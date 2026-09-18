@@ -11,9 +11,12 @@ import com.github.libretube.helpers.PreferenceHelper
 import com.github.libretube.obj.SearchDataItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
@@ -56,10 +59,16 @@ class SearchViewModel : ViewModel() {
 
     /**
      * Emits a [Pair] of ([SearchDataType.SUGGESTION]  and the results ([List]))
+     *
+     * The query is debounced and de-duplicated so that typing doesn't fire one network
+     * request per keystroke.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val onlineSearchSuggestions =
-        combine(searchQuery, isSearchSuggestionEnabled) { query, suggestionsEnabled ->
+        combine(
+            searchQuery.debounce(SUGGESTIONS_DEBOUNCE_MS).distinctUntilChanged(),
+            isSearchSuggestionEnabled
+        ) { query, suggestionsEnabled ->
             if (!suggestionsEnabled || query.isNullOrBlank()) {
                 return@combine emptyList<String>()
             }
@@ -116,5 +125,8 @@ class SearchViewModel : ViewModel() {
 
     companion object {
         private const val MAX_FILTERED_SEARCH_HISTORY = 5
+
+        /** Delay before an online suggestion request is actually fired. */
+        private const val SUGGESTIONS_DEBOUNCE_MS = 300L
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">LibreTube</string>
+    <string name="app_name" translatable="false">Watube</string>
     <string name="startpage">Home</string>
     <string name="subscriptions">Subscriptions</string>
     <string name="library">Library</string>
@@ -113,6 +113,7 @@
     <string name="color_accent">Accents</string>
     <string name="color_red">Resting red</string>
     <string name="color_blue">Blissful blue</string>
+    <string name="color_watube" translatable="false">Watube aqua</string>
     <string name="color_yellow">Yeeting yellow</string>
     <string name="color_green">Groovy green</string>
     <string name="color_purple">Pleasurable purple</string>
@@ -364,7 +365,7 @@
     <string name="alternative_pip_controls">Alternative PiP controls</string>
     <string name="alternative_pip_controls_summary">Show audio only and skip controls in PiP instead of forward and rewind</string>
     <string name="audio_only_mode">Audio only mode</string>
-    <string name="audio_only_mode_summary">Turn LibreTube into a music player</string>
+    <string name="audio_only_mode_summary">Turn Watube into a music player</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="skip_silence">Skip silence</string>
     <string name="help">Help</string>
@@ -491,7 +492,7 @@
     <string name="change">Change</string>
     <string name="gestures">Gestures</string>
     <string name="external_download_provider">External download provider</string>
-    <string name="external_download_provider_summary">Enter the package name of the app you want to use for downloading videos. Leave blank to use LibreTube\'s inbuilt downloader.</string>
+    <string name="external_download_provider_summary">Enter the package name of the app you want to use for downloading videos. Leave blank to use Watube\'s inbuilt downloader.</string>
     <string name="local_stream_extraction">Local stream extraction</string>
     <string name="local_stream_extraction_summary">Directly fetch video playback information from YouTube without using Piped.</string>
     <string name="local_ryd">Local Return Youtube Dislike extractor</string>
@@ -555,4 +556,12 @@
     <string name="import_temp_playlist_summary">Do you want to create a new playlist named \'%1$s\'? The playlist will contain %2$d videos.</string>
     <string name="comment_verified">Verified</string>
     <string name="comment_pinned">Pinned</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="clear_cache_summary">Frees up storage space · %1$s used</string>
+    <string name="clear_cache_dialog_title">Clear the cache?</string>
+    <string name="clear_cache_dialog_message">Cached thumbnails and temporary network data will be deleted. Your downloads, subscriptions, playlists and history are kept.</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="checking_for_updates">Checking for updates…</string>
+    <string name="last_update_check">Last checked: %1$s</string>
+    <string name="maintenance">Maintenance</string>
 </resources>

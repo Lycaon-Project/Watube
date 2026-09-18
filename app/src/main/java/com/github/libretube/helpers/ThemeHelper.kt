@@ -23,8 +23,8 @@ object ThemeHelper {
      */
     fun updateTheme(activity: AppCompatActivity) {
         var accentColor = PreferenceHelper.getString(PreferenceKeys.ACCENT_COLOR, "")
-        if (accentColor.isEmpty()) {
-            accentColor = if (DynamicColors.isDynamicColorAvailable()) "my" else "blue"
+        if (!isValidAccent(accentColor)) {
+            accentColor = if (DynamicColors.isDynamicColorAvailable()) "my" else "watube"
             PreferenceHelper.putString(PreferenceKeys.ACCENT_COLOR, accentColor)
         }
 
@@ -45,6 +45,7 @@ object ThemeHelper {
         return when (accentColor) {
             // set the accent color, use the pure black/white theme if enabled
             "my" -> R.style.BaseTheme
+            "watube" -> R.style.Theme_Watube
             "red" -> R.style.Theme_Red
             "blue" -> R.style.Theme_Blue
             "yellow" -> R.style.Theme_Yellow
@@ -55,6 +56,11 @@ object ThemeHelper {
             else -> throw IllegalArgumentException()
         }
     }
+
+    /** true if the given stored accent value is still supported by the current version */
+    fun isValidAccent(accentColor: String): Boolean = accentColor in setOf(
+        "my", "watube", "red", "blue", "yellow", "green", "purple", "monochrome", "violet"
+    )
 
     fun applyDialogActivityTheme(activity: Activity) {
         activity.theme.applyStyle(R.style.DialogActivity, true)
@@ -110,7 +116,7 @@ object ThemeHelper {
     fun getStyledAppName(context: Context): Spanned {
         val colorPrimary = getThemeColor(context, androidx.appcompat.R.attr.colorPrimaryDark)
         val hexColor = "#%06X".format(0xFFFFFF and colorPrimary)
-        return "Libre<span  style='color:$hexColor';>Tube</span>"
+        return "Wa<span style='color:$hexColor'>tube</span>"
             .parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT)
     }
 

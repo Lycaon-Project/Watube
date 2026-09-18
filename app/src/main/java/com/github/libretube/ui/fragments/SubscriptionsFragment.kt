@@ -74,6 +74,7 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.subFeed?.layoutManager = GridLayoutManager(context, gridItems)
+        _binding?.subFeed?.setHasFixedSize(true)
     }
 
     @SuppressLint("SetTextI18n")

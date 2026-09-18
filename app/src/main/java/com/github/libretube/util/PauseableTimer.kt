@@ -19,6 +19,9 @@ class PauseableTimer(
     }
 
     fun resume() {
+        // only start a single tick chain, otherwise every call would add another one
+        if (isRunning) return
+
         if (timer == null) {
             timer = Timer()
         }

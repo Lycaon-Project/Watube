@@ -16,6 +16,46 @@
         <item name="loadingIndicatorStyle">@style/Widget.Material3.LoadingIndicator.Contained</item>
 
         <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
+
+        <!-- Watube signature shapes -->
+        <item name="shapeAppearanceSmallComponent">@style/WatubeShape.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/WatubeShape.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/WatubeShape.Large</item>
+    </style>
+
+    <!-- Watube signature accent -->
+    <style name="Theme.Watube" parent="BaseTheme">
+
+        <item name="colorPrimary">@color/watube_theme_dark_primary</item>
+        <item name="colorOnPrimary">@color/watube_theme_dark_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/watube_theme_dark_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/watube_theme_dark_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/watube_theme_dark_secondary</item>
+        <item name="colorOnSecondary">@color/watube_theme_dark_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/watube_theme_dark_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/watube_theme_dark_onSecondaryContainer</item>
+
+        <item name="colorTertiary">@color/watube_theme_dark_tertiary</item>
+        <item name="colorOnTertiary">@color/watube_theme_dark_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/watube_theme_dark_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/watube_theme_dark_onTertiaryContainer</item>
+
+        <item name="colorError">@color/watube_theme_dark_error</item>
+        <item name="colorErrorContainer">@color/watube_theme_dark_errorContainer</item>
+        <item name="colorOnError">@color/watube_theme_dark_onError</item>
+        <item name="colorOnErrorContainer">@color/watube_theme_dark_onErrorContainer</item>
+
+        <item name="android:colorBackground">@color/watube_theme_dark_background</item>
+        <item name="colorOnBackground">@color/watube_theme_dark_onBackground</item>
+        <item name="colorSurface">@color/watube_theme_dark_surface</item>
+        <item name="colorOnSurface">@color/watube_theme_dark_onSurface</item>
+        <item name="colorSurfaceVariant">@color/watube_theme_dark_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/watube_theme_dark_onSurfaceVariant</item>
+        <item name="colorOutline">@color/watube_theme_dark_outline</item>
+        <item name="colorOnSurfaceInverse">@color/watube_theme_dark_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/watube_theme_dark_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/watube_theme_dark_inversePrimary</item>
+
     </style>
 
     <style name="Theme.Red" parent="BaseTheme">

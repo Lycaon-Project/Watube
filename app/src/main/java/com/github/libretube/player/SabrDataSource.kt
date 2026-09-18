@@ -31,13 +31,15 @@ class SabrDataSource(
         transferInitializing(dataSpec)
         transferStarted(dataSpec)
         val segment = try {
-            sabrClient.getNextSegment(playbackRequest!!)!!
+            requireNotNull(playbackRequest) { "missing SABR playback request" }
+            requireNotNull(sabrClient.getNextSegment(playbackRequest)) { "no SABR segment available" }
         } catch (e: Exception) {
             Log.e(
                 SabrClient::class.java.name,
-                "open: failed to get segment ${playbackRequest!!.segment} for ${playbackRequest.format.itag}: $e"
+                "open: failed to get segment ${playbackRequest?.segment} for ${playbackRequest?.format?.itag}: $e"
             )
-            throw IOException()
+            // keep the original cause so that ExoPlayer / logs can report the real failure
+            throw IOException("Failed to fetch SABR segment", e)
         }
 
         data = CompositeBuffer(segment.data)

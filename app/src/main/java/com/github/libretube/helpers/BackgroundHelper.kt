@@ -35,6 +35,9 @@ import com.google.common.util.concurrent.MoreExecutors
 object BackgroundHelper {
     private val handler = Handler(Looper.getMainLooper())
 
+    /** maximal attempts to connect to a media service before giving up */
+    private const val MAX_CONNECTION_RETRIES = 5
+
     /**
      * Start the foreground service [OnlinePlayerService] to play in background.
      */
@@ -79,6 +82,17 @@ object BackgroundHelper {
         arguments: Bundle = Bundle.EMPTY,
         onController: (MediaController) -> Unit = {}
     ) {
+        connectMediaService(context, serviceClass, arguments, onController, retryCount = 0)
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun connectMediaService(
+        context: Context,
+        serviceClass: Class<*>,
+        arguments: Bundle,
+        onController: (MediaController) -> Unit,
+        retryCount: Int
+    ) {
         val context = context.applicationContext
         val sessionToken =
             SessionToken(context, ComponentName(context, serviceClass))
@@ -102,8 +116,21 @@ object BackgroundHelper {
             // see also: https://github.com/androidx/media/issues/1096
             override fun onFailure(t: Throwable) {
                 Log.e(TAG(), t.toString())
+
+                // don't keep retrying forever in case the service can't be started at all
+                if (retryCount >= MAX_CONNECTION_RETRIES) {
+                    Log.e(TAG(), "Giving up connecting to $serviceClass")
+                    return
+                }
+
                 handler.postDelayed(200) {
-                    startMediaService(context, serviceClass, arguments, onController)
+                    connectMediaService(
+                        context,
+                        serviceClass,
+                        arguments,
+                        onController,
+                        retryCount + 1
+                    )
                 }
             }
         }, MoreExecutors.directExecutor())

@@ -1,22 +1,41 @@
 package com.github.libretube.helpers
 
+import android.util.Log
 import com.github.libretube.api.PipedMediaServiceRepository
 import com.github.libretube.api.RetrofitInstance
 import com.github.libretube.constants.PreferenceKeys
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.github.libretube.extensions.TAG
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 object ProxyHelper {
-    fun fetchProxyUrl() {
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                RetrofitInstance.externalApi.getInstanceConfig(PipedMediaServiceRepository.apiUrl)
-                    .imageProxyUrl?.let {
-                        PreferenceHelper.putString(PreferenceKeys.IMAGE_PROXY_URL, it)
-                    }
-            }
+    /** Don't hit the instance config endpoint more than twice a day. */
+    private const val PROXY_REFRESH_INTERVAL_MS = 12 * 60 * 60 * 1000L
+
+    /**
+     * Refreshes the image proxy url of the current instance.
+     *
+     * The request is throttled: it is skipped when the proxy of the current instance has
+     * already been fetched recently, which avoids one network call on every app start.
+     */
+    suspend fun fetchProxyUrl() {
+        val apiUrl = PipedMediaServiceRepository.apiUrl
+        val lastFetchInstance = PreferenceHelper.getString(PreferenceKeys.LAST_PROXY_FETCH_INSTANCE, "")
+        val lastFetchTime = PreferenceHelper.getLong(PreferenceKeys.LAST_PROXY_FETCH_TIME, 0L)
+        val isFresh = lastFetchInstance == apiUrl &&
+                System.currentTimeMillis() - lastFetchTime < PROXY_REFRESH_INTERVAL_MS
+        if (isFresh) return
+
+        runCatching {
+            val fetchedAt = System.currentTimeMillis()
+            RetrofitInstance.externalApi.getInstanceConfig(apiUrl)
+                .imageProxyUrl
+                ?.takeIf { it.isNotEmpty() }
+                ?.let { PreferenceHelper.putString(PreferenceKeys.IMAGE_PROXY_URL, it) }
+
+            PreferenceHelper.putString(PreferenceKeys.LAST_PROXY_FETCH_INSTANCE, apiUrl)
+            PreferenceHelper.putLong(PreferenceKeys.LAST_PROXY_FETCH_TIME, fetchedAt)
+        }.onFailure {
+            Log.d(TAG(), "Failed to fetch the instance config", it)
         }
     }
 

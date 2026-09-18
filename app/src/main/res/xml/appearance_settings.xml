@@ -22,7 +22,7 @@
 
         <ListPreference
             android:icon="@drawable/ic_color"
-            app:defaultValue="purple"
+            app:defaultValue="watube"
             app:entries="@array/accents"
             app:entryValues="@array/accentsValue"
             app:key="accent_color"

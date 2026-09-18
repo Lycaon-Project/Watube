@@ -15,7 +15,11 @@ import com.github.libretube.ui.viewholders.SubscriptionGroupChannelRowViewHolder
 class SubscriptionGroupChannelsAdapter(
     private val group: SubscriptionGroup,
     private val onGroupChanged: (SubscriptionGroup) -> Unit
-) : ListAdapter<Subscription, SubscriptionGroupChannelRowViewHolder>(DiffUtilItemCallback()) {
+) : ListAdapter<Subscription, SubscriptionGroupChannelRowViewHolder>(
+    DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+        oldItem.url == newItem.url
+    })
+) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

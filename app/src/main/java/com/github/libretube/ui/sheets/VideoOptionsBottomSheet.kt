@@ -109,7 +109,7 @@ class VideoOptionsBottomSheet : BaseBottomSheet() {
                 R.string.mark_as_watched -> {
                     val watchPosition = WatchPosition(videoId, Long.MAX_VALUE)
                     withContext(Dispatchers.IO) {
-                        DatabaseHolder.Database.watchPositionDao().insert(watchPosition)
+                        DatabaseHelper.saveWatchPosition(watchPosition)
 
                         if (PlayerHelper.watchHistoryEnabled) {
                             DatabaseHelper.addToWatchHistory(streamItem.toWatchHistoryItem(videoId))
@@ -129,7 +129,7 @@ class VideoOptionsBottomSheet : BaseBottomSheet() {
 
                 R.string.mark_as_unwatched -> {
                     withContext(Dispatchers.IO) {
-                        DatabaseHolder.Database.watchPositionDao().deleteByVideoId(videoId)
+                        DatabaseHelper.deleteWatchPosition(videoId)
                         DatabaseHolder.Database.watchHistoryDao().deleteByVideoId(videoId)
                     }
                     setFragmentResult(VIDEO_OPTIONS_SHEET_REQUEST_KEY, bundleOf())

@@ -1,9 +1,13 @@
 package com.github.libretube
 
 import android.app.Application
+import android.content.Context
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.ExistingPeriodicWorkPolicy
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import com.github.libretube.db.DatabaseHelper
 import com.github.libretube.helpers.ImageHelper
 import com.github.libretube.helpers.NewPipeExtractorInstance
 import com.github.libretube.helpers.NotificationHelper
@@ -18,7 +22,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class LibreTubeApp : Application() {
+class LibreTubeApp : Application(), SingletonImageLoader.Factory {
 
     // Scope global de l'application qui survit aux changements de configuration
     // Utilise Dispatchers.IO pour ne pas bloquer le thread principal
@@ -46,6 +50,8 @@ class LibreTubeApp : Application() {
         appScope.launch {
             PreferenceHelper.migrate()
             ImageHelper.initializeImageLoader(this@LibreTubeApp)
+            // preloads the watch positions so that list rows don't need to query Room on bind
+            DatabaseHelper.primeWatchPositionCache()
             NotificationHelper.enqueueWork(
                 context = this@LibreTubeApp,
                 existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP
@@ -63,6 +69,12 @@ class LibreTubeApp : Application() {
             ProxyHelper.fetchProxyUrl()
         }
     }
+
+    /**
+     * Coil singleton factory: guarantees that images, the data saver checks and the manual
+     * cache clearing all operate on one single set of caches.
+     */
+    override fun newImageLoader(context: Context): ImageLoader = ImageHelper.buildImageLoader(context)
 
     /**
      * Configure le gestionnaire d'exceptions

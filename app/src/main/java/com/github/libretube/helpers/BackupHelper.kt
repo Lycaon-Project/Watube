@@ -9,6 +9,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import com.github.libretube.R
 import com.github.libretube.api.JsonHelper
 import com.github.libretube.constants.PreferenceKeys
+import com.github.libretube.db.DatabaseHelper
 import com.github.libretube.db.DatabaseHolder.Database
 import com.github.libretube.extensions.TAG
 import com.github.libretube.extensions.toastFromMainDispatcher
@@ -55,7 +56,7 @@ object BackupHelper {
 
         Database.watchHistoryDao().insertAll(backupFile.watchHistory.orEmpty())
         Database.searchHistoryDao().insertAll(backupFile.searchHistory.orEmpty())
-        Database.watchPositionDao().insertAll(backupFile.watchPositions.orEmpty())
+        DatabaseHelper.saveWatchPositions(backupFile.watchPositions.orEmpty())
         Database.localSubscriptionDao().insertAll(backupFile.subscriptions.orEmpty())
         Database.customInstanceDao().insertAll(backupFile.customInstances.orEmpty())
         Database.playlistBookmarkDao().insertAll(backupFile.playlistBookmarks.orEmpty())

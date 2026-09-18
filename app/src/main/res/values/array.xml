@@ -14,6 +14,7 @@
 
     <string-array name="accents">
         <item>@string/material_you</item>
+        <item>@string/color_watube</item>
         <item>@string/color_red</item>
         <item>@string/color_blue</item>
         <item>@string/color_yellow</item>
@@ -25,6 +26,7 @@
 
     <string-array name="accentsValue">
         <item>my</item>
+        <item>watube</item>
         <item>red</item>
         <item>blue</item>
         <item>yellow</item>

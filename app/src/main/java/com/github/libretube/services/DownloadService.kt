@@ -11,6 +11,7 @@ import android.net.Network
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.os.SystemClock
 import android.util.Log
 import android.util.SparseBooleanArray
 import androidx.core.app.NotificationCompat
@@ -75,6 +76,7 @@ import okio.sink
 import java.net.HttpURLConnection
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.path.createFile
@@ -94,6 +96,12 @@ class DownloadService : LifecycleService() {
     private lateinit var summaryNotificationBuilder: Builder
 
     /**
+     * Last time the progress notification of a download has been posted to the system,
+     * used to avoid one binder call per downloaded chunk.
+     */
+    private val lastNotificationUpdate = ConcurrentHashMap<Int, Long>()
+
+    /**
      * Maps all currently running downloads to `true`, and all paused or stopped downloads to `false`.
      */
     private val downloadQueue = SparseBooleanArray()
@@ -109,7 +117,7 @@ class DownloadService : LifecycleService() {
         super.onCreate()
         IS_DOWNLOAD_RUNNING = true
         notifyForeground()
-        sendBroadcast(Intent(ACTION_SERVICE_STARTED))
+        sendBroadcast(Intent(ACTION_SERVICE_STARTED).setPackage(packageName))
     }
 
     /**
@@ -325,7 +333,7 @@ class DownloadService : LifecycleService() {
                                 item.downloadSize
                             )
                         )
-                        updateNotification(notificationBuilder, item, totalRead.toInt())
+                        updateNotification(notificationBuilder, item, totalRead)
                     }
                 }
             } catch (_: CancellationException) {
@@ -369,20 +377,42 @@ class DownloadService : LifecycleService() {
     private fun updateNotification(
         notificationBuilder: Builder,
         item: DownloadItem,
-        totalRead: Int
+        totalRead: Long
     ) {
+        val notificationId = item.getNotificationId()
+
+        // throttle the notification updates, each one is a call into the system server
+        val now = SystemClock.elapsedRealtime()
+        if (now - (lastNotificationUpdate[notificationId] ?: 0L) < MIN_NOTIFICATION_UPDATE_INTERVAL) {
+            return
+        }
+        lastNotificationUpdate[notificationId] = now
+
         notificationBuilder
             .setContentText(
                 totalRead.formatAsFileSize() + " / " +
                         item.downloadSize.formatAsFileSize()
             )
-            .setProgress(
-                item.downloadSize.toInt(),
-                totalRead,
+
+        val downloadSize = item.downloadSize
+        when {
+            downloadSize <= 0L -> notificationBuilder.setProgress(0, 0, true)
+            // the notification progress is int based, use percentages for huge files
+            downloadSize <= Int.MAX_VALUE -> notificationBuilder.setProgress(
+                downloadSize.toInt(),
+                totalRead.coerceIn(0L, downloadSize).toInt(),
                 false
             )
+
+            else -> notificationBuilder.setProgress(
+                100,
+                ((totalRead * 100) / downloadSize).coerceIn(0L, 100L).toInt(),
+                false
+            )
+        }
+
         notificationManager.notify(
-            item.getNotificationId(),
+            notificationId,
             notificationBuilder.build()
         )
     }
@@ -504,7 +534,7 @@ class DownloadService : LifecycleService() {
     private fun stopServiceIfDone() {
         if (downloadQueue.valueIterator().asSequence().none { it }) {
             ServiceCompat.stopForeground(this@DownloadService, ServiceCompat.STOP_FOREGROUND_DETACH)
-            sendBroadcast(Intent(ACTION_SERVICE_STOPPED))
+            sendBroadcast(Intent(ACTION_SERVICE_STOPPED).setPackage(packageName))
             stopSelf()
         }
     }
@@ -653,7 +683,7 @@ class DownloadService : LifecycleService() {
     override fun onDestroy() {
         downloadQueue.clear()
         IS_DOWNLOAD_RUNNING = false
-        sendBroadcast(Intent(ACTION_SERVICE_STOPPED))
+        sendBroadcast(Intent(ACTION_SERVICE_STOPPED).setPackage(packageName))
         super.onDestroy()
     }
 
@@ -677,6 +707,9 @@ class DownloadService : LifecycleService() {
             "com.github.libretube.services.DownloadService.ACTION_RESUME_ALL"
 
         private const val MAX_SEGMENT_RETRIES = 3
+
+        /** minimal delay between two progress notifications of the same download */
+        private const val MIN_NOTIFICATION_UPDATE_INTERVAL = 500L
         var IS_DOWNLOAD_RUNNING = false
     }
 }

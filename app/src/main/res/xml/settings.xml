@@ -56,7 +56,13 @@
         app:summary="@string/backup_restore_summary"
         app:title="@string/backup_restore" />
 
-    <PreferenceCategory>
+    <PreferenceCategory app:title="@string/maintenance">
+
+        <Preference
+            android:icon="@drawable/ic_delete"
+            app:key="clear_cache"
+            app:summary="@string/clear_cache_summary"
+            app:title="@string/clear_cache" />
 
         <Preference
             android:icon="@drawable/ic_update"

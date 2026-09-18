@@ -34,7 +34,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
-    ListAdapter<StreamItem, VideoCardsViewHolder>(DiffUtilItemCallback()) {
+    ListAdapter<StreamItem, VideoCardsViewHolder>(
+        // identity is the video url so that only changed contents get rebound
+        DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+            oldItem.url == newItem.url && oldItem.type == newItem.type
+        })
+    ) {
 
     override fun getItemViewType(position: Int): Int {
         return if (currentList[position].type == CAUGHT_UP_STREAM_TYPE) CAUGHT_UP_TYPE else NORMAL_TYPE

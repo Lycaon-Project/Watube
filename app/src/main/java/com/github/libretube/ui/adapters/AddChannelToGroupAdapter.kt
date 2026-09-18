@@ -10,7 +10,11 @@ import com.github.libretube.ui.viewholders.AddChannelToGroupViewHolder
 
 class AddChannelToGroupAdapter(
     private val channelId: String
-) : ListAdapter<SubscriptionGroup, AddChannelToGroupViewHolder>(DiffUtilItemCallback()) {
+) : ListAdapter<SubscriptionGroup, AddChannelToGroupViewHolder>(
+    DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+        oldItem.name == newItem.name
+    })
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddChannelToGroupViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = AddChannelToGroupRowBinding.inflate(layoutInflater, parent, false)

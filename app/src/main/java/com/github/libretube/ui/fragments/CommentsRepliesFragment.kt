@@ -65,6 +65,7 @@ class CommentsRepliesFragment : Fragment(R.layout.fragment_comments) {
 
         val layoutManager = LinearLayoutManager(context)
         binding.commentsRV.layoutManager = layoutManager
+        binding.commentsRV.setHasFixedSize(true)
 
         binding.commentsRV.adapter = repliesAdapter
 

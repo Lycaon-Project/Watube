@@ -12,7 +12,9 @@ class CustomInstancesAdapter(
     private val onClickInstance: (CustomInstance) -> Unit,
     private val onDeleteInstance: (CustomInstance) -> Unit
 ) : ListAdapter<CustomInstance, CustomInstancesViewHolder>(
-    DiffUtilItemCallback()
+    DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+        oldItem.name == newItem.name
+    })
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomInstancesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

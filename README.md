@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/banners/gh-banner.png" width="auto" height="auto" alt="LibreTube">
+  <img src="assets/banners/gh-banner.png" width="auto" height="auto" alt="Watube">
 
 [![GPL-v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 </div>
@@ -11,7 +11,7 @@
 </div>
 
 > **📌 Important Note** <br>
-> This is an **independent fork** maintained by Lycaon-Project. While based on the original LibreTube project, this fork operates as a separate entity with its own development roadmap and focus on performance optimisation and modernisation.
+> This is **Watube**, an **independent fork** maintained by Lycaon-Project and based on the original LibreTube project. Watube is a separate entity with its own development roadmap focused on performance optimisation, resource efficiency, security hardening and modernisation — while keeping every feature of the upstream app.
 
 </div>
 
@@ -65,17 +65,43 @@ About
 
 YouTube has an extremely invasive [privacy policy](https://support.google.com/youtube/answer/10364219) which relies on using user data in unethical ways. They store a lot of your personal data - ranging from ideas, music taste, content, political opinions, and much more than you think.
 
-**LibreTube (Lycaon-Project Fork)** aims at improving the users' privacy by being independent from Google and bypassing their data collection as much as possible. The app only sends the minimum amount of data necessary to ensure that the app works, e.g. it only loads the YouTube-video you want to play without tracking your behavior when using the app.
+**Watube (Lycaon-Project Fork)** aims at improving the users' privacy by being independent from Google and bypassing their data collection as much as possible. The app only sends the minimum amount of data necessary to ensure that the app works, e.g. it only loads the YouTube-video you want to play without tracking your behavior when using the app.
 
 ### 🎯 This Fork's Focus
 
-While maintaining the original project's privacy-first philosophy, **this fork specifically focuses on**:
+While maintaining the original project's privacy-first philosophy, **Watube specifically focuses on**:
 
 - ⚡ **Performance Optimization** - Optimized for 120Hz displays and modern Android devices
 - 🧠 **Code Modernization** - Updated to latest Kotlin best practices and Android APIs
 - 🐛 **Bug Fixes & Stability** - Comprehensive testing and reliability improvements
 - 📱 **Android 14+ Compatibility** - Full support for latest Android features and requirements
 - 🎨 **Enhanced User Experience** - Smoother animations and improved responsiveness
+- 🔒 **Security Hardening** - Reduced attack surface and stricter network/backups rules
+
+### 🆕 Notable changes in Watube
+
+**Performance & resources**
+
+- Polling loops of the player UI (`position`, queue buttons, chapter name, seek bar, chapter index) only do work when their value actually changed, slow down while paused, and are stopped when the player is detached
+- SponsorBlock/chapter time bars no longer allocate `Paint`/`Rect` objects on every frame
+- Search suggestions are debounced (300 ms) instead of firing one request per keystroke
+- The watch position is persisted every 5 s instead of every second, and immediately on pause/end; it is also cached in memory so list rows don't have to query Room while binding
+- DiffUtil now identifies rows by their stable id (video url, primary key, …), so lists rebind and reload thumbnails only when their content really changed
+- Download progress notifications are throttled to 2 updates per second
+- The player back buffer was reduced from 3 minutes to 1 minute to save memory
+
+**Quality, security & maintenance**
+
+- Strict network security config (cleartext disabled, only local development hosts exempted), encrypted-app backups that exclude the account token, and removal of the unused boot receiver
+- Automatic update checks against [github.com/Lycaon-Project/LibreTube](https://github.com/Lycaon-Project/LibreTube/releases/latest), throttled to once every 12 hours, plus a manual check in the settings
+- **Maintenance → Clear cache** in the settings wipes the image cache, the HTTP cache and the leftover app cache in one tap
+- Reliable error handling in the SABR data source and picture-in-picture, bounded retry loops (media service connection, feed notifications) instead of infinite ones
+- A unified Coil image loader and a shared HTTP cache are created once for the whole app
+
+**Design**
+
+- New **Watube aqua** accent (default), rounder component shapes and a raised bottom navigation bar
+- The app title is rendered with a colour gradient in the toolbar and the about screen
 
 ---
 
@@ -128,11 +154,12 @@ Features
 ### 🚀 Fork-Specific Optimizations
 
 - ⚡ **120Hz Display Support** - Ultra-smooth scrolling and animations
-- 🧠 **Optimized Memory Usage** - Efficient resource management with Kotlin sequences
-- 🔄 **Modern Kotlin Code** - Updated to latest best practices and APIs
+- 🧠 **Optimized Memory Usage** - Shared image/HTTP caches, less allocations while drawing
+- ⏳ **Manual Cache Control** - Clear the whole cache from the settings in one tap
+- 🔁 **Update Checks** - Built-in update check against this repository
 - 🐛 **Comprehensive Bug Fixes** - Improved stability and reliability
 - 📱 **Android 14+ Ready** - Full compatibility with latest Android requirements
-- 🎨 **Enhanced Performance** - Faster app startup and smoother interactions
+- 🎨 **Watube Design** - Dedicated accent colour, rounder shapes, raised bottom bar
 
 ---
 
@@ -199,7 +226,7 @@ Contributions in any form are welcome!
 📝 Translations
 </h2>
 
-Help make LibreTube available in your language!
+Help make Watube available in your language!
 
 <a href="https://hosted.weblate.org/projects/libretube/#languages">
 <img src="https://hosted.weblate.org/widgets/libretube/-/287x66-grey.png" alt="Translation status" />
@@ -229,7 +256,7 @@ Both, LibreTube and NewPipe, are great clients for watching YouTube videos. Ther
 Privacy Policy and Disclaimer
 </h2>
 
-LibreTube aims to protect the privacy of its users. [Our Privacy Policy](/PRIVACY_POLICY.md) gives detailed information on which data the app stores in order to work, how it is being used, and how the project protects your personal information. It is recommended to read the privacy policy of LibreTube as well as the privacy policy of the instance you have chosen inside the app.
+Watube aims to protect the privacy of its users. [Our Privacy Policy](/PRIVACY_POLICY.md) gives detailed information on which data the app stores in order to work, how it is being used, and how the project protects your personal information. It is recommended to read the privacy policy of the upstream LibreTube project as well as the privacy policy of the instance you have chosen inside the app.
 
 ---
 
@@ -237,7 +264,7 @@ LibreTube aims to protect the privacy of its users. [Our Privacy Policy](/PRIVAC
 
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](http://www.gnu.org/licenses/gpl-3.0.en.html)
 
-LibreTube is [Free Software](https://en.wikipedia.org/wiki/Free_software): You can use, study, share and modify it at your will. The app can be redistributed and/or modified under the terms of the [GNU General Public License version 3 or later](https://www.gnu.org/licenses/gpl.html) published by the [Free Software Foundation](https://www.fsf.org/).
+Watube is [Free Software](https://en.wikipedia.org/wiki/Free_software): You can use, study, share and modify it at your will. The app can be redistributed and/or modified under the terms of the [GNU General Public License version 3 or later](https://www.gnu.org/licenses/gpl.html) published by the [Free Software Foundation](https://www.fsf.org/).
 
 ---
 

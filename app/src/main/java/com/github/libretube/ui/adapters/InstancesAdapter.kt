@@ -13,7 +13,11 @@ import com.github.libretube.ui.viewholders.InstancesViewHolder
 class InstancesAdapter(
     initialSelectionApiIndex: Int?,
     private val onSelectInstance: (index: Int) -> Unit
-) : ListAdapter<PipedInstance, InstancesViewHolder>(DiffUtilItemCallback()) {
+) : ListAdapter<PipedInstance, InstancesViewHolder>(
+    DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+        oldItem.apiUrl == newItem.apiUrl
+    })
+) {
     private var selectedInstanceIndex = initialSelectionApiIndex?.takeIf { it >= 0 }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InstancesViewHolder {

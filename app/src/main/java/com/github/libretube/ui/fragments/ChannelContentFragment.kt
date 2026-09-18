@@ -37,6 +37,7 @@ class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_ch
     private val viewModel: ChannelViewModel by viewModels({ requireParentFragment() })
 
     override fun setLayoutManagers(gridItems: Int) {
+        binding.channelRecView.setHasFixedSize(true)
         binding.channelRecView.layoutManager = GridLayoutManager(
             requireContext(),
             gridItems.ceilHalf()

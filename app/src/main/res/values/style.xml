@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Watube signature shapes: rounder controls and larger cards than upstream -->
+    <style name="WatubeShape.Small" parent="ShapeAppearance.Material3.Corner.Medium" />
+
+    <style name="WatubeShape.Medium" parent="ShapeAppearance.Material3.Corner.Large" />
+
+    <style name="WatubeShape.Large" parent="ShapeAppearance.Material3.Corner.ExtraLarge" />
+
     <style name="RoundedImageView">
 
         <item name="cornerFamily">rounded</item>

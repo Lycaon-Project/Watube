@@ -5,12 +5,14 @@ import com.github.libretube.constants.PreferenceKeys
 import com.github.libretube.db.DatabaseHolder.Database
 import com.github.libretube.db.obj.SearchHistoryItem
 import com.github.libretube.db.obj.WatchHistoryItem
+import com.github.libretube.db.obj.WatchPosition
 import com.github.libretube.enums.ContentFilter
 import com.github.libretube.extensions.toID
 import com.github.libretube.helpers.PreferenceHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 
 object DatabaseHelper {
     private const val MAX_SEARCH_HISTORY_SIZE = 20
@@ -20,6 +22,11 @@ object DatabaseHelper {
 
     // can only mark as watched if at least 75% watched
     private const val RELATIVE_WATCHED_THRESHOLD = 0.75f
+
+    private val watchPositionCache = ConcurrentHashMap<String, Long>()
+
+    @Volatile
+    private var watchPositionCacheLoaded = false
 
     suspend fun addToWatchHistory(watchHistoryItem: WatchHistoryItem) =
         withContext(Dispatchers.IO) {
@@ -55,10 +62,49 @@ object DatabaseHelper {
         }
     }
 
-    suspend fun getWatchPosition(videoId: String) = Database.watchPositionDao().findById(videoId)?.position
+    suspend fun getWatchPosition(videoId: String): Long? {
+        if (watchPositionCacheLoaded) return watchPositionCache[videoId]
 
-    fun getWatchPositionBlocking(videoId: String): Long? = runBlocking(Dispatchers.IO) {
-        getWatchPosition(videoId)
+        return Database.watchPositionDao().findById(videoId)?.position
+    }
+
+    /**
+     * Watch positions are read for every single row while scrolling, so they are kept
+     * in memory instead of hitting Room (and blocking the main thread) on each bind.
+     */
+    fun getWatchPositionBlocking(videoId: String): Long? {
+        if (watchPositionCacheLoaded) return watchPositionCache[videoId]
+
+        return runBlocking(Dispatchers.IO) { getWatchPosition(videoId) }
+    }
+
+    /** Loads the watch positions into memory. Runs once, off the main thread. */
+    suspend fun primeWatchPositionCache() {
+        if (watchPositionCacheLoaded) return
+
+        val positions = withContext(Dispatchers.IO) { Database.watchPositionDao().getAll() }
+        positions.forEach { watchPositionCache[it.videoId] = it.position }
+        watchPositionCacheLoaded = true
+    }
+
+    suspend fun saveWatchPosition(watchPosition: WatchPosition) {
+        Database.watchPositionDao().insert(watchPosition)
+        watchPositionCache[watchPosition.videoId] = watchPosition.position
+    }
+
+    suspend fun saveWatchPositions(watchPositions: List<WatchPosition>) {
+        Database.watchPositionDao().insertAll(watchPositions)
+        watchPositions.forEach { watchPositionCache[it.videoId] = it.position }
+    }
+
+    suspend fun deleteWatchPosition(videoId: String) {
+        Database.watchPositionDao().deleteByVideoId(videoId)
+        watchPositionCache.remove(videoId)
+    }
+
+    suspend fun clearWatchPositions() {
+        Database.watchPositionDao().deleteAll()
+        watchPositionCache.clear()
     }
 
     suspend fun isVideoWatched(videoId: String, duration: Long): Boolean =

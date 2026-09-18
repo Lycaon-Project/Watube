@@ -11,7 +11,6 @@ import com.github.libretube.R
 import com.github.libretube.constants.IntentData
 import com.github.libretube.databinding.QueueBottomSheetBinding
 import com.github.libretube.db.DatabaseHelper
-import com.github.libretube.db.DatabaseHolder
 import com.github.libretube.db.obj.WatchPosition
 import com.github.libretube.extensions.setActionListener
 import com.github.libretube.extensions.toID
@@ -34,6 +33,7 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.optionsRecycler.layoutManager = LinearLayoutManager(context)
+        binding.optionsRecycler.setHasFixedSize(true)
         val adapter = PlayingQueueAdapter { videoId ->
             setFragmentResult(PLAYING_QUEUE_REQUEST_KEY, bundleOf(IntentData.videoId to videoId))
         }
@@ -163,20 +163,19 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
                 when (index) {
                     0 -> {
                         CoroutineScope(Dispatchers.IO).launch {
-                            PlayingQueue.getStreams().forEach {
+                            val watchPositions = PlayingQueue.getStreams().map {
                                 val videoId = it.url.orEmpty().toID()
                                 val duration = it.duration ?: 0
-                                val watchPosition = WatchPosition(videoId, duration * 1000)
-                                DatabaseHolder.Database.watchPositionDao().insert(watchPosition)
+                                WatchPosition(videoId, duration * 1000)
                             }
+                            DatabaseHelper.saveWatchPositions(watchPositions)
                         }
                     }
 
                     1 -> {
                         CoroutineScope(Dispatchers.IO).launch {
                             PlayingQueue.getStreams().forEach {
-                                DatabaseHolder.Database.watchPositionDao()
-                                    .deleteByVideoId(it.url.orEmpty().toID())
+                                DatabaseHelper.deleteWatchPosition(it.url.orEmpty().toID())
                             }
                         }
                     }

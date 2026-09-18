@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.withTransaction
 import com.github.libretube.R
 import com.github.libretube.databinding.FragmentWatchHistoryBinding
+import com.github.libretube.db.DatabaseHelper
 import com.github.libretube.db.DatabaseHolder.Database
 import com.github.libretube.db.obj.WatchHistoryItem
 import com.github.libretube.extensions.ceilHalf
@@ -79,6 +80,7 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         })
 
         binding.watchHistoryRecView.adapter = watchHistoryAdapter
+        binding.watchHistoryRecView.setHasFixedSize(true)
 
         // manually restore the recyclerview state due to https://github.com/material-components/material-components-android/issues/3473
         binding.watchHistoryRecView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -110,7 +112,7 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
                     lifecycleScope.launch(Dispatchers.IO) {
                         Database.withTransaction {
                             Database.watchHistoryDao().deleteAll()
-                            if (selected[0]) Database.watchPositionDao().deleteAll()
+                            if (selected[0]) DatabaseHelper.clearWatchPositions()
                         }
                     }
                 }

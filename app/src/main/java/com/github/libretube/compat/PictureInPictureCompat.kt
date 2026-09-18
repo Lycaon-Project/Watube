@@ -40,8 +40,13 @@ object PictureInPictureCompat {
     }
 
     fun enterPictureInPictureMode(activity: Activity, params: PictureInPictureParamsCompat) {
-        if (isPictureInPictureAvailable(activity)) {
+        if (!isPictureInPictureAvailable(activity)) return
+        try {
             activity.enterPictureInPictureMode(params.toPictureInPictureParams())
+        } catch (e: IllegalStateException) {
+            // some devices claim to support PiP, but throw when entering it
+            Log.e(TAG(), "Failed to enter picture-in-picture mode", e)
+            activity.toastFromMainThread(e.localizedMessage.orEmpty())
         }
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.preference.Preference
 import com.github.libretube.R
 import com.github.libretube.constants.PreferenceKeys
+import com.github.libretube.db.DatabaseHelper
 import com.github.libretube.db.DatabaseHolder.Database
 import com.github.libretube.ui.base.BasePreferenceFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -38,7 +39,7 @@ class HistorySettings : BasePreferenceFragment() {
         val clearWatchPositions = findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_POSITIONS)
         clearWatchPositions?.setOnPreferenceClickListener {
             showClearDialog(R.string.reset_watch_positions) {
-                Database.watchPositionDao().deleteAll()
+                DatabaseHelper.clearWatchPositions()
             }
             true
         }

@@ -117,6 +117,7 @@ class TrendsContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_tre
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.recview?.layoutManager = GridLayoutManager(context, gridItems)
+        _binding?.recview?.setHasFixedSize(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -28,6 +28,10 @@ class ChapterTimeBar(
 
     private val progressBarHeight = 2f.dpToPx()
     private val chapterBreakWidth = 4f.dpToPx()
+
+    // reused on every draw, the time bar redraws while the video plays
+    private val chapterRect = Rect()
+
     private val eraserPaint = Paint().apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             blendMode = BlendMode.CLEAR
@@ -46,25 +50,23 @@ class ChapterTimeBar(
 
 
     private fun drawChapters(canvas: Canvas) {
-        if (exoPlayer == null) return
+        if (exoPlayer == null || chapters.size <= 1) return
 
         val horizontalOffset = (parent as View).marginLeft
         length = width - horizontalOffset * 2
         val marginY = (height - progressBarHeight) / 2
 
         // skip the first chapter as it always starts at 0:00
-        chapters.drop(1).forEach {
-            val center = it.start.toLength() + horizontalOffset
+        for (i in 1 until chapters.size) {
+            val center = chapters[i].start.toLength() + horizontalOffset
 
-            canvas.drawRect(
-                Rect(
-                    center - (chapterBreakWidth / 2),
-                    marginY,
-                    center + (chapterBreakWidth / 2),
-                    marginY + progressBarHeight
-                ),
-                eraserPaint,
+            chapterRect.set(
+                center - (chapterBreakWidth / 2),
+                marginY,
+                center + (chapterBreakWidth / 2),
+                marginY + progressBarHeight
             )
+            canvas.drawRect(chapterRect, eraserPaint)
         }
     }
 

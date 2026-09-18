@@ -27,38 +27,41 @@ open class MarkableTimeBar(
 
     private val progressBarHeight = 2f.dpToPx()
 
+    // reused on every draw, the time bar redraws while the video plays
+    private val segmentRect = Rect()
+    private val segmentPaint = Paint()
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawSegments(canvas)
     }
 
     private fun drawSegments(canvas: Canvas) {
-        if (exoPlayer == null) return
+        if (exoPlayer == null || segments.isEmpty()) return
 
         canvas.save()
         val horizontalOffset = (parent as View).marginLeft
         length = canvas.width - horizontalOffset * 2
         val marginY =  (canvas.height - progressBarHeight) / 2
         val themeColor = ThemeHelper.getThemeColor(context, R.attr.colorOnSecondary)
+        val useCustomColors = PreferenceHelper.getBoolean("sb_enable_custom_colors", false)
 
         segments.forEach {
             val (start, end) = it.segmentStartAndEnd
 
-            canvas.drawRect(
-                Rect(
-                    start.toLength() + horizontalOffset,
-                    marginY,
-                    end.toLength() + horizontalOffset,
-                    marginY + progressBarHeight
-                ),
-                Paint().apply {
-                    color = if (PreferenceHelper.getBoolean("sb_enable_custom_colors", false)) {
-                        PreferenceHelper.getInt(it.category + "_color", themeColor)
-                    } else {
-                        themeColor
-                    }
-                }
+            segmentPaint.color = if (useCustomColors) {
+                PreferenceHelper.getInt(it.category + "_color", themeColor)
+            } else {
+                themeColor
+            }
+
+            segmentRect.set(
+                start.toLength() + horizontalOffset,
+                marginY,
+                end.toLength() + horizontalOffset,
+                marginY + progressBarHeight
             )
+            canvas.drawRect(segmentRect, segmentPaint)
         }
         canvas.restore()
     }

@@ -16,12 +16,52 @@
         <item name="loadingIndicatorStyle">@style/Widget.Material3.LoadingIndicator.Contained</item>
 
         <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
+
+        <!-- Watube signature shapes -->
+        <item name="shapeAppearanceSmallComponent">@style/WatubeShape.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/WatubeShape.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/WatubeShape.Large</item>
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.SplashScreen">
 
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
         <item name="postSplashScreenTheme">@style/BaseTheme</item>
+
+    </style>
+
+    <!-- Watube signature accent -->
+    <style name="Theme.Watube" parent="BaseTheme">
+
+        <item name="colorPrimary">@color/watube_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/watube_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/watube_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/watube_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/watube_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/watube_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/watube_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/watube_theme_light_onSecondaryContainer</item>
+
+        <item name="colorTertiary">@color/watube_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/watube_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/watube_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/watube_theme_light_onTertiaryContainer</item>
+
+        <item name="colorError">@color/watube_theme_light_error</item>
+        <item name="colorErrorContainer">@color/watube_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/watube_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/watube_theme_light_onErrorContainer</item>
+
+        <item name="android:colorBackground">@color/watube_theme_light_background</item>
+        <item name="colorOnBackground">@color/watube_theme_light_onBackground</item>
+        <item name="colorSurface">@color/watube_theme_light_surface</item>
+        <item name="colorOnSurface">@color/watube_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/watube_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/watube_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/watube_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/watube_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/watube_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/watube_theme_light_inversePrimary</item>
 
     </style>
 

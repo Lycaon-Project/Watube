@@ -79,6 +79,15 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     private var transitionEndId = 0
 
     private var handler = Handler(Looper.getMainLooper())
+
+    /** whether an update of the seek bar / chapter index is already pending */
+    private var seekBarUpdateScheduled = false
+    private var chapterIndexUpdateScheduled = false
+
+    /** last values shown in the seek bar labels, used to skip redundant text layouts */
+    private var lastDurationText: String? = null
+    private var lastPositionText: String? = null
+
     private var isPaused = !PlayerHelper.playAutomatically
 
     var isOffline: Boolean = false
@@ -398,6 +407,28 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     }
 
     /**
+     * Only ever keeps one seek bar update pending, so that repeated initializations
+     * don't stack multiple polling loops on top of each other.
+     */
+    private fun scheduleSeekBarUpdate(delayMs: Long) {
+        if (seekBarUpdateScheduled) return
+        seekBarUpdateScheduled = true
+        handler.postDelayed({
+            seekBarUpdateScheduled = false
+            updateSeekBar()
+        }, delayMs)
+    }
+
+    private fun scheduleChapterIndexUpdate(delayMs: Long) {
+        if (chapterIndexUpdateScheduled) return
+        chapterIndexUpdateScheduled = true
+        handler.postDelayed({
+            chapterIndexUpdateScheduled = false
+            updateChapterIndex()
+        }, delayMs)
+    }
+
+    /**
      * Update the position, duration and text views belonging to the seek bar
      */
     private fun updateSeekBar() {
@@ -405,18 +436,28 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
         val duration = playerController?.duration?.takeIf { it > 0 } ?: let {
             // if there's no duration available, clear everything
             binding.timeBar.value = 0f
-            binding.duration.text = ""
-            binding.currentPosition.text = ""
-            handler.postDelayed(this::updateSeekBar, 100)
+            if (binding.duration.text.isNotEmpty()) {
+                binding.duration.text = ""
+                binding.currentPosition.text = ""
+                lastDurationText = null
+                lastPositionText = null
+            }
+            scheduleSeekBarUpdate(SEEK_BAR_UPDATE_INTERVAL_PAUSED)
             return
         }
         val currentPosition = playerController?.currentPosition?.toFloat() ?: 0f
 
-        // set the text for the indicators
-        binding.duration.text = DateUtils.formatElapsedTime(duration / 1000)
-        binding.currentPosition.text = DateUtils.formatElapsedTime(
-            (currentPosition / 1000).toLong()
-        )
+        // only write the labels when they change to avoid a text layout every tick
+        val durationText = DateUtils.formatElapsedTime(duration / 1000)
+        if (durationText != lastDurationText) {
+            lastDurationText = durationText
+            binding.duration.text = durationText
+        }
+        val positionText = DateUtils.formatElapsedTime((currentPosition / 1000).toLong())
+        if (positionText != lastPositionText) {
+            lastPositionText = positionText
+            binding.currentPosition.text = positionText
+        }
 
         // update the time bar current value and maximum value
         binding.timeBar.valueTo = (duration / 1000).toFloat()
@@ -426,7 +467,10 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
             binding.timeBar.valueTo
         )
 
-        handler.postDelayed(this::updateSeekBar, 200)
+        scheduleSeekBarUpdate(
+            if (playerController?.isPlaying == true) SEEK_BAR_UPDATE_INTERVAL_PLAYING
+            else SEEK_BAR_UPDATE_INTERVAL_PAUSED
+        )
     }
 
     private fun updatePlayPauseButton() {
@@ -446,6 +490,10 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
                 updatePlayPauseButton()
                 isPaused = !isPlaying
+
+                // the polling runs less frequently while paused, refresh right away instead
+                updateSeekBar()
+                updateChapterIndex()
             }
 
             override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
@@ -473,6 +521,8 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // stop the seek bar and chapter polling loops
+        handler.removeCallbacksAndMessages(null)
         _binding = null
     }
 
@@ -529,7 +579,11 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
     private fun updateChapterIndex() {
         if (_binding == null) return
-        handler.postDelayed(this::updateChapterIndex, 100)
+
+        scheduleChapterIndexUpdate(
+            if (playerController?.isPlaying == true) CHAPTER_UPDATE_INTERVAL_PLAYING
+            else CHAPTER_UPDATE_INTERVAL_PAUSED
+        )
 
         val currentIndex =
             PlayerHelper.getCurrentChapterIndex(
@@ -537,5 +591,12 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
                 chaptersModel.chapters
             )
         chaptersModel.currentChapterIndex.updateIfChanged(currentIndex ?: return)
+    }
+
+    companion object {
+        private const val SEEK_BAR_UPDATE_INTERVAL_PLAYING = 200L
+        private const val SEEK_BAR_UPDATE_INTERVAL_PAUSED = 500L
+        private const val CHAPTER_UPDATE_INTERVAL_PLAYING = 200L
+        private const val CHAPTER_UPDATE_INTERVAL_PAUSED = 1000L
     }
 }

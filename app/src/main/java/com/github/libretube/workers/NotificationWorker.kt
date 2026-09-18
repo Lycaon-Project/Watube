@@ -33,6 +33,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalTime
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -43,8 +44,8 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
 
     private val notificationManager = NotificationManagerCompat.from(appContext)
 
-    // Cache pour éviter de retélécharger les mêmes images
-    private val imageCache = mutableMapOf<String, Bitmap>()
+    // Cache pour éviter de retélécharger les mêmes images, accessed from parallel coroutines
+    private val imageCache = ConcurrentHashMap<String, Bitmap>()
 
     override suspend fun doWork(): Result {
         if (!checkTime()) {
@@ -106,9 +107,14 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
                 }
             }?.filter { !it.isUpcoming } ?: run {
                 Log.w(TAG(), "Feed fetch timeout or null, retrying with force refresh")
-                withContext(Dispatchers.IO) {
-                    SubscriptionHelper.getFeed(forceRefresh = true)
-                }.filter { !it.isUpcoming }
+                withTimeoutOrNull(30.seconds) {
+                    withContext(Dispatchers.IO) {
+                        SubscriptionHelper.getFeed(forceRefresh = true)
+                    }
+                }?.filter { !it.isUpcoming } ?: run {
+                    Log.w(TAG(), "Feed fetch still failed, skipping this run")
+                    return false
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG(), "Failed to fetch feed", e)
@@ -339,13 +345,11 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
 
     /**
      * Clear image cache to free memory
+     *
+     * The bitmaps are not recycled on purpose, they might still be rendered by the system
+     * once they have been passed to a notification.
      */
     private fun clearImageCache() {
-        imageCache.values.forEach { bitmap ->
-            if (!bitmap.isRecycled) {
-                bitmap.recycle()
-            }
-        }
         imageCache.clear()
         Log.d(TAG(), "Image cache cleared")
     }

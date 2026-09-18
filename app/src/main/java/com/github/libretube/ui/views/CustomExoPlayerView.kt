@@ -12,6 +12,7 @@ import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -109,6 +110,10 @@ class CustomExoPlayerView(
     private var fullscreenGestureAnimationController: FullscreenGestureAnimationController
     private var chaptersBottomSheet: ChaptersBottomSheet? = null
     private var scrubbingTimeBar = false
+
+    /** last values shown in the position labels, used to skip redundant text layouts */
+    private var lastPositionText: String? = null
+    private var lastTimeLeftText: String? = null
 
     /**
      * Objects from the parent fragment
@@ -364,6 +369,10 @@ class CustomExoPlayerView(
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
                 keepScreenOn = isPlaying
+
+                // the labels are polled less frequently while paused, refresh them directly
+                updateCurrentPosition()
+                setCurrentChapterName(forceUpdate = true, enqueueNew = false)
             }
         })
 
@@ -411,14 +420,29 @@ class CustomExoPlayerView(
 
     fun detachPlayer(){
         super.setPlayer(null)
+
+        // stop the polling loops tied to the player, otherwise they keep this view alive
+        runnableHandler.removeCallbacksAndMessages(UPDATE_POSITION_TOKEN)
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun syncQueueButtons() {
+        if (player == null) {
+            // without a player the buttons are unusable, stop the polling loop
+            handler.removeCallbacksAndMessages(null)
+            return
+        }
+
         // toggle the visibility of next and prev buttons based on queue and whether the player view is locked
-        binding.skipPrev.isInvisible = !PlayingQueue.hasPrev() || isPlayerLocked
-        binding.skipNext.isInvisible = !PlayingQueue.hasNext() || isPlayerLocked
+        setQueueButtonState(binding.skipPrev, !PlayingQueue.hasPrev() || isPlayerLocked)
+        setQueueButtonState(binding.skipNext, !PlayingQueue.hasNext() || isPlayerLocked)
 
         handler.postDelayed(this::syncQueueButtons, 100)
+    }
+
+    private fun setQueueButtonState(button: View, isInvisible: Boolean) {
+        if (button.isVisible == isInvisible) return
+        button.isInvisible = isInvisible
     }
 
     /**
@@ -469,8 +493,14 @@ class CustomExoPlayerView(
         // the following logic to set the chapter title can be skipped if no chapters are available
         if (chapters.isEmpty()) return
 
-        // call the function again in 100ms
-        if (enqueueNew) postDelayed(this::setCurrentChapterName, 100)
+        // call the function again soon, the delay only needs to be short while actually
+        // playing since the chapter changes together with the playback position
+        if (enqueueNew) {
+            postDelayed(
+                this::setCurrentChapterName,
+                if (player.isPlaying) 100L else 1000L
+            )
+        }
 
         // if the user is scrubbing the time bar, don't update
         if (scrubbingTimeBar && !forceUpdate) return
@@ -1212,18 +1242,37 @@ class CustomExoPlayerView(
     /**
      * Set the current position text (e.g. "10:00 - 17:37"). This does not set the timebar
      * progress, ExoPlayer handles that automatically.
+     *
+     * The labels are only written when the displayed value actually changes, otherwise each
+     * tick would trigger a text layout (10 per second while playing).
      */
     @SuppressLint("SetTextI18n")
     private fun updateCurrentPosition() {
+        if (player == null) {
+            // no player attached anymore, stop the polling loop to avoid leaking this view
+            runnableHandler.removeCallbacksAndMessages(UPDATE_POSITION_TOKEN)
+            return
+        }
+
         val position = player?.currentPosition?.div(1000) ?: 0
         val duration = player?.duration?.takeIf { it != C.TIME_UNSET }?.div(1000) ?: 0
         val timeLeft = duration - position
 
-        binding.position.text =
-            if (playerCallback.isVideoLive()) context.getString(R.string.live) else DateUtils.formatElapsedTime(
-                position
-            )
-        binding.timeLeft.text = "-${DateUtils.formatElapsedTime(timeLeft)}"
+        val positionText = if (playerCallback.isVideoLive()) {
+            context.getString(R.string.live)
+        } else {
+            DateUtils.formatElapsedTime(position)
+        }
+        val timeLeftText = "-${DateUtils.formatElapsedTime(timeLeft)}"
+
+        if (positionText != lastPositionText) {
+            lastPositionText = positionText
+            binding.position.text = positionText
+        }
+        if (timeLeftText != lastTimeLeftText) {
+            lastTimeLeftText = timeLeftText
+            binding.timeLeft.text = timeLeftText
+        }
 
         runnableHandler.postDelayed(100, UPDATE_POSITION_TOKEN, this::updateCurrentPosition)
     }

@@ -92,6 +92,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
                 watchPositionTimer.resume()
             } else {
                 watchPositionTimer.pause()
+                // persist the exact position right away, the periodic timer is throttled
+                saveWatchPosition()
             }
         }
 

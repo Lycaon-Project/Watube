@@ -17,7 +17,12 @@ class SearchSuggestionsAdapter(
     private val onRootClickListener: (String) -> Unit,
     private val onArrowClickListener: (String) -> Unit,
     private val onSearchHistoryItemDeleted: (SearchHistoryItem) -> Unit,
-) : ListAdapter<SearchDataItem, SuggestionsViewHolder>(DiffUtilItemCallback<SearchDataItem>()) {
+) : ListAdapter<SearchDataItem, SuggestionsViewHolder>(
+    // the list gets de-duplicated by query already, so the query identifies an entry
+    DiffUtilItemCallback<SearchDataItem>(areItemsTheSame = { oldItem, newItem ->
+        oldItem.query == newItem.query && oldItem.type == newItem.type
+    })
+) {
 
     /**
      *  Allow submit list partially, either [historyList] only or [suggestionList] only, without

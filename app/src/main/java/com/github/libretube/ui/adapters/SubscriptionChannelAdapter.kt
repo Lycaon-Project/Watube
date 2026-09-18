@@ -18,7 +18,11 @@ import com.github.libretube.ui.sheets.ChannelOptionsBottomSheet
 import com.github.libretube.ui.viewholders.SubscriptionChannelViewHolder
 
 class SubscriptionChannelAdapter :
-    ListAdapter<Subscription, SubscriptionChannelViewHolder>(DiffUtilItemCallback()) {
+    ListAdapter<Subscription, SubscriptionChannelViewHolder>(
+        DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+            oldItem.url == newItem.url
+        })
+    ) {
 
     // Track recently unsubscribed channels to preserve their unsubscribed state when
     // [onBindViewHolder] is re-called on these channels while scrolling the [RecyclerView]

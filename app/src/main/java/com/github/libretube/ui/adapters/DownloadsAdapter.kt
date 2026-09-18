@@ -43,7 +43,12 @@ class DownloadsAdapter(
     private val playlistId: String?,
     private val currentSortOrder: () -> DownloadSortingOrder,
     private val toggleDownload: (DownloadWithItems) -> Boolean
-) : ListAdapter<DownloadWithItems, DownloadsViewHolder>(DiffUtilItemCallback()) {
+) : ListAdapter<DownloadWithItems, DownloadsViewHolder>(
+    // identity is the primary key so that only changed contents get rebound
+    DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+        oldItem.download.videoId == newItem.download.videoId
+    })
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadsViewHolder {
         val binding = VideoRowBinding.inflate(
             LayoutInflater.from(parent.context),

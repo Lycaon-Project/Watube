@@ -30,7 +30,12 @@ import kotlinx.coroutines.withContext
 
 class VideosAdapter(
     private val showChannelInfo: Boolean = true
-) : ListAdapter<StreamItem, VideosViewHolder>(DiffUtilItemCallback()) {
+) : ListAdapter<StreamItem, VideosViewHolder>(
+    // identity is the video url so that only changed contents get rebound
+    DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+        oldItem.url == newItem.url && oldItem.type == newItem.type
+    })
+) {
 
     fun insertItems(newItems: List<StreamItem>) {
         val updatedList = currentList.toMutableList().also {

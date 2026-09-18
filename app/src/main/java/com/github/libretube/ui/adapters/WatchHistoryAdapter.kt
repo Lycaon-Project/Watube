@@ -26,7 +26,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class WatchHistoryAdapter :
-    ListAdapter<WatchHistoryItem, WatchHistoryViewHolder>(DiffUtilItemCallback()) {
+    ListAdapter<WatchHistoryItem, WatchHistoryViewHolder>(
+        // identity is the primary key so that only changed contents get rebound
+        DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
+            oldItem.videoId == newItem.videoId
+        })
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WatchHistoryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

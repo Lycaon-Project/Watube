@@ -14,6 +14,7 @@ import androidx.core.net.toUri
 import coil3.ImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
+import coil3.imageLoader
 import coil3.load
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
@@ -21,25 +22,34 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.toBitmap
 import com.github.libretube.BuildConfig
+import com.github.libretube.api.RetrofitInstance
 import com.github.libretube.extensions.toAndroidUri
 import com.github.libretube.util.DataSaverMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.io.File
 import java.nio.file.Path
 
 object ImageHelper {
-    private lateinit var imageLoader: ImageLoader
-
-    private val Context.coilFile get() = cacheDir.resolve("coil")
     private const val HTTP_SCHEME = "http"
 
+    /** Images may only take half of the app cache quota, the rest is for http and temp files. */
+    private const val DISK_CACHE_FRACTION = 0.5
+    private const val MIN_DISK_CACHE_BYTES = 32L * 1024 * 1024
+
+    private val Context.coilFile get() = cacheDir.resolve("coil")
+
     /**
-     * Initialize the image loader
+     * Builds the one and only [ImageLoader] of the app.
+     *
+     * It is registered as Coil's singleton from [LibreTubeApp], which means every
+     * `ImageView.load(...)` call, the data saver lookups and the manual cache clearing
+     * all share the very same memory and disk caches as well as one shared OkHttp client.
      */
-    fun initializeImageLoader(context: Context) {
-        val httpClient = OkHttpClient().newBuilder()
+    fun buildImageLoader(context: Context): ImageLoader {
+        val httpClient = OkHttpClient.Builder()
 
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -49,7 +59,7 @@ object ImageHelper {
             httpClient.addInterceptor(loggingInterceptor)
         }
 
-        imageLoader = ImageLoader.Builder(context)
+        return ImageLoader.Builder(context.applicationContext)
             .crossfade(true)
             .components {
                 add(
@@ -67,7 +77,9 @@ object ImageHelper {
                 val diskCache = DiskCache.Builder()
                     .directory(context.coilFile)
                     // only use a certain percentage of the available cache size for images
-                    .maxSizeBytes(availableCache)
+                    .maxSizeBytes(
+                        (availableCache * DISK_CACHE_FRACTION).toLong().coerceAtLeast(MIN_DISK_CACHE_BYTES)
+                    )
                     .build()
                 diskCache(diskCache)
             }
@@ -75,10 +87,18 @@ object ImageHelper {
     }
 
     /**
+     * Warms up the shared image loader off the main thread so that the first image requests
+     * don't pay for building it while the first frames are being rendered.
+     */
+    fun initializeImageLoader(context: Context) {
+        context.applicationContext.imageLoader
+    }
+
+    /**
      * Checks if the corresponding image for the given key (e.g. a url) is cached.
      */
-    private fun isCached(key: String): Boolean {
-        val cacheSnapshot = imageLoader.diskCache?.openSnapshot(key)
+    private fun isCached(context: Context, key: String): Boolean {
+        val cacheSnapshot = context.applicationContext.imageLoader.diskCache?.openSnapshot(key)
         val isCacheHit = cacheSnapshot?.data?.toFile()?.exists()
         cacheSnapshot?.close()
 
@@ -91,21 +111,29 @@ object ImageHelper {
     fun loadImage(url: String?, target: ImageView, whiteBackground: Boolean = false) {
         if (url.isNullOrEmpty()) return
 
-        // clear image to avoid loading issues at fast scrolling
-        target.setImageBitmap(null)
-
         val urlToLoad = ProxyHelper.rewriteUrlUsingProxyPreference(url)
 
         // only load online images if the data saver mode is disabled
         if (DataSaverMode.isEnabled(target.context)) {
-            if (urlToLoad.startsWith(HTTP_SCHEME) && !isCached(urlToLoad)) return
+            if (urlToLoad.startsWith(HTTP_SCHEME) && !isCached(target.context, urlToLoad)) return
         }
+
+        // the view already displays this exact image, don't clear and decode it again
+        if (target.tag == urlToLoad) return
+        target.tag = urlToLoad
+
+        // clear image to avoid loading issues at fast scrolling
+        target.setImageBitmap(null)
 
         target.load(urlToLoad) {
             listener(
                 onSuccess = { _, _ ->
                     // set the background to white for transparent images
                     if (whiteBackground) target.setBackgroundColor(Color.WHITE)
+                },
+                onError = { _, _ ->
+                    // allow a later rebind to retry the request
+                    target.tag = null
                 }
             )
         }
@@ -129,7 +157,50 @@ object ImageHelper {
             .data(url)
             .build()
 
-        return imageLoader.execute(request).image?.toBitmap()
+        return context.applicationContext.imageLoader.execute(request).image?.toBitmap()
+    }
+
+    /**
+     * Total size of the app cache directory in bytes (images, http responses, temp files).
+     */
+    suspend fun getCacheSize(context: Context): Long = withContext(Dispatchers.IO) {
+        directorySize(context.cacheDir)
+    }
+
+    /**
+     * Empties every cache of the app and returns the amount of freed bytes.
+     *
+     * Only caches are touched: downloads, subscriptions, playlists and history stay untouched.
+     */
+    suspend fun clearCache(context: Context): Long = withContext(Dispatchers.IO) {
+        val before = directorySize(context.cacheDir)
+        val applicationContext = context.applicationContext
+
+        runCatching { applicationContext.imageLoader.diskCache?.clear() }
+            .onFailure { it.printStackTrace() }
+        runCatching { applicationContext.imageLoader.memoryCache?.clear() }
+            .onFailure { it.printStackTrace() }
+        runCatching { RetrofitInstance.clearHttpCache() }
+            .onFailure { it.printStackTrace() }
+
+        // remove what is left (webview cache, temp files) but keep the managed cache
+        // directories alive so that Coil and OkHttp can keep using their instances
+        val managedDirectories = setOf("coil", RetrofitInstance.HTTP_CACHE_DIR)
+        applicationContext.cacheDir.listFiles()
+            ?.filter { it.name !in managedDirectories }
+            ?.forEach { file -> runCatching { file.deleteRecursively() } }
+
+        (before - directorySize(applicationContext.cacheDir)).coerceAtLeast(0L)
+    }
+
+    private fun directorySize(directory: File): Long {
+        if (!directory.isDirectory) return directory.length()
+
+        var total = 0L
+        directory.walkTopDown().forEach { file ->
+            if (file.isFile) total += file.length()
+        }
+        return total
     }
 
     fun insertText(bitmap: Bitmap, text: String, posX: Float, posY: Float, fontSize: Float) {

@@ -44,7 +44,7 @@ import com.github.libretube.api.obj.Segment
 import com.github.libretube.api.obj.Streams
 import com.github.libretube.api.obj.Subtitle
 import com.github.libretube.constants.PreferenceKeys
-import com.github.libretube.db.DatabaseHolder
+import com.github.libretube.db.DatabaseHelper
 import com.github.libretube.db.obj.WatchPosition
 import com.github.libretube.enums.PlayerEvent
 import com.github.libretube.enums.SbSkipOptions
@@ -65,7 +65,7 @@ object PlayerHelper {
     const val SPONSOR_HIGHLIGHT_CATEGORY = "poi_highlight"
     const val ROLE_FLAG_AUTO_GEN_SUBTITLE = C.ROLE_FLAG_SUPPLEMENTARY
     private const val MINIMUM_BUFFER_DURATION = 1000 * 10 // exo default is 50s
-    const val WATCH_POSITION_TIMER_DELAY_MS = 1000L
+    const val WATCH_POSITION_TIMER_DELAY_MS = 5000L
 
     /**
      * Playback speed while the fast_forward action is active (triggered by a long press on the player)
@@ -490,8 +490,8 @@ object PlayerHelper {
     @OptIn(UnstableApi::class)
     fun getLoadControl(): LoadControl {
         return DefaultLoadControl.Builder()
-            // cache the last three minutes
-            .setBackBuffer(1000 * 60 * 3, true)
+            // cache the last minute of the video for backward seeks
+            .setBackBuffer(1000 * 60, true)
             .setBufferDurationsMs(
                 MINIMUM_BUFFER_DURATION,
                 max(bufferingGoal, MINIMUM_BUFFER_DURATION),
@@ -837,7 +837,7 @@ object PlayerHelper {
 
         val watchPosition = WatchPosition(videoId, player.currentPosition)
         CoroutineScope(Dispatchers.IO).launch {
-            DatabaseHolder.Database.watchPositionDao().insert(watchPosition)
+            DatabaseHelper.saveWatchPosition(watchPosition)
         }
     }
 
