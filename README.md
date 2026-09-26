@@ -6,7 +6,7 @@
 
 <div align="center" style="width:100%; display:flex; justify-content:space-between; margin: 20px 0;">
 
-[![GitHub](https://img.shields.io/badge/GitHub-Lycaon--Project-181717?style=for-the-badge&logo=github)](https://github.com/Lycaon-Project/LibreTube)
+[![GitHub](https://img.shields.io/badge/GitHub-Lycaon--Project-181717?style=for-the-badge&logo=github)](https://github.com/Lycaon-Project/Watube)
 
 </div>
 
@@ -17,9 +17,9 @@
 
 <div align="center" style="width:100%; display:flex; justify-content:center; gap: 20px; margin: 30px 0;">
 
-[<img src="https://img.shields.io/badge/Download-Latest_Release-4CAF50?style=for-the-badge&logo=github&logoColor=white" alt="Get it on GitHub" width="45%">](https://github.com/Lycaon-Project/LibreTube/releases/latest)
+[<img src="https://img.shields.io/badge/Download-Latest_Release-4CAF50?style=for-the-badge&logo=github&logoColor=white" alt="Get it on GitHub" width="45%">](https://github.com/Lycaon-Project/Watube/releases/latest)
 
-[<img src="https://img.shields.io/badge/Download-Nightly_Build-FF9800?style=for-the-badge&logo=github&logoColor=white" alt="Get it on GitHub (Nightly)" width="45%">](https://github.com/Lycaon-Project/LibreTube/releases/tag/nightly)
+[<img src="https://img.shields.io/badge/Download-Nightly_Build-FF9800?style=for-the-badge&logo=github&logoColor=white" alt="Get it on GitHub (Nightly)" width="45%">](https://github.com/Lycaon-Project/Watube/releases/tag/nightly)
 
 </div>
 
@@ -49,8 +49,8 @@ This fork is **based on the original LibreTube project** created by the libre-tu
 
 ### Icons
 
-<sub>🖼️ **[Default App Icon](https://github.com/Lycaon-Project/LibreTube/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png)** by [XelXen](https://github.com/XelXen)</sub> <br>
-<sub>🐦 **[Boosted Bird](https://github.com/Lycaon-Project/LibreTube/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_bird_round.png)** by [Margot Albert-Heuzey](https://margotdesign.ovh)</sub>
+<sub>🖼️ **[Watube App Icon](assets/icons/Watube.png)** - the Watube brand logo</sub> <br>
+<sub>🐦 **[Boosted Bird](https://github.com/Lycaon-Project/Watube/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_bird_round.png)** by [Margot Albert-Heuzey](https://margotdesign.ovh)</sub>
 
 </details>
 
@@ -92,7 +92,7 @@ While maintaining the original project's privacy-first philosophy, **Watube spec
 **Quality, security & maintenance**
 
 - Strict network security config (cleartext disabled, only local development hosts exempted), encrypted-app backups that exclude the account token, and removal of the unused boot receiver
-- Automatic update checks against [github.com/Lycaon-Project/LibreTube](https://github.com/Lycaon-Project/LibreTube/releases/latest), throttled to once every 12 hours, plus a manual check in the settings
+- Automatic update checks against [github.com/Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest), throttled to once every 12 hours, plus a manual check in the settings
 - **Maintenance → Clear cache** in the settings wipes the image cache, the HTTP cache and the leftover app cache in one tap
 - Reliable error handling in the SABR data source and picture-in-picture, bounded retry loops (media service connection, feed notifications) instead of infinite ones
 - A unified Coil image loader and a shared HTTP cache are created once for the whole app
@@ -119,7 +119,7 @@ Screenshots
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4.jpg" width=19% alt="Library">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_9.jpg" width=19% alt="Channel Overview">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_9.jpg)
 
-* More screenshots can be found [here](https://github.com/Lycaon-Project/LibreTube/blob/master/SCREEN_SHOT.md)
+* More screenshots can be found [here](https://github.com/Lycaon-Project/Watube/blob/master/SCREEN_SHOT.md)
 
 </div>
 

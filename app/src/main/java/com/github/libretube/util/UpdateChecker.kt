@@ -177,9 +177,21 @@ class UpdateChecker(private val context: Context) {
                 }
             }
         } catch (e: retrofit2.HttpException) {
-            Log.e(TAG(), "HTTP error during update check: ${e.code()} - ${e.message()}", e)
-            if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.error_occurred)
+            when (e.code()) {
+                // the repository has no published release (yet) -> not an error
+                404 -> {
+                    Log.w(TAG(), "No published release found for this repository")
+                    if (isManualCheck) {
+                        context.toastFromMainDispatcher(R.string.no_release_available)
+                    }
+                }
+
+                else -> {
+                    Log.e(TAG(), "HTTP error during update check: ${e.code()} - ${e.message()}", e)
+                    if (isManualCheck) {
+                        context.toastFromMainDispatcher(R.string.error_occurred)
+                    }
+                }
             }
         } catch (e: java.net.UnknownHostException) {
             Log.e(TAG(), "No internet connection during update check", e)

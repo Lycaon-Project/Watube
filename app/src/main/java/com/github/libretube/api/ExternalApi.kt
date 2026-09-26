@@ -17,7 +17,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
-private const val GITHUB_API_URL = "https://api.github.com/repos/Lycaon-Project/LibreTube/releases/latest"
+private const val GITHUB_API_URL = "https://api.github.com/repos/Lycaon-Project/Watube/releases/latest"
 private const val SB_API_URL = "https://sponsor.ajay.app"
 private const val RYD_API_URL = "https://ryd-proxy.kavin.rocks"
 private const val GOOGLE_API_KEY = "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw"

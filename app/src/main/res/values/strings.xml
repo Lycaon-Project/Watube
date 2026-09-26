@@ -130,6 +130,7 @@
     <string name="downloads">Downloads</string>
     <string name="update_summary">Check for update</string>
     <string name="app_uptodate">Running the latest version.</string>
+    <string name="no_release_available">No release published yet.</string>
     <string name="playback_speed">Playback speed</string>
     <string name="advanced">Advanced</string>
     <string name="player">Player</string>
