@@ -71,10 +71,9 @@ YouTube has an extremely invasive [privacy policy](https://support.google.com/yo
 
 While maintaining the original project's privacy-first philosophy, **Watube specifically focuses on**:
 
-- ⚡ **Performance Optimization** - Optimized for 120Hz displays and modern Android devices
-- 🧠 **Code Modernization** - Updated to latest Kotlin best practices and Android APIs
+- ⚡ **Performance Optimization** - Optimize for 120 Hz screens and to reduce battery consumption
 - 🐛 **Bug Fixes & Stability** - Comprehensive testing and reliability improvements
-- 📱 **Android 14+ Compatibility** - Full support for latest Android features and requirements
+- 📱 **Android 15+ Compatibility** - Full support for latest Android features and requirements
 - 🎨 **Enhanced User Experience** - Smoother animations and improved responsiveness
 - 🔒 **Security Hardening** - Reduced attack surface and stricter network/backups rules
 
@@ -156,10 +155,12 @@ Features
 - ⚡ **120Hz Display Support** - Ultra-smooth scrolling and animations
 - 🧠 **Optimized Memory Usage** - Shared image/HTTP caches, less allocations while drawing
 - ⏳ **Manual Cache Control** - Clear the whole cache from the settings in one tap
-- 🔁 **Update Checks** - Built-in update check against this repository
+- 🔁 **Update Checks** - Built-in update check against this repository, throttled to once every 12 hours
+- 🔄 **Modern Kotlin Code** - Updated to latest best practices and APIs
 - 🐛 **Comprehensive Bug Fixes** - Improved stability and reliability
-- 📱 **Android 14+ Ready** - Full compatibility with latest Android requirements
+- 📱 **Android 15+ Ready** - Full compatibility with latest Android requirements
 - 🎨 **Watube Design** - Dedicated accent colour, rounder shapes, raised bottom bar
+- 🎨 **Enhanced Performance** - Faster app startup and smoother interactions
 
 ---
 
