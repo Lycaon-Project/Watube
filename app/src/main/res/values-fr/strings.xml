@@ -569,5 +569,5 @@
     <string name="cancel">Annuler</string>
     <string name="dialog_reset">Réinitialiser</string>
     <string name="privacy_neutral_region">Région neutre</string>
-    <string name="privacy_neutral_region_summary">Demander toujours les flux Tendances et Accueil comme si vous étiez aux États-Unis plutôt que depuis le pays de votre appareil : les serveurs n'apprennent jamais où vous vivez. Modifie le contenu affiché.</string>
+    <string name="privacy_neutral_region_summary">Demander toujours les flux Tendances et Accueil comme si vous étiez aux États-Unis plutôt que depuis le pays de votre appareil : les serveurs n\'apprennent jamais où vous vivez. Modifie le contenu affiché.</string>
 </resources>
