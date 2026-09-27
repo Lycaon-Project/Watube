@@ -1,5 +1,6 @@
 package com.watube.yard.api
 
+import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.api.obj.DeArrowBody
 import com.watube.yard.api.obj.DeArrowContent
 import com.watube.yard.api.obj.PipedConfig
@@ -21,7 +22,7 @@ private const val GITHUB_API_URL = "https://api.github.com/repos/Lycaon-Project/
 private const val SB_API_URL = "https://sponsor.ajay.app"
 private const val RYD_API_URL = "https://ryd-proxy.kavin.rocks"
 private const val GOOGLE_API_KEY = "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw"
-const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.3"
+const val USER_AGENT = PrivacyHelper.GENERIC_USER_AGENT
 
 interface ExternalApi {
     @GET("config")

@@ -15,6 +15,8 @@ object PreferenceKeys {
 
     /** Rotate the SponsorBlock user id daily to prevent long term tracking. */
     const val RESET_SB_UUID_DAILY = "reset_sb_uuid_daily"
+    /** Watube: Tor/Mullvad-style neutral region for trending/home requests (opt-in). */
+    const val PRIVACY_NEUTRAL_REGION = "privacy_neutral_region"
 
     // General
     const val LANGUAGE = "language"

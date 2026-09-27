@@ -37,4 +37,6 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="dialog_reset">Reset</string>
+    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
+    <string name="privacy_neutral_region_summary" translatable="false">Always request trending and home feeds as if located in the US instead of your device country, so backends never learn where you live. Changes the content you see.</string>
 </resources>

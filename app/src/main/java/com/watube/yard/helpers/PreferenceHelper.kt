@@ -422,7 +422,11 @@ object PreferenceHelper {
 
         // get the system default country if auto region selected
         return if (regionPref == "sys") {
-            getDetectedCountry(context).uppercase()
+            // Watube anti-fingerprinting: optional neutral region so the backend never
+            // learns the real locale country of the device (off by default).
+            if (PrivacyHelper.isNeutralRegionEnabled()) "US" else {
+                getDetectedCountry(context).uppercase()
+            }
         } else {
             regionPref
         }

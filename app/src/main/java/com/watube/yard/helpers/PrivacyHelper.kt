@@ -107,6 +107,25 @@ object PrivacyHelper {
     fun getUserAgent(context: Context): String = GENERIC_USER_AGENT
 
     /**
+     * Canonical generic user agent used across the whole app. Every component that talks
+     * to a third party service (SponsorBlock, DeArrow, Return YouTube Dislike proxy,
+     * NewPipe extractor downloader, Piped instances) must use this single value so that
+     * all Watube users are indistinguishable from one another on the wire.
+     */
+    val userAgent: String get() = GENERIC_USER_AGENT
+
+    /**
+     * Optional "neutral region" mode (Tor/Mullvad style): when enabled, the trending/home
+     * region sent to the backend is always US instead of the device locale country, so
+     * requests don't reveal where the user actually lives. Off by default because it
+     * changes visible content recommendations; can be toggled in the privacy settings.
+     */
+    fun isNeutralRegionEnabled(): Boolean {
+        return isHardeningEnabled() &&
+            PreferenceHelper.getBoolean(PreferenceKeys.PRIVACY_NEUTRAL_REGION, false)
+    }
+
+    /**
      * Applies Mullvad-browser/Tor inspired WebView hardening where the public Android
      * APIs allow it without breaking the PoToken challenge:
      *  - disables the DOM cache, a classic persistent fingerprinting vector

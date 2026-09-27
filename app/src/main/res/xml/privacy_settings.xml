@@ -15,6 +15,13 @@
         app:summary="@string/reset_sb_uuid_daily_summary"
         app:title="@string/reset_sb_uuid_daily" />
 
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:dependency="privacy_hardening"
+        app:key="privacy_neutral_region"
+        app:summary="@string/privacy_neutral_region_summary"
+        app:title="@string/privacy_neutral_region" />
+
     <Preference
         app:key="sb_user_id_info"
         app:selectable="false"

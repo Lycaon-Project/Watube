@@ -1,5 +1,6 @@
 package com.watube.yard.util
 
+import com.watube.yard.helpers.PrivacyHelper
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.schabi.newpipe.extractor.downloader.Downloader
@@ -22,7 +23,7 @@ class NewPipeDownloaderImpl : Downloader() {
         val requestBuilder = okhttp3.Request.Builder()
             .method(httpMethod, dataToSend?.toRequestBody())
             .url(url)
-            .addHeader("User-Agent", USER_AGENT)
+            .addHeader("User-Agent", PrivacyHelper.userAgent)
 
         for ((headerKey, headerValues) in headers) {
             requestBuilder.removeHeader(headerKey)
@@ -49,10 +50,5 @@ class NewPipeDownloaderImpl : Downloader() {
                 )
             }
         }
-    }
-
-    companion object {
-        private const val USER_AGENT =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0"
     }
 }
