@@ -1,9 +1,19 @@
 plugins {
-    alias(libs.plugins.androidTest) apply false
+    // ⚠️ L'alias androidTest (com.android.test) a été retiré de libs.versions.toml :
+    // il référençait à tort la version d'AGP (9.4.1), inexistante pour ce plugin.
+    // Le module baselineprofile étant désormais optionnel (voir settings.gradle.kts),
+    // le plugin com.android.test est appliqué directement dans son build.gradle.kts.
     alias(libs.plugins.baselineprofile) apply false
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidx.navigation.safeargs) apply false
+    // Doivent être déclarés à la racine (apply false) pour que les sous-modules
+    // puissent les résoudre via le classpath commun :
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.google.protobuf) apply false
 }
 
 // ✅ CORRECTION 1 : Ajout description et groupe pour la tâche clean

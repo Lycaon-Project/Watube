@@ -4,10 +4,24 @@ import com.google.protobuf.gradle.id
 
 plugins {
     alias(libs.plugins.androidApplication)
+    // Le plugin Kotlin lui-même n'était jamais appliqué (seuls parcelize/serialization
+    // l'étaient) -> le module ne compilait pas en Kotlin. À déclarer explicitement.
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.androidx.navigation.safeargs)
-    alias(libs.plugins.baselineprofile)
+    // Plugin baselineprofile : la configuration "com.android.test" du module
+    // :baselineprofile plantait la sync Android Studio ("targetProjectPath cannot
+    // be null"). Le module est donc retiré du build par défaut (settings.gradle.kts)
+    // et l'application ne conserve que profileinstaller, qui lit le profil embarqué
+    // app/src/main/baseline-prof.txt si présent.
+    // Pour régénérer un jour le profil (nécessite un appareil API 33+) :
+    //   ./gradlew :app:generateBaselineProfile -PincludeBaselineProfile=true
+    // en décommentant les deux lignes ci-dessous ainsi que le bloc conditionnel
+    // dans dependencies{}.
+    // if (providers.gradleProperty("includeBaselineProfile").isPresent) {
+    //     alias(libs.plugins.baselineprofile)
+    // }
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.protobuf)
 }
@@ -35,8 +49,9 @@ android {
         applicationId = "com.github.libretube"
         minSdk = 26
         targetSdk = 37
-        versionCode = 72
-        versionName = "47.0 C"
+        versionCode = 821
+        // Version en préparation : 27A1 (build 821)
+        versionName = "27A1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resValue("string", "app_name", "Watube")
     }
@@ -184,7 +199,12 @@ dependencies {
 
     /* Baseline profile generation */
     implementation(libs.androidx.profileinstaller)
-    baselineProfile(project(":baselineprofile"))
+    // Dépendance vers le module :baselineprofile désactivée par défaut (voir le
+    // commentaire du bloc plugins{} plus haut). À décommenter en même temps que
+    // le plugin, lors d'une génération de profil sur appareil API 33+ :
+    // if (providers.gradleProperty("includeBaselineProfile").isPresent) {
+    //     baselineProfile(project(":baselineprofile"))
+    // }
 
     /* AndroidX Paging */
     implementation(libs.androidx.paging)

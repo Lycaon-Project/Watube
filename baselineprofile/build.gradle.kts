@@ -1,7 +1,14 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.androidTest)
+    // ⚠️ Correction sync Android Studio : l'ancien alias libs.plugins.androidTest
+    // pointait vers "com.android.test" version 9.4.1 (la version d'AGP), qui
+    // n'existe pas sur le plugin portal -> résolution impossible.
+    // Le plugin com.android.test est publié en 1.x ; on l'applique directement.
+    id("com.android.test") version "1.0.0"
+    // Le module baselineprofile compile du Kotlin (GenerateBaselineProfile.kt) :
+    // sans le plugin kotlin-android, les sources .kt étaient tout simplement ignorés.
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.baselineprofile)
 }
 

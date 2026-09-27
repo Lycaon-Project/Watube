@@ -73,8 +73,29 @@ dependencyResolutionManagement {
 }
 
 // Project configuration
-rootProject.name = "LibreTube"
+// Le nom du projet racine sert de nom de workspace dans Android Studio :
+// ouvrir le dépôt doit afficher "Watube", pas "LibreTube".
+rootProject.name = "Watube"
 
 // Include modules
 include(":app")
-include(":baselineprofile")
+
+// ----------------------------------------------------------------------------
+// Module :baselineprofile (génération des profiles de démarrage)
+// ----------------------------------------------------------------------------
+// Ce module utilise le plugin "com.android.test", dont la propriété
+// targetProjectPath est parfois ignorée/annulée selon les versions d'AGP
+// -> erreur de sync Android Studio :
+//   "targetProjectPath cannot be null in test project baselineprofile"
+// La génération d'un baseline profile exige en plus un appareil physique rooté
+// ou un émulateur API 33+ (cf. baselineProfile { useConnectedDevices = true }),
+// ce qui n'est jamais le cas lors d'une compilation classique.
+// On l'inclut donc UNIQUEMENT en mode explicite, sans casser pour autant le
+// build de l'application : app/build.gradle.kts rend la dépendance optionnelle.
+//
+// Pour générer un jour le profil :
+//   ./gradlew :app:generateBaselineProfile -PincludeBaselineProfile=true
+// ----------------------------------------------------------------------------
+if (providers.gradleProperty("includeBaselineProfile").isPresent) {
+    include(":baselineprofile")
+}
