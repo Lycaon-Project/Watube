@@ -50,9 +50,9 @@ object PrivacyHelper {
 
     /**
      * Convenience overload for call sites that already hold a context.
+     * The parameter is ignored; kept for API compatibility with callers like LocaleHelper.
      */
-    @JvmOverloads
-    fun isHardeningEnabled(context: Context? = null): Boolean = isHardeningEnabled()
+    fun isHardeningEnabledWith(context: Context): Boolean = isHardeningEnabled()
 
     /**
      * Whether the SponsorBlock user id should be regenerated every day.

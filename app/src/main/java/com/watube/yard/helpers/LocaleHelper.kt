@@ -41,7 +41,7 @@ object LocaleHelper {
      * country (already exposed to every website via Accept-Language) is used instead.
      */
     fun getDetectedCountry(context: Context): String {
-        if (!PrivacyHelper.isHardeningEnabled(context)) {
+        if (!PrivacyHelper.isHardeningEnabledWith(context)) {
             detectSIMCountry(context)?.let { return it }
             detectNetworkCountry(context)?.let { return it }
         }
