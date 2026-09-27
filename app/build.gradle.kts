@@ -120,6 +120,8 @@ android {
     }
 
     buildFeatures {
+        // AGP 9 (new DSL) : buildConfig n'est plus actif par defaut,
+        // or BuildConfig.VERSION_NAME est utilise (PrivacyHelper, etc.)
         buildConfig = true
         resValues = true
     }
