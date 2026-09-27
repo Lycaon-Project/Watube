@@ -7,7 +7,7 @@
     android:background="?android:colorBackground"
     tools:context=".ui.fragments.LibraryFragment">
 
-    <com.github.libretube.ui.views.CustomSwipeToRefresh
+    <com.watube.yard.ui.views.CustomSwipeToRefresh
         android:id="@+id/playlist_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -160,7 +160,7 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
-    </com.github.libretube.ui.views.CustomSwipeToRefresh>
+    </com.watube.yard.ui.views.CustomSwipeToRefresh>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_playlist"

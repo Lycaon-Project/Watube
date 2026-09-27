@@ -1,0 +1,38 @@
+package com.watube.yard.ui.activities
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.core.net.toUri
+import com.watube.yard.constants.IntentData
+import com.watube.yard.helpers.IntentHelper
+import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.util.PlayingQueue
+
+/**
+ * Receives a text by the intent and attempts to add it to the playing queue
+ * If no video is playing currently,the queue will be left unchanged and the main activity is being resumed
+ */
+class AddToQueueActivity : BaseActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val videoId = intent.getStringExtra(Intent.EXTRA_TEXT)
+            ?.let { IntentHelper.resolveType(it.toUri()) }
+            ?.getStringExtra(IntentData.videoId)
+
+        if (videoId != null) {
+            val newIntent = packageManager.getLaunchIntentForPackage(packageName)
+
+            // if playing a video currently, the video will be added to the queue
+            if (PlayingQueue.isNotEmpty()) {
+                PlayingQueue.insertByVideoId(videoId)
+            } else {
+                newIntent?.putExtra(IntentData.videoId, videoId)
+            }
+
+            startActivity(newIntent)
+        }
+
+        finish()
+    }
+}

@@ -70,14 +70,14 @@
         android:layout_height="match_parent"/>
 
 
-    <com.github.libretube.ui.views.DoubleTapOverlay
+    <com.watube.yard.ui.views.DoubleTapOverlay
         android:id="@+id/doubleTapOverlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center" />
 
-    <com.github.libretube.ui.views.PlayerGestureControlsView
+    <com.watube.yard.ui.views.PlayerGestureControlsView
         android:id="@+id/playerGestureControlsView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -95,7 +95,7 @@
         app:strokeWidth="1dp"
         tools:ignore="RtlSymmetry">
 
-        <com.github.libretube.ui.views.DrawableTextView
+        <com.watube.yard.ui.views.DrawableTextView
             android:id="@+id/sb_skip_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.github.libretube.ui.views.AutoplayCountdownView
+    <com.watube.yard.ui.views.AutoplayCountdownView
         android:id="@+id/autoplay_countdown"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -125,7 +125,7 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
-    <com.github.libretube.ui.views.FastForwardView
+    <com.watube.yard.ui.views.FastForwardView
         android:id="@+id/fastForwardView"
         android:visibility="gone"
         android:layout_marginTop="24dp"

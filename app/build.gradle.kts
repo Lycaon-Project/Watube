@@ -1,12 +1,10 @@
 import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import com.google.protobuf.gradle.id
 
 plugins {
     alias(libs.plugins.androidApplication)
     // Le plugin Kotlin lui-même n'était jamais appliqué (seuls parcelize/serialization
     // l'étaient) -> le module ne compilait pas en Kotlin. À déclarer explicitement.
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.androidx.navigation.safeargs)
@@ -46,7 +44,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.github.libretube"
+        applicationId = "com.watube.yard"
         minSdk = 26
         targetSdk = 37
         versionCode = 821
@@ -139,7 +137,7 @@ android {
         generateLocaleConfig = true
     }
 
-    namespace = "com.github.libretube"
+    namespace = "com.watube.yard"
 }
 
 dependencies {
@@ -221,13 +219,11 @@ protobuf {
     generateProtoTasks {
         all().forEach { task ->
             task.plugins {
-                //TODO: only generate kotlin code
-                id("java") {
+                //DSL protobuf-gradle-plugin >= 0.10 : les options se déclarent
+                //via builtin "options" (l'ancienne extension `option(...)` n'existe plus)
+                create("java") {
                     option("lite")
                 }
-//                id("kotlin") {
-//                    option("lite")
-//                }
             }
         }
     }

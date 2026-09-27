@@ -57,10 +57,10 @@
 # APP-SPECIFIC DATA CLASSES
 
 # Keep data classes used for JSON serialization and IPC
--keep class com.github.libretube.obj.** { *; }
--keep class com.github.libretube.api.obj.** { *; }
--keep class com.github.libretube.obj.update.** { *; }
--keep class com.github.libretube.parcelable.** { *; }
+-keep class com.watube.yard.obj.** { *; }
+-keep class com.watube.yard.api.obj.** { *; }
+-keep class com.watube.yard.obj.update.** { *; }
+-keep class com.watube.yard.parcelable.** { *; }
 
 # Keep Parcelable CREATOR fields
 -keepclassmembers class * implements android.os.Parcelable {
@@ -71,7 +71,7 @@
 # SETTINGS FRAGMENTS (loaded via reflection)
 
 # Keep preference fragments loaded dynamically
--keep class com.github.libretube.ui.preferences.** { *; }
+-keep class com.watube.yard.ui.preferences.** { *; }
 
 # ----------------------------------------------------------------------------
 # CONSTRAINTLAYOUT MOTIONLAYOUT (Fix for miniplayer issue)

@@ -40,7 +40,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <com.github.libretube.ui.views.CustomSwipeToRefresh
+    <com.watube.yard.ui.views.CustomSwipeToRefresh
         android:id="@+id/sub_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -199,5 +199,5 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </com.github.libretube.ui.views.CustomSwipeToRefresh>
+    </com.watube.yard.ui.views.CustomSwipeToRefresh>
 </RelativeLayout>

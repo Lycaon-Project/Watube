@@ -15,7 +15,7 @@ plugins {
 // ✅ CORRECTION 1 : Suppression du warning de dépréciation pour android {}
 @Suppress("Deprecation")
 android {
-    namespace = "com.github.libretube.baselineprofile"
+    namespace = "com.watube.yard.baselineprofile"
     // ✅ CORRECTION 2 : Mise à jour vers compileSdk 37 (Android 16)
     compileSdk = 37
 
