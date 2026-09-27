@@ -459,4 +459,5 @@
     <color name="watube_theme_dark_inverseSurface">#DDE4E6</color>
     <color name="watube_theme_dark_inversePrimary">#006770</color>
 
+    <color name="watube_splash_background">#08140E</color>
 </resources>

@@ -42,6 +42,11 @@ class PoTokenWebView private constructor(
             blockNetworkLoads = true // the WebView does not need internet access
         }
 
+        // Watube: extra anti-fingerprinting hardening (no DOM cache, no third party
+        // cookies, no JS popups). localStorage is intentionally preserved because the
+        // BotGuard PoToken challenge requires it -> playback keeps working.
+        com.github.libretube.helpers.PrivacyHelper.applyWebViewAntiFingerprinting(webView)
+
         // so that we can run async functions and get back the result
        webView.addJavascriptInterface(this, JS_INTERFACE)
      }

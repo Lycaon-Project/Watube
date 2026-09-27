@@ -12,7 +12,6 @@
     <string name="password">Mot de passe</string>
     <string name="login">Se connecter</string>
     <string name="logout">Se déconnecter</string>
-    <string name="cancel">Annuler</string>
     <string name="loggedIn">Connecté(e).</string>
     <string name="loggedout">Déconnecté(e).</string>
     <string name="instances">Choisir…</string>
@@ -27,7 +26,6 @@
     <string name="server_error">Il semble y avoir un problème avec le serveur sélectionné. Essayez une autre instance.</string>
     <string name="unknown_error">Erreur réseau.</string>
     <string name="error">Quelque chose s’est mal passé.</string>
-    <string name="empty">Vous devez saisir un nom d’utilisateur et un mot de passe.</string>
     <string name="notgmail">Ceci est pour un compte Piped</string>
     <string name="defres">Résolution de la vidéo</string>
     <string name="addToPlaylist">Ajouter à la playlist</string>
@@ -148,7 +146,6 @@
     <string name="behavior">Comportement</string>
     <string name="player_summary">Valeurs par défaut et comportement</string>
     <string name="seek_increment">Incrément d’avance / recul</string>
-    <string name="reset">Restaurer les valeurs par défaut</string>
     <string name="reset_message">Souhaitez-vous réinitialiser tous vos paramètres et vous déconnecter ?</string>
     <string name="pauseOnScreenOff">Pause automatique</string>
     <string name="pauseOnScreenOff_summary">Mettre la lecture en pause lorsque l’écran s’éteint</string>
@@ -543,4 +540,32 @@
     <string name="comment_verified">Vérifié</string>
     <string name="comment_pinned">Épinglé</string>
     <string name="courses">Cours</string>
+
+    <!-- Paramètres Confidentialité -->
+    <string name="privacy">Confidentialité</string>
+    <string name="privacy_summary">Protections anti-empreinte numérique et gestion des identifiants</string>
+    <string name="privacy_hardening">Renforcement de la confidentialité</string>
+    <string name="privacy_hardening_summary">Bloque l’empreinte liée à la carte SIM, au réseau et à l’appareil : user-agent générique, aucune donnée de téléphonie, WebView durcie pour les jetons d’intégrité</string>
+    <string name="reset_sb_uuid_daily">Rotation quotidienne de l’ID SponsorBlock</string>
+    <string name="reset_sb_uuid_daily_summary">Génère un nouvel identifiant aléatoire de soumission SponsorBlock chaque jour (inspiré de la rotation Tor/Mullvad)</string>
+    <string name="current_sponsorblock_id">ID SponsorBlock actuel</string>
+    <string name="sb_user_id_info">Les soumissions à SponsorBlock utilisent un identifiant aléatoire et rotatif au lieu d’un identifiant d’appareil permanent.</string>
+    <string name="privacy_identifiers">Identifiants</string>
+    <string name="reset_identifiers">Réinitialiser les identifiants et les données WebView</string>
+    <string name="reset_identifiers_summary">Supprime l’ID SponsorBlock, les cookies WebView et le stockage de sites utilisé pour les jetons d’intégrité</string>
+    <string name="reset_identifiers_dialog_message">Cette action réinitialise votre ID de soumission SponsorBlock et efface tous les cookies et le stockage WebView. Les jetons d’intégrité devront peut-être être régénérés lors de la prochaine lecture vidéo.</string>
+    <string name="sponsorblock_id_rotated">ID SponsorBlock réinitialisé</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance">Maintenance</string>
+    <string name="cache_cleared">Cache vidé</string>
+    <string name="checking_for_updates">Recherche de mises à jour…</string>
+    <string name="last_update_check">Dernière vérification : %1$s</string>
+    <string name="clear_cache">Vider le cache</string>
+    <string name="clear_cache_summary">Vider le cache de l’application (%1$s)</string>
+    <string name="clear_cache_dialog_message">Vider tout le cache de l’application ? Cela supprimera les images en cache, le cache réseau et les fichiers temporaires.</string>
+    <string name="empty">Vide</string>
+    <string name="dialog_ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="dialog_reset">Réinitialiser</string>
 </resources>

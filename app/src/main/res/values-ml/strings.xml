@@ -182,4 +182,23 @@
     <string name="alphabetic_reversed">അക്ഷരമാലാക്രമം (വിപരീതമായി)</string>
     <string name="creation_date_reversed">സൃഷ്‌ടിച്ച തീയതി (വിപരീതമായി)</string>
     <string name="pip">PiP</string>
+
+    <!-- TODO: translate (Watube privacy settings) -->
+    <string name="privacy" translatable="true">Privacy</string>
+    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
+    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
+    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
+    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
+    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
+    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
+    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
+    <string name="privacy_identifiers" translatable="true">Identifiers</string>
+    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
+    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
+    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
+    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
+    <string name="reset" translatable="true">Reset</string>
+
+    <!-- TODO: translate (Watube privacy settings) -->
+    <string name="dialog_reset">Reset</string>
 </resources>

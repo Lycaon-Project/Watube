@@ -10,6 +10,7 @@ import com.github.libretube.extensions.formatAsFileSize
 import com.github.libretube.extensions.toastFromMainDispatcher
 import com.github.libretube.helpers.ImageHelper
 import com.github.libretube.helpers.PreferenceHelper
+import com.github.libretube.helpers.PrivacyHelper
 import com.github.libretube.ui.base.BasePreferenceFragment
 import com.github.libretube.ui.dialogs.ErrorDialog
 import com.github.libretube.util.UpdateChecker
@@ -53,6 +54,7 @@ class MainSettings : BasePreferenceFragment() {
             "general" to R.id.action_global_generalSettings,
             "instance" to R.id.action_global_instanceSettings,
             "appearance" to R.id.action_global_appearanceSettings,
+            "privacy" to R.id.action_global_privacySettings,
             "sponsorblock" to R.id.action_global_sponsorBlockSettings,
             "player" to R.id.action_global_playerSettings,
             "audio_video" to R.id.action_global_audioVideoSettings,
@@ -83,6 +85,8 @@ class MainSettings : BasePreferenceFragment() {
                     val appContext = requireContext().applicationContext
                     lifecycleScope.launch {
                         ImageHelper.clearCache(appContext)
+                        // Watube: also drop cookies/web storage persisted by the PoToken WebView
+                        PrivacyHelper.clearWebViewData()
                         refreshCacheSummary(clearCache)
                         appContext.toastFromMainDispatcher(R.string.cache_cleared)
                     }

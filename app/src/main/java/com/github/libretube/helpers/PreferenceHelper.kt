@@ -34,11 +34,6 @@ object PreferenceHelper {
     private lateinit var authSettings: SharedPreferences
 
     /**
-     * Possible chars to use for the SB User ID
-     */
-    private const val USER_ID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-
-    /**
      * Cache for ignorable notification channels to avoid repeated string splitting
      */
     private var ignorableChannelsCache: List<String>? = null
@@ -408,19 +403,17 @@ object PreferenceHelper {
 
     /**
      * Get or generate a SponsorBlock user ID.
-     * Optimized to minimize allocations using buildString.
+     *
+     * Watube hardening: the id is generated with [SecureRandom] via [PrivacyHelper] and,
+     * when daily rotation is enabled (default), it is replaced by a fresh random value
+     * every day so that submitted segments cannot be correlated over time.
      */
     fun getSponsorBlockUserID(): String {
-        val existingUuid = getString(PreferenceKeys.SB_USER_ID, "")
-        if (existingUuid.isNotEmpty()) return existingUuid
+        PrivacyHelper.getValidSponsorBlockUserId()?.let { return it }
 
         // generate a new user id to use for submitting SponsorBlock segments
-        val newUuid = buildString(30) {
-            repeat(30) {
-                append(USER_ID_CHARS.random())
-            }
-        }
-        putString(PreferenceKeys.SB_USER_ID, newUuid)
+        val newUuid = PrivacyHelper.generateSponsorBlockUserId()
+        PrivacyHelper.storeSponsorBlockUserId(newUuid)
         return newUuid
     }
 

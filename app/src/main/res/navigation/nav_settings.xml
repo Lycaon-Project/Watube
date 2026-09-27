@@ -48,6 +48,19 @@
         android:name="com.github.libretube.ui.preferences.SponsorBlockSettings"
         android:label="@string/sponsorblock" />
 
+    <fragment
+        android:id="@+id/privacySettings"
+        android:name="com.github.libretube.ui.preferences.PrivacySettings"
+        android:label="@string/privacy" />
+
+    <action
+        android:id="@+id/action_global_privacySettings"
+        app:destination="@id/privacySettings"
+        app:enterAnim="@animator/nav_default_enter_anim"
+        app:exitAnim="@animator/nav_default_exit_anim"
+        app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+        app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+
     <action
         android:id="@+id/action_global_generalSettings"
         app:destination="@id/generalSettings"

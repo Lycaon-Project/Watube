@@ -4,7 +4,7 @@ import android.content.Context
 import android.icu.text.RelativeDateTimeFormatter
 import android.net.Uri
 import android.text.format.DateUtils
-import com.github.libretube.BuildConfig
+import com.github.libretube.helpers.PrivacyHelper
 import com.github.libretube.R
 import com.github.libretube.extensions.formatShort
 import com.github.libretube.extensions.toLocalDate
@@ -132,9 +132,12 @@ object TextUtils {
         return text.take(maxLength) + "…"
     }
 
-    fun getUserAgent(context: Context): String {
-        return "${context.packageName}/${BuildConfig.VERSION_NAME}"
-    }
+    /**
+     * Watube: delegates to [PrivacyHelper.getUserAgent] so that third party services
+     * (SponsorBlock, DeArrow) receive a generic, non-identifying user agent when
+     * anti-fingerprinting hardening is enabled (default).
+     */
+    fun getUserAgent(context: Context): String = PrivacyHelper.getUserAgent(context)
 
     fun formatViewsString(context: Context, views: Long, uploaded: Long, uploader: String? = null): String {
         val viewsString = views.takeIf { it != -1L }?.formatShort()?.let {

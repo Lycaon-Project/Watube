@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:key="privacy_hardening"
+        app:summary="@string/privacy_hardening_summary"
+        app:title="@string/privacy_hardening" />
+
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:dependency="privacy_hardening"
+        app:key="reset_sb_uuid_daily"
+        app:summary="@string/reset_sb_uuid_daily_summary"
+        app:title="@string/reset_sb_uuid_daily" />
+
+    <Preference
+        app:key="sb_user_id_info"
+        app:selectable="false"
+        app:summary="@string/sb_user_id_info"
+        app:title="@string/current_sponsorblock_id" />
+
+    <PreferenceCategory app:title="@string/privacy_identifiers">
+
+        <Preference
+            android:icon="@drawable/ic_delete"
+            app:key="reset_identifiers"
+            app:summary="@string/reset_identifiers_summary"
+            app:title="@string/reset_identifiers" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

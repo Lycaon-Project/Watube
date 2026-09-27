@@ -9,6 +9,13 @@ object PreferenceKeys {
     const val TOKEN = "token"
     const val USERNAME = "username"
 
+    // Privacy / anti fingerprinting (Watube)
+    /** Master switch: blocks SIM/network based data collection and other identifiers. */
+    const val PRIVACY_HARDENING = "privacy_hardening"
+
+    /** Rotate the SponsorBlock user id daily to prevent long term tracking. */
+    const val RESET_SB_UUID_DAILY = "reset_sb_uuid_daily"
+
     // General
     const val LANGUAGE = "language"
     const val REGION = "region"

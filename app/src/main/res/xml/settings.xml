@@ -21,6 +21,12 @@
         app:title="@string/appearance" />
 
     <Preference
+        android:icon="@drawable/ic_shield"
+        app:key="privacy"
+        app:summary="@string/privacy_summary"
+        app:title="@string/privacy" />
+
+    <Preference
         android:icon="@drawable/ic_block"
         app:key="sponsorblock"
         app:summary="@string/sponsorblock_summary"

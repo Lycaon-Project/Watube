@@ -33,11 +33,19 @@ object LocaleHelper {
         }
     }
 
+    /**
+     * Watube anti-fingerprinting (inspired by Mullvad Browser / Tor Browser policies):
+     * when privacy hardening is enabled, the SIM and cellular-network country are never
+     * read. Those values leak the carrier and the real roaming location and act as a
+     * stable fingerprinting signal across apps/sessions. Only the user-visible locale
+     * country (already exposed to every website via Accept-Language) is used instead.
+     */
     fun getDetectedCountry(context: Context): String {
-        return detectSIMCountry(context)
-            ?: detectNetworkCountry(context)
-            ?: detectLocaleCountry(context)
-            ?: "UK"
+        if (!PrivacyHelper.isHardeningEnabled(context)) {
+            detectSIMCountry(context)?.let { return it }
+            detectNetworkCountry(context)?.let { return it }
+        }
+        return detectLocaleCountry(context) ?: "US"
     }
 
     private fun detectSIMCountry(context: Context): String? {
