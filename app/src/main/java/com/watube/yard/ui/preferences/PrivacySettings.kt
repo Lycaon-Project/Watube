@@ -5,6 +5,7 @@ import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
+import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.base.BasePreferenceFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

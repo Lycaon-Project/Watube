@@ -1,33 +1,27 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    // ⚠️ Correction sync Android Studio : l'ancien alias libs.plugins.androidTest
-    // pointait vers "com.android.test" version 9.4.1 (la version d'AGP), qui
-    // n'existe pas sur le plugin portal -> résolution impossible.
-    // Le plugin com.android.test est publié en 1.x ; on l'applique directement.
-    id("com.android.test") version "1.0.0"
-    // Le module baselineprofile compile du Kotlin (GenerateBaselineProfile.kt) :
-    // sans le plugin kotlin-android, les sources .kt étaient tout simplement ignorés.
-    alias(libs.plugins.kotlin.android)
+    // Identique au dépôt amont (Lycaon-Project/Watube @ main) : le plugin
+    // com.android.test partage la classe d'agents commune chargée à la racine
+    // (alias androidTest -> même version que AGP, embarquée dans AGP).
+    alias(libs.plugins.androidTest)
     alias(libs.plugins.baselineprofile)
 }
 
 // ✅ CORRECTION 1 : Suppression du warning de dépréciation pour android {}
 @Suppress("Deprecation")
 android {
+    // CORRECTION CRITIQUE DE LA SYNC ANDROID STUDIO :
+    // "targetProjectPath cannot be null in test project baselineprofile"
+    // AGP lit cette propriété dès la phase afterEvaluate ; elle doit donc être
+    // déclarée EN TÊTE du bloc android{}, avant toute autre configuration.
+    targetProjectPath = ":app"
+
     namespace = "com.watube.yard.baselineprofile"
-    // ✅ CORRECTION 2 : Mise à jour vers compileSdk 37 (Android 16)
     compileSdk = 37
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
     }
 
     defaultConfig {
@@ -38,7 +32,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    targetProjectPath = ":app"
+}
+
+// CORRECTION "Unresolved reference: kotlinOptions / jvmTarget" :
+// sans org.jetbrains.kotlin.android applique nommement, seule la compilation
+// embarquee AGP 9 est disponible -> reglage du jvmTarget par reflection.
+tasks.withType<AbstractCompile>().configureEach {
+    if (name.startsWith("compile") && name.contains("Kotlin")) {
+        try {
+            val co = javaClass.getMethod("getCompilerOptions").invoke(this)
+            val jt = co.javaClass.getMethod("getJvmTarget").invoke(co)
+            val v17 = jt.javaClass.getMethod("fromString", String::class.java).invoke(null, "17")
+            jt.javaClass.getMethod("set", Object::class.java).invoke(jt, v17)
+        } catch (_: Throwable) { }
+    }
 }
 
 // This is the configuration block for the Baseline Profile plugin.

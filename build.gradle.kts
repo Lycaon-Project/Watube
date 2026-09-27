@@ -1,16 +1,22 @@
 plugins {
-    // ⚠️ L'alias androidTest (com.android.test) a été retiré de libs.versions.toml :
-    // il référençait à tort la version d'AGP (9.4.1), inexistante pour ce plugin.
-    // Le module baselineprofile étant désormais optionnel (voir settings.gradle.kts),
-    // le plugin com.android.test est appliqué directement dans son build.gradle.kts.
-    alias(libs.plugins.baselineprofile) apply false
+    // CORRECTION "Unresolved reference: navigationArgs" (Android Studio) :
+    // les plugins doivent etre CHARGES au classpath commun des la racine pour
+    // que leurs extensions DSL soient visibles dans les sous-modules.
     alias(libs.plugins.androidApplication) apply false
-    alias(libs.plugins.androidx.navigation.safeargs) apply false
-    // Doivent être déclarés à la racine (apply false) pour que les sous-modules
-    // puissent les résoudre via le classpath commun :
-    alias(libs.plugins.kotlin.jvm) apply false
-    alias(libs.plugins.kotlin.parcelize) apply false
-    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.baselineprofile) apply false
+    alias(libs.plugins.androidTest) apply false
+    // NOTE : le plugin androidx.navigation.safeargs.kotlin est UN GENERATEUR
+    // de code (KSP/annotation-processor style) : il n'ajoute AUCUNE propriete
+    // au bloc buildFeatures{} -> `safeArgs`/`navigationArgs` y sont inconnus.
+    // Il est donc applique directement dans :app (seul consommateur).
+    // Plugins Kotlin appliques par :app via apply(plugin = ...) -> doivent etre
+    // resolves a la racine pour figurer sur le classpath commun. Les vrais Maven
+    // coords des plugins Gradle (et non les jars du compiler) sont utilises ici ;
+    // la version est forcee a celle embarquee par AGP 9.4.1 (2.3.20) pour eviter
+    // "already on the classpath with an unknown version".
+    id("org.jetbrains.kotlin.plugin.parcelize") version "2.3.20" apply false
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20" apply false
+    // KSP et protobuf idem : classes chargees une seule fois, a la racine.
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.google.protobuf) apply false
 }

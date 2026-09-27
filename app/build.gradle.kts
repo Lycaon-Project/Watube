@@ -1,28 +1,27 @@
 import java.util.Properties
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.androidApplication)
-    // Le plugin Kotlin lui-même n'était jamais appliqué (seuls parcelize/serialization
-    // l'étaient) -> le module ne compilait pas en Kotlin. À déclarer explicitement.
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.serialization)
+    // CORRECTION SYNC ANDROID STUDIO : AGP 9 embarque déjà les plugins Kotlin
+    // parcelize/serialization dans son classpath. Les redemander AVEC version
+    // provoque "already on the classpath with an unknown version" ; il faut donc
+    // les appliquer SANS version, ce qui est interdit dans un bloc plugins{} ->
+    // on les applique via la forme imperative apply(plugin = ...) ci-dessous.
     alias(libs.plugins.androidx.navigation.safeargs)
-    // Plugin baselineprofile : la configuration "com.android.test" du module
-    // :baselineprofile plantait la sync Android Studio ("targetProjectPath cannot
-    // be null"). Le module est donc retiré du build par défaut (settings.gradle.kts)
-    // et l'application ne conserve que profileinstaller, qui lit le profil embarqué
-    // app/src/main/baseline-prof.txt si présent.
-    // Pour régénérer un jour le profil (nécessite un appareil API 33+) :
-    //   ./gradlew :app:generateBaselineProfile -PincludeBaselineProfile=true
-    // en décommentant les deux lignes ci-dessous ainsi que le bloc conditionnel
-    // dans dependencies{}.
-    // if (providers.gradleProperty("includeBaselineProfile").isPresent) {
-    //     alias(libs.plugins.baselineprofile)
-    // }
+    // Plugin baselineprofile : identique à main amont. L'erreur de sync
+    // "targetProjectPath cannot be null in test project baselineprofile" était
+    // causée par une déclaration TARDIVE de targetProjectPath dans le DSL android{}
+    // du module :baselineprofile (AGP lit cette propriété dès afterEvaluate -> null).
+    // Corrigé dans baselineprofile/build.gradle.kts (déclaration en tête de bloc).
+    alias(libs.plugins.baselineprofile)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.protobuf)
 }
+
+// Plugins Kotlin déjà présents sur le classpath commun (chargés à la racine) :
+// appliqués sans numéro de version pour éviter tout conflit avec AGP 9.
+apply(plugin = "org.jetbrains.kotlin.plugin.parcelize")
+apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
 /*
 'keystore.properties' should look like the following:
@@ -51,7 +50,6 @@ android {
         // Version en préparation : 27A1 (build 821)
         versionName = "27A1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resValue("string", "app_name", "Watube")
     }
 
     ksp {
@@ -59,8 +57,16 @@ android {
         arg("exportSchema", "true")
     }
 
-    viewBinding {
-        enable = true
+    buildFeatures {
+        viewBinding = true
+        // CORRECTION "Unresolved reference 'BuildConfig'" : AGP 9 ne genere plus
+        // BuildConfig par defaut -> reactivation explicite (classe generee dans
+        // com.watube.yard.BuildConfig, utilisee par ~15 fichiers).
+        buildConfig = true
+        // Le plugin safeargs (genereur de code NavDirections/NavArgs) n'expose
+        // AUCUNE propriete dans buildFeatures{} -> rien a declarer ici. Les
+        // classes generees (ex. NavDirections.openChannel) le sont des que le
+        // plugin est applique ci-dessus dans le bloc plugins{}.
     }
 
     signingConfigs {
@@ -88,20 +94,39 @@ android {
         getByName("debug") {
             isDebuggable = true
             applicationIdSuffix = ".debug"
-            resValue("string", "app_name", "Watube Debug")
+            // WATUBE: resValue etait desactive sous AGP9/newDsl -> nom "Watube Debug"
+            // porte par values/strings.xml dans le sourceSet debug (equivalent, propre).
         }
     }
 
+    // CORRECTION "Unresolved reference: kotlinOptions" :
+    // sans le plugin org.jetbrains.kotlin.android applique nommement, l'extension
+    // KotlinAndroidProjectExtension n'existe pas (AGP 9 embarque le compilateur
+    // mais n'enregistre PAS l'extension DSL). On configure donc le jvmTarget via
+    // la task compileOptions commune + options de compilation Kotlin standard.
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-            javaParameters = true
+    // javaParameters est une option JAVA pure -> passe par les tasks JavaCompile.
+    tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.add("-parameters") // ex-javaParameters
+    }
+
+    // CORRECTION "Unresolved reference: jvmTarget" : sans l'extension kotlinOptions,
+    // on force le jvmTarget 17 sur les tasks de compilation Kotlin. Les classes du
+    // plugin embarque AGP 9 ne sont pas sur le classpath des scripts -> reflection.
+    tasks.withType<AbstractCompile>().configureEach {
+        if (name.startsWith("compile") && name.contains("Kotlin")) {
+            try {
+                val co = javaClass.getMethod("getCompilerOptions").invoke(this)
+                val jt = co.javaClass.getMethod("getJvmTarget").invoke(co)
+                val fromString = jt.javaClass.getMethod("fromString", String::class.java)
+                val v17 = fromString.invoke(null, "17")
+                jt.javaClass.getMethod("set", Object::class.java).invoke(jt, v17)
+            } catch (_: Throwable) { /* task Java : nothing to do */ }
         }
     }
 
@@ -117,13 +142,6 @@ android {
     lint {
         abortOnError = false
         checkReleaseBuilds = false
-    }
-
-    buildFeatures {
-        // AGP 9 (new DSL) : buildConfig n'est plus actif par defaut,
-        // or BuildConfig.VERSION_NAME est utilise (PrivacyHelper, etc.)
-        buildConfig = true
-        resValues = true
     }
 
     dependenciesInfo {
@@ -199,12 +217,7 @@ dependencies {
 
     /* Baseline profile generation */
     implementation(libs.androidx.profileinstaller)
-    // Dépendance vers le module :baselineprofile désactivée par défaut (voir le
-    // commentaire du bloc plugins{} plus haut). À décommenter en même temps que
-    // le plugin, lors d'une génération de profil sur appareil API 33+ :
-    // if (providers.gradleProperty("includeBaselineProfile").isPresent) {
-    //     baselineProfile(project(":baselineprofile"))
-    // }
+    baselineProfile(project(":baselineprofile"))
 
     /* AndroidX Paging */
     implementation(libs.androidx.paging)

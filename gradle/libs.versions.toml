@@ -7,8 +7,11 @@ junit = "4.13.2"
 # NOTE: la version de KSP doit correspondre exactement à la version de Kotlin
 # (format "<kotlin>-<ksp patch>"). Kotlin 2.3.21 n'a aucun build KSP correspondant ;
 # on épingle donc le couple supporté le plus récent : Kotlin 2.3.20 + KSP 2.3.20.2.
+# Doit correspondre EXACTEMENT à la version du compilateur Kotlin
+# embarquée dans AGP 9.4.1 (sinon : "plugin already on the classpath with an
+# unknown version" sous Android Studio). À réaligner à chaque montée d'AGP.
 kotlin = "2.3.20"
-ksp = "2.3.2"
+ksp = "2.3.6"
 lifecycle = "2.10.0"
 constraintlayout = "2.2.1"
 loggingInterceptor = "5.3.2"
@@ -88,18 +91,10 @@ google-protobuf-javalite = { module = 'com.google.protobuf:protobuf-javalite', v
 google-protobuf-kotlin-lite = { module = 'com.google.protobuf:protobuf-kotlin-lite', version.ref = 'protobuf' }
 
 [plugins]
-# ⚠️ Le plugin "com.android.test" (ancien alias androidTest) a été SUPPRIMÉ :
-# il référençait la version d'AGP (9.4.1) comme version du plugin, ce qui est
-# invalide (le plugin com.android.test n'est publié qu'en 1.x) -> "Plugin not
-# found" pendant la sync. Il n'était utilisé que par le module :baselineprofile,
-# dont l'inclusion est désormais optionnelle ; son build.gradle.kts applique
-# maintenant le plugin directement avec sa vraie version (1.x).
+androidTest = { id = "com.android.test", version.ref = "gradle" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 androidApplication = { id = "com.android.application", version.ref = "gradle" }
-# Le plugin Kotlin (jvm/android) doit être déclaré explicitement : sans version,
-# le resolveur Gradle cherchait com.android.lint.plugin introuvable -> ~20 erreurs.
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation"}
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
