@@ -287,6 +287,22 @@ open class OnlinePlayerService : AbstractPlayerService() {
                 val mediaItem = createMediaItem(dashUri, MimeTypes.APPLICATION_MPD, streams)
                 exoPlayer?.setMediaItem(mediaItem)
             }
+            // HLS: preferred source for livestreams (YouTube serves live content over HLS,
+            // and the DASH manifests it exposes for live are frequently incomplete/failing)
+            streams.isLive && streams.hls != null -> {
+                val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))
+                    .setPlaylistParserFactory(YoutubeHlsPlaylistParser.Factory())
+
+                val mediaItem = createMediaItem(
+                    ProxyHelper.rewriteUrlUsingProxyPreference(streams.hls).toUri(),
+                    MimeTypes.APPLICATION_M3U8,
+                    streams
+                )
+                val mediaSource = hlsMediaSourceFactory.createMediaSource(mediaItem)
+
+                exoPlayer?.setMediaSource(mediaSource)
+                return
+            }
             // HLS as last fallback
             streams.hls != null -> {
                 val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))

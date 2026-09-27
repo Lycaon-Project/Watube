@@ -6,7 +6,6 @@ import android.webkit.WebSettings
 import android.webkit.WebStorage
 import android.webkit.WebView
 import androidx.core.content.edit
-import com.watube.yard.BuildConfig
 import com.watube.yard.constants.PreferenceKeys
 import java.security.SecureRandom
 import java.util.Calendar
@@ -98,14 +97,14 @@ object PrivacyHelper {
      * The user agent to use for third party services (SponsorBlock, DeArrow, ...).
      * When hardening is enabled, a stable generic value is returned that doesn't leak
      * the package name, app version or device model.
+     *
+     * Watube 27A1: the [context] parameter is kept for call-site compatibility but is
+     * intentionally unused - even the legacy per-package identifier was removed from the
+     * non-hardened path since it leaked the application id (a classic fingerprinting
+     * vector) and provided no functional benefit to any endpoint.
      */
-    fun getUserAgent(context: Context): String {
-        return if (isHardeningEnabled()) {
-            GENERIC_USER_AGENT
-        } else {
-            "${context.packageName}/${BuildConfig.VERSION_NAME}"
-        }
-    }
+    @Suppress("UNUSED_PARAMETER")
+    fun getUserAgent(context: Context): String = GENERIC_USER_AGENT
 
     /**
      * Applies Mullvad-browser/Tor inspired WebView hardening where the public Android

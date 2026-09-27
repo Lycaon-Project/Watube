@@ -50,6 +50,7 @@ import org.schabi.newpipe.extractor.stream.AudioStream
 import org.schabi.newpipe.extractor.stream.ContentAvailability
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import org.schabi.newpipe.extractor.stream.StreamType
 import org.schabi.newpipe.extractor.stream.VideoStream
 import kotlin.time.toKotlinInstant
 
@@ -320,6 +321,16 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
                 )
             },
             visibility = resp.privacy.name.lowercase(),
+            // Watube 27A1 fix: the livestream flag was never reliably mapped from NewPipe,
+            // so live videos could be treated as VODs -> DASH/HLS selection went down the
+            // wrong branch and playback failed with a source error.
+            // Note: `resp` here is an org.schabi.newpipe.extractor.stream.StreamInfo, which
+            // exposes getStreamType() but has NO `livestream` property (that one only exists
+            // on StreamInfoItem) -> derive liveness from the stream type enum instead.
+            livestream = resp.streamType == StreamType.LIVE_STREAM ||
+                resp.streamType == StreamType.LIVE_PREMIERE ||
+                // fallback for extractors that leave the duration unset/zero for live content
+                (resp.duration <= 0 && resp.streamType != StreamType.AUDIO_STREAM),
             duration = resp.duration,
             uploadTimestamp = resp.uploadDate.offsetDateTime().toInstant().toKotlinInstant(),
             uploaded = resp.uploadDate.offsetDateTime().toEpochSecond() * 1000,
