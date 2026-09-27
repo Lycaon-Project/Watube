@@ -8,12 +8,13 @@
         app:summary="@string/privacy_hardening_summary"
         app:title="@string/privacy_hardening" />
 
-    <SwitchPreferenceCompat
-        app:defaultValue="true"
+    <ListPreference
+        app:defaultValue="24h"
         app:dependency="privacy_hardening"
-        app:key="reset_sb_uuid_daily"
-        app:summary="@string/reset_sb_uuid_daily_summary"
-        app:title="@string/reset_sb_uuid_daily" />
+        app:entries="@array/privacyRotationFrequency"
+        app:entryValues="@array/privacyRotationFrequencyValues"
+        app:key="privacy_rotation_frequency"
+        app:title="@string/privacy_rotation_frequency" />
 
     <SwitchPreferenceCompat
         app:defaultValue="false"

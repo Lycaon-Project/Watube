@@ -53,7 +53,6 @@ import com.watube.yard.util.TextUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.timeago.patterns.it
 
@@ -102,10 +101,14 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
 
         binding.playlistProgress.isVisible = true
 
-        isBookmarked = runBlocking(Dispatchers.IO) {
-            DatabaseHolder.Database.playlistBookmarkDao().includes(playlistId)
+        // a database read must never block the frame: the bookmark icon is applied as
+        // soon as the result is there
+        viewLifecycleOwner.lifecycleScope.launch {
+            isBookmarked = withContext(Dispatchers.IO) {
+                DatabaseHolder.Database.playlistBookmarkDao().includes(playlistId)
+            }
+            updateBookmarkRes()
         }
-        updateBookmarkRes()
 
         commonPlayerViewModel.isMiniPlayerVisible.observe(viewLifecycleOwner) {
             binding.playlistRecView.updatePadding(bottom = if (it) 64f.dpToPx() else 0)

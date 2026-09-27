@@ -677,7 +677,10 @@ class DownloadService : LifecycleService() {
      * Get a [Path] from the corresponding download directory and the file name
      */
     private fun getDownloadPath(directory: String, fileName: String): Path {
-        return DownloadHelper.getDownloadDir(this, directory) / fileName
+        return DownloadHelper.resolveDownloadPath(
+            DownloadHelper.getDownloadDir(this, directory),
+            fileName
+        )
     }
 
     override fun onDestroy() {

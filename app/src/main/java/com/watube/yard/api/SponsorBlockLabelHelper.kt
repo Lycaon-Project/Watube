@@ -8,7 +8,14 @@ import com.watube.yard.api.obj.VideoLabelData
 import com.watube.yard.extensions.sha256Sum
 
 object SponsorBlockLabelHelper {
-    private val cache = LruCache<String, VideoLabelData>(256)
+    /**
+     * Wrapper distinguishing "queried, this video has no label" from "never queried":
+     * a plain `null` cache entry would be indistinguishable from a cache miss and the
+     * same video would be re-fetched on every single rebind while scrolling.
+     */
+    private class CachedLabels(val value: VideoLabelData?)
+
+    private val cache = LruCache<String, CachedLabels>(256)
 
     /**
      * Returns the full video labels for a video.
@@ -21,17 +28,23 @@ object SponsorBlockLabelHelper {
     suspend fun getVideoLabels(
         videoId: String,
     ): VideoLabelData? {
-        // if we have the response cached, return it
-        cache.get(videoId)?.let { return it }
+        // if we have the response cached, return it (including "no label")
+        cache.get(videoId)?.let { return it.value }
 
-        return runCatching {
+        val result = runCatching {
             RetrofitInstance.externalApi.getVideoLabels(
                 // use hashed video id for privacy
                 // https://wiki.sponsor.ajay.app/w/API_Docs/Draft#GET_/api/videoLabels/:sha256HashPrefix
                 videoId.sha256Sum().substring(0, 5),
             ).firstOrNull { it.videoID == videoId }
-                .also { cache.put(videoId, it) }
-        }.getOrNull()
+        }
+
+        // cache every completed lookup, including "this video has no label": otherwise
+        // the same video would hit the API again on each rebind while scrolling.
+        // A failed call is not cached so that a network error stays retryable.
+        if (result.isSuccess) cache.put(videoId, CachedLabels(result.getOrNull()))
+
+        return result.getOrNull()
     }
 
     /**

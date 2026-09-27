@@ -174,6 +174,22 @@ object PreferenceHelper {
         },
         PreferenceMigration(10, 11) {
             remove("skip_buttons")
+        },
+        PreferenceMigration(11, 12) {
+            // Watube: the old "rotate SponsorBlock ID daily" boolean is replaced by a
+            // shared rotation frequency (12h / 24h / manual) that also drives the
+            // neutral region rotation. Preserve the previous choice of the user.
+            val legacyDaily = getBoolean(PreferenceKeys.RESET_SB_UUID_DAILY, true)
+            putString(
+                PreferenceKeys.PRIVACY_ROTATION_FREQUENCY,
+                if (legacyDaily) {
+                    PrivacyHelper.RotationFrequency.EVERY_24_HOURS.value
+                } else {
+                    PrivacyHelper.RotationFrequency.MANUAL.value
+                }
+            )
+            // the old per-day stamp format is superseded by the shared cycle stamp
+            remove("sb_user_id_day")
         }
     )
 
@@ -423,8 +439,11 @@ object PreferenceHelper {
         // get the system default country if auto region selected
         return if (regionPref == "sys") {
             // Watube anti-fingerprinting: optional neutral region so the backend never
-            // learns the real locale country of the device (off by default).
-            if (PrivacyHelper.isNeutralRegionEnabled()) "US" else {
+            // learns the real locale country of the device (off by default). The neutral
+            // region itself rotates on the shared rotation frequency.
+            if (PrivacyHelper.isNeutralRegionEnabled()) {
+                PrivacyHelper.getNeutralRegion()
+            } else {
                 getDetectedCountry(context).uppercase()
             }
         } else {

@@ -16,11 +16,23 @@ import com.watube.yard.ui.sheets.IntentChooserSheet
 import com.watube.yard.util.TextUtils.toTimeInSeconds
 
 object IntentHelper {
+    /**
+     * Schemes an in-app link is allowed to open. Anything else (javascript:, intent:,
+     * content:, file:, ...) is dropped: links come from untrusted video descriptions.
+     */
+    private val ALLOWED_SCHEMES = setOf("http", "https", "mailto")
+
+    fun isAllowedLink(link: String): Boolean {
+        val scheme = runCatching { link.toUri().scheme?.lowercase() }.getOrNull()
+        return scheme != null && scheme in ALLOWED_SCHEMES
+    }
+
     private fun getResolveIntent(link: String) = Intent(Intent.ACTION_VIEW)
         .setData(link.toUri())
         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
     fun getResolveInfo(context: Context, link: String): List<ResolveInfo> {
+        if (!isAllowedLink(link)) return emptyList()
         val intent = getResolveIntent(link)
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -36,6 +48,11 @@ object IntentHelper {
     }
 
     fun openLinkFromHref(context: Context, fragmentManager: FragmentManager, link: String, forceDefaultOpen: Boolean = false) {
+        if (!isAllowedLink(link)) {
+            // never hand an unsupported scheme over to another app
+            context.toastFromMainThread(R.string.error)
+            return
+        }
         val resolveInfoList = getResolveInfo(context, link)
 
         if (resolveInfoList.isEmpty() || forceDefaultOpen) {

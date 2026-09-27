@@ -162,6 +162,11 @@ class PoTokenWebView private constructor(
 
     //region Obtaining poTokens
     suspend fun generatePoToken(identifier: String): String {
+        // the identifier ends up inside a JS snippet as a string literal: anything but a
+        // plain id could break out of it and run code in the generator WebView
+        if (!IDENTIFIER_PATTERN.matches(identifier)) {
+            throw PoTokenException("Refusing to build a poToken for an invalid identifier")
+        }
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "generatePoToken() called with identifier $identifier")
         }
@@ -272,6 +277,9 @@ class PoTokenWebView private constructor(
         private val TAG = PoTokenWebView::class.simpleName
         private const val REQUEST_KEY = "O43z0dpjhgX20SCx4KAo"
         private val JS_INTERFACE = PoTokenWebView::class.simpleName!!
+
+        /** Only plain ids (video ids, ...) may be embedded into the JS snippets. */
+        private val IDENTIFIER_PATTERN = Regex("[A-Za-z0-9._-]{1,128}")
 
         suspend fun newPoTokenGenerator(context: Context): PoTokenWebView {
             return suspendCancellableCoroutine { continuation ->

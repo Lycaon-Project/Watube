@@ -115,7 +115,7 @@ class InstanceSettings : BasePreferenceFragment() {
 
         val fullLocalMode = findPreference<SwitchPreferenceCompat>(PreferenceKeys.FULL_LOCAL_MODE)!!
         val localReturnYouTubeDislike = findPreference<SwitchPreferenceCompat>(PreferenceKeys.LOCAL_RYD)!!
-        localReturnYouTubeDislike.isEnabled = fullLocalMode.isEnabled
+        localReturnYouTubeDislike.isEnabled = fullLocalMode.isChecked
         fullLocalMode.setOnPreferenceChangeListener { _, newValue ->
             localReturnYouTubeDislike.isEnabled = newValue == true
 
@@ -185,8 +185,12 @@ class InstanceSettings : BasePreferenceFragment() {
                 CreateCustomInstanceDialog().show(childFragmentManager, null)
             }
             .setPositiveButton(R.string.okay) { _, _ ->
-                preference.value = selectedInstance
-                resetForNewInstance()
+                // only tear down the session when the instance really changed: validating
+                // the dialog with the very same instance must not log the user out
+                if (selectedInstance != preference.value) {
+                    preference.value = selectedInstance
+                    resetForNewInstance()
+                }
             }
             .show()
     }

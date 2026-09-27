@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.VideoRowBinding
@@ -88,7 +89,11 @@ class VideosAdapter(
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,
                     activity
                 ) { _, _ ->
-                    notifyItemChanged(position)
+                    // the row may have moved or been removed while the sheet was open
+                    val currentPosition = holder.bindingAdapterPosition
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(currentPosition)
+                    }
                 }
                 val sheet = VideoOptionsBottomSheet()
                 sheet.arguments = Bundle().apply {
@@ -98,23 +103,42 @@ class VideosAdapter(
                 true
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
+            // previous async work of this row is obsolete as soon as it is rebound
+            holder.bindJob?.cancel()
+            holder.bindJob = CoroutineScope(Dispatchers.IO).launch {
                 val isDownloaded =
                     DatabaseHolder.Database.downloadDao().exists(videoId)
 
                 withContext(Dispatchers.Main) {
-                    downloadBadge.isVisible = isDownloaded
+                    if (isStillBoundTo(holder, videoId)) {
+                        downloadBadge.isVisible = isDownloaded
+                    }
                 }
-            }
 
-            CoroutineScope(Dispatchers.IO).launch {
                 DeArrowUtil.deArrowVideoId(videoId)?.let { (title, thumbnail) ->
                     withContext(Dispatchers.Main) {
+                        if (!isStillBoundTo(holder, videoId)) return@withContext
                         if (title != null) holder.binding.videoTitle.text = title
                         if (thumbnail != null) ImageHelper.loadImage(thumbnail, holder.binding.thumbnail)
                     }
                 }
             }
         }
+    }
+
+    /**
+     * True while [holder] still displays the row of [videoId]: a recycled row must never
+     * receive the download badge or the DeArrow title of another video.
+     */
+    private fun isStillBoundTo(holder: VideosViewHolder, videoId: String): Boolean {
+        val position = holder.bindingAdapterPosition
+        if (position == RecyclerView.NO_POSITION) return false
+        return currentList.getOrNull(position)?.url.orEmpty().toID() == videoId
+    }
+
+    override fun onViewRecycled(holder: VideosViewHolder) {
+        holder.bindJob?.cancel()
+        holder.bindJob = null
+        super.onViewRecycled(holder)
     }
 }

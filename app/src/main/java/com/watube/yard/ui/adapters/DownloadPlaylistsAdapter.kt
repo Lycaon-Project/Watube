@@ -42,7 +42,7 @@ class DownloadPlaylistAdapter(
         holder: DownloadPlaylistViewHolder,
         position: Int
     ) {
-        val item = getItem(position)!!
+        val item = getItem(position) ?: return
 
         with(holder.binding) {
             playlistTitle.text = item.downloadPlaylist.title
@@ -65,7 +65,9 @@ class DownloadPlaylistAdapter(
      * If [includeVideos] is set to true, all corresponding download items will be deleted as well.
      */
     private fun deletePlaylist(position: Int, includeVideos: Boolean) {
-        val playlist = getItem(position)!!
+        // resolve the row by its identity: the list may have been sorted, filtered or
+        // changed while the dialog was open, a stale index would delete the wrong playlist
+        val playlist = currentList.getOrNull(position) ?: return
 
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {

@@ -109,13 +109,19 @@ object ImageHelper {
      * load an image from a url into an imageView
      */
     fun loadImage(url: String?, target: ImageView, whiteBackground: Boolean = false) {
-        if (url.isNullOrEmpty()) return
+        if (url.isNullOrEmpty()) {
+            clearImage(target)
+            return
+        }
 
         val urlToLoad = ProxyHelper.rewriteUrlUsingProxyPreference(url)
 
         // only load online images if the data saver mode is disabled
-        if (DataSaverMode.isEnabled(target.context)) {
-            if (urlToLoad.startsWith(HTTP_SCHEME) && !isCached(target.context, urlToLoad)) return
+        if (DataSaverMode.isEnabled(target.context) &&
+            urlToLoad.startsWith(HTTP_SCHEME) && !isCached(target.context, urlToLoad)
+        ) {
+            clearImage(target)
+            return
         }
 
         // the view already displays this exact image, don't clear and decode it again
@@ -137,6 +143,16 @@ object ImageHelper {
                 }
             )
         }
+    }
+
+    /**
+     * Empties a recycled target so it can never keep displaying the thumbnail of the
+     * item it previously held (including the early returns above, which otherwise left
+     * the previous image in place while scrolling).
+     */
+    private fun clearImage(target: ImageView) {
+        target.tag = null
+        target.setImageBitmap(null)
     }
 
     suspend fun downloadImage(context: Context, url: String, path: Path) {

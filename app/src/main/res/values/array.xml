@@ -267,4 +267,17 @@
         <item>@string/category_music_offtopic</item>
         <item>@string/category_preview</item>
     </string-array>
+
+    <!-- Watube privacy: single rotation frequency shared by every rotating identifier -->
+    <string-array name="privacyRotationFrequency">
+        <item>@string/rotation_every_12_hours</item>
+        <item>@string/rotation_every_24_hours</item>
+        <item>@string/rotation_manual</item>
+    </string-array>
+
+    <string-array name="privacyRotationFrequencyValues">
+        <item>12h</item>
+        <item>24h</item>
+        <item>manual</item>
+    </string-array>
 </resources>

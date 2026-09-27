@@ -19,9 +19,10 @@ import com.watube.yard.ui.adapters.SubscriptionGroupChannelsAdapter
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class EditChannelGroupSheet : ExpandedBottomSheet(R.layout.dialog_edit_channel_group) {
     private var _binding: DialogEditChannelGroupBinding? = null
@@ -31,6 +32,9 @@ class EditChannelGroupSheet : ExpandedBottomSheet(R.layout.dialog_edit_channel_g
     private var channels = listOf<Subscription>()
 
     private lateinit var channelsAdapter: SubscriptionGroupChannelsAdapter
+
+    /** last name validation, cancelled as soon as the user types again */
+    private var nameValidationJob: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = DialogEditChannelGroupBinding.bind(view)
@@ -119,24 +123,30 @@ class EditChannelGroupSheet : ExpandedBottomSheet(R.layout.dialog_edit_channel_g
     private fun updateConfirmStatus() {
         with(binding) {
             val name = groupName.text.toString()
-            groupName.error = getGroupNameError(name)
 
-            confirm.isEnabled = groupName.error == null && !viewModel.groupToEdit?.channels.isNullOrEmpty()
-        }
-    }
+            // the uniqueness check reads the database: never block the keystroke on it,
+            // only the latest validation may update the field
+            nameValidationJob?.cancel()
+            nameValidationJob = viewLifecycleOwner.lifecycleScope.launch {
+                val groupExists = if (name.isBlank()) {
+                    false
+                } else {
+                    withContext(Dispatchers.IO) {
+                        DatabaseHolder.Database.subscriptionGroupsDao().exists(name)
+                    }
+                }
 
-    private fun getGroupNameError(name: String): String? {
-        if (name.isBlank()) {
-            return getString(R.string.group_name_error_empty)
-        }
+                val error = when {
+                    name.isBlank() -> getString(R.string.group_name_error_empty)
+                    groupExists && viewModel.groupToEdit?.name != name ->
+                        getString(R.string.group_name_error_exists)
+                    else -> null
+                }
 
-        val groupExists = runBlocking(Dispatchers.IO) {
-            DatabaseHolder.Database.subscriptionGroupsDao().exists(name)
+                groupName.error = error
+                confirm.isEnabled =
+                    error == null && !viewModel.groupToEdit?.channels.isNullOrEmpty()
+            }
         }
-        if (groupExists && viewModel.groupToEdit?.name != name) {
-            return getString(R.string.group_name_error_exists)
-        }
-
-        return null
     }
 }

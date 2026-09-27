@@ -92,13 +92,17 @@ class SleepTimerSheet : ExpandedBottomSheet(R.layout.sleep_timer_sheet) {
 
         binding.timeLeft.text = DateUtils.formatElapsedTime(SleepTimer.timeLeftMillis / 1000)
 
-        handler.postDelayed(1000) {
+        // only one countdown loop: every extra call (reopening the sheet, restarting the
+        // timer) would otherwise stack another 1s chain
+        handler.removeCallbacksAndMessages(null)
+        handler.postDelayed({
             updateTimeLeftText()
-        }
+        }, 1000)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
         _binding = null
     }
 }

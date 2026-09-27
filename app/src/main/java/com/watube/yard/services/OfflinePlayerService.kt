@@ -34,7 +34,6 @@ import com.watube.yard.util.PlayingQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 
@@ -80,7 +79,8 @@ open class OfflinePlayerService : AbstractPlayerService() {
         PlayingQueue.clear()
 
         this.videoId = if (playerData.shuffle) {
-            runBlocking(Dispatchers.IO) {
+            // already suspending: no need to block a thread while reading the database
+            withContext(Dispatchers.IO) {
                 if (playerData.downloadTab == DownloadTab.PLAYLIST) {
                     Database.downloadDao()
                         .getDownloadPlaylistById(playerData.playlistId!!).downloadVideos.randomOrNull()

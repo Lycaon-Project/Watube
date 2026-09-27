@@ -100,7 +100,10 @@ class MainSettings : BasePreferenceFragment() {
     private fun refreshCacheSummary(preference: Preference) {
         val appContext = requireContext().applicationContext
         lifecycleScope.launch {
-            val size = ImageHelper.getCacheSize(appContext)
+            // walking the cache directory is I/O: keep it off the main thread
+            val size = withContext(Dispatchers.IO) {
+                ImageHelper.getCacheSize(appContext)
+            }
             preference.summary = getString(R.string.clear_cache_summary, size.formatAsFileSize())
         }
     }

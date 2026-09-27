@@ -49,7 +49,28 @@ object DownloadHelper {
             } catch (e: Exception) {
                 context.filesDir
             }
-        return (storageDir.toPath() / path).createDirectories()
+        val base = storageDir.toPath().normalize()
+        // never leave the app storage, whatever the requested directory is
+        val dir = (base / path).normalize()
+        return (if (dir.startsWith(base)) dir else base).createDirectories()
+    }
+
+    /**
+     * Resolves [fileName] inside [directory] and guarantees the result stays there:
+     * separators are replaced and a crafted name ("../../..") can never make a download
+     * write outside of its own directory.
+     */
+    fun resolveDownloadPath(directory: Path, fileName: String): Path {
+        val safeName = fileName
+            .replace('/', '_')
+            .replace('\\', '_')
+            .trim()
+            .ifBlank { "download" }
+
+        val base = directory.normalize()
+        val resolved = (base / safeName).normalize()
+        // "." or ".." would collapse to the directory itself or to a parent: keep a file inside
+        return if (resolved.startsWith(base) && resolved != base) resolved else base / "download"
     }
 
     fun startDownloadService(context: Context, downloadData: DownloadData? = null) {

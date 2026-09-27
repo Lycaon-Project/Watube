@@ -1,5 +1,7 @@
 package com.watube.yard.api
 
+import android.os.SystemClock
+import android.util.LruCache
 import com.watube.yard.api.obj.Subscription
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.obj.SubscriptionsFeedItem
@@ -20,6 +22,13 @@ object SubscriptionHelper {
      * the subscriptions list and the feed
      */
     const val GET_SUBSCRIPTIONS_LIMIT = 100
+
+    /** How long a known subscription state is reused before being re-checked. */
+    private const val SUBSCRIPTION_STATE_TTL_MS = 60_000L
+
+    private class CachedSubscription(val value: Boolean, val expiresAt: Long)
+
+    private val subscribedState = LruCache<String, CachedSubscription>(512)
 
     private val localFeedExtraction
         get() = PreferenceHelper.getBoolean(
@@ -43,15 +52,47 @@ object SubscriptionHelper {
     suspend fun subscribe(
         channelId: String, name: String, uploaderAvatar: String?, verified: Boolean
     ) = subscriptionsRepository.subscribe(channelId, name, uploaderAvatar, verified)
+        .also { invalidateSubscribedState(channelId) }
 
     suspend fun unsubscribe(channelId: String) {
         subscriptionsRepository.unsubscribe(channelId)
+        invalidateSubscribedState(channelId)
         // remove videos from (local) feed
         feedRepository.removeChannel(channelId)
     }
-    suspend fun isSubscribed(channelId: String) = subscriptionsRepository.isSubscribed(channelId)
+
+    /**
+     * Known subscription state of a channel, kept for a short moment so that list rows
+     * don't fire one request per line while scrolling (a search result page would
+     * otherwise ask the API about every channel it renders).
+     *
+     * The entry is dropped as soon as the state changes through [subscribe] or
+     * [unsubscribe] and expires on its own, so a change made elsewhere (import, another
+     * device) can only stay stale for [SUBSCRIPTION_STATE_TTL_MS].
+     */
+    suspend fun isSubscribed(channelId: String): Boolean? {
+        val now = SystemClock.elapsedRealtime()
+        subscribedState.get(channelId)?.let { cached ->
+            if (now < cached.expiresAt) return cached.value
+            subscribedState.remove(channelId)
+        }
+
+        val result = subscriptionsRepository.isSubscribed(channelId) ?: return null
+        subscribedState.put(
+            channelId,
+            CachedSubscription(result, now + SUBSCRIPTION_STATE_TTL_MS)
+        )
+        return result
+    }
+
+    private fun invalidateSubscribedState(channelId: String) {
+        subscribedState.remove(channelId)
+    }
+
     suspend fun importSubscriptions(newChannels: List<String>) =
-        subscriptionsRepository.importSubscriptions(newChannels)
+        subscriptionsRepository.importSubscriptions(newChannels).also {
+            subscribedState.evictAll()
+        }
 
     suspend fun getSubscriptions() =
         subscriptionsRepository.getSubscriptions().sortedBy { it.name.lowercase() }

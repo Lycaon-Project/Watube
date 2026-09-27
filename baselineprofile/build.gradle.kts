@@ -5,9 +5,9 @@ plugins {
     // (alias androidTest -> même version que AGP, embarquée dans AGP).
     alias(libs.plugins.androidTest)
     alias(libs.plugins.baselineprofile)
-    // WATUBE FIX : le module contient des sources Kotlin (BaselineProfileGenerator)
-    // -> le plugin Kotlin doit etre declare explicitement pour l'IDE.
-    alias(libs.plugins.kotlin.android)
+    // WATUBE FIX : le module contient des sources Kotlin (BaselineProfileGenerator).
+    // AGP 9 embarque le support Kotlin : declarer org.jetbrains.kotlin.android echoue
+    // ("no longer required for Kotlin support since AGP 9.0") -> rien a declarer ici.
 }
 
 // ✅ CORRECTION 1 : Suppression du warning de dépréciation pour android {}
@@ -37,8 +37,9 @@ android {
 
 }
 
-// WATUBE FIX : extension Kotlin officielle (plugin applique nommement ci-dessus).
-kotlin {
+// WATUBE FIX : jvmTarget Kotlin aligne sur compileOptions (AGP 9 embarque Kotlin :
+// l'extension DSL kotlin{} du plugin org.jetbrains.kotlin.android n'existe plus).
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }

@@ -9,7 +9,14 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 
 object DeArrowUtil {
-    private val cache = LruCache<String, DeArrowContent>(256)
+    /**
+     * Wrapper distinguishing "queried, no DeArrow data" from "never queried": storing a
+     * plain null would look exactly like a cache miss, so a video without DeArrow data
+     * would hit the API again on every rebind while scrolling.
+     */
+    private class CachedContent(val value: DeArrowContent?)
+
+    private val cache = LruCache<String, CachedContent>(256)
 
     private fun extractTitleAndThumbnail(content: DeArrowContent): Pair<String?, String?> {
         val title = content.titles.firstOrNull { it.votes >= 0 || it.locked }?.title
@@ -22,13 +29,14 @@ object DeArrowUtil {
 
 
     private suspend fun fetchDeArrowContent(videoId: String): DeArrowContent? {
-        // prefer cached response, if available
-        cache.get(videoId)?.let { return it }
+        // prefer cached response, if available (including "no data for this video")
+        cache.get(videoId)?.let { return it.value }
 
         return try {
             MediaServiceRepository.instance.getDeArrowContent(videoId)
-                .also { cache.put(videoId, it) }
+                .also { cache.put(videoId, CachedContent(it)) }
         } catch (e: Exception) {
+            // failed lookups are not cached so a network error stays retryable
             Log.e(this::class.java.name, "Failed to fetch DeArrow content: ${e.message}")
             null
         }

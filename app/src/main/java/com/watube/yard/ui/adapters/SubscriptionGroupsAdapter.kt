@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SubscriptionGroupsAdapter(
     var groups: MutableList<SubscriptionGroup>,
@@ -39,7 +40,7 @@ class SubscriptionGroupsAdapter(
             groupName.text = subscriptionGroup.name
 
             deleteGroup.setOnClickListener {
-                showDeleteDialog(root.context, position)
+                showDeleteDialog(root.context, subscriptionGroup)
             }
 
             editGroup.setOnClickListener {
@@ -49,17 +50,20 @@ class SubscriptionGroupsAdapter(
         }
     }
 
-    private fun showDeleteDialog(context: Context, position: Int) {
+    private fun showDeleteDialog(context: Context, group: SubscriptionGroup) {
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.delete)
             .setMessage(R.string.irreversible)
             .setPositiveButton(R.string.okay) { _, _ ->
                 CoroutineScope(Dispatchers.IO).launch {
                     DatabaseHolder.Database.subscriptionGroupsDao()
-                        .deleteGroup(groups[position].name)
+                        .deleteGroup(group.name)
 
-                    groups.removeAt(position)
-                    viewModel.groups.postValue(groups)
+                    withContext(Dispatchers.Main) {
+                        // RecyclerView binds this list: only ever mutate it on the main thread
+                        groups.removeAll { it.name == group.name }
+                        viewModel.groups.postValue(groups.toList())
+                    }
                 }
             }
             .setNegativeButton(R.string.cancel, null)

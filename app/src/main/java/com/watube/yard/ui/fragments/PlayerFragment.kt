@@ -70,11 +70,13 @@ import com.watube.yard.extensions.formatShort
 import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.serializableExtra
 import com.watube.yard.extensions.toID
+import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.extensions.togglePlayPauseState
 import com.watube.yard.extensions.updateIfChanged
 import com.watube.yard.helpers.BackgroundHelper
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
+import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
@@ -1173,10 +1175,21 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         val videoId = TextUtils.getVideoIdFromUri(uri)
 
         if (videoId.isNullOrEmpty()) {
+            // description links are untrusted: never hand a foreign scheme to another app
+            val ctx = context ?: return
+            if (!IntentHelper.isAllowedLink(link)) {
+                ctx.toastFromMainThread(R.string.error)
+                return
+            }
+
             val intent = Intent(Intent.ACTION_VIEW, uri)
 
             onUserLeaveHint()
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                ctx.toastFromMainThread(R.string.error)
+            }
 
             return
         }

@@ -5,6 +5,7 @@ import com.watube.yard.api.obj.Streams
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.io.StringWriter
+import javax.xml.XMLConstants
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
@@ -15,7 +16,23 @@ import javax.xml.transform.stream.StreamResult
 object DashHelper {
 
     private val builderFactory: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+        .apply {
+            // hardened against XXE: no doctype, no external entity, no XInclude. Only
+            // documents built programmatically are handled here, so nothing is lost.
+            runCatching { setFeature("http://apache.org/xml/features/disallow-doctype-decl", true) }
+            runCatching { setFeature("http://xml.org/sax/features/external-general-entities", false) }
+            runCatching { setFeature("http://xml.org/sax/features/external-parameter-entities", false) }
+            runCatching { isXIncludeAware = false }
+            runCatching { isExpandEntityReferences = false }
+        }
+
     private val transformerFactory: TransformerFactory = TransformerFactory.newInstance()
+        .apply {
+            runCatching { setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true) }
+            // no external DTD / stylesheet may be fetched while serializing
+            runCatching { setAttribute("http://javax.xml.XMLConstants/property/accessExternalDTD", "") }
+            runCatching { setAttribute("http://javax.xml.XMLConstants/property/accessExternalStylesheet", "") }
+        }
 
     private data class AdapSetInfo(
         val mimeType: String,

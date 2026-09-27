@@ -37,8 +37,11 @@ class BackupRestoreSettings : BasePreferenceFragment() {
     private val getBackupFile =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri == null) return@registerForActivityResult
-            CoroutineScope(Dispatchers.IO).launch {
-                BackupHelper.restoreAdvancedBackup(requireContext().applicationContext, uri)
+            // bound to the fragment lifecycle so nothing runs (and no dialog is shown)
+            // once the screen is gone
+            val appContext = context?.applicationContext ?: return@registerForActivityResult
+            lifecycleScope.launch(Dispatchers.IO) {
+                BackupHelper.restoreAdvancedBackup(appContext, uri)
                 withContext(Dispatchers.Main) {
                     // could fail if fragment is already closed
                     runCatching {
@@ -49,8 +52,9 @@ class BackupRestoreSettings : BasePreferenceFragment() {
         }
     private val createBackupFile = registerForActivityResult(CreateDocument(FILETYPE_ANY)) { uri ->
         if (uri == null) return@registerForActivityResult
+        val appContext = context?.applicationContext ?: return@registerForActivityResult
         lifecycleScope.launch(Dispatchers.IO) {
-            BackupHelper.createAdvancedBackup(requireContext().applicationContext, uri, backupFile)
+            BackupHelper.createAdvancedBackup(appContext, uri, backupFile)
         }
     }
 
@@ -61,20 +65,18 @@ class BackupRestoreSettings : BasePreferenceFragment() {
         ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri == null) return@registerForActivityResult
-        CoroutineScope(Dispatchers.IO).launch {
-            ImportHelper.importSubscriptions(requireContext().applicationContext, uri, importFormat)
+        val appContext = context?.applicationContext ?: return@registerForActivityResult
+        lifecycleScope.launch(Dispatchers.IO) {
+            ImportHelper.importSubscriptions(appContext, uri, importFormat)
         }
     }
 
     private val createSubscriptionsFile =
         registerForActivityResult(CreateDocument(FILETYPE_ANY)) { uri ->
             if (uri == null) return@registerForActivityResult
+            val appContext = context?.applicationContext ?: return@registerForActivityResult
             lifecycleScope.launch(Dispatchers.IO) {
-                ImportHelper.exportSubscriptions(
-                    requireContext().applicationContext,
-                    uri,
-                    importFormat
-                )
+                ImportHelper.exportSubscriptions(appContext, uri, importFormat)
             }
         }
 
@@ -82,39 +84,30 @@ class BackupRestoreSettings : BasePreferenceFragment() {
     // result listeners for importing and exporting playlists
     private val getPlaylistsFile =
         registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { files ->
-            for (file in files) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    ImportHelper.importPlaylists(
-                        requireContext().applicationContext,
-                        file,
-                        importFormat
-                    )
+            val appContext = context?.applicationContext ?: return@registerForActivityResult
+            lifecycleScope.launch(Dispatchers.IO) {
+                for (file in files) {
+                    ImportHelper.importPlaylists(appContext, file, importFormat)
                 }
             }
         }
 
     private val getWatchHistoryFile =
         registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { files ->
-            for (file in files) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    ImportHelper.importWatchHistory(
-                        requireContext().applicationContext,
-                        file,
-                        importFormat
-                    )
+            val appContext = context?.applicationContext ?: return@registerForActivityResult
+            lifecycleScope.launch(Dispatchers.IO) {
+                for (file in files) {
+                    ImportHelper.importWatchHistory(appContext, file, importFormat)
                 }
             }
         }
 
     private val createPlaylistsFile =
         registerForActivityResult(CreateDocument(FILETYPE_ANY)) { uri ->
+            val appContext = context?.applicationContext ?: return@registerForActivityResult
             uri?.let {
                 lifecycleScope.launch(Dispatchers.IO) {
-                    ImportHelper.exportPlaylists(
-                        requireContext().applicationContext,
-                        uri,
-                        importFormat
-                    )
+                    ImportHelper.exportPlaylists(appContext, uri, importFormat)
                 }
             }
         }

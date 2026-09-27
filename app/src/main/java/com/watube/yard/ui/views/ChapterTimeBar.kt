@@ -41,6 +41,13 @@ class ChapterTimeBar(
     }
 
     override fun onDraw(canvas: Canvas) {
+        // an offscreen layer is only needed to erase the chapter breaks: skipping it when
+        // there is nothing to erase avoids allocating/redrawing a full layer per frame
+        if (exoPlayer == null || chapters.size <= 1) {
+            super.onDraw(canvas)
+            return
+        }
+
         val saveCount = canvas.saveLayer(null, null)
         super.onDraw(canvas)
         drawChapters(canvas)

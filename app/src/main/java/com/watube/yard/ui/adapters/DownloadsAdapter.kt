@@ -32,7 +32,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
@@ -105,7 +104,10 @@ class DownloadsAdapter(
             }
 
             progressBar.setOnClickListener {
-                val isDownloading = toggleDownload(getItem(holder.bindingAdapterPosition))
+                // resolve by position when clicked: the row may have been rebound meanwhile
+                val item = currentList.getOrNull(holder.bindingAdapterPosition)
+                    ?: return@setOnClickListener
+                val isDownloading = toggleDownload(item)
 
                 resumePauseBtn.setImageResource(
                     if (isDownloading) {
@@ -149,8 +151,10 @@ class DownloadsAdapter(
                     // the position might have changed in the meanwhile if an other item was deleted
                     // apparently [onBindViewHolder] is only retriggered if the item changes, but
                     // not if the position changes (which would lead to IndexOutOfBounds here)
-                    val realPosition = currentList.indexOf(downloadWithItems)
-                    showDeleteDialog(root.context, realPosition)
+                    val realPosition = currentList.indexOfFirst {
+                        it.download.videoId == download.videoId
+                    }
+                    if (realPosition >= 0) showDeleteDialog(root.context, realPosition)
                 }
                 DownloadOptionsBottomSheet()
                     .apply {
@@ -167,36 +171,44 @@ class DownloadsAdapter(
     }
 
     fun showDeleteDialog(context: Context, position: Int) {
+        // capture the row now: the list can change while the dialog is open, a stale index
+        // would delete the wrong download
+        val item = currentList.getOrNull(position) ?: return
+
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.delete)
             .setMessage(R.string.irreversible)
             .setPositiveButton(R.string.okay) { _, _ ->
-                deleteDownload(position)
+                deleteDownload(item)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
-    private fun deleteDownload(position: Int) {
+    private fun deleteDownload(item: DownloadWithItems) {
         CoroutineScope(Dispatchers.IO).launch {
-            DownloadHelper.deleteDownloadIncludingFiles(getItem(position))
+            DownloadHelper.deleteDownloadIncludingFiles(item)
 
             withContext(Dispatchers.Main) {
-                submitList(currentList.toMutableList().also {
-                    it.removeAt(position)
+                submitList(currentList.toMutableList().also { list ->
+                    list.removeAll { it.download.videoId == item.download.videoId }
                 })
             }
         }
     }
 
     fun deleteAllDownloads(onlyDeleteWatched: Boolean) {
-        val (toDelete, toKeep) = currentList.partition {
-            !onlyDeleteWatched || runBlocking(Dispatchers.IO) {
-                DatabaseHelper.isVideoWatched(it.download.videoId, it.download.duration ?: 0)
-            }
-        }
+        // snapshot on the caller thread, the watched check runs off the main thread
+        val snapshot = currentList.toList()
 
         CoroutineScope(Dispatchers.IO).launch {
+            val (toDelete, toKeep) = snapshot.partition {
+                !onlyDeleteWatched || DatabaseHelper.isVideoWatched(
+                    it.download.videoId,
+                    it.download.duration ?: 0
+                )
+            }
+
             for (item in toDelete) {
                 DownloadHelper.deleteDownloadIncludingFiles(item)
             }

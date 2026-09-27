@@ -24,6 +24,7 @@ import com.watube.yard.databinding.FragmentTrendsContentBinding
 import com.watube.yard.extensions.serializable
 import com.watube.yard.helpers.LocaleHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.obj.Country
 import com.watube.yard.ui.adapters.VideoCardsAdapter
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.models.TrendsViewModel
@@ -61,10 +62,19 @@ class TrendsFragment : Fragment(R.layout.fragment_trends) {
 
     companion object {
         fun showChangeRegionDialog(context: Context, onPositiveButtonClick: () -> Unit) {
-            val currentRegionPref = PreferenceHelper.getTrendingRegion(context)
+            // the raw preference (not the effective region) so that "sys" stays selected
+            // while the automatic/neutral region mode is active
+            val currentRegionPref =
+                PreferenceHelper.getString(PreferenceKeys.REGION, AUTOMATIC_REGION)
 
-            val countries = LocaleHelper.getAvailableCountries()
+            // "Automatic" always stays reachable: it is what enables the system country
+            // detection and the neutral region mode from the privacy settings.
+            val countries = listOf(Country(context.getString(R.string.automatic), AUTOMATIC_REGION)) +
+                LocaleHelper.getAvailableCountries()
+
             var selected = countries.indexOfFirst { it.code == currentRegionPref }
+            if (selected < 0) selected = 0
+
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.region)
                 .setSingleChoiceItems(
@@ -80,6 +90,9 @@ class TrendsFragment : Fragment(R.layout.fragment_trends) {
                 }
                 .show()
         }
+
+        /** Preference value meaning "use the system country (or the neutral region)". */
+        private const val AUTOMATIC_REGION = "sys"
     }
 }
 

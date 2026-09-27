@@ -13,10 +13,29 @@ object PreferenceKeys {
     /** Master switch: blocks SIM/network based data collection and other identifiers. */
     const val PRIVACY_HARDENING = "privacy_hardening"
 
-    /** Rotate the SponsorBlock user id daily to prevent long term tracking. */
+    /**
+     * Legacy daily rotation switch, superseded by [PRIVACY_ROTATION_FREQUENCY].
+     * Still read as a fallback for installs that never migrated and still written by
+     * the preference migration (see PreferenceHelper.MIGRATIONS).
+     */
     const val RESET_SB_UUID_DAILY = "reset_sb_uuid_daily"
+
+    /**
+     * Shared rotation frequency ("12h" / "24h" / "manual") driving *every* rotating
+     * client identifier at once: the SponsorBlock user id and the neutral region.
+     * A single value keeps the identifiers in sync (Tor/Mullvad style rotation).
+     */
+    const val PRIVACY_ROTATION_FREQUENCY = "privacy_rotation_frequency"
+
     /** Watube: Tor/Mullvad-style neutral region for trending/home requests (opt-in). */
     const val PRIVACY_NEUTRAL_REGION = "privacy_neutral_region"
+
+    // Cycle stamps of the rotating identifiers (not user facing)
+    /** SponsorBlock user id: "user id" half + "cycle stamp" half. */
+    const val SB_USER_ID_CYCLE = "sb_user_id_cycle"
+    /** Neutral region currently in use and the cycle stamp it was picked for. */
+    const val NEUTRAL_REGION_ACTIVE = "privacy_neutral_region_active"
+    const val NEUTRAL_REGION_CYCLE = "privacy_neutral_region_cycle"
 
     // General
     const val LANGUAGE = "language"

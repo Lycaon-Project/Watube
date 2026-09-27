@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.VideoRowBinding
 import com.watube.yard.db.DatabaseHolder
@@ -76,7 +77,9 @@ class WatchHistoryAdapter :
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,
                     activity
                 ) { _, _ ->
-                    notifyItemChanged(position)
+                    // resolve the position when the sheet answers, the row may have moved
+                    val boundPosition = holder.bindingAdapterPosition
+                    if (boundPosition != RecyclerView.NO_POSITION) notifyItemChanged(boundPosition)
                 }
                 val sheet = VideoOptionsBottomSheet()
                 sheet.arguments = Bundle().apply {
@@ -91,14 +94,34 @@ class WatchHistoryAdapter :
                 video.duration
             )
 
-            CoroutineScope(Dispatchers.IO).launch {
+            // always hide the badge first: a recycled row must not keep the previous download state
+            downloadBadge.isVisible = false
+            holder.bindJob?.cancel()
+            holder.bindJob = CoroutineScope(Dispatchers.IO).launch {
                 val isDownloaded =
                     DatabaseHolder.Database.downloadDao().exists(video.videoId)
 
                 withContext(Dispatchers.Main) {
+                    if (!isStillBoundTo(holder, video.videoId)) return@withContext
                     downloadBadge.isVisible = isDownloaded
                 }
             }
         }
+    }
+
+    /**
+     * True while [holder] still displays the row of [videoId], so an async result can never
+     * be applied to a recycled row.
+     */
+    private fun isStillBoundTo(holder: WatchHistoryViewHolder, videoId: String): Boolean {
+        val position = holder.bindingAdapterPosition
+        if (position == RecyclerView.NO_POSITION) return false
+        return currentList.getOrNull(position)?.videoId == videoId
+    }
+
+    override fun onViewRecycled(holder: WatchHistoryViewHolder) {
+        holder.bindJob?.cancel()
+        holder.bindJob = null
+        super.onViewRecycled(holder)
     }
 }

@@ -143,3 +143,14 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# ----------------------------------------------------------------------------
+# LOGGING (release builds)
+
+# Verbose/debug logs are stripped from release: they can leak identifiers, URLs and
+# user data through logcat. Warnings and errors are kept. R8 only removes calls whose
+# return value is unused, so existing call sites stay valid.
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+}

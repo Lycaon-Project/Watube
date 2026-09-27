@@ -9,6 +9,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.api.SponsorBlockLabelHelper
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
@@ -46,14 +47,32 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
     }
 
     fun removeItemById(videoId: String) {
+        // index 0 is a valid position: only a missing id (indexOfFirst == -1) aborts
         val index = currentList.indexOfFirst {
             it.url?.toID() == videoId
-        }.takeIf { it > 0 } ?: return
+        }.takeIf { it >= 0 } ?: return
         val updatedList = currentList.toMutableList().also {
             it.removeAt(index)
         }
 
         submitList(updatedList)
+    }
+
+    /**
+     * True while [holder] still displays the row of [videoId]. Async results (SponsorBlock
+     * label, DeArrow title/thumbnail) are only applied when this holds, so a recycled row
+     * can never show data belonging to another video.
+     */
+    private fun isStillBoundTo(holder: VideoCardsViewHolder, videoId: String): Boolean {
+        val position = holder.bindingAdapterPosition
+        if (position == RecyclerView.NO_POSITION) return false
+        return currentList.getOrNull(position)?.url.orEmpty().toID() == videoId
+    }
+
+    override fun onViewRecycled(holder: VideoCardsViewHolder) {
+        holder.bindJob?.cancel()
+        holder.bindJob = null
+        super.onViewRecycled(holder)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoCardsViewHolder {
@@ -125,7 +144,11 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,
                     activity
                 ) { _, _ ->
-                    notifyItemChanged(position)
+                    // the row may have moved or been removed while the sheet was open
+                    val currentPosition = holder.bindingAdapterPosition
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(currentPosition)
+                    }
                 }
                 val sheet = VideoOptionsBottomSheet()
                 sheet.arguments = Bundle().apply {
@@ -137,10 +160,14 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
 
             // always hide the icon, to avoid issues where the icon is recycled and shown until the web requests succeeds
             sponsorBadgeCard.isVisible = false
-            CoroutineScope(Dispatchers.IO).launch {
+
+            // previous async work of this row is obsolete as soon as it is rebound
+            holder.bindJob?.cancel()
+            holder.bindJob = CoroutineScope(Dispatchers.IO).launch {
                 if (PlayerHelper.sponsorBlockEnabled) {
                     val sponsor = SponsorBlockLabelHelper.getVideoLabels(videoId)
                     withContext(Dispatchers.Main) {
+                        if (!isStillBoundTo(holder, videoId)) return@withContext
                         val category = sponsor?.segments?.firstOrNull()?.category
                         sponsorBadgeCard.isVisible = category != null
                         SponsorBlockLabelHelper.categoryIcon(category)?.let {
@@ -156,6 +183,7 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
 
                 DeArrowUtil.deArrowVideoId(videoId)?.let { (title, thumbnail) ->
                     withContext(Dispatchers.Main) {
+                        if (!isStillBoundTo(holder, videoId)) return@withContext
                         if (title != null) this@apply.textViewTitle.text = title
                         if (thumbnail != null) ImageHelper.loadImage(thumbnail, this@apply.thumbnail)
                     }

@@ -232,7 +232,10 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
 
     @Suppress("SameParameterValue")
     private fun getDownloadPath(directory: String, fileName: String): Path {
-        return DownloadHelper.getDownloadDir(this, directory) / fileName
+        return DownloadHelper.resolveDownloadPath(
+            DownloadHelper.getDownloadDir(this, directory),
+            fileName
+        )
     }
 
     override fun onDestroy() {

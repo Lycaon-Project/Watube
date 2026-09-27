@@ -8,7 +8,8 @@ import android.webkit.WebView
 import androidx.core.content.edit
 import com.watube.yard.constants.PreferenceKeys
 import java.security.SecureRandom
-import java.util.Calendar
+
+private const val HOUR_MILLIS = 60L * 60 * 1000
 
 /**
  * Central place for all Watube anti fingerprinting decisions.
@@ -16,7 +17,8 @@ import java.util.Calendar
  * The master switch ([isHardeningEnabled]) is enabled by default and controls every
  * identifier that could be used to link requests coming from this device together:
  *  - SIM / carrier based country detection (see [LocaleHelper.getDetectedCountry])
- *  - the SponsorBlock user id, optionally rotated daily (see [rotateSponsorBlockUserIdDaily])
+ *  - the SponsorBlock user id, rotated on the shared [RotationFrequency] schedule
+ *  - the neutral region used for trending/home requests (see [getNeutralRegion])
  *  - the reported User-Agent of third party services (SponsorBlock, DeArrow), which is
  *    normalized to a single generic value instead of leaking package name and version
  *  - WebView level information (see [applyWebViewAntiFingerprinting])
@@ -35,10 +37,40 @@ object PrivacyHelper {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)" +
             " Chrome/131.0.0.0 Safari/537.36"
 
-    private const val KEY_SB_UUID_DAY = "sb_user_id_day"
+    /**
+     * How often the rotating client identifiers (SponsorBlock user id **and** neutral
+     * region) are regenerated. A single shared frequency keeps every identifier in sync
+     * so an observer can never correlate "the id changed" with "the region changed" at
+     * two different points in time.
+     *
+     * [MANUAL] never rotates on its own: only an explicit "reset identifiers" action
+     * (or a change of this setting) produces a new value.
+     */
+    enum class RotationFrequency(val value: String, val periodMillis: Long?) {
+        EVERY_12_HOURS("12h", 12 * HOUR_MILLIS),
+        EVERY_24_HOURS("24h", 24 * HOUR_MILLIS),
+        MANUAL("manual", null);
+
+        companion object {
+            fun fromValue(value: String?): RotationFrequency =
+                entries.firstOrNull { it.value == value } ?: EVERY_24_HOURS
+        }
+    }
+
+    /**
+     * Countries the neutral region rotates through. Chosen to be large, well supported
+     * trending regions so the visible content stays usable while never pointing back at
+     * the real location of the user (Tor/Mullvad "blend into the crowd" strategy).
+     */
+    private val NEUTRAL_REGIONS = arrayOf(
+        "US", "CA", "GB", "DE", "FR", "NL", "SE", "JP", "AU", "BR", "IN", "IT"
+    )
+
     private const val USER_ID_CHARS =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    private const val MANUAL_CYCLE_STAMP = "manual"
     private val secureRandom = SecureRandom()
+    private val rotationLock = Any()
 
     /**
      * Hardening is on by default: privacy should be opt-out, not opt-in.
@@ -54,34 +86,57 @@ object PrivacyHelper {
     fun isHardeningEnabledWith(context: Context): Boolean = isHardeningEnabled()
 
     /**
-     * Whether the SponsorBlock user id should be regenerated every day.
+     * The frequency chosen by the user for every rotating identifier.
+     *
+     * Falls back on the legacy `reset_sb_uuid_daily` boolean so installations that never
+     * saw the frequency preference keep behaving exactly as before (daily on, off otherwise).
      */
-    fun rotateSponsorBlockUserIdDaily(): Boolean {
-        return isHardeningEnabled() &&
-            PreferenceHelper.getBoolean(PreferenceKeys.RESET_SB_UUID_DAILY, true)
+    fun rotationFrequency(): RotationFrequency {
+        val stored = PreferenceHelper.getString(PreferenceKeys.PRIVACY_ROTATION_FREQUENCY, "")
+        if (stored.isNotEmpty()) return RotationFrequency.fromValue(stored)
+
+        val legacyDaily = PreferenceHelper.getBoolean(PreferenceKeys.RESET_SB_UUID_DAILY, true)
+        return if (legacyDaily) RotationFrequency.EVERY_24_HOURS else RotationFrequency.MANUAL
+    }
+
+    /**
+     * Identifier rotation is active unless the user explicitly selected "manual".
+     */
+    fun isRotationAutomatic(): Boolean = rotationFrequency() != RotationFrequency.MANUAL
+
+    /**
+     * Shared cycle stamp of the current rotation window. Every rotating identifier stores
+     * the stamp it was generated for; when the stored stamp no longer matches, the value
+     * is stale and gets replaced. Using one stamp for all identifiers guarantees they all
+     * rotate at the very same moment.
+     */
+    fun currentCycleStamp(): String {
+        val period = rotationFrequency().periodMillis ?: return MANUAL_CYCLE_STAMP
+        return (System.currentTimeMillis() / period).toString()
     }
 
     /**
      * Returns the stored SponsorBlock user id, or null when it has to be regenerated
-     * (missing id, or new day while daily rotation is active).
+     * (missing id, or a new rotation cycle while automatic rotation is active).
      */
     fun getValidSponsorBlockUserId(): String? {
         val stored = PreferenceHelper.getString(PreferenceKeys.SB_USER_ID, "")
         if (stored.isEmpty()) return null
 
-        if (!rotateSponsorBlockUserIdDaily()) return stored
+        if (!isRotationAutomatic()) return stored
 
-        val day = PreferenceHelper.getString(KEY_SB_UUID_DAY, "")
-        return stored.takeIf { day == currentDayStamp() }
+        val cycle = PreferenceHelper.getString(PreferenceKeys.SB_USER_ID_CYCLE, "")
+        return stored.takeIf { cycle == currentCycleStamp() }
     }
 
     /**
-     * Stores a freshly generated SponsorBlock user id together with its validity day.
+     * Stores a freshly generated SponsorBlock user id together with the rotation cycle
+     * it is valid for.
      */
     fun storeSponsorBlockUserId(userId: String) {
         PreferenceHelper.settings.edit {
             putString(PreferenceKeys.SB_USER_ID, userId)
-            putString(KEY_SB_UUID_DAY, currentDayStamp())
+            putString(PreferenceKeys.SB_USER_ID_CYCLE, currentCycleStamp())
         }
     }
 
@@ -116,13 +171,50 @@ object PrivacyHelper {
 
     /**
      * Optional "neutral region" mode (Tor/Mullvad style): when enabled, the trending/home
-     * region sent to the backend is always US instead of the device locale country, so
-     * requests don't reveal where the user actually lives. Off by default because it
-     * changes visible content recommendations; can be toggled in the privacy settings.
+     * region sent to the backend is picked from [NEUTRAL_REGIONS] instead of the device
+     * locale country, so requests don't reveal where the user actually lives. The region
+     * is re-picked on every rotation cycle, synchronized with the SponsorBlock id.
+     * Off by default because it changes visible content recommendations; it can be
+     * toggled in the privacy settings.
      */
     fun isNeutralRegionEnabled(): Boolean {
         return isHardeningEnabled() &&
             PreferenceHelper.getBoolean(PreferenceKeys.PRIVACY_NEUTRAL_REGION, false)
+    }
+
+    /**
+     * The neutral region currently in use, rotating it when the current cycle expired.
+     * Never returns a different value within the same cycle so every screen (home,
+     * trending, cached feeds) agrees on a single region during the whole window.
+     */
+    fun getNeutralRegion(): String {
+        synchronized(rotationLock) {
+            val cycle = currentCycleStamp()
+            val active = PreferenceHelper.getString(PreferenceKeys.NEUTRAL_REGION_ACTIVE, "")
+            if (active.isNotEmpty() &&
+                PreferenceHelper.getString(PreferenceKeys.NEUTRAL_REGION_CYCLE, "") == cycle
+            ) {
+                return active
+            }
+
+            val next = pickNeutralRegion(active)
+            PreferenceHelper.settings.edit {
+                putString(PreferenceKeys.NEUTRAL_REGION_ACTIVE, next)
+                putString(PreferenceKeys.NEUTRAL_REGION_CYCLE, cycle)
+            }
+            return next
+        }
+    }
+
+    /**
+     * Drops the neutral region so that the next read picks a brand new one. Used by the
+     * manual "reset identifiers" action.
+     */
+    fun resetNeutralRegion() {
+        PreferenceHelper.settings.edit {
+            remove(PreferenceKeys.NEUTRAL_REGION_ACTIVE)
+            remove(PreferenceKeys.NEUTRAL_REGION_CYCLE)
+        }
     }
 
     /**
@@ -153,8 +245,18 @@ object PrivacyHelper {
     fun resetSponsorBlockUserId() {
         PreferenceHelper.settings.edit {
             remove(PreferenceKeys.SB_USER_ID)
-            remove(KEY_SB_UUID_DAY)
+            remove(PreferenceKeys.SB_USER_ID_CYCLE)
         }
+    }
+
+    /**
+     * Rotates every client side identifier at once (SponsorBlock id + neutral region).
+     * This is the manual rotation action: it is also what drives the "manual only"
+     * frequency, where nothing rotates until the user asks for it.
+     */
+    fun rotateAllIdentifiers() {
+        resetSponsorBlockUserId()
+        resetNeutralRegion()
     }
 
     /**
@@ -166,8 +268,10 @@ object PrivacyHelper {
         runCatching { WebStorage.getInstance().deleteAllData() }
     }
 
-    private fun currentDayStamp(): String {
-        val cal = Calendar.getInstance()
-        return "${cal.get(Calendar.YEAR)}-${cal.get(Calendar.DAY_OF_YEAR)}"
+    private fun pickNeutralRegion(previous: String): String {
+        // both branches must be lists: NEUTRAL_REGIONS is an Array
+        val pool = NEUTRAL_REGIONS.filter { it != previous }
+            .ifEmpty { NEUTRAL_REGIONS.toList() }
+        return pool[secureRandom.nextInt(pool.size)]
     }
 }

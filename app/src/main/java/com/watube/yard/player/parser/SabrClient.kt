@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import misc.Common.FormatId
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -548,7 +549,19 @@ class SabrClient private constructor(
 
             UMPPartId.SABR_REDIRECT -> {
                 val redirect = SabrRedirect.parseFrom(part.data)
-                url = redirect.url
+                // The next request carries the PoToken and playback cookie: only follow a
+                // redirect that stays on https and inside the YouTube/Google host family,
+                // otherwise the credentials would be sent to an arbitrary host.
+                if (isTrustedStreamUrl(redirect.url)) {
+                    url = redirect.url
+                } else {
+                    // host only: the url carries the PoToken and playback cookies
+                    val rejectedHost = redirect.url.toHttpUrlOrNull()?.host ?: "invalid url"
+                    Log.e(
+                        TAG,
+                        "processPart: ignoring SABR redirect to an unexpected host ($rejectedHost)"
+                    )
+                }
             }
 
             UMPPartId.SABR_CONTEXT_UPDATE -> {
@@ -646,5 +659,27 @@ class SabrClient private constructor(
         private const val ENCODING = "identity"
         private const val ACCEPT = "application/vnd.yt-ump"
         private const val USER_AGENT = "com.google.visionos.youtube/1.02(RealityDevice14,1; U; CPU visionOS 25_6_0 like Mac OS X; GB)";
+
+        /** Domains a stream request is allowed to be redirected to. */
+        private val TRUSTED_STREAM_HOSTS = setOf(
+            "youtube.com",
+            "googlevideo.com",
+            "googleapis.com",
+            "google.com",
+            "ytimg.com",
+            "gvt1.com",
+            "googleusercontent.com"
+        )
+
+        /**
+         * Whether [candidate] is a URL a SABR request may be sent to: https only and within
+         * the YouTube/Google host family (the redirect comes from the response body).
+         */
+        private fun isTrustedStreamUrl(candidate: String): Boolean {
+            val httpUrl = candidate.toHttpUrlOrNull() ?: return false
+            if (!httpUrl.isHttps) return false
+            val host = httpUrl.host.lowercase()
+            return TRUSTED_STREAM_HOSTS.any { host == it || host.endsWith(".$it") }
+        }
     }
 }
