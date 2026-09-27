@@ -1,0 +1,6 @@
+# Exemple de configuration locale (copiez ce fichier en local.properties)
+# Adaptez sdk.dir a votre systeme :
+#   Windows : sdk.dir=C\:\\Users\\<vous>\\AppData\\Local\\Android\\Sdk
+#   Linux   : sdk.dir=/opt/android-sdk
+#   macOS   : sdk.dir=/Users/<vous>/Library/Android/sdk
+sdk.dir=/opt/android-sdk
