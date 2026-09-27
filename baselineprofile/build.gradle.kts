@@ -5,6 +5,9 @@ plugins {
     // (alias androidTest -> même version que AGP, embarquée dans AGP).
     alias(libs.plugins.androidTest)
     alias(libs.plugins.baselineprofile)
+    // WATUBE FIX : le module contient des sources Kotlin (BaselineProfileGenerator)
+    // -> le plugin Kotlin doit etre declare explicitement pour l'IDE.
+    alias(libs.plugins.kotlin.android)
 }
 
 // ✅ CORRECTION 1 : Suppression du warning de dépréciation pour android {}
@@ -34,19 +37,13 @@ android {
 
 }
 
-// CORRECTION "Unresolved reference: kotlinOptions / jvmTarget" :
-// sans org.jetbrains.kotlin.android applique nommement, seule la compilation
-// embarquee AGP 9 est disponible -> reglage du jvmTarget par reflection.
-tasks.withType<AbstractCompile>().configureEach {
-    if (name.startsWith("compile") && name.contains("Kotlin")) {
-        try {
-            val co = javaClass.getMethod("getCompilerOptions").invoke(this)
-            val jt = co.javaClass.getMethod("getJvmTarget").invoke(co)
-            val v17 = jt.javaClass.getMethod("fromString", String::class.java).invoke(null, "17")
-            jt.javaClass.getMethod("set", Object::class.java).invoke(jt, v17)
-        } catch (_: Throwable) { }
+// WATUBE FIX : extension Kotlin officielle (plugin applique nommement ci-dessus).
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
+
 
 // This is the configuration block for the Baseline Profile plugin.
 // You can specify to run the generators on a managed devices or connected devices.

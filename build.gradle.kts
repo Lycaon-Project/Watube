@@ -9,13 +9,10 @@ plugins {
     // de code (KSP/annotation-processor style) : il n'ajoute AUCUNE propriete
     // au bloc buildFeatures{} -> `safeArgs`/`navigationArgs` y sont inconnus.
     // Il est donc applique directement dans :app (seul consommateur).
-    // Plugins Kotlin appliques par :app via apply(plugin = ...) -> doivent etre
-    // resolves a la racine pour figurer sur le classpath commun. Les vrais Maven
-    // coords des plugins Gradle (et non les jars du compiler) sont utilises ici ;
-    // la version est forcee a celle embarquee par AGP 9.4.1 (2.3.20) pour eviter
-    // "already on the classpath with an unknown version".
-    id("org.jetbrains.kotlin.plugin.parcelize") version "2.3.20" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20" apply false
+    // WATUBE FIX (sync Android Studio) : les plugins Kotlin (android/parcelize/
+    // serialization) sont desormais declares AVEC version dans :app via le
+    // version catalog (alias libs.plugins.kotlin.*). Ils ne doivent plus etre
+    // pre-resolus ici sans version coherentes, sinon conflits de classpath.
     // KSP et protobuf idem : classes chargees une seule fois, a la racine.
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.google.protobuf) apply false

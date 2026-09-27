@@ -2,11 +2,15 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
-    // CORRECTION SYNC ANDROID STUDIO : AGP 9 embarque déjà les plugins Kotlin
-    // parcelize/serialization dans son classpath. Les redemander AVEC version
-    // provoque "already on the classpath with an unknown version" ; il faut donc
-    // les appliquer SANS version, ce qui est interdit dans un bloc plugins{} ->
-    // on les applique via la forme imperative apply(plugin = ...) ci-dessous.
+    // WATUBE FIX (sync Android Studio) : le plugin Kotlin android est declare
+    // explicitement avec sa version via le version catalog. C'est LA condition
+    // pour qu'Android Studio reconnaisse le module comme une application Android
+    // complete (sourceSets Kotlin, extension kotlin{}, tache IDE
+    // prepareKotlinBuildScriptModel). La version reste alignee sur celle
+    // embarquee par AGP (voir commentaire dans libs.versions.toml).
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.androidx.navigation.safeargs)
     // Plugin baselineprofile : identique à main amont. L'erreur de sync
     // "targetProjectPath cannot be null in test project baselineprofile" était
@@ -17,11 +21,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.protobuf)
 }
-
-// Plugins Kotlin déjà présents sur le classpath commun (chargés à la racine) :
-// appliqués sans numéro de version pour éviter tout conflit avec AGP 9.
-apply(plugin = "org.jetbrains.kotlin.plugin.parcelize")
-apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
 /*
 'keystore.properties' should look like the following:
@@ -112,26 +111,7 @@ android {
 
     // javaParameters est une option JAVA pure -> passe par les tasks JavaCompile.
     tasks.withType<JavaCompile>().configureEach {
-        options.compilerArgs.add("-parameters") // ex-javaParameters
-    }
-
-    // CORRECTION "Unresolved reference: jvmTarget" : sans l'extension kotlinOptions,
-    // on force le jvmTarget 17 sur les tasks de compilation Kotlin. Les classes du
-    // plugin embarque AGP 9 ne sont pas sur le classpath des scripts -> reflection.
-    tasks.withType<AbstractCompile>().configureEach {
-        if (name.startsWith("compile") && name.contains("Kotlin")) {
-            try {
-                val co = javaClass.getMethod("getCompilerOptions").invoke(this)
-                val jt = co.javaClass.getMethod("getJvmTarget").invoke(co)
-                val fromString = jt.javaClass.getMethod("fromString", String::class.java)
-                val v17 = fromString.invoke(null, "17")
-                jt.javaClass.getMethod("set", Object::class.java).invoke(jt, v17)
-            } catch (_: Throwable) { /* task Java : nothing to do */ }
-        }
-    }
-
-    packaging {
-        jniLibs.excludes.add("lib/armeabi-v7a/*_neon.so")
+        options.compilerArgs.add("-parameters")
     }
 
     tasks.register("testClasses") {
@@ -158,6 +138,17 @@ android {
     }
 
     namespace = "com.watube.yard"
+}
+
+// WATUBE FIX (sync Android Studio) : extension Kotlin officielle. Le plugin
+// org.jetbrains.kotlin.android etant desormais applique nommement dans le bloc
+// plugins{}, cette DSL est resolue par l'IDE -> le module est reconnu comme
+// application Android complete (plus de "prepareKotlinBuildScriptModel not
+// found", plus de module Java orphelin). Remplace le hack par reflection.
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 dependencies {
