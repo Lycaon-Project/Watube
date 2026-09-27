@@ -1,4 +1,4 @@
-package com.github.libretube.baselineprofile
+package com.watube.yard.baselineprofile
 
 import android.widget.RadioButton
 import androidx.benchmark.macro.MacrobenchmarkScope

@@ -1,4 +1,4 @@
-package com.github.libretube.baselineprofile
+package com.watube.yard.baselineprofile
 
 import androidx.benchmark.macro.BaselineProfileMode
 import androidx.benchmark.macro.CompilationMode
