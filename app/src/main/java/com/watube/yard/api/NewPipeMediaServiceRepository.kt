@@ -327,10 +327,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             // Note: `resp` here is an org.schabi.newpipe.extractor.stream.StreamInfo, which
             // exposes getStreamType() but has NO `livestream` property (that one only exists
             // on StreamInfoItem) -> derive liveness from the stream type enum instead.
-            livestream = resp.streamType == StreamType.LIVE_STREAM ||
-                resp.streamType == StreamType.LIVE_PREMIERE ||
+            livestream = resp.streamType in LIVE_STREAM_TYPES ||
                 // fallback for extractors that leave the duration unset/zero for live content
-                (resp.duration <= 0 && resp.streamType != StreamType.AUDIO_STREAM),
+                (resp.duration <= 0 && resp.streamType !in NON_LIVE_TYPES),
             duration = resp.duration,
             uploadTimestamp = resp.uploadDate.offsetDateTime().toInstant().toKotlinInstant(),
             uploaded = resp.uploadDate.offsetDateTime().toEpochSecond() * 1000,
@@ -556,5 +555,21 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
     companion object {
         private const val DEARROW_THUMBNAIL_URL =
             "https://dearrow-thumb.ajay.app/api/v1/getThumbnail"
+
+        // Watube 27A1: exhaustive set of "currently live" stream types exposed by the
+        // NewPipe extractor (the fork pinned here has no LIVE_PREMIERE constant; a premiere
+        // is reported as POST_LIVE_STREAM until it starts, then as LIVE_STREAM).
+        private val LIVE_STREAM_TYPES = setOf(
+            StreamType.LIVE_STREAM,
+            StreamType.AUDIO_LIVE_STREAM,
+            StreamType.POST_LIVE_STREAM,
+            StreamType.POST_LIVE_AUDIO_STREAM,
+        )
+
+        // Types that are definitely NOT live -> excluded from the zero-duration fallback.
+        private val NON_LIVE_TYPES = setOf(
+            StreamType.VIDEO_STREAM,
+            StreamType.AUDIO_STREAM,
+        )
     }
 }
