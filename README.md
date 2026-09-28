@@ -30,9 +30,8 @@
     </a>
   </div>
 
+  <!-- Liens communautaires (Distribution exclusivement via GitHub) -->
   <div align="center" style="width:100%; display:flex; justify-content:center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
-    <a href="#"><img src="assets/badges/fdrload.png" alt="Get it on F-Droid" height="65"></a>
-    <a href="#"><img src="assets/badges/izzyload.png" alt="Get it on IzzyOnDroid" height="65"></a>
     <a href="#"><img src="assets/badges/tgload.png" alt="Join us on Telegram" height="65"></a>
   </div>
 
@@ -45,7 +44,7 @@
 ---
 
 > **📌 Important Note** <br>
-> This is **Watube**, an **independent fork** maintained by Lycaon-Project and based on the original LibreTube project. Watube is a separate entity with its own development roadmap focused on performance optimisation, resource efficiency, security hardening and modernisation — while keeping every feature of the upstream app.
+> This is **Watube**, an **independent fork** maintained by Lycaon-Project and based on the original LibreTube project. Watube is a separate entity with its own development roadmap focused on performance enhancement, resource efficiency, security hardening and modernisation — while keeping every feature of the upstream app.
 
 ---
 
@@ -59,7 +58,7 @@ YouTube has an extremely invasive [privacy policy](https://support.google.com/yo
 
 While maintaining the original project's privacy-first philosophy, **Watube specifically focuses on**:
 
-- ⚡ **Performance Optimization** - Optimize for 120 Hz screens and to reduce battery consumption
+- ⚡ **Performance Enhancement** - Refine for 120 Hz screens and to reduce battery consumption
 - 🐛 **Bug Fixes & Stability** - Comprehensive testing and reliability improvements
 - 📱 **Android 15+ Compatibility** - Full support for latest Android features and requirements
 - 🎨 **Enhanced User Experience** - Smoother animations and improved responsiveness
@@ -69,15 +68,15 @@ While maintaining the original project's privacy-first philosophy, **Watube spec
 
 <h2 align="left">⚙️ Technical Deep Dive: Notable Changes in Watube</h2>
 
-Unlike standard forks, Watube introduces deep architectural and rendering optimizations to guarantee a buttery-smooth experience ("our daily comfort") while drastically reducing the resource footprint.
+Unlike standard forks, Watube introduces deep architectural and rendering enhancements to guarantee a buttery-smooth experience ("our daily comfort") while drastically reducing the resource footprint.
 
 #### 🚀 Performance & Resources
-| Optimization Area | Technical Implementation |
+| Enhancement Area | Technical Implementation |
 | :--- | :--- |
 | **Smart UI Polling** | Polling loops of the player UI (`position`, queue buttons, chapter name, seek bar, chapter index) only do work when their value actually changed, slow down while paused, and are stopped when the player is detached. |
 | **Zero-Allocation Rendering** | SponsorBlock/chapter time bars no longer allocate `Paint`/`Rect` objects on every frame, eliminating GC (Garbage Collection) spikes during playback. |
 | **Debounced Search** | Search suggestions are debounced (300 ms) instead of firing one network request per keystroke. |
-| **Optimized Persistence** | The watch position is persisted every 5 s instead of every second (and immediately on pause/end). It is cached in memory so list rows don't have to query Room while binding. |
+| **Optimised Persistence** | The watch position is persisted every 5 s instead of every second (and immediately on pause/end). It is cached in memory so list rows don't have to query Room while binding. |
 | **Smart DiffUtil** | Identifies rows by their stable id (video url, primary key, …), so lists rebind and reload thumbnails only when their content really changed. |
 | **Throttled Notifications** | Download progress notifications are throttled to 2 updates per second to save CPU cycles. |
 | **Memory Management** | The player back buffer was reduced from 3 minutes to 1 minute to save RAM on low-end devices. |
