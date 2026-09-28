@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="16dp"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,8 @@
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/sponsor_badge_card"
@@ -47,6 +48,7 @@
                     android:id="@+id/sponsor_badge_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/category_sponsor"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
                     android:src="@drawable/ic_paid_content"
@@ -96,16 +98,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="4dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:textAlignment="viewStart"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/thumbnailcard"
+        app:layout_constraintEnd_toStartOf="@+id/options_button"
         app:layout_constraintStart_toEndOf="@+id/channel_image_container"
         app:layout_constraintTop_toBottomOf="@+id/thumbnailcard"
         tools:text="Title" />
+
+    <!-- menu à droite: the video options sheet, same as the long press -->
+    <ImageButton
+        android:id="@+id/options_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/tooltip_options"
+        android:padding="8dp"
+        android:src="@drawable/ic_three_dots"
+        app:layout_constraintEnd_toEndOf="@+id/thumbnailcard"
+        app:layout_constraintTop_toTopOf="@+id/textView_title"
+        app:tint="?attr/colorOnSurfaceVariant" />
 
     <TextView
         android:id="@+id/textView_channel"
@@ -134,6 +149,7 @@
             android:id="@+id/channel_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:importantForAccessibility="no"
             tools:srcCompat="@mipmap/ic_launcher" />
 
     </androidx.cardview.widget.CardView>

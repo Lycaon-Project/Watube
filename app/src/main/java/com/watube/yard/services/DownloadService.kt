@@ -25,7 +25,7 @@ import androidx.core.util.set
 import androidx.core.util.valueIterator
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.watube.yard.LibreTubeApp.Companion.DOWNLOAD_CHANNEL_NAME
+import com.watube.yard.WatubeApp.Companion.DOWNLOAD_CHANNEL_NAME
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.obj.PipedStream

@@ -44,12 +44,14 @@ object ImageHelper {
     /**
      * Builds the one and only [ImageLoader] of the app.
      *
-     * It is registered as Coil's singleton from [LibreTubeApp], which means every
+     * It is registered as Coil's singleton from [WatubeApp], which means every
      * `ImageView.load(...)` call, the data saver lookups and the manual cache clearing
      * all share the very same memory and disk caches as well as one shared OkHttp client.
      */
     fun buildImageLoader(context: Context): ImageLoader {
         val httpClient = OkHttpClient.Builder()
+            // thumbnails must not leak `okhttp/x.y.z` either: same UA as the API calls
+            .addInterceptor(com.watube.yard.api.GenericUserAgentInterceptor())
 
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor().apply {

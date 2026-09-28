@@ -20,7 +20,11 @@ import retrofit2.http.Url
 
 private const val GITHUB_API_URL = "https://api.github.com/repos/Lycaon-Project/Watube/releases/latest"
 private const val SB_API_URL = "https://sponsor.ajay.app"
-private const val RYD_API_URL = "https://ryd-proxy.kavin.rocks"
+// Watube 26.9 fix: the former endpoint (ryd-proxy.kavin.rocks, a Piped side proxy) answers
+// 502 for every request, so the dislike counter could never load and stayed hidden.
+// returnyoutubedislikeapi.com is the official Return YouTube Dislike API and is the very
+// URL announced by the setting summary (res/values*/strings.xml "local_ryd_summary").
+private const val RYD_API_URL = "https://returnyoutubedislikeapi.com"
 private const val GOOGLE_API_KEY = "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw"
 const val USER_AGENT = PrivacyHelper.GENERIC_USER_AGENT
 

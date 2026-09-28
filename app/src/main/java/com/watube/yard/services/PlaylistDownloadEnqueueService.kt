@@ -10,7 +10,7 @@ import androidx.core.app.ServiceCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.watube.yard.LibreTubeApp.Companion.PLAYLIST_DOWNLOAD_ENQUEUE_CHANNEL_NAME
+import com.watube.yard.WatubeApp.Companion.PLAYLIST_DOWNLOAD_ENQUEUE_CHANNEL_NAME
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.PlaylistsHelper

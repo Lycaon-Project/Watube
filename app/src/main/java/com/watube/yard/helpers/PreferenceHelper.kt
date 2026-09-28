@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.watube.yard.LibreTubeApp
+import com.watube.yard.WatubeApp
 import com.watube.yard.R
 import com.watube.yard.api.TrendingCategory
 import com.watube.yard.constants.PreferenceKeys
@@ -44,7 +44,7 @@ object PreferenceHelper {
      */
     private val MIGRATIONS = arrayOf(
         PreferenceMigration(0, 1) {
-            LibreTubeApp.instance.resources
+            WatubeApp.instance.resources
                 .getStringArray(R.array.sponsorBlockSegments)
                 .forEach { category ->
                     val key = "${category}_category"

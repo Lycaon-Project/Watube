@@ -19,7 +19,7 @@ import com.watube.yard.helpers.WindowHelper
 import java.util.Locale
 
 /**
- * Activity that applies the LibreTube theme and the in-app language
+ * Activity that applies the Watube theme and the in-app language
  */
 open class BaseActivity : AppCompatActivity() {
 

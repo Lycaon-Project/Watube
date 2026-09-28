@@ -90,6 +90,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             // Start or pause watch position timer
             if (isPlaying) {
                 watchPositionTimer.resume()
+                // the SponsorBlock polling loop stops while paused: restart it here
+                checkForSegments()
             } else {
                 watchPositionTimer.pause()
                 // persist the exact position right away, the periodic timer is throttled
@@ -288,9 +290,22 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
      * 100ms using [handler], so it's not needed to schedule it manually.
      */
     private fun checkForSegments() {
+        val player = exoPlayer
+        // The loop must only run while it can actually do something: no player, paused,
+        // no segments or SponsorBlock disabled would otherwise keep 10 wake-ups/second
+        // alive for the whole service lifetime. It is restarted by onIsPlayingChanged(true)
+        // and by setSponsorBlockSegments().
+        if (player == null ||
+            !player.isPlaying ||
+            sponsorBlockSegments.isEmpty() ||
+            !PlayerHelper.sponsorBlockEnabled
+        ) {
+            return
+        }
+
         handler.postDelayed(this::checkForSegments, 100)
 
-        val (currentSegment, sbSkipOption) = exoPlayer?.getCurrentSegment(
+        val (currentSegment, sbSkipOption) = player.getCurrentSegment(
             sponsorBlockSegments,
             sponsorBlockConfig
         ) ?: return
@@ -406,7 +421,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         this.trackSelector = trackSelector
 
         val player = PlayerHelper.createPlayer(this, trackSelector)
-        // prevent android from putting LibreTube to sleep when locked
+        // prevent android from putting Watube to sleep when locked
         player.setWakeMode(if (isOfflinePlayer) C.WAKE_MODE_LOCAL else C.WAKE_MODE_NETWORK)
         player.addListener(playerListener)
         this.exoPlayer = player

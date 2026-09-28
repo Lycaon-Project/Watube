@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# LibreTube ProGuard/R8 Rules - Ubdated
+# Watube ProGuard/R8 Rules - Ubdated
 # ----------------------------------------------------------------------------
 
 # Enable aggressive optimizations for smaller APK size

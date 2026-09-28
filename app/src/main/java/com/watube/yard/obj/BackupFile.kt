@@ -22,7 +22,7 @@ data class BackupFile(
     val version: Int = 1,
 
     //
-    // only compatible with LibreTube itself, database objects
+    // only compatible with this app itself, database objects
     //
     var watchHistory: List<WatchHistoryItem>? = emptyList(),
     var watchPositions: List<WatchPosition>? = emptyList(),

@@ -26,6 +26,27 @@
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
+                <!-- Chips de filtres horizontales sous le header (style communautaire) -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:overScrollMode="never"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/filterChips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="2dp"
+                        app:chipSpacingHorizontal="8dp"
+                        app:singleLine="true" />
+
+                </HorizontalScrollView>
+
                 <LinearLayout
                     android:id="@+id/featuredTV"
                     android:layout_width="match_parent"
@@ -82,6 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
+                    android:paddingStart="0dp"
                     android:paddingEnd="12dp"
                     android:visibility="gone"
                     tools:visibility="visible">
@@ -206,6 +228,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
+            android:importantForAccessibility="no"
             android:src="@drawable/ic_list" />
 
         <TextView

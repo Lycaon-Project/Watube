@@ -37,7 +37,7 @@ import androidx.media3.exoplayer.text.TextOutput
 import androidx.media3.exoplayer.text.TextRenderer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.CaptionStyleCompat
-import com.watube.yard.LibreTubeApp
+import com.watube.yard.WatubeApp
 import com.watube.yard.R
 import com.watube.yard.api.obj.ChapterSegment
 import com.watube.yard.api.obj.Segment
@@ -518,7 +518,7 @@ object PlayerHelper {
     fun getSponsorBlockCategories(): MutableMap<String, SbSkipOptions> {
         val categories: MutableMap<String, SbSkipOptions> = mutableMapOf()
 
-        for (category in LibreTubeApp.instance.resources.getStringArray(
+        for (category in WatubeApp.instance.resources.getStringArray(
             R.array.sponsorBlockSegments
         )) {
             val defaultCategoryValue = sbDefaultValues.getOrDefault(category, SbSkipOptions.OFF)

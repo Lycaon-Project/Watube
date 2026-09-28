@@ -1,6 +1,7 @@
 package com.watube.yard.repo
 
 import android.util.Log
+import com.watube.yard.api.GenericUserAgentInterceptor
 import com.watube.yard.db.obj.DownloadItem
 import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.DownloadHelper
@@ -26,6 +27,8 @@ class RawByteStreamDownloadProvider(val url: HttpUrl) : DownloadProvider {
             .connectTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
             .readTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
             .retryOnConnectionFailure(true)
+            // downloads must not leak `okhttp/x.y.z` either: same UA as the API calls
+            .addInterceptor(GenericUserAgentInterceptor())
             .build()
     }
 

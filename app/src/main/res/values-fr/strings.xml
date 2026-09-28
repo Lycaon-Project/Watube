@@ -229,6 +229,10 @@
     <string name="open_copied">Ouvrir</string>
     <string name="copied_to_clipboard">Copié dans le presse-papier</string>
     <string name="device_info">Informations de l’appareil</string>
+    <string name="open_source_licenses">Licences des logiciels libres</string>
+    <string name="open_source_licenses_message">Watube est publié sous licence GPL-3.0. Cette application intègre aussi les bibliothèques de logiciels libres suivantes. Touchez une entrée pour lire sa licence.</string>
+    <string name="watube_features">Fonctions de Watube</string>
+    <string name="watube_features_message">Ces fonctions sont spécifiques à Watube et ne font pas partie du code source d’origine :\n\n• Centre de confidentialité : un seul écran regroupant tous les interrupteurs anti-empreintes\n• Durcissement activé par défaut (la confidentialité se désactive, elle ne s’active pas)\n• Rotation automatique de l’identifiant SponsorBlock (12 h / 24 h / manuelle)\n• Mode région neutre : le pays envoyé pour les tendances et l’accueil tourne dans une liste fixe\n• Un User-Agent générique pour toutes les requêtes : API, vignettes, téléchargements et services tiers\n• Aucune fuite de pays par la carte SIM ou l’opérateur\n• Durcissement du WebView : pas de cache DOM, pas de cookies tiers\n• Réinitialisation des identifiants en une touche (identifiant SponsorBlock + région neutre)\n• Les versions de release ne font confiance qu’aux certificats système : les certificats utilisateur restent réservés au debug\n• Compteur de dislikes Return YouTube Dislike en local</string>
     <string name="audio_video_summary">Qualité et format</string>
     <string name="new_videos_badge">Indicateur de nouvelles vidéos</string>
     <string name="new_videos_badge_summary">Afficher un badge avec le nombre de nouvelles vidéos s’il y en a</string>
@@ -313,7 +317,7 @@
     <string name="resume">Reprendre</string>
     <string name="help">Aide</string>
     <string name="audio_only_mode">Mode audio seulement</string>
-    <string name="audio_only_mode_summary">Transforme LibreTube en lecteur de musique</string>
+    <string name="audio_only_mode_summary">Transforme Watube en lecteur de musique</string>
     <string name="no_subtitle">Pas de sous-titre</string>
     <string name="download_paused">Téléchargement interrompu</string>
     <string name="download_completed">Téléchargement terminé</string>
@@ -469,7 +473,7 @@
     <string name="best_quality">Le meilleur</string>
     <string name="thumbnail_time">Durée de la miniature</string>
     <string name="external_download_provider">Fournisseur de téléchargement externe</string>
-    <string name="external_download_provider_summary">Entrez le nom du package de l’application que vous souhaitez utiliser pour télécharger des vidéos. Laissez vide pour utiliser le téléchargeur qui est intégré dans LibreTube.</string>
+    <string name="external_download_provider_summary">Entrez le nom du package de l’application que vous souhaitez utiliser pour télécharger des vidéos. Laissez vide pour utiliser le téléchargeur qui est intégré dans Watube.</string>
     <string name="screenshot">Capture d’écran</string>
     <string name="pip">PiP</string>
     <string name="local_stream_extraction">Extraction de flux locaux</string>

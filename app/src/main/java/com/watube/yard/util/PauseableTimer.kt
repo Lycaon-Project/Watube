@@ -14,9 +14,9 @@ class PauseableTimer(
     private var timer: Timer? = null
     private var isRunning = false
 
-    init {
-        resume()
-    }
+    // Note: the timer intentionally does NOT start itself. Callers (e.g. the player
+    // service) start it through resume() when there is actually something to tick,
+    // so an idle service never keeps a timer chain alive.
 
     fun resume() {
         // only start a single tick chain, otherwise every call would add another one

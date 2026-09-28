@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.watube.yard.LibreTubeApp
+import com.watube.yard.WatubeApp
 
 object DatabaseHolder {
     private const val DATABASE_NAME = "LibreTubeDatabase"
@@ -89,7 +89,7 @@ object DatabaseHolder {
     class MIGRATION_23_24 : AutoMigrationSpec
 
     val Database by lazy {
-        Room.databaseBuilder(LibreTubeApp.instance, AppDatabase::class.java, DATABASE_NAME)
+        Room.databaseBuilder(WatubeApp.instance, AppDatabase::class.java, DATABASE_NAME)
             .addMigrations(
                 MIGRATION_11_12,
                 MIGRATION_12_13,

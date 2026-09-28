@@ -9,7 +9,7 @@ import androidx.media3.session.CommandButton
 import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaNotification
 import androidx.media3.session.MediaSession
-import com.watube.yard.LibreTubeApp.Companion.PLAYER_CHANNEL_NAME
+import com.watube.yard.WatubeApp.Companion.PLAYER_CHANNEL_NAME
 import com.watube.yard.R
 import com.watube.yard.enums.NotificationId
 import com.watube.yard.enums.PlayerEvent

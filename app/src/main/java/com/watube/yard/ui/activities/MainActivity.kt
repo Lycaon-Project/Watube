@@ -1,6 +1,7 @@
 package com.watube.yard.ui.activities
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -8,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -18,6 +20,7 @@ import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.allViews
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.core.view.isNotEmpty
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
@@ -63,11 +66,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
+/** Material "expanded" breakpoint: wider screens switch to a navigation rail */
+private const val EXPANDED_WIDTH_DP = 600
+
+/** Mirrors the 80dp width of the nav rail declared in res/layout/activity_main.xml */
+private const val EXPANDED_RAIL_WIDTH_DP = 80f
+
 class MainActivity : AbstractPlayerHostActivity() {
     private lateinit var binding: ActivityMainBinding
 
     lateinit var navController: NavController
     private var startFragmentId = R.id.homeFragment
+
+    /** set once the navigation rail listeners are attached, so config changes don't stack them */
+    private var railNavWired = false
 
     private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
@@ -136,6 +148,14 @@ class MainActivity : AbstractPlayerHostActivity() {
                         setPadding(
                             paddingLeft,
                             paddingTop,
+                            paddingRight,
+                            systemBarInsets.bottom
+                        )
+                    }
+                    with(binding.navRail) {
+                        setPadding(
+                            paddingLeft,
+                            systemBarInsets.top,
                             paddingRight,
                             systemBarInsets.bottom
                         )
@@ -209,6 +229,8 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         if (binding.bottomNav.menu.children.none { it.itemId == startFragmentId }) deselectBottomBarItems()
 
+        setupExpandedLayout()
+
         binding.toolbar.title = ThemeHelper.getStyledAppName(this)
 
         // handle error logs
@@ -228,11 +250,87 @@ class MainActivity : AbstractPlayerHostActivity() {
      * Deselect all bottom bar items
      */
     private fun deselectBottomBarItems() {
-        binding.bottomNav.menu.setGroupCheckable(0, true, false)
-        for (child in binding.bottomNav.menu.children) {
-            child.isChecked = false
+        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+            bar.menu.setGroupCheckable(0, true, false)
+            for (child in bar.menu.children) {
+                child.isChecked = false
+            }
+            bar.menu.setGroupCheckable(0, true, true)
         }
-        binding.bottomNav.menu.setGroupCheckable(0, true, true)
+    }
+
+    /**
+     * Adaptive navigation: tablets and unfolded foldables (>= 600dp of width, the
+     * Material "expanded" breakpoint) swap the bottom bar for a navigation rail pinned
+     * to the start edge. Phones keep the exact previous behaviour.
+     *
+     * Idempotent, because it is called again on every configuration change: MainActivity
+     * declares `orientation` in its configChanges, so rotating never recreates it.
+     */
+    private fun setupExpandedLayout() {
+        val expanded = resources.configuration.screenWidthDp >= EXPANDED_WIDTH_DP
+
+        binding.navRail.isVisible = false
+        setContentMarginStart(0f)
+
+        if (!expanded) {
+            // compact layout: bring the bottom bar back, the nav preference still
+            // decides whether it is visible at all (e.g. "hide every tab")
+            try {
+                NavBarHelper.applyNavBarStyle(binding.bottomNav)
+            } catch (_: Exception) {
+                binding.bottomNav.isVisible = true
+            }
+            return
+        }
+
+        binding.bottomNav.isVisible = false
+        binding.navRail.isVisible = true
+
+        // both bars must offer the very same (user ordered) tabs
+        try {
+            NavBarHelper.applyNavBarStyle(binding.navRail)
+        } catch (_: Exception) {
+            // a corrupted nav preference must never keep the rail from working
+        }
+
+        // "hide every tab" makes applyNavBarStyle drop the bar: keep it that way
+        if (!binding.navRail.isVisible) return
+
+        if (!railNavWired) {
+            railNavWired = true
+            binding.navRail.setupWithNavController(navController)
+            binding.navRail.setOnItemReselectedListener {
+                if (it.itemId != navController.currentDestination?.id) {
+                    navigateToBottomSelectedItem(it)
+                } else {
+                    tryScrollToTop(
+                        (supportFragmentManager.fragments.filterIsInstance<NavHostFragment>()
+                            .firstOrNull()
+                            ?.childFragmentManager?.fragments)?.firstOrNull()?.requireView()
+                    )
+                }
+            }
+            binding.navRail.setOnItemSelectedListener {
+                navigateToBottomSelectedItem(it)
+            }
+        }
+
+        // keep the content clear of the rail
+        setContentMarginStart(EXPANDED_RAIL_WIDTH_DP)
+    }
+
+    /** Keeps the fragment container clear of the navigation rail (0dp on phones) */
+    private fun setContentMarginStart(widthDp: Float) {
+        (binding.fragment.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
+            layoutParams.marginStart = (widthDp * resources.displayMetrics.density).toInt()
+            binding.fragment.layoutParams = layoutParams
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setupExpandedLayout()
     }
 
     /**
@@ -260,25 +358,34 @@ class MainActivity : AbstractPlayerHostActivity() {
             return
         }
 
-        subscriptionsViewModel.fetchSubscriptions(this)
+        // the badge counts new videos: the feed is what has to be loaded, not the channels
+        subscriptionsViewModel.fetchFeed(this, forceRefresh = false)
 
         subscriptionsViewModel.videoFeed.observe(this) { feed ->
             val lastCheckedFeedTime = PreferenceHelper.getLastCheckedFeedTime(seenByUser = true)
             val lastSeenVideoIndex = feed.orEmpty()
                 .filter { !it.isUpcoming }
                 .indexOfFirst { it.uploaded <= lastCheckedFeedTime }
-            if (lastSeenVideoIndex < 1) return@observe
+            if (lastSeenVideoIndex < 1) {
+                // nothing new: drop a badge left over from a previous feed
+                binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
+                binding.navRail.removeBadge(R.id.subscriptionsFragment)
+                return@observe
+            }
 
-            binding.bottomNav.getOrCreateBadge(R.id.subscriptionsFragment).apply {
-                number = lastSeenVideoIndex
-                backgroundColor = ThemeHelper.getThemeColor(
-                    this@MainActivity,
-                    androidx.appcompat.R.attr.colorPrimary
-                )
-                badgeTextColor = ThemeHelper.getThemeColor(
-                    this@MainActivity,
-                    com.google.android.material.R.attr.colorOnPrimary
-                )
+            // the badge is mirrored on both bars: only one of them is visible at a time
+            listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+                bar.getOrCreateBadge(R.id.subscriptionsFragment).apply {
+                    number = lastSeenVideoIndex
+                    backgroundColor = ThemeHelper.getThemeColor(
+                        this@MainActivity,
+                        androidx.appcompat.R.attr.colorPrimary
+                    )
+                    badgeTextColor = ThemeHelper.getThemeColor(
+                        this@MainActivity,
+                        com.google.android.material.R.attr.colorOnPrimary
+                    )
+                }
             }
         }
     }
@@ -499,6 +606,8 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         // Open the Downloads screen if requested
         if (intent?.getBooleanExtra(IntentData.OPEN_DOWNLOADS, false) == true) {
+            // downloads isn't a visible tab: no other tab may stay highlighted
+            deselectBottomBarItems()
             navController.navigate(R.id.downloadsFragment)
             return
         }
@@ -506,10 +615,14 @@ class MainActivity : AbstractPlayerHostActivity() {
         // Handle navigation from app shortcuts (Home, Trends, etc.)
         intent?.getStringExtra(IntentData.fragmentToOpen)?.let {
             ShortcutManagerCompat.reportShortcutUsed(this, it)
+            // same for trends: the destination may be hidden in the bottom bar
+            deselectBottomBarItems()
             when (it) {
                 TopLevelDestination.Home.route -> navController.navigate(R.id.homeFragment)
                 TopLevelDestination.Trends.route -> navController.navigate(R.id.trendsFragment)
-                TopLevelDestination.Subscriptions.route -> navController.navigate(R.id.subscriptionsFragment)
+                TopLevelDestination.Subscriptions.route -> navController.navigate(
+                    R.id.subscriptionsFragment
+                )
                 TopLevelDestination.Library.route -> navController.navigate(R.id.libraryFragment)
             }
         }
@@ -594,6 +707,7 @@ class MainActivity : AbstractPlayerHostActivity() {
     private fun navigateToBottomSelectedItem(item: MenuItem): Boolean {
         if (item.itemId == R.id.subscriptionsFragment) {
             binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
+            binding.navRail.removeBadge(R.id.subscriptionsFragment)
         }
 
         // Remove focus from search view when navigating to bottom view.

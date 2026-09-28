@@ -1,7 +1,7 @@
 package com.watube.yard.api
 
 import com.watube.yard.BuildConfig
-import com.watube.yard.LibreTubeApp
+import com.watube.yard.WatubeApp
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
@@ -56,7 +56,7 @@ object RetrofitInstance {
         }
 
     private val cacheDirectory: File
-        get() = File(LibreTubeApp.instance.cacheDir, HTTP_CACHE_DIR)
+        get() = File(WatubeApp.instance.cacheDir, HTTP_CACHE_DIR)
 
     private fun httpCache(): Cache = httpCache ?: synchronized(cacheLock) {
         httpCache ?: Cache(cacheDirectory, HTTP_CACHE_MAX_BYTES).also { httpCache = it }
@@ -90,25 +90,10 @@ object RetrofitInstance {
     }
 
     /**
-     * Watube anti-fingerprinting: normalize the User-Agent of every outgoing request
-     * that doesn't already carry a service-specific one. OkHttp otherwise appends its
-     * own default UA (`okhttp/x.y.z`), which leaks the library version and lets
-     * third parties single Watube traffic out from real browser traffic. This makes all
-     * hardened users look identical (Mullvad/Tor "blend into the crowd" policy).
+     * Watube anti-fingerprinting: see [GenericUserAgentInterceptor], installed on every
+     * client of the app (API, images, raw downloads) so no request ever leaks
+     * `okhttp/x.y.z`.
      */
-    private class GenericUserAgentInterceptor : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val original = chain.request()
-            if (original.header("User-Agent") != null) return chain.proceed(original)
-
-            return chain.proceed(
-                original.newBuilder()
-                    .header("User-Agent", PrivacyHelper.userAgent)
-                    .build(),
-            )
-        }
-    }
-
     private fun buildClient(): OkHttpClient {
         val httpClient = OkHttpClient().newBuilder()
             .cache(httpCache())

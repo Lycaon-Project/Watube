@@ -5,7 +5,7 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
-import com.watube.yard.LibreTubeApp
+import com.watube.yard.WatubeApp
 import com.watube.yard.api.poToken.PoTokenGenerator
 import com.watube.yard.helpers.DisplayHelper
 import com.watube.yard.player.manifest.Representation
@@ -262,7 +262,7 @@ class SabrClient private constructor(
     var lastActionMs: Long? = null
 
 
-    private val bandwidthEstimator = DefaultBandwidthMeter.getSingletonInstance(LibreTubeApp.instance)
+    private val bandwidthEstimator = DefaultBandwidthMeter.getSingletonInstance(WatubeApp.instance)
 
     @OptIn(UnstableApi::class)
     fun selectFormat(representation: Representation) {
@@ -372,7 +372,7 @@ class SabrClient private constructor(
             // only set for mobile clients
             .setMediaCapabilities(
                 MediaCapabilities.newBuilder()
-                    .setHdrModeBitmask(if (DisplayHelper.supportsHdr(LibreTubeApp.instance)) 3 else 0)
+                    .setHdrModeBitmask(if (DisplayHelper.supportsHdr(WatubeApp.instance)) 3 else 0)
                     .addAllVideoFormatCapabilities(
                         VideoFormatCapability.VideoCodec.entries.map {
                             VideoFormatCapability.newBuilder()

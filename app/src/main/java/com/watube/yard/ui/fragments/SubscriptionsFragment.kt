@@ -111,12 +111,13 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
             if (feed != null) {
                 lifecycleScope.launch {
                     showFeed(!alreadyShowedFeedOnce)
+                    // the "all caught up" separator inside showFeed must be computed with the
+                    // PREVIOUS seen timestamp, so the new one is written only afterwards
+                    feed.firstOrNull { !it.isUpcoming }?.uploaded?.let {
+                        PreferenceHelper.updateLastFeedWatchedTime(it, true)
+                    }
                 }
                 alreadyShowedFeedOnce = true
-            }
-
-           feed?.firstOrNull { !it.isUpcoming }?.uploaded?.let {
-                PreferenceHelper.updateLastFeedWatchedTime(it, true)
             }
 
             // ungrouped chip is hidden if the user doesn't use channel groups
@@ -313,8 +314,9 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
     }
 
     private fun List<StreamItem>.sortedBySelectedOrder() = when (selectedSortOrder) {
-        0 -> this
-        1 -> this.reversed()
+        // "most recent" must actually sort: the piped repositories return the api order
+        0 -> this.sortedByDescending { it.uploaded }
+        1 -> this.sortedBy { it.uploaded }
         2 -> this.sortedBy { it.views }.reversed()
         3 -> this.sortedBy { it.views }
         4 -> this.sortedBy { it.uploaderName }
@@ -339,9 +341,11 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         // add an "all caught up item"
         if (selectedSortOrder == 0) {
             val lastCheckedFeedTime = PreferenceHelper.getLastCheckedFeedTime(seenByUser = true)
+            // the index must be looked up in the list that is actually displayed, otherwise
+            // the separator lands at a wrong position for unsorted (piped) feeds
             val caughtUpIndex =
-                feed.indexOfFirst { it.uploaded <= lastCheckedFeedTime && !it.isUpcoming }
-            if (caughtUpIndex > 0 && !feed[caughtUpIndex - 1].isUpcoming) {
+                sortedFeed.indexOfFirst { it.uploaded <= lastCheckedFeedTime && !it.isUpcoming }
+            if (caughtUpIndex > 0 && !sortedFeed[caughtUpIndex - 1].isUpcoming) {
                 sortedFeed.add(
                     caughtUpIndex,
                     StreamItem(type = VideoCardsAdapter.CAUGHT_UP_STREAM_TYPE)

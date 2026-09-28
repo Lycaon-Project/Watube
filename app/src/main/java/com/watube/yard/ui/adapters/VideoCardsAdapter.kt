@@ -139,7 +139,9 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
                 NavigationHelper.navigateVideo(root.context, PlayerData(videoId))
             }
 
-            root.setOnLongClickListener {
+            // "menu à droite" of the concept sheet: opens the very same options sheet
+            // as the long press, so both entry points stay behaviourally identical
+            val showOptions = {
                 fragmentManager.setFragmentResultListener(
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,
                     activity
@@ -155,6 +157,11 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
                     putParcelable(IntentData.streamItem, video)
                 }
                 sheet.show(fragmentManager, VideoCardsAdapter::class.java.name)
+            }
+            optionsButton.setOnClickListener { showOptions() }
+
+            root.setOnLongClickListener {
+                showOptions()
                 true
             }
 

@@ -10,6 +10,7 @@ import com.watube.yard.R
 import com.watube.yard.databinding.ActivityAboutBinding
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.helpers.IntentHelper
+import com.watube.yard.helpers.LibraryInfo
 import com.watube.yard.ui.base.BaseActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -41,6 +42,14 @@ class AboutActivity : BaseActivity() {
         binding.license.setOnLongClickListener {
             onLongClick(LICENSE_URL)
             true
+        }
+
+        binding.libraries.setOnClickListener {
+            showLibraries()
+        }
+
+        binding.features.setOnClickListener {
+            showFeatures()
         }
 
         binding.device.setOnClickListener {
@@ -83,6 +92,31 @@ class AboutActivity : BaseActivity() {
         MaterialAlertDialogBuilder(this)
             .setPositiveButton(getString(R.string.okay)) { _, _ -> }
             .setMessage(licenseHtml)
+            .create()
+            .show()
+    }
+
+    private fun showLibraries() {
+        val entries = LibraryInfo.libraries
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.open_source_licenses)
+            .setMessage(R.string.open_source_licenses_message)
+            .setItems(entries.map { it.label }.toTypedArray()) { _, which ->
+                entries.getOrNull(which)?.let { library ->
+                    IntentHelper.openLinkFromHref(this, supportFragmentManager, library.licenseUrl)
+                }
+            }
+            .setPositiveButton(R.string.okay) { _, _ -> }
+            .create()
+            .show()
+    }
+
+    private fun showFeatures() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.watube_features)
+            .setMessage(R.string.watube_features_message)
+            .setPositiveButton(R.string.okay) { _, _ -> }
             .create()
             .show()
     }

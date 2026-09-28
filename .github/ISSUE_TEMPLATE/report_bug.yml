@@ -1,5 +1,5 @@
 name: 🐞 Issue Report
-description: Report a issue in LibreTube
+description: Report an issue in Watube
 labels: [bug]
 body:
 
@@ -39,9 +39,9 @@ body:
   - type: input
     id: libretube-version
     attributes:
-      label: LibreTube version
+      label: Watube version
       description: |
-        You can find your LibreTube version in **Settings**.
+        You can find your Watube version in **Settings**.
       placeholder: |
         Example: "0.2.6"
     validations:

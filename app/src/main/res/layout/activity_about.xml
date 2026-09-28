@@ -77,6 +77,28 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/libraries"
+            style="@style/AboutCard">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AboutItem"
+                android:text="@string/open_source_licenses"
+                app:drawableStartCompat="@drawable/ic_library" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/features"
+            style="@style/AboutCard">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AboutItem"
+                android:text="@string/watube_features"
+                app:drawableStartCompat="@drawable/ic_shield" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/license"
             style="@style/AboutCard">
 

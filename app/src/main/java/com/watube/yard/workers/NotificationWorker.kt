@@ -15,7 +15,7 @@ import androidx.core.app.PendingIntentCompat
 import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.watube.yard.LibreTubeApp.Companion.PUSH_CHANNEL_NAME
+import com.watube.yard.WatubeApp.Companion.PUSH_CHANNEL_NAME
 import com.watube.yard.R
 import com.watube.yard.api.SubscriptionHelper
 import com.watube.yard.api.obj.StreamItem

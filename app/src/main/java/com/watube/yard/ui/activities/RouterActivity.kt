@@ -25,7 +25,9 @@ class RouterActivity : BaseActivity() {
     }
 
     private fun handleSendText(uri: Uri) {
-        Log.i(TAG(), uri.toString())
+        // debug only: the shared link can be private (channel, playlist, account...)
+        // and must not end up in logcat on a user device
+        Log.d(TAG(), uri.toString())
 
         val intent = packageManager.getLaunchIntentForPackage(packageName)!!.let { intent ->
             IntentHelper.resolveType(intent, uri)

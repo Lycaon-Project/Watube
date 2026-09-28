@@ -280,6 +280,10 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="open_copied">Open</string>
     <string name="device_info">Device Info</string>
+    <string name="open_source_licenses">Open-source licenses</string>
+    <string name="open_source_licenses_message">Watube is released under the GPL-3.0 license. This app also bundles the following open-source libraries. Tap an entry to read its license.</string>
+    <string name="watube_features">Watube features</string>
+    <string name="watube_features_message">These features are specific to Watube and are not part of the upstream code base:\n\n• Privacy hub: a single screen that groups every anti-fingerprinting switch\n• Hardening enabled by default (privacy is opt-out, not opt-in)\n• Automatic rotation of the SponsorBlock id (12h / 24h / manual)\n• Neutral region mode: the country sent for trending and home rotates through a fixed list\n• One generic User-Agent for every request: API, thumbnails, downloads and third party services\n• No SIM or carrier based country leak\n• WebView hardening: no DOM cache, no third party cookies\n• One tap reset of identifiers (SponsorBlock id + neutral region)\n• Release builds only trust system certificates, user installed CAs are debug only\n• Local Return YouTube Dislike counter</string>
     <string name="audio_video_summary">Quality and format</string>
     <string name="delete">Delete from downloads</string>
     <string name="delete_all">All downloads will be deleted!</string>

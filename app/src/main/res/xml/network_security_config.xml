@@ -10,12 +10,11 @@
         cleartextTrafficPermitted="false"
         tools:ignore="CleartextTrafficPermitted">
         <trust-anchors>
-            <!-- Trust preinstalled CAs -->
+            <!-- Trust preinstalled CAs only. User installed CAs are deliberately NOT
+                 trusted in release: any app (or MDM) could install one and read the whole
+                 traffic. The debug build overrides this file with a version that does
+                 trust user CAs, so mitmproxy/Charles based diagnostics keep working. -->
             <certificates src="system" />
-            <!-- Additionally trust user added CAs (self-signed local instances) -->
-            <certificates
-                src="user"
-                tools:ignore="AcceptsUserCertificates" />
         </trust-anchors>
     </base-config>
 
