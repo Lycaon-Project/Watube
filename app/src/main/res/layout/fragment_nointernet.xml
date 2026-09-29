@@ -16,14 +16,16 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_no_wifi" />
+            app:srcCompat="@drawable/ic_no_wifi"
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/noInternet_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/noInternet" />
+            android:text="@string/noInternet"
+            android:textColor="?attr/colorOnSurface" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/retry_button"
@@ -33,7 +35,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:text="@string/retry"
-            android:textColor="?android:attr/colorBackground"
+            android:textColor="?attr/colorOnPrimary"
             app:elevation="20dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -44,7 +46,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:text="@string/downloads"
-            android:textColor="?android:attr/colorBackground"
+            android:textColor="?attr/colorOnPrimary"
             app:elevation="20dp" />
 
     </LinearLayout>

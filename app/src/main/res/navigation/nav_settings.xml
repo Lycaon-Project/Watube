@@ -53,6 +53,13 @@
         android:name="com.watube.yard.ui.preferences.PrivacySettings"
         android:label="@string/privacy" />
 
+    <fragment
+        android:id="@+id/maintenanceSettings"
+        android:name="com.watube.yard.ui.preferences.MaintenanceSettings"
+        android:label="@string/maintenance" />
+
+    <!-- The former standalone screens are now merged into the five hub categories, so
+         their actions land on the category that carries the very same preferences. -->
     <action
         android:id="@+id/action_global_privacySettings"
         app:destination="@id/privacySettings"
@@ -63,7 +70,7 @@
 
     <action
         android:id="@+id/action_global_generalSettings"
-        app:destination="@id/generalSettings"
+        app:destination="@id/maintenanceSettings"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim"
         app:popEnterAnim="@animator/nav_default_pop_enter_anim"
@@ -71,7 +78,15 @@
 
     <action
         android:id="@+id/action_global_instanceSettings"
-        app:destination="@id/instanceSettings"
+        app:destination="@id/privacySettings"
+        app:enterAnim="@animator/nav_default_enter_anim"
+        app:exitAnim="@animator/nav_default_exit_anim"
+        app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+        app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+
+    <action
+        android:id="@+id/action_global_maintenanceSettings"
+        app:destination="@id/maintenanceSettings"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim"
         app:popEnterAnim="@animator/nav_default_pop_enter_anim"
@@ -87,7 +102,7 @@
 
     <action
         android:id="@+id/action_global_audioVideoSettings"
-        app:destination="@id/audioVideoSettings"
+        app:destination="@id/playerSettings"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim"
         app:popEnterAnim="@animator/nav_default_pop_enter_anim"
@@ -103,7 +118,7 @@
 
     <action
         android:id="@+id/action_global_historySettings"
-        app:destination="@id/historySettings"
+        app:destination="@id/privacySettings"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim"
         app:popEnterAnim="@animator/nav_default_pop_enter_anim"
@@ -111,7 +126,7 @@
 
     <action
         android:id="@+id/action_global_notificationSettings"
-        app:destination="@id/notificationSettings"
+        app:destination="@id/maintenanceSettings"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim"
         app:popEnterAnim="@animator/nav_default_pop_enter_anim"
@@ -127,7 +142,7 @@
 
     <action
         android:id="@+id/action_global_sponsorBlockSettings"
-        app:destination="@id/sponsorBlockSettings"
+        app:destination="@id/playerSettings"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim"
         app:popEnterAnim="@animator/nav_default_pop_enter_anim"

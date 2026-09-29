@@ -81,6 +81,9 @@ class MainActivity : AbstractPlayerHostActivity() {
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
 
+    /** kept so that a rebuilt options menu doesn't stack a second destination listener */
+    private var searchDestinationListener: NavController.OnDestinationChangedListener? = null
+
     private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
     // search related stuff
@@ -97,6 +100,10 @@ class MainActivity : AbstractPlayerHostActivity() {
     // PlaylistOptionsBottomSheet instead if Android allowed us to
     private var playlistExportFormat: ImportFormat = ImportFormat.NEWPIPE
     private var exportPlaylistId: String? = null
+
+    /** garde one-shot : loadIntentData() peut être ré-entré par onNewIntent() suite à la
+     *  relance auto PiP, et une boucle d'intents fait pin/unpin de la fenêtre PiP. */
+    private var pipRelaunchPending = false
     private val createPlaylistsFile = registerForActivityResult(
         ActivityResultContracts.CreateDocument(FILETYPE_ANY)
     ) { uri ->
@@ -330,6 +337,7 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        if (!::binding.isInitialized) return
         setupExpandedLayout()
     }
 
@@ -433,7 +441,8 @@ class MainActivity : AbstractPlayerHostActivity() {
         searchView = searchItem.actionView as SearchView
 
         // automatically set a different search icon in the playlists
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        searchDestinationListener?.let { navController.removeOnDestinationChangedListener(it) }
+        val destinationListener = NavController.OnDestinationChangedListener { _, destination, _ ->
             currentSearchType = when (destination.id) {
                 R.id.downloadsFragment -> SearchType.DOWNLOADS
                 R.id.playlistFragment -> SearchType.PLAYLIST
@@ -451,6 +460,8 @@ class MainActivity : AbstractPlayerHostActivity() {
 
             searchItem.setIcon(searchIconResource)
         }
+        searchDestinationListener = destinationListener
+        navController.addOnDestinationChangedListener(destinationListener)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -575,7 +586,12 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     private fun loadIntentData() {
         // If activity is running in PiP mode, then start it in front.
-        if (PictureInPictureCompat.isInPictureInPictureMode(this)) {
+        // one-shot : sans cette garde, onNewIntent() rappelle cette méthode et la
+        // relance auto s'exécute en boucle (la fenêtre PiP se re-border en permanence).
+        if (!pipRelaunchPending &&
+            PictureInPictureCompat.isInPictureInPictureMode(this)
+        ) {
+            pipRelaunchPending = true
             val nIntent = Intent(this, MainActivity::class.java)
             nIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(nIntent)
@@ -713,7 +729,27 @@ class MainActivity : AbstractPlayerHostActivity() {
         // Remove focus from search view when navigating to bottom view.
         searchItem.collapseActionView()
 
+        // settings are hosted by their own activity, not by this nav graph
+        if (item.itemId == R.id.settingsFragment) {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            return true
+        }
+
         return item.onNavDestinationSelected(navController)
+    }
+
+    /**
+     * The settings tab opens a separate activity, so the checked item no longer matches
+     * the current destination when coming back. Re-sync both bars, without triggering
+     * [setOnItemSelectedListener] (a plain [MenuItem.isChecked] never does).
+     */
+    private fun syncBottomBarSelection() {
+        if (!::binding.isInitialized) return
+        val destinationId = navController.currentDestination?.id ?: return
+        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+            val item = bar.menu.findItem(destinationId) ?: return@forEach
+            if (item.isVisible && !item.isChecked) item.isChecked = true
+        }
     }
 
     override fun onUserLeaveHint() {
@@ -728,12 +764,21 @@ class MainActivity : AbstractPlayerHostActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
+        if (!::binding.isInitialized) return
         loadIntentData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        pipRelaunchPending = false
+        syncBottomBarSelection()
+    }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        // onCreate() peut avoir quitté avant d'initialiser binding (pas de réseau)
+        if (!::binding.isInitialized) return super.onKeyUp(keyCode, event)
         // don't forward key events to the player while the search text input is used
-        if (searchItem.isActionViewExpanded) return false
+        if (::searchItem.isInitialized && searchItem.isActionViewExpanded) return false
 
         if (runOnPlayerFragment { this@runOnPlayerFragment.onKeyUp(keyCode, event) }) {
             return true

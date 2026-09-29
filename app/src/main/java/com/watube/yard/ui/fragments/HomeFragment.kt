@@ -19,6 +19,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.constants.PreferenceKeys.HOME_TAB_CONTENT
 import com.watube.yard.databinding.FragmentHomeBinding
 import com.watube.yard.db.obj.PlaylistBookmark
+import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.activities.SettingsActivity
 import com.watube.yard.ui.adapters.CarouselPlaylist
@@ -103,6 +104,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.featuredTV.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_subscriptionsFragment)
         }
+
+        // Solar search pill: opens the search screen, shows the LOCAL badge in local mode
+        binding.searchPill.setOnClickListener {
+            findNavController().navigate(R.id.openSearch)
+        }
+        binding.localBadge.isGone = !PlayerHelper.fullLocalMode
 
         binding.watchingTV.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_watchHistoryFragment)

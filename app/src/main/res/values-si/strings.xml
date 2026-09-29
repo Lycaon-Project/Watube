@@ -84,11 +84,6 @@
     <string name="shareTo">URL එක බෙදාගන්න</string>
     <string name="defaultIcon">පෙරනිමිය</string>
     <string name="color_accent">අවධාරණ</string>
-    <string name="color_yellow">කහ පාට</string>
-    <string name="color_green">කොළ පාට</string>
-    <string name="color_purple">දම් පාට</string>
-    <string name="color_blue">නිල් පාට</string>
-    <string name="color_red">රතු පාට</string>
     <string name="playback_speed">වාදන වේගය</string>
     <string name="fireIcon">විලාසිතාමය ගින්න</string>
     <string name="torchIcon">නවීන පන්දම</string>
@@ -207,7 +202,6 @@
     <string name="swipe_controls_summary">දීප්තිය සහ ශබ්ද හඩ සීරුමාරු කිරීමට ස්වයිප් අභිනය භාවිත කරන්න</string>
     <string name="pinch_control">කෙනිත්තීම අභිනය පාලනය</string>
     <string name="pinch_control_summary">විශාලනය කිරීමට/පිටතට කිරීමට කෙනිත්තීම අභිනය භාවිත කරන්න</string>
-    <string name="theme_monochrome">අවම ඒකවර්ණ</string>
     <string name="captions_size">සිරස්තල ප්‍රමාණය</string>
     <string name="play_all">සියල්ල වාදනය කරන්න</string>
     <string name="all_caught_up_summary">ඔබ නව වීඩියෝ සියල්ලම දැක ඇත</string>
@@ -218,7 +212,6 @@
     <string name="proceed">ඉදිරියට යන්න</string>
     <string name="play_latest_videos">නවතම වීඩියෝ වාදනය කරන්න</string>
     <string name="nothing_selected">කිසිවක් තෝරා නැත!</string>
-    <string name="color_violet">ජම්බූල පාට</string>
     <string name="import_playlists">වාදන ලැයිස්තු ආනයනය කරන්න</string>
     <string name="playlistUrl">වාදන ලැයිස්තු URL</string>
     <string name="audio_only_mode_summary">LibreTube සංගීත වාදකයක් බවට පත් කරන්න</string>

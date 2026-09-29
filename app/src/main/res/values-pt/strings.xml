@@ -88,7 +88,6 @@
     <string name="category_intro_summary">É um intervalo sem qualquer conteúdo. Pode ser uma pausa, uma imagem ou uma animação recorrente. Não deve ser usado para transições que possuam informação</string>
     <string name="category_outro">Ecrã final e créditos</string>
     <string name="color_accent">Destaque</string>
-    <string name="color_red">Vermelho</string>
     <string name="app_icon">Ícone</string>
     <string name="playOnBackground">Reproduzir em segundo plano</string>
     <string name="shareTo">Partilhar URL</string>
@@ -100,13 +99,9 @@
     <string name="birdIcon">Pássaro</string>
     <string name="addInstance">Adicionar instância</string>
     <string name="instance_api_url">URL para API da instância</string>
-    <string name="color_yellow">Amarelo</string>
     <string name="sponsorblock_notifications">Notificações</string>
     <string name="enabled">Ligado</string>
     <string name="license">Licença</string>
-    <string name="color_blue">Azul</string>
-    <string name="color_green">Verde</string>
-    <string name="color_purple">Púrpura</string>
     <string name="material_you">Material You</string>
     <string name="disabled">Desligado</string>
     <string name="appearance">Aparência</string>
@@ -284,7 +279,6 @@
     <string name="comments_disabled">O autor não permite comentários.</string>
     <string name="no_comments_available">Este vídeo não tem comentários.</string>
     <string name="proceed">Continuar</string>
-    <string name="theme_monochrome">Monocromático minimalista</string>
     <string name="captions_size">Tamanho das legendas</string>
     <string name="double_tap_seek_summary">Toque duas vezes à esquerda ou à direita para recuar ou avançar o vídeo</string>
     <string name="import_playlists">Importar listas de reprodução</string>
@@ -298,7 +292,6 @@
     <string name="swipe_controls_summary">Deslize para ajustar o brilho e o volume no modo de ecrã completo</string>
     <string name="all_caught_up">É tudo por hoje</string>
     <string name="nothing_selected">Nada selecionado!</string>
-    <string name="color_violet">Violeta versátil</string>
     <string name="hide_watched_from_feed">Ocultar vídeos já vistos</string>
     <string name="playlistUrl">URL da lista de reprodução</string>
     <string name="shuffle">Baralhar</string>

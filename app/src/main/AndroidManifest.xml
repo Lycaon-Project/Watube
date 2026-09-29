@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:installLocation="auto"
     tools:ignore="ForegroundServiceType,DiscouragedApi">
 
     <uses-feature
@@ -31,7 +30,6 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/BaseTheme"
@@ -390,9 +388,20 @@
     </application>
 
     <queries>
+        <!-- Only the schemes IntentHelper is ever allowed to open (http/https/mailto):
+             declaring scheme="*" advertises the ability to resolve *any* link and
+             widens the app's package visibility unnecessarily. -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="*" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mailto" />
         </intent>
     </queries>
 </manifest>

@@ -86,11 +86,11 @@
                 android:id="@+id/player_channel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="2dp"
+                android:layout_marginHorizontal="@dimen/watube_gutter"
                 android:layout_marginVertical="10dp"
-                android:background="@drawable/rounded_ripple"
+                android:background="@drawable/watube_pcard"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="10dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_channelImage"
@@ -124,6 +124,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:textColor="?attr/colorOnSurfaceVariant"
                         android:textSize="11sp"
                         tools:text="2.5M subscribers" />
 
@@ -135,7 +136,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/subscribe"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:shapeAppearance="@style/WatubeShape.Pill" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -147,9 +149,8 @@
                 android:layout_marginVertical="10dp"
                 android:text="@string/comments"
                 android:textAlignment="viewStart"
-                android:textColor="?colorPrimary"
                 app:drawableEndCompat="@drawable/ic_arrow_up_down"
-                app:drawableTint="?colorPrimary" />
+                app:drawableTint="?attr/colorOnSurfaceVariant" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/related_rec_view"
@@ -206,6 +207,7 @@
         android:padding="8dp"
         android:src="@drawable/ic_play"
         android:tooltipText="@string/tooltip_play"
+        android:contentDescription="@string/tooltip_play"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/close_imageView"
         app:layout_constraintEnd_toStartOf="@+id/close_imageView"

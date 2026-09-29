@@ -212,6 +212,8 @@ class CustomExoPlayerView(
         this.playerCallback = playerCallback
         super.player = player
 
+        playerGestureController.observeFullscreen(viewLifecycleOwner)
+
         initializeGestureProgress()
 
         initRewindAndForward()

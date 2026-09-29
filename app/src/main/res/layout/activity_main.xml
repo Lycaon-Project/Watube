@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/action_bar"
-            app:title="@string/app_name" />
+            app:title="@string/app_name"
+            app:titleTextColor="?attr/colorOnSurface" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,7 +48,10 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/watube_nav_inset"
+        android:layout_marginEnd="@dimen/watube_nav_inset"
         android:background="@drawable/watube_bottom_nav_background"
+        android:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

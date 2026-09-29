@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="?colorPrimary"
+                android:textColor="@color/watube_link"
                 android:textStyle="italic"
                 tools:text="'suggestion'" />
 
@@ -59,7 +59,7 @@
                 android:id="@+id/filter_chip_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
+                android:paddingStart="@dimen/watube_gutter"
                 app:checkedChip="@id/chip_all"
                 app:selectionRequired="true"
                 app:singleLine="true"
@@ -132,14 +132,16 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:src="@drawable/ic_search" />
+                android:src="@drawable/ic_search"
+                app:tint="?attr/colorOnSurfaceVariant" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_search_result"
                 android:textAlignment="center"
-                android:textSize="20sp"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

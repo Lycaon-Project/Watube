@@ -66,11 +66,6 @@
     <string name="category_outro_summary">Info na afloop. Niet voor conclusies met info</string>
     <string name="license">Licentie</string>
     <string name="color_accent">Accenten</string>
-    <string name="color_red">Rustend rood</string>
-    <string name="color_blue">Bloeiend blauw</string>
-    <string name="color_yellow">Gooiend geel</string>
-    <string name="color_green">Groovy groen</string>
-    <string name="color_purple">Plezierig paars</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Meldingen</string>
     <string name="app_icon">Pictogram</string>
@@ -279,8 +274,6 @@
     <string name="copied_to_clipboard">Gekopieerd naar klembord</string>
     <string name="play_all">Alles afspelen</string>
     <string name="captions_size">Ondertitelings­grootte</string>
-    <string name="theme_monochrome">Minimalistisch monochroom</string>
-    <string name="color_violet">Veelzijdig violet</string>
     <string name="remove_bookmark">Bladwijzer verwijderen</string>
     <string name="aspect_ratio">Beeldverhouding van video</string>
     <string name="require_restart">Herstart van app vereist</string>

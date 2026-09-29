@@ -80,11 +80,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:maxLines="1"
-                            android:padding="8dp"
+                            style="@style/HomeCategoryTitle"
                             android:text="@string/playlists"
-                            android:textAlignment="viewStart"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textAlignment="viewStart" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/sortTV"
@@ -115,14 +113,16 @@
                             android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:layout_marginBottom="16dp"
-                            android:src="@drawable/ic_list" />
+                            android:src="@drawable/ic_list"
+                            app:tint="?attr/colorOnSurfaceVariant" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/emptyList"
-                            android:textSize="20sp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -142,12 +142,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/HomeCategoryTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:text="@string/bookmarks"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:text="@string/bookmarks" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/bookmarks_recView"
@@ -169,8 +167,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:backgroundTint="?attr/colorSecondary"
+        app:backgroundTint="?attr/colorPrimary"
         app:srcCompat="@drawable/ic_add"
-        app:tint="?android:attr/colorBackground" />
+        app:tint="?attr/colorOnPrimary" />
 
 </FrameLayout>

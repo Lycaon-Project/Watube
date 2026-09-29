@@ -183,6 +183,8 @@ object DownloadHelper {
         }
 
         withContext(Dispatchers.IO) {
+            // downloadChapters n'a pas de FK CASCADE : nettoyage manuel sinon orphelins
+            DatabaseHolder.Database.downloadDao().deleteChaptersForVideo(download.videoId)
             DatabaseHolder.Database.downloadDao().deleteDownload(download)
         }
     }

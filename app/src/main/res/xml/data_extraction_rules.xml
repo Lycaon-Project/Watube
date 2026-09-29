@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   Android 12+ backup / device-to-device transfer rules.
-  Credentials (Piped auth token, login data) must never leave the device.
+
+  Privacy line of this app: browsing data (watch history, watch positions,
+  search history, subscriptions, playlists, feed cache) must not be uploaded to
+  a cloud backup service. It is still carried over by a local device-to-device
+  transfer, and the in-app export (Settings -> Backup) remains the supported way
+  to save a copy of everything.
+
+  Credentials (Piped auth token, login data) never leave the device at all.
 -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude
             domain="sharedpref"
             path="auth.xml" />
+        <exclude
+            domain="database"
+            path="." />
+        <exclude
+            domain="root"
+            path="cache" />
     </cloud-backup>
     <device-transfer>
         <exclude

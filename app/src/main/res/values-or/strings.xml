@@ -61,11 +61,6 @@
     <string name="category_filler">ହସକଥା</string>
     <string name="category_music_offtopic">ଅଣ ସଙ୍ଗୀତ</string>
     <string name="color_accent">ଆସେଣ୍ଟ</string>
-    <string name="color_red">ଲାଲ୍</string>
-    <string name="color_blue">ନୀଳ</string>
-    <string name="color_yellow">ହଳଦିଆ</string>
-    <string name="color_green">ସବୁଜ</string>
-    <string name="color_purple">ପାତଳୀ</string>
     <string name="app_icon">ଆଇକନ</string>
     <string name="enabled">ଅନ୍</string>
     <string name="disabled">ବନ୍ଦ ଅଛି</string>
@@ -295,10 +290,8 @@
     <string name="proceed">ଅଗ୍ରଗତି କର</string>
     <string name="pinch_control_summary">ଜୁମ୍ ଇନ୍ / ଆଉଟ୍ କରିବାକୁ ପିଞ୍ଚ୍ ଅଙ୍ଗଭଙ୍ଗୀ ବ୍ୟବହାର କରନ୍ତୁ</string>
     <string name="pinch_control">ପିଞ୍ଚ୍ ନିୟନ୍ତ୍ରଣ</string>
-    <string name="theme_monochrome">ସର୍ବନିମ୍ନ ମୋନୋକ୍ରୋମ୍</string>
     <string name="play_latest_videos">ସର୍ବଶେଷ ଭିଡିଓଗୁଡିକ ଚଲାନ୍ତୁ</string>
     <string name="nothing_selected">କିଛି ମନୋନୀତ ହୋଇନାହିଁ!</string>
-    <string name="color_violet">ବହୁମୁଖୀ ବାଇଗଣୀ</string>
     <string name="hide_watched_from_feed">ପୂର୍ବରୁ ଦେଖାଯାଇଥିବା ଭିଡିଓଗୁଡିକ ଲୁଚାନ୍ତୁ</string>
     <string name="playlistUrl">ପ୍ଲେଲିଷ୍ଟ୍ URL</string>
     <string name="shuffle">ସଫଲ୍</string>

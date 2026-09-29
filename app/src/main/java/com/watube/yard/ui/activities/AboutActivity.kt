@@ -30,7 +30,6 @@ class AboutActivity : BaseActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        setupCard(binding.donate, DONATE_URL)
         setupCard(binding.website, WEBSITE_URL)
         setupCard(binding.piped, PIPED_GITHUB_URL)
         setupCard(binding.translate, WEBLATE_URL)
@@ -143,7 +142,6 @@ class AboutActivity : BaseActivity() {
     }
 
     companion object {
-        const val DONATE_URL = "https://github.com/Lycaon-Project/Watube#donate"
         private const val WEBSITE_URL = "https://github.com/Lycaon-Project/Watube"
         const val GITHUB_URL = "https://github.com/Lycaon-Project/Watube"
         private const val PIPED_GITHUB_URL = "https://github.com/TeamPiped/Piped"

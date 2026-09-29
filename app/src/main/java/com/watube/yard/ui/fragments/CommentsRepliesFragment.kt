@@ -65,7 +65,6 @@ class CommentsRepliesFragment : Fragment(R.layout.fragment_comments) {
 
         val layoutManager = LinearLayoutManager(context)
         binding.commentsRV.layoutManager = layoutManager
-        binding.commentsRV.setHasFixedSize(true)
 
         binding.commentsRV.adapter = repliesAdapter
 
@@ -90,7 +89,24 @@ class CommentsRepliesFragment : Fragment(R.layout.fragment_comments) {
         })
 
         repliesAdapter.addLoadStateListener { loadStates ->
-            binding.progress.isVisible = loadStates.refresh is LoadState.Loading
+            val refresh = loadStates.refresh
+            binding.progress.isVisible = refresh is LoadState.Loading
+
+            // same as the main comments list: surface a failed load instead of leaving
+            // the list blank, and clear the message once the retry succeeds
+            val error = refresh as? LoadState.Error ?: loadStates.append as? LoadState.Error
+            when {
+                error != null -> {
+                    binding.errorTV.text =
+                        "${getString(R.string.error_occurred)} – ${getString(R.string.retry)}"
+                    binding.errorTV.isVisible = true
+                    binding.errorTV.setOnClickListener { repliesAdapter.retry() }
+                }
+                else -> {
+                    binding.errorTV.isVisible = false
+                    binding.errorTV.setOnClickListener(null)
+                }
+            }
 
             val refreshState = loadStates.source.refresh
             if (refreshState is LoadState.NotLoading && repliesAdapter.itemCount > 0) {

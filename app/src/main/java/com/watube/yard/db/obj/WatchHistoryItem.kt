@@ -19,7 +19,9 @@ data class WatchHistoryItem(
     @ColumnInfo var uploaderAvatar: String? = null,
     @ColumnInfo var thumbnailUrl: String? = null,
     @ColumnInfo val duration: Long? = null,
-    @ColumnInfo val isShort: Boolean = false
+    @ColumnInfo val isShort: Boolean = false,
+    /** Epoch millis of the last time this video was watched, 0 when unknown. */
+    @ColumnInfo val watchedAt: Long = 0L
 ) {
     val isLive get() = (duration == null) || (duration <= 0L)
 

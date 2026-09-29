@@ -206,6 +206,9 @@ class DownloadService : LifecycleService() {
         )
         Database.downloadDao().insertDownload(download)
 
+        // REPLACE sur "download" ne touche pas downloadChapters (pas de FK) : on repurge
+        // les chapitres de la vidéo avant de réécrire la liste courante
+        Database.downloadDao().deleteChaptersForVideo(videoId)
         for (chapter in streams.chapters) {
             val downloadChapter = DownloadChapter(
                 videoId = videoId,
@@ -240,7 +243,7 @@ class DownloadService : LifecycleService() {
                     val categories = PlayerHelper.getSponsorBlockCategories()
                     MediaServiceRepository.instance.getSegments(videoId, categories.map { it.key })
                 } catch (e: Exception) {
-                    Log.e(TAG(), "failed to download SponsorBlock segments for $videoId")
+                    Log.e(TAG(), "failed to download SponsorBlock segments")
                     Log.e(TAG(), e.stackTraceToString())
                     return@launch
                 }
@@ -258,8 +261,8 @@ class DownloadService : LifecycleService() {
                         thumbnailTargetPath
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG(), "failed to download image $thumbnailUrl")
-                    Log.e(TAG(), e.stackTraceToString())
+                    // never log the thumbnail url: it carries the video id
+                    Log.e(TAG(), "failed to download the video image")
                 }
             }
         }

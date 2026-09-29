@@ -45,10 +45,24 @@ object NavBarHelper {
         val p = PopupMenu(context, null)
         MenuInflater(context).inflate(R.menu.bottom_menu, p.menu)
 
-        if (prefItems.size == p.menu.size) {
+        // a tab appended to bottom_menu.xml must not wipe a customized order: the stored
+        // list is migrated by appending the id of the item that was added
+        val items = if (prefItems.size == p.menu.size - 1 && prefItems.all { token ->
+                val index = token.replace("-", "").toIntOrNull()
+                index != null && index in 0 until p.menu.size - 1
+            }
+        ) {
+            (prefItems + (p.menu.size - 1).toString()).also {
+                PreferenceHelper.putString(PreferenceKeys.NAVBAR_ITEMS, it.joinToString(SEPARATOR))
+            }
+        } else {
+            prefItems
+        }
+
+        if (items.size == p.menu.size) {
             // a corrupted preference (out of range, not a number) must never crash a dialog
             return try {
-                prefItems.map {
+                items.map {
                     val menuItemId = p.menu[it.replace("-", "").toInt()].itemId
                     val isVisible = !it.contains("-")
                     menuItemId to isVisible

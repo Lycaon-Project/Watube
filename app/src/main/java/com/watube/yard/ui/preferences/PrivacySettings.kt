@@ -6,18 +6,32 @@ import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
+import com.watube.yard.db.DatabaseHolder.Database
+import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.helpers.PrivacyHelper
-import com.watube.yard.ui.base.BasePreferenceFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Watube privacy hub: exposes every anti fingerprinting measure that is active in the
  * app, so the user can understand and control them without reading the source code.
+ *
+ * It is also the "Confidentialité" category of the settings hub: the instance/Piped
+ * operation mode (inherited from [InstanceSettings]) and the local history controls are
+ * merged into the same screen.
  */
-class PrivacySettings : BasePreferenceFragment() {
+class PrivacySettings : InstanceSettings() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.privacy_settings, rootKey)
+
+        addPreferencesFromResource(R.xml.instance_settings)
+        addPreferencesFromResource(R.xml.history_settings)
+
+        bindInstancePreferences()
+        bindHistoryPreferences()
 
         findPreference<SwitchPreferenceCompat>(PreferenceKeys.PRIVACY_HARDENING)?.apply {
             isChecked = PrivacyHelper.isHardeningEnabled()
@@ -25,6 +39,7 @@ class PrivacySettings : BasePreferenceFragment() {
 
         setupRotationFrequency()
         setupNeutralRegion()
+        setupTouristMode()
         refreshIdentifierSummary()
 
         findPreference<Preference>("reset_identifiers")?.setOnPreferenceClickListener {
@@ -36,6 +51,57 @@ class PrivacySettings : BasePreferenceFragment() {
                 .show()
             true
         }
+    }
+
+    /**
+     * Local history controls (search history, watch history, positions, bookmarks),
+     * identical to the ones of [HistorySettings] but bound to the merged hub.
+     */
+    private fun bindHistoryPreferences() {
+        findPreference<Preference>(PreferenceKeys.CLEAR_SEARCH_HISTORY)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.clear_history) {
+                    Database.searchHistoryDao().deleteAll()
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_HISTORY)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.clear_history) {
+                    Database.watchHistoryDao().deleteAll()
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_POSITIONS)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.reset_watch_positions) {
+                    DatabaseHelper.clearWatchPositions()
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_BOOKMARKS)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.clear_bookmarks) {
+                    Database.playlistBookmarkDao().deleteAll()
+                }
+                true
+            }
+    }
+
+    private fun showClearDialog(title: Int, actionOnConfirm: suspend () -> Unit) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(R.string.irreversible)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.okay) { _, _ ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    actionOnConfirm.invoke()
+                }
+            }
+            .show()
     }
 
     /**
@@ -83,6 +149,35 @@ class PrivacySettings : BasePreferenceFragment() {
             R.string.privacy_neutral_region_current,
             PrivacyHelper.getNeutralRegion()
         )
+    }
+
+    /**
+     * Tourist mode keeps no browsing trace on the device, so turning it on also offers to
+     * wipe what is already stored. The preference is only persisted once the deletion has
+     * been accepted, otherwise the switch would promise an empty device while keeping data.
+     */
+    private fun setupTouristMode() {
+        val touristMode = findPreference<SwitchPreferenceCompat>(PreferenceKeys.TOURIST_MODE)
+            ?: return
+
+        touristMode.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue != true) return@setOnPreferenceChangeListener true
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.tourist_mode)
+                .setMessage(R.string.tourist_mode_clear_dialog)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.okay) { _, _ ->
+                    // setChecked() only persists and re-renders the row, it does not call
+                    // the change listener again, so the dialog cannot pop up twice
+                    touristMode.isChecked = true
+                    CoroutineScope(Dispatchers.IO).launch {
+                        DatabaseHelper.clearBrowsingData()
+                    }
+                }
+                .show()
+            false
+        }
     }
 
     /**

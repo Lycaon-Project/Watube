@@ -46,9 +46,6 @@
     <string name="category_filler">Філеры/Жарты</string>
     <string name="category_preview">Папярэдні прагляд/Паўторы</string>
     <string name="color_accent">Акцэнты</string>
-    <string name="color_red">Заспакаяльны чырвоны</string>
-    <string name="color_green">Завадны зялёны</string>
-    <string name="color_purple">Прыемны пурпур</string>
     <string name="sponsorblock_notifications">Апавяшчэнні</string>
     <string name="disabled">Адкл.</string>
     <string name="appearance">Знешні выгляд</string>
@@ -185,8 +182,6 @@
     <string name="category_filler_summary">Для датычных сцэн, дададзеных толькі для напаўнення або гумару, не патрабуецца для разумення асноўнага зместу відэа</string>
     <string name="category_music_offtopic">Музыка: немузычны раздзел</string>
     <string name="license">Ліцэнзія</string>
-    <string name="color_blue">Блажэнная сінь</string>
-    <string name="color_yellow">Жалейны жоўтыя</string>
     <string name="material_you">Material You</string>
     <string name="app_icon">Значок</string>
     <string name="enabled">Ўкл.</string>
@@ -275,7 +270,6 @@
     <string name="volume">Гучнасць</string>
     <string name="auto">Аўта</string>
     <string name="no_comments_available">Гэта відэа не мае каментароў.</string>
-    <string name="theme_monochrome">Мінімалістычны манахром</string>
     <string name="captions_size">Памер субтытраў</string>
     <string name="comments_disabled">Запампавальнік адключыў каментарыі.</string>
     <string name="double_tap_seek_summary">Двойчы націсніце злева або справа, каб пераматаць пазіцыю прайгравальніка назад або наперад</string>
@@ -325,7 +319,6 @@
     <string name="featured">Рэкамендацыі</string>
     <string name="pinch_control">Шчыпковы кантроль</string>
     <string name="pinch_control_summary">Выкарыстоўвайце жэст шчыпка для павелічэння/памяншэння</string>
-    <string name="color_violet">Універсальны фіялетавы</string>
     <string name="download_channel_name">Служба запампоўкі</string>
     <string name="live">Прамы эфір</string>
     <string name="playback_pitch">Хуткасць</string>

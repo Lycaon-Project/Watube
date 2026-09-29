@@ -92,7 +92,6 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.playlistRecView?.layoutManager = GridLayoutManager(context, gridItems.ceilHalf())
-        _binding?.playlistRecView?.setHasFixedSize(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

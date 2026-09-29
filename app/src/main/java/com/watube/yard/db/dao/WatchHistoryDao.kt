@@ -38,4 +38,7 @@ interface WatchHistoryDao {
 
     @Query("DELETE FROM watchHistoryItem")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM watchHistoryItem WHERE watchedAt > 0 AND watchedAt < :timestamp")
+    suspend fun deleteOlderThan(timestamp: Long)
 }

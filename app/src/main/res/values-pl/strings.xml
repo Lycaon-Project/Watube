@@ -83,12 +83,7 @@
     <string name="noInternet">Najpierw połącz się z Internetem.</string>
     <string name="retry">Ponów</string>
     <string name="comments">Komentarze</string>
-    <string name="color_blue">Błogi błękit</string>
-    <string name="color_yellow">Żwawa żółć</string>
-    <string name="color_green">Zamyślona zieleń</string>
     <string name="color_accent">Akcenty</string>
-    <string name="color_red">Cierpliwa czerwień</string>
-    <string name="color_purple">Fantastyczny fiolet</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Powiadomienia</string>
     <string name="app_icon">Ikona</string>
@@ -294,10 +289,8 @@
     <string name="username_email">Nie zaleca się używania adresu e-mail jako nazwy użytkownika. Kontynuować?</string>
     <string name="pinch_control">Gesty zmiany rozmiaru obrazu</string>
     <string name="pinch_control_summary">Użyj gestu rozciągnięcia/uszczypania, aby powiększyć/zmniejszyć rozmiar obrazu</string>
-    <string name="theme_monochrome">Minimalistyczny monochromatyczny</string>
     <string name="play_latest_videos">Odtwórz najnowsze filmy</string>
     <string name="nothing_selected">Nic nie zostało wybrane!</string>
-    <string name="color_violet">Wszechstronny fiolet</string>
     <string name="hide_watched_from_feed">Ukryj obejrzane filmy</string>
     <string name="playlistUrl">Link do playlisty</string>
     <string name="shuffle">Odtwórz losowo</string>

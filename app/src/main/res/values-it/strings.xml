@@ -86,11 +86,6 @@
     <string name="category_interaction_summary">Quando c\'è un breve promemoria per mettere mi piace, iscriversi o seguire nel mezzo del contenuto. Se è lungo o riguarda qualcosa di specifico, dovrebbe essere invece autopromozione</string>
     <string name="license">Licenza</string>
     <string name="color_accent">Accenti</string>
-    <string name="color_red">Rosso riposante</string>
-    <string name="color_blue">Blu beato</string>
-    <string name="color_yellow">Giallo lanciato</string>
-    <string name="color_green">Verde figo</string>
-    <string name="color_purple">Viola piacevole</string>
     <string name="clear_history">Cancella la cronologia</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Notifiche</string>
@@ -294,11 +289,9 @@
     <string name="pinch_control_summary">Usa il pinch to zoom per ingrandire</string>
     <string name="import_playlists">Importa playlist</string>
     <string name="username_email">L\'uso di un indirizzo email come nome utente non è consigliato. Procedere comunque?</string>
-    <string name="theme_monochrome">Monocromatico minimalista</string>
     <string name="proceed">Procedi</string>
     <string name="play_latest_videos">Riproduci i video più recenti</string>
     <string name="nothing_selected">Niente di selezionato!</string>
-    <string name="color_violet">Violetto versatile</string>
     <string name="hide_watched_from_feed">Nascondi i video già guardati</string>
     <string name="playlistUrl">URL della playlist</string>
     <string name="shuffle">Mischia</string>

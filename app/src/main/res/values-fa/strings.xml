@@ -78,11 +78,6 @@
     <string name="category_segments">بخش‌ها</string>
     <string name="category_interaction">یادآوری تعامل</string>
     <string name="color_accent">لهجه‌ها</string>
-    <string name="color_blue">ابی شاد</string>
-    <string name="color_green">سبز</string>
-    <string name="color_yellow">زرد</string>
-    <string name="color_purple">ارغوانی فرح‌بخش</string>
-    <string name="color_red">قرمز</string>
     <string name="enabled">روشن</string>
     <string name="disabled">خاموش</string>
     <string name="appearance">ظاهر</string>
@@ -316,12 +311,10 @@
     <string name="captions_size">اندازهٔ عنوان</string>
     <string name="import_playlists">درون‌ریزی سیاهه‌های پخش</string>
     <string name="export_playlists">برون‌ریزی سیاهه‌های پخش</string>
-    <string name="theme_monochrome">تک‌رنگ کمینه‌گرا</string>
     <string name="sleep_timer">شمارشگر خواب</string>
     <string name="skip_silence">پرش از سکوت</string>
     <string name="nothing_selected">هیچ چیزی گزیده نشده!</string>
     <string name="playlistUrl">نشانی سیاههٔ پخش</string>
-    <string name="color_violet">بنفش چندمنظوره</string>
     <string name="remove_bookmark">برداشتن نشانک</string>
     <string name="pinch_control">واپایش نیشگونی</string>
     <string name="app_backup">پشتیبان کاره</string>

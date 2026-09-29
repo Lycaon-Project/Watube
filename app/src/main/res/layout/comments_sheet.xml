@@ -49,6 +49,8 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
                     android:textAlignment="viewStart"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     tools:text="Comments (1000)" />
 

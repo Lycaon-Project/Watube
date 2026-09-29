@@ -37,7 +37,8 @@
                     style="@style/PlayerControlTop"
                     android:scaleX="0.8"
                     android:scaleY="0.8"
-                    android:src="@drawable/ic_unlocked" />
+                    android:src="@drawable/ic_unlocked"
+                    android:contentDescription="@string/tooltip_locked" />
 
             </LinearLayout>
 
@@ -143,6 +144,7 @@
             style="@style/PlayerControlCenter"
             android:background="?android:selectableItemBackgroundBorderless"
             android:src="@drawable/ic_prev"
+            android:contentDescription="@string/exo_controls_previous_description"
             android:visibility="invisible"
             app:tint="@android:color/white" />
 
@@ -152,6 +154,7 @@
             android:layout_marginHorizontal="10dp"
             android:background="?android:selectableItemBackgroundBorderless"
             android:src="@drawable/ic_play"
+            android:contentDescription="@string/tooltip_play"
             app:tint="@android:color/white" />
 
         <ImageView
@@ -159,6 +162,7 @@
             style="@style/PlayerControlCenter"
             android:background="?android:selectableItemBackgroundBorderless"
             android:src="@drawable/ic_next"
+            android:contentDescription="@string/exo_controls_next_description"
             android:visibility="invisible"
             app:tint="@android:color/white" />
 
@@ -300,6 +304,7 @@
                     style="@style/PlayerControlBottom"
                     android:src="@drawable/ic_fullscreen"
                     android:tooltipText="@string/tooltip_fullscreen"
+                    android:contentDescription="@string/tooltip_fullscreen"
                     app:tint="@android:color/white" />
 
             </LinearLayout>
@@ -320,8 +325,8 @@
                 android:layout_height="match_parent"
                 android:paddingTop="6dp"
                 app:bar_height="2dp"
-                app:played_color="?attr/colorSecondary"
-                app:scrubber_color="?attr/colorSecondary"
+                app:played_color="?attr/colorPrimary"
+                app:scrubber_color="?attr/colorPrimary"
                 app:scrubber_dragged_size="16dp"
                 app:scrubber_enabled_size="12dp"
                 app:touch_target_height="35dp" />

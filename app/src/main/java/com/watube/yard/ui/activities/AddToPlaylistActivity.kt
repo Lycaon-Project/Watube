@@ -44,7 +44,7 @@ class AddToPlaylistActivity : BaseActivity() {
                     MediaServiceRepository.instance.getStreams(videoId).toStreamItem(videoId)
                 } catch (e: Exception) {
                     // Log the exception for better debugging
-                    Log.e(TAG, "Failed to fetch stream info for videoId=$videoId", e)
+                    Log.e(TAG, "Failed to fetch stream info", e)
                     toastFromMainDispatcher(R.string.unknown_error)
                     withContext(Dispatchers.Main) {
                         finish()

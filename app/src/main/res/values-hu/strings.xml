@@ -86,11 +86,6 @@
     <string name="category_outro_summary">Köszönetnyilvánítás vagy a videóvégi kártyák megjelenése. Nem a videó informatív összefoglalása</string>
     <string name="license">Licenc</string>
     <string name="color_accent">Kiemelés</string>
-    <string name="color_red">Pihentető vörös</string>
-    <string name="color_blue">Boldogító kék</string>
-    <string name="color_yellow">Izgalmas sárga</string>
-    <string name="color_green">Vagány zöld</string>
-    <string name="color_purple">Kellemes lila</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Értesítések</string>
     <string name="enabled">Be</string>
@@ -295,9 +290,7 @@
     <string name="pinch_control_summary">Használjon csípés gesztust, a nagyításhoz/kicsinyítéshez</string>
     <string name="all_caught_up_summary">Már látta az összes új videót</string>
     <string name="all_caught_up">Minden lemaradás pótolva</string>
-    <string name="color_violet">Változékony lila</string>
     <string name="nothing_selected">Nincs semmi kiválasztva!</string>
-    <string name="theme_monochrome">Minimalista monokróm</string>
     <string name="play_latest_videos">Legújabb videók lejátszása</string>
     <string name="hide_watched_from_feed">A már megtekintett videók elrejtése</string>
     <string name="playlistUrl">Lejátszási lista webcíme</string>

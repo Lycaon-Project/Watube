@@ -125,15 +125,18 @@
                 style="@style/TextViewMarquee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp" />
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/uploader"
                 style="@style/TextViewMarquee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp" />
+                android:layout_marginTop="4dp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp" />
 
         </LinearLayout>
 
@@ -149,6 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:contentDescription="@string/exo_controls_previous_description"
                 app:iconGravity="textStart"
                 app:icon="@drawable/ic_prev" />
 
@@ -165,6 +169,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:contentDescription="@string/exo_controls_next_description"
                 app:iconGravity="textStart"
                 app:icon="@drawable/ic_next" />
 
@@ -219,6 +224,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:contentDescription="@string/pause"
                 app:iconGravity="textStart"
                 app:iconSize="55dp"
                 app:icon="@drawable/ic_pause" />
@@ -338,7 +344,8 @@
             android:layout_gravity="center"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/ic_pause" />
+            android:src="@drawable/ic_pause"
+            android:contentDescription="@string/pause" />
 
         <ImageView
             android:id="@+id/miniPlayerClose"

@@ -347,7 +347,9 @@ object PlayerHelper {
     val localRYD: Boolean
         get() = PreferenceHelper.getBoolean(
             PreferenceKeys.LOCAL_RYD,
-            true
+            // off by default: the counter would send every video id to a third party
+            // from the user's own IP. Still available (opt-in) in the instance settings.
+            false
         )
 
     var repeatMode: Int
@@ -444,6 +446,12 @@ object PlayerHelper {
     @OptIn(UnstableApi::class)
     private fun createRendererFactory(context: Context): DefaultRenderersFactory {
         val renderersFactory = object : DefaultRenderersFactory(context) {
+            init {
+                // when a decoder refuses a stream, ExoPlayer silently retries with the next
+                // one instead of ending playback with an error
+                setEnableDecoderFallback(true)
+            }
+
             override fun buildTextRenderers(
                 context: Context,
                 output: TextOutput,

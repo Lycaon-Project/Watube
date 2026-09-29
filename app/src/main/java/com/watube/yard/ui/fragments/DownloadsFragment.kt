@@ -185,7 +185,6 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.downloadsRecView?.layoutManager = GridLayoutManager(context, gridItems.ceilHalf())
-        _binding?.downloadsRecView?.setHasFixedSize(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

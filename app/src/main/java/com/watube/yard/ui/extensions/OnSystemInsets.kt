@@ -8,7 +8,10 @@ import androidx.core.view.WindowInsetsCompat
 
 fun View.onSystemInsets(callback: (v: View, systemBarInsets: Insets) -> Unit) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        // systemBars() alone misses the camera cutout on the sides/top in landscape
+        val systemBars = insets.getInsets(
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+        )
         callback(this, systemBars)
 
         WindowInsetsCompat.CONSUMED

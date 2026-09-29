@@ -95,11 +95,6 @@
     <string name="category_preview_summary">ਬਿਨਾਂ ਵਾਧੂ ਜਾਣਕਾਰੀ ਦੇ ਭਵਿੱਖ ਦੀ ਸਮੱਗਰੀ ਦਾ ਵੇਰਵਾ ਦੇਣ ਵਾਲੇ ਹਿੱਸਿਆਂ ਲਈ। ਜੇਕਰ ਇਸ ਵਿੱਚ ਕਲਿੱਪ ਸ਼ਾਮਲ ਹਨ ਜੋ ਸਿਰਫ਼ ਇੱਥੇ ਦਿਖਾਈ ਦਿੰਦੀਆਂ ਹਨ, ਤਾਂ ਇਹ ਗਲਤ ਸ਼੍ਰੇਣੀ ਹੈ</string>
     <string name="license">ਲਾਈਸੈਂਸ</string>
     <string name="color_accent">ਲਹਿਜ਼ੇ</string>
-    <string name="color_red">ਆਰਾਮਦਾਇਕ ਲਾਲ</string>
-    <string name="color_blue">ਅਨੰਦਮਈ ਨੀਲਾ</string>
-    <string name="color_yellow">ਜ਼ੋਰਦਾਰ ਪੀਲਾ</string>
-    <string name="color_green">ਆਕਰਸ਼ਕ ਹਰਾ</string>
-    <string name="color_purple">ਅਨੰਦਦਾਇਕ ਜਾਮਣੀ</string>
     <string name="material_you">ਮਟੀਰੀਅਲ ਯੂ</string>
     <string name="sponsorblock_notifications">ਨੋਟੀਫਿਕੇਸ਼ਨ</string>
     <string name="app_icon">ਆਈਕੌਨ</string>
@@ -261,7 +256,6 @@
     <string name="swipe_controls">ਸਵਾਈਪ ਕੰਟਰੋਲ</string>
     <string name="pinch_control">ਪਿੰਚ ਕੰਟਰੋਲ</string>
     <string name="pinch_control_summary">ਜ਼ੂਮ ਇਨ/ਆਊਟ ਕਰਨ ਲਈ ਪਿੰਚ ਸੰਕੇਤ ਦੀ ਵਰਤੋਂ ਕਰੋ</string>
-    <string name="theme_monochrome">ਨਿਊਨਤਮ ਮੋਨੋਕ੍ਰੋਮ</string>
     <string name="captions_size">ਕੈਪਸ਼ਨਾਂ ਦਾ ਆਕਾਰ</string>
     <string name="double_tap_seek">ਸੀਕ ਲਈ ਡਬਲ ਟੈਪ ਕਰੋ</string>
     <string name="import_playlists">ਪਲੇਲਿਸਟਸ ਆਯਾਤ ਕਰੋ</string>
@@ -273,7 +267,6 @@
     <string name="username_email">ਇੱਕ ਉਪਭੋਗਤਾ ਨਾਮ ਵਜੋਂ ਈਮੇਲ ਪਤੇ ਦੀ ਵਰਤੋਂ ਕਰਨ ਦੀ ਸਿਫਾਰਸ਼ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ। ਕੀ ਫਿਰ ਵੀ ਅੱਗੇ ਵਧਣਾ ਹੈ?</string>
     <string name="play_latest_videos">ਨਵੀਨਤਮ ਵੀਡੀਓ ਚਲਾਓ</string>
     <string name="nothing_selected">ਕੁਝ ਵੀ ਨਹੀਂ ਚੁਣਿਆ ਗਿਆ!</string>
-    <string name="color_violet">ਬਹੁਮੁਖੀ ਵੈਂਗਣੀ</string>
     <string name="push_channel_name">ਸੂਚਨਾ ਵਰਕਰ</string>
     <string name="push_channel_description">ਨਵੀਆਂ ਸਟ੍ਰੀਮਾਂ ਉਪਲਬਧ ਹੋਣ \'ਤੇ ਇੱਕ ਸੂਚਨਾ ਦਿਖਾਉਂਦਾ ਹੈ।</string>
     <string name="irreversible">ਯਕੀਨਨ ਤੁਸੀਂ ਇਹ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ\? ਇਸਨੂੰ ਅਣਕੀਤਾ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!</string>

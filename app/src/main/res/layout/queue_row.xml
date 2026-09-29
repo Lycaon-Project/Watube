@@ -13,7 +13,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center"
         android:layout_marginEnd="10dp"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="@dimen/watube_card_radius">
 
         <ImageView
             android:id="@+id/thumbnail"
@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp"
             tools:text="Brennan Heart" />
 

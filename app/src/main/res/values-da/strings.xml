@@ -57,8 +57,6 @@
     <string name="downloads">Downloads</string>
     <string name="license">Licens</string>
     <string name="color_accent">Accentfarve</string>
-    <string name="color_red">Rolig rød</string>
-    <string name="color_blue">Belejlig blå</string>
     <string name="playback_speed">Afspilningshastighed</string>
     <string name="advanced">Avanceret</string>
     <string name="appearance_summary">Tilpas appen efter din smag</string>
@@ -103,15 +101,12 @@
     <string name="systemDefault">System</string>
     <string name="customization">Justeringer</string>
     <string name="enabled">Til</string>
-    <string name="color_purple">Lemfældig lilla</string>
     <string name="material_you">Material You</string>
     <string name="update_summary">Tjek for opdatering</string>
     <string name="app_uptodate">Kører den seneste version.</string>
     <string name="player">Afspiller</string>
     <string name="gradientIcon">Glidende gradient</string>
     <string name="legacyIcon">Tabt arv</string>
-    <string name="color_yellow">Gallisk gul</string>
-    <string name="color_green">Gesten grøn</string>
     <string name="category_sponsor_summary">Betalt promovering, betalte henvisninger og direkte reklamer. Ikke for selvpromovering, eller reelle shoutouts af tiltag, skabere, hjemmesider og produkter</string>
     <string name="category_interaction">Interaktionspåmindelse</string>
     <string name="category_selfpromo">Ubetalt/Selvpromovering</string>
@@ -288,7 +283,6 @@
     <string name="username_email">Det anbefales ikke at bruge en e-mailadresse som brugernavn. Fortsæt alligevel?</string>
     <string name="play_latest_videos">Afspil seneste videoer</string>
     <string name="nothing_selected">Intet valgt!</string>
-    <string name="color_violet">Alsidig violet</string>
     <string name="shuffle">Bland</string>
     <string name="category">Kategori</string>
     <string name="stats_for_nerds">Statistik for nørder</string>
@@ -432,7 +426,6 @@
     <string name="playback_pitch">Tonehøjde</string>
     <string name="category_highlight_summary">Kan være enten sponsoreret titel, miniaturebilledet eller den mest interessante del af videoen. Du kan springe hen til den ved at trykke på den i kapitlersektionen</string>
     <string name="color">Farve</string>
-    <string name="theme_monochrome">Minimalistisk monokrom</string>
     <string name="captions_size">Undertekstsstørrelse</string>
     <string name="hide_watched_from_feed">Skjul allerede sete videoer</string>
     <string name="playlistUrl">Playliste-URL</string>

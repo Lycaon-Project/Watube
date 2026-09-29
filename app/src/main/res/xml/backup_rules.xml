@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  Credentials (Piped auth token, login data) must never leave the device.
-  Everything else (settings, history, subscriptions, playlists) stays backed up.
+  Android 9-11 backup rules (API 28-30). Same policy as data_extraction_rules.xml:
+  credentials and browsing data never leave the device, everything else (settings)
+  stays backed up. On these API levels there is no separate device-transfer rule.
 -->
 <full-backup-content>
     <exclude
         domain="sharedpref"
         path="auth.xml" />
+    <exclude
+        domain="database"
+        path="." />
+    <exclude
+        domain="root"
+        path="cache" />
 </full-backup-content>

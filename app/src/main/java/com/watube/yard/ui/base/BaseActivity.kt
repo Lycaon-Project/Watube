@@ -97,6 +97,13 @@ open class BaseActivity : AppCompatActivity() {
         val configuration = Configuration()
         var needsConfig = false
 
+        // Watube: text size from Settings > Appearance (88–116 %)
+        val fontScalePercent = PreferenceHelper.getInt(PreferenceKeys.FONT_SCALE, 100)
+        if (fontScalePercent != 100) {
+            configuration.fontScale = fontScalePercent / 100f
+            needsConfig = true
+        }
+
         // Gestion de la locale pour les versions antérieures à Android 13 (Tiramisu)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             @Suppress("DEPRECATION")

@@ -68,7 +68,8 @@ object DashHelper {
                 continue
             }
 
-            // only unwraps the url if the preference is set in the settings
+            // segments routed through the media proxy of the instance, exactly like the
+            // upstream default: the raw YouTube url is unwrapped first, then re-proxied
             stream.url = ProxyHelper.rewriteUrlUsingProxyPreference(stream.url.orEmpty())
 
             val adapSetInfo = adapSetInfos.find { it.mimeType == stream.mimeType }
@@ -94,7 +95,8 @@ object DashHelper {
                 continue
             }
 
-            // only unwraps the url if the preference is set in the settings
+            // segments routed through the media proxy of the instance, exactly like the
+            // upstream default: the raw YouTube url is unwrapped first, then re-proxied
             stream.url = ProxyHelper.rewriteUrlUsingProxyPreference(stream.url.orEmpty())
 
             adapSetInfos.add(

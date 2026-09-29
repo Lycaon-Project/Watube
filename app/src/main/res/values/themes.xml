@@ -21,6 +21,13 @@
         <item name="shapeAppearanceSmallComponent">@style/WatubeShape.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/WatubeShape.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/WatubeShape.Large</item>
+
+        <!-- Solar navigation: accent-soft pill behind the selected item -->
+        <item name="itemActiveIndicatorStyle">@style/WatubeNavActiveIndicator</item>
+
+        <!-- Solar chips: flat surface chip everywhere, including chips created
+             from the plain Material Chip style. -->
+        <item name="chipStyle">@style/Chip</item>
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.SplashScreen">
@@ -35,7 +42,6 @@
 
     </style>
 
-    <!-- Watube signature accent -->
     <style name="Theme.Watube" parent="BaseTheme">
 
         <item name="colorPrimary">@color/watube_theme_light_primary</item>
@@ -46,17 +52,14 @@
         <item name="colorOnSecondary">@color/watube_theme_light_onSecondary</item>
         <item name="colorSecondaryContainer">@color/watube_theme_light_secondaryContainer</item>
         <item name="colorOnSecondaryContainer">@color/watube_theme_light_onSecondaryContainer</item>
-
         <item name="colorTertiary">@color/watube_theme_light_tertiary</item>
         <item name="colorOnTertiary">@color/watube_theme_light_onTertiary</item>
         <item name="colorTertiaryContainer">@color/watube_theme_light_tertiaryContainer</item>
         <item name="colorOnTertiaryContainer">@color/watube_theme_light_onTertiaryContainer</item>
-
         <item name="colorError">@color/watube_theme_light_error</item>
         <item name="colorErrorContainer">@color/watube_theme_light_errorContainer</item>
         <item name="colorOnError">@color/watube_theme_light_onError</item>
         <item name="colorOnErrorContainer">@color/watube_theme_light_onErrorContainer</item>
-
         <item name="android:colorBackground">@color/watube_theme_light_background</item>
         <item name="colorOnBackground">@color/watube_theme_light_onBackground</item>
         <item name="colorSurface">@color/watube_theme_light_surface</item>
@@ -68,240 +71,219 @@
         <item name="colorSurfaceInverse">@color/watube_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/watube_theme_light_inversePrimary</item>
 
-    </style>
+        <item name="colorSurfaceContainerLowest">@color/watube_theme_light_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/watube_theme_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/watube_theme_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/watube_theme_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/watube_theme_light_surfaceContainerHighest</item>
+        <item name="colorSurfaceDim">@color/watube_theme_light_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/watube_theme_light_surfaceBright</item>
+        <item name="colorOutlineVariant">@color/watube_theme_light_outlineVariant</item>
 
-    <style name="Theme.Red" parent="BaseTheme">
-
-        <item name="colorPrimary">@color/red_md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/red_md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/red_md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/red_md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/red_md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/red_md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/red_md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/red_md_theme_light_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/red_md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/red_md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/red_md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/red_md_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/red_md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/red_md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/red_md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/red_md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/red_md_theme_light_background</item>
-        <item name="colorOnBackground">@color/red_md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/red_md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/red_md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/red_md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/red_md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/red_md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/red_md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/red_md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/red_md_theme_light_inversePrimary</item>
+        <!-- Day mode is a light surface: status/navigation bar icons stay dark. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
     </style>
 
-    <style name="Theme.Blue" parent="BaseTheme">
+    <style name="Theme.Azur" parent="BaseTheme">
 
-        <item name="colorPrimary">@color/blue_md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/blue_md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/blue_md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/blue_md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/blue_md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/blue_md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/blue_md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/blue_md_theme_light_onSecondaryContainer
-        </item>
-        <item name="colorTertiary">@color/blue_md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/blue_md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/blue_md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/blue_md_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/blue_md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/blue_md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/blue_md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/blue_md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/blue_md_theme_light_background</item>
-        <item name="colorOnBackground">@color/blue_md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/blue_md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/blue_md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/blue_md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/blue_md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/blue_md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/blue_md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/blue_md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/blue_md_theme_light_inversePrimary</item>
+        <item name="colorPrimary">@color/azur_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/azur_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/azur_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/azur_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/azur_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/azur_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/azur_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/azur_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/azur_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/azur_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/azur_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/azur_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/watube_theme_light_error</item>
+        <item name="colorErrorContainer">@color/watube_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/watube_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/watube_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/watube_theme_light_background</item>
+        <item name="colorOnBackground">@color/watube_theme_light_onBackground</item>
+        <item name="colorSurface">@color/watube_theme_light_surface</item>
+        <item name="colorOnSurface">@color/watube_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/watube_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/watube_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/watube_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/watube_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/watube_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/azur_theme_light_inversePrimary</item>
 
-    </style>
+        <item name="colorSurfaceContainerLowest">@color/watube_theme_light_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/watube_theme_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/watube_theme_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/watube_theme_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/watube_theme_light_surfaceContainerHighest</item>
+        <item name="colorSurfaceDim">@color/watube_theme_light_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/watube_theme_light_surfaceBright</item>
+        <item name="colorOutlineVariant">@color/watube_theme_light_outlineVariant</item>
 
-    <style name="Theme.Yellow" parent="BaseTheme">
-
-        <item name="colorPrimary">@color/yellow_md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/yellow_md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/yellow_md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/yellow_md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/yellow_md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/yellow_md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/yellow_md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/yellow_md_theme_light_onSecondaryContainer
-        </item>
-        <item name="colorTertiary">@color/yellow_md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/yellow_md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/yellow_md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/yellow_md_theme_light_onTertiaryContainer
-        </item>
-        <item name="colorError">@color/yellow_md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/yellow_md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/yellow_md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/yellow_md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/yellow_md_theme_light_background</item>
-        <item name="colorOnBackground">@color/yellow_md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/yellow_md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/yellow_md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/yellow_md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/yellow_md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/yellow_md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/yellow_md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/yellow_md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/yellow_md_theme_light_inversePrimary</item>
+        <!-- Day mode is a light surface: status/navigation bar icons stay dark. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
     </style>
 
-    <style name="Theme.Green" parent="BaseTheme">
+    <style name="Theme.Corail" parent="BaseTheme">
 
-        <item name="colorPrimary">@color/green_md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/green_md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/green_md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/green_md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/green_md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/green_md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/green_md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/green_md_theme_light_onSecondaryContainer
-        </item>
-        <item name="colorTertiary">@color/green_md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/green_md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/green_md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/green_md_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/green_md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/green_md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/green_md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/green_md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/green_md_theme_light_background</item>
-        <item name="colorOnBackground">@color/green_md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/green_md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/green_md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/green_md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/green_md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/green_md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/green_md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/green_md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/green_md_theme_light_inversePrimary</item>
+        <item name="colorPrimary">@color/corail_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/corail_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/corail_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/corail_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/corail_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/corail_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/corail_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/corail_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/corail_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/corail_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/corail_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/corail_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/watube_theme_light_error</item>
+        <item name="colorErrorContainer">@color/watube_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/watube_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/watube_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/watube_theme_light_background</item>
+        <item name="colorOnBackground">@color/watube_theme_light_onBackground</item>
+        <item name="colorSurface">@color/watube_theme_light_surface</item>
+        <item name="colorOnSurface">@color/watube_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/watube_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/watube_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/watube_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/watube_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/watube_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/corail_theme_light_inversePrimary</item>
 
-    </style>
+        <item name="colorSurfaceContainerLowest">@color/watube_theme_light_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/watube_theme_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/watube_theme_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/watube_theme_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/watube_theme_light_surfaceContainerHighest</item>
+        <item name="colorSurfaceDim">@color/watube_theme_light_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/watube_theme_light_surfaceBright</item>
+        <item name="colorOutlineVariant">@color/watube_theme_light_outlineVariant</item>
 
-    <style name="Theme.Purple" parent="BaseTheme">
-
-        <item name="colorPrimary">@color/purple_md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/purple_md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/purple_md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/purple_md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/purple_md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/purple_md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/purple_md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/purple_md_theme_light_onSecondaryContainer
-        </item>
-        <item name="colorTertiary">@color/purple_md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/purple_md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/purple_md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/purple_md_theme_light_onTertiaryContainer
-        </item>
-        <item name="colorError">@color/purple_md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/purple_md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/purple_md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/purple_md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/purple_md_theme_light_background</item>
-        <item name="colorOnBackground">@color/purple_md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/purple_md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/purple_md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/purple_md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/purple_md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/purple_md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/purple_md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/purple_md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/purple_md_theme_light_inversePrimary</item>
+        <!-- Day mode is a light surface: status/navigation bar icons stay dark. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
     </style>
 
-    <style name="Theme.Monochrome" parent="BaseTheme">
+    <style name="Theme.Lavande" parent="BaseTheme">
 
-        <item name="colorPrimary">@color/monochrome_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/monochrome_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/monochrome_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/monochrome_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/monochrome_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/monochrome_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/monochrome_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/monochrome_theme_light_onSecondaryContainer
-        </item>
-        <item name="colorTertiary">@color/monochrome_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/monochrome_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/monochrome_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/monochrome_theme_light_onTertiaryContainer
-        </item>
-        <item name="colorError">@color/monochrome_theme_light_error</item>
-        <item name="colorErrorContainer">@color/monochrome_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/monochrome_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/monochrome_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/monochrome_theme_light_background</item>
-        <item name="colorOnBackground">@color/monochrome_theme_light_onBackground</item>
-        <item name="colorSurface">@color/monochrome_theme_light_surface</item>
-        <item name="colorOnSurface">@color/monochrome_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/monochrome_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/monochrome_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/monochrome_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/monochrome_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/monochrome_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/monochrome_theme_light_inversePrimary</item>
+        <item name="colorPrimary">@color/lavande_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/lavande_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/lavande_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/lavande_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/lavande_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/lavande_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/lavande_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/lavande_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/lavande_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/lavande_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/lavande_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/lavande_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/watube_theme_light_error</item>
+        <item name="colorErrorContainer">@color/watube_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/watube_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/watube_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/watube_theme_light_background</item>
+        <item name="colorOnBackground">@color/watube_theme_light_onBackground</item>
+        <item name="colorSurface">@color/watube_theme_light_surface</item>
+        <item name="colorOnSurface">@color/watube_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/watube_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/watube_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/watube_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/watube_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/watube_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/lavande_theme_light_inversePrimary</item>
 
-    </style>
+        <item name="colorSurfaceContainerLowest">@color/watube_theme_light_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/watube_theme_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/watube_theme_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/watube_theme_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/watube_theme_light_surfaceContainerHighest</item>
+        <item name="colorSurfaceDim">@color/watube_theme_light_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/watube_theme_light_surfaceBright</item>
+        <item name="colorOutlineVariant">@color/watube_theme_light_outlineVariant</item>
 
-    <style name="Theme.Violet" parent="BaseTheme">
-
-        <item name="colorPrimary">@color/violet_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/violet_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/violet_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/violet_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/violet_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/violet_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/violet_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/violet_theme_light_onSecondaryContainer
-        </item>
-        <item name="colorTertiary">@color/violet_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/violet_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/violet_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/violet_theme_light_onTertiaryContainer
-        </item>
-        <item name="colorError">@color/violet_theme_light_error</item>
-        <item name="colorErrorContainer">@color/violet_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/violet_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/violet_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/violet_theme_light_background</item>
-        <item name="colorOnBackground">@color/violet_theme_light_onBackground</item>
-        <item name="colorSurface">@color/violet_theme_light_surface</item>
-        <item name="colorOnSurface">@color/violet_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/violet_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/violet_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/violet_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/violet_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/violet_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/violet_theme_light_inversePrimary</item>
+        <!-- Day mode is a light surface: status/navigation bar icons stay dark. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
     </style>
 
+    <style name="Theme.Ambre" parent="BaseTheme">
+
+        <item name="colorPrimary">@color/ambre_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/ambre_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/ambre_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/ambre_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/ambre_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/ambre_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/ambre_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/ambre_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/ambre_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/ambre_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/ambre_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/ambre_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/watube_theme_light_error</item>
+        <item name="colorErrorContainer">@color/watube_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/watube_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/watube_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/watube_theme_light_background</item>
+        <item name="colorOnBackground">@color/watube_theme_light_onBackground</item>
+        <item name="colorSurface">@color/watube_theme_light_surface</item>
+        <item name="colorOnSurface">@color/watube_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/watube_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/watube_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/watube_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/watube_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/watube_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/ambre_theme_light_inversePrimary</item>
+
+        <item name="colorSurfaceContainerLowest">@color/watube_theme_light_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/watube_theme_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/watube_theme_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/watube_theme_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/watube_theme_light_surfaceContainerHighest</item>
+        <item name="colorSurfaceDim">@color/watube_theme_light_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/watube_theme_light_surfaceBright</item>
+        <item name="colorOutlineVariant">@color/watube_theme_light_outlineVariant</item>
+
+        <!-- Day mode is a light surface: status/navigation bar icons stay dark. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+
+    </style>
     <style name="Pure">
 
+        <!-- Flat white surfaces. The neutral roles must be flipped back to a light
+             palette here: every Watube accent ships with dark-grey neutrals. -->
         <item name="android:colorBackground">@android:color/white</item>
         <item name="colorSurface">@android:color/white</item>
-        <item name="colorSurfaceContainer">@android:color/white</item>
+        <item name="colorSurfaceContainerLowest">#FFFFFF</item>
+        <item name="colorSurfaceContainerLow">#FAFAFA</item>
+        <item name="colorSurfaceContainer">#FFFFFF</item>
+        <item name="colorSurfaceContainerHigh">#F2F2F2</item>
+        <item name="colorSurfaceContainerHighest">#EAEAEA</item>
+        <item name="colorSurfaceDim">#FFFFFF</item>
+        <item name="colorSurfaceBright">#FFFFFF</item>
+        <item name="colorSurfaceVariant">#E8E8E8</item>
+        <item name="colorOnSurface">#1A1C1E</item>
+        <item name="colorOnBackground">#1A1C1E</item>
+        <item name="colorOnSurfaceVariant">#444746</item>
+        <item name="colorOutline">#74777C</item>
+        <item name="colorOutlineVariant">#C4C6CA</item>
+        <item name="colorSurfaceInverse">#33373A</item>
+        <item name="colorOnSurfaceInverse">#ECEFF1</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <item name="popupMenuBackground">@drawable/pure_theme_popup_menu_background</item>
 
     </style>

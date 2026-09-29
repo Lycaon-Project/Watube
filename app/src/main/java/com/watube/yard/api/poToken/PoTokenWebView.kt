@@ -7,6 +7,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.annotation.MainThread
+import org.json.JSONObject
 import com.watube.yard.BuildConfig
 import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.api.USER_AGENT
@@ -102,7 +103,7 @@ class PoTokenWebView private constructor(
             withContext(Dispatchers.Main) {
                 webView.evaluateJavascript(
                     """try {
-                             data = $parsedChallengeData
+                             data = JSON.parse(${JSONObject.quote(parsedChallengeData)})
                              runBotGuard(data).then(function (result) {
                                  this.webPoSignalOutput = result.webPoSignalOutput
                                  $JS_INTERFACE.onRunBotguardResult(result.botguardResponse)

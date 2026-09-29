@@ -1,110 +1,100 @@
 package com.watube.yard.ui.preferences
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.preference.Preference
 import com.watube.yard.BuildConfig
 import com.watube.yard.R
-import com.watube.yard.extensions.formatAsFileSize
-import com.watube.yard.extensions.toastFromMainDispatcher
-import com.watube.yard.helpers.ImageHelper
-import com.watube.yard.helpers.PreferenceHelper
-import com.watube.yard.helpers.PrivacyHelper
-import com.watube.yard.ui.base.BasePreferenceFragment
-import com.watube.yard.ui.dialogs.ErrorDialog
-import com.watube.yard.util.UpdateChecker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.watube.yard.databinding.FragmentMainSettingsBinding
+import com.watube.yard.databinding.SettingsCategoryRowBinding
+import com.watube.yard.ui.activities.AboutActivity
 
-class MainSettings : BasePreferenceFragment() {
+/**
+ * Settings hub index.
+ *
+ * One card, five rows — the "Paramètres" screen of the Solar mockup: Apparence,
+ * Lecteur, Confidentialité, Données & maintenance and À propos. Every former top
+ * level entry now lives inside one of those categories.
+ */
+class MainSettings : Fragment() {
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.settings, rootKey)
+    private var _binding: FragmentMainSettingsBinding? = null
+    private val binding get() = _binding!!
 
-        val update = findPreference<Preference>("update")
-        update?.summary = "v${BuildConfig.VERSION_NAME}"
-
-        // check app update manually
-        update?.setOnPreferenceClickListener {
-            lifecycleScope.launch {
-                update.summary = getString(R.string.checking_for_updates)
-                withContext(Dispatchers.IO) {
-                    UpdateChecker(requireContext()).checkUpdate(true)
-                }
-                update.summary = "v${BuildConfig.VERSION_NAME}"
-            }
-
-            true
-        }
-
-        setupClearCache()
-
-        val crashlog = findPreference<Preference>("crashlog")
-        crashlog?.isVisible = PreferenceHelper.getErrorLog().isNotEmpty() && BuildConfig.DEBUG
-        crashlog?.setOnPreferenceClickListener {
-            ErrorDialog().show(childFragmentManager, null)
-            crashlog.isVisible = false
-            true
-        }
-        
-        listOf(
-            "general" to R.id.action_global_generalSettings,
-            "instance" to R.id.action_global_instanceSettings,
-            "appearance" to R.id.action_global_appearanceSettings,
-            "privacy" to R.id.action_global_privacySettings,
-            "sponsorblock" to R.id.action_global_sponsorBlockSettings,
-            "player" to R.id.action_global_playerSettings,
-            "audio_video" to R.id.action_global_audioVideoSettings,
-            "history" to R.id.action_global_historySettings,
-            "notifications" to R.id.action_global_notificationSettings,
-            "backup_restore" to R.id.action_global_backupRestoreSettings
-        ).forEach { (preferenceKey, actionId) ->
-            findPreference<Preference>(preferenceKey)?.setOnPreferenceClickListener { _ ->
-                findNavController().navigate(actionId)
-                true
-            }
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMainSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    /**
-     * Lets the user manually free the storage used by images, http responses and temp files.
-     */
-    private fun setupClearCache() {
-        val clearCache = findPreference<Preference>("clear_cache") ?: return
-        refreshCacheSummary(clearCache)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupRow(
+            binding.rowAppearance,
+            R.drawable.ic_color,
+            R.string.appearance,
+            R.string.appearance_summary
+        ) { navigate(R.id.action_global_appearanceSettings) }
 
-        clearCache.setOnPreferenceClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.clear_cache_dialog_title)
-                .setMessage(R.string.clear_cache_dialog_message)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.clear_cache) { _, _ ->
-                    val appContext = requireContext().applicationContext
-                    lifecycleScope.launch {
-                        ImageHelper.clearCache(appContext)
-                        // Watube: also drop cookies/web storage persisted by the PoToken WebView
-                        PrivacyHelper.clearWebViewData()
-                        refreshCacheSummary(clearCache)
-                        appContext.toastFromMainDispatcher(R.string.cache_cleared)
-                    }
-                }
-                .show()
+        setupRow(
+            binding.rowPlayer,
+            R.drawable.ic_play_filled,
+            R.string.player,
+            R.string.player_summary
+        ) { navigate(R.id.action_global_playerSettings) }
 
-            true
+        setupRow(
+            binding.rowPrivacy,
+            R.drawable.ic_shield,
+            R.string.privacy,
+            R.string.privacy_summary
+        ) { navigate(R.id.action_global_privacySettings) }
+
+        setupRow(
+            binding.rowData,
+            R.drawable.ic_data_saver,
+            R.string.settings_data_maintenance,
+            R.string.general_summary
+        ) { navigate(R.id.action_global_maintenanceSettings) }
+
+        setupRow(
+            binding.rowAbout,
+            R.drawable.ic_info,
+            R.string.about,
+            R.string.about
+        ) {
+            startActivity(Intent(requireContext(), AboutActivity::class.java))
         }
+        // mockup: "Watube 26.9 · GPL-3.0 · crédits"
+        binding.rowAbout.rowSummary.text = getString(R.string.version, BuildConfig.VERSION_NAME)
     }
 
-    private fun refreshCacheSummary(preference: Preference) {
-        val appContext = requireContext().applicationContext
-        lifecycleScope.launch {
-            // walking the cache directory is I/O: keep it off the main thread
-            val size = withContext(Dispatchers.IO) {
-                ImageHelper.getCacheSize(appContext)
-            }
-            preference.summary = getString(R.string.clear_cache_summary, size.formatAsFileSize())
-        }
+    private fun setupRow(
+        row: SettingsCategoryRowBinding,
+        @DrawableRes icon: Int,
+        title: Int,
+        summary: Int,
+        onClick: () -> Unit
+    ) {
+        row.rowIcon.setImageResource(icon)
+        row.rowTitle.setText(title)
+        row.rowSummary.setText(summary)
+        row.root.setOnClickListener { onClick() }
+    }
+
+    private fun navigate(actionId: Int) {
+        findNavController().navigate(actionId)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

@@ -2,6 +2,13 @@
 <resources>
     <integer name="grid_items">1</integer>
     <integer name="grid_items_landscape">2</integer>
+
+    <!-- Solar spacing: pad (1.1rem) and cgap (1.15rem) of the mockup -->
+    <dimen name="watube_gutter">15dp</dimen>
+    <dimen name="watube_cgap">15dp</dimen>
+    <dimen name="watube_card_radius">17.5dp</dimen>
+    <dimen name="watube_nav_inset">10dp</dimen>
+
     <dimen name="normal_button_margin_bottom">0dp</dimen>
     <dimen name="normal_button_margin_end">0dp</dimen>
     <dimen name="fullscreen_button_margin_bottom">5dp</dimen>

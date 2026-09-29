@@ -34,14 +34,11 @@
 
                 <TextView
                     android:id="@+id/bottom_sheet_title"
+                    style="@style/WatubeSheetTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textSize="27sp"
-                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/watube_gutter"
+                    android:layout_marginBottom="6dp"
                     tools:text="Very long text that is going across more than two lines in total"/>
 
                 <com.google.android.material.divider.MaterialDivider

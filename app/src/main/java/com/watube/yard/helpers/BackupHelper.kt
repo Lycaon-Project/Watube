@@ -54,9 +54,18 @@ object BackupHelper {
             JsonHelper.json.decodeFromStream<BackupFile>(it)
         } ?: return@withContext
 
-        Database.watchHistoryDao().insertAll(backupFile.watchHistory.orEmpty())
-        Database.searchHistoryDao().insertAll(backupFile.searchHistory.orEmpty())
-        DatabaseHelper.saveWatchPositions(backupFile.watchPositions.orEmpty())
+        // tourist mode keeps browsing data off the device, even while restoring a backup;
+        // entries without a watch time are stamped so the retention purge can age them
+        if (!PreferenceHelper.isTouristModeEnabled()) {
+            val restoredAt = System.currentTimeMillis()
+            Database.watchHistoryDao().insertAll(
+                backupFile.watchHistory.orEmpty().map { item ->
+                    if (item.watchedAt > 0) item else item.copy(watchedAt = restoredAt)
+                }
+            )
+            Database.searchHistoryDao().insertAll(backupFile.searchHistory.orEmpty())
+            DatabaseHelper.saveWatchPositions(backupFile.watchPositions.orEmpty())
+        }
         Database.localSubscriptionDao().insertAll(backupFile.subscriptions.orEmpty())
         Database.customInstanceDao().insertAll(backupFile.customInstances.orEmpty())
         Database.playlistBookmarkDao().insertAll(backupFile.playlistBookmarks.orEmpty())

@@ -15,22 +15,12 @@
             android:layout_height="wrap_content"
             app:navigationIcon="?homeAsUpIndicator"
             android:fitsSystemWindows="true"
-            app:title="@string/about" />
+            app:title="@string/about"
+            app:titleTextColor="?attr/colorOnSurface" />
 
         <com.watube.yard.ui.views.AppIconHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/donate"
-            style="@style/AboutCard">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/donate"
-                app:drawableStartCompat="@drawable/ic_donate" />
-
-        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/website"

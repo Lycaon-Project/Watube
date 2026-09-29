@@ -98,11 +98,6 @@
     <string name="category_selfpromo">Tasuta reklaam või enesereklaam</string>
     <string name="category_selfpromo_summary">Sarnane „sponsorile“, kuid tegemist on tasuta reklaamiga või enesereklaamiga. Siin hulgas on tootenäidete teave või info annetuste ja koostööpartnerite kohta</string>
     <string name="color_accent">Aktsentvärv</string>
-    <string name="color_red">Puhkav punane</string>
-    <string name="color_blue">Õnnis sinine</string>
-    <string name="color_yellow">Tormakas kollane</string>
-    <string name="color_green">Äge roheline</string>
-    <string name="color_purple">Meeldiv lilla</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Teavitused</string>
     <string name="app_icon">Ikoon</string>
@@ -312,14 +307,12 @@
     <string name="category_music_offtopic_summary">Kasutamiseks vaid muusikavideotes. Siia alla kuuluvad video need lõigud, mis pole algupärase plaadiproduktsiooni osa. Lõpuks peaks video heliriba enam-vähem vastama sellele, nagu ta tegelikult plaadil leidub või Spotify\'st leitav on. Video alguses ja lõpus leiduvad jutulõigud ja muu ebaoluline peaks olema välja jäetud</string>
     <string name="featured">Esiletõstetud</string>
     <string name="bookmark">Järjehoidja</string>
-    <string name="theme_monochrome">Minimalistlik mustvalge</string>
     <string name="captions_size">Subtiitrite suurus</string>
     <string name="double_tap_seek">Edasikerimiseks topeltklõpsa</string>
     <string name="double_tap_seek_summary">Edasi- või tagasikerimiseks topeltklõpsa meediamängija paremas või vasakus ääres</string>
     <string name="import_playlists">Impordi esitusloendeid</string>
     <string name="export_playlists">Ekspordi esitusloendeid</string>
     <string name="app_backup">Rakenduse varundus</string>
-    <string name="color_violet">Mitmekülgne violetne</string>
     <string name="shuffle">Sega videod</string>
     <string name="add_to_bookmarks">Lisa järjehoidjaks</string>
     <string name="remove_bookmark">Kustuta järjehoidja</string>

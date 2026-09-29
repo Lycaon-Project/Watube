@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Watube signature shapes: rounder controls and larger cards than upstream -->
-    <style name="WatubeShape.Small" parent="ShapeAppearance.Material3.Corner.Medium" />
+    <!-- Watube signature shapes: Solar radii (8 / 12 / 17.5 dp) -->
+    <style name="WatubeShape.Small" parent="ShapeAppearance.Material3.Corner.Small">
+        <item name="cornerSize">8dp</item>
+    </style>
 
-    <style name="WatubeShape.Medium" parent="ShapeAppearance.Material3.Corner.Large" />
+    <style name="WatubeShape.Medium" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">12dp</item>
+    </style>
 
-    <style name="WatubeShape.Large" parent="ShapeAppearance.Material3.Corner.ExtraLarge" />
+    <style name="WatubeShape.Large" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSize">17.5dp</item>
+    </style>
+
+    <style name="WatubeShape.Pill" parent="ShapeAppearance.Material3.Corner.Full" />
+
+    <!-- Solar bottom navigation: accent-soft pill behind the selected item -->
+    <style name="WatubeNavActiveIndicator"
+        parent="Widget.Material3Expressive.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="shapeAppearance">@style/WatubeShape.Pill</item>
+    </style>
 
     <style name="RoundedImageView">
 
@@ -24,15 +39,17 @@
 
     <style name="AboutCard" parent="Widget.Material3.CardView.Elevated">
 
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="strokeWidth">0dp</item>
-        <item name="cardCornerRadius">18dp</item>
+        <item name="android:layout_marginStart">@dimen/watube_gutter</item>
+        <item name="android:layout_marginEnd">@dimen/watube_gutter</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainerLow</item>
+        <item name="cardCornerRadius">@dimen/watube_card_radius</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="cardElevation">5dp</item>
+        <item name="cardElevation">0dp</item>
 
     </style>
 
@@ -40,14 +57,28 @@
 
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:drawablePadding">20dp</item>
+        <item name="android:drawablePadding">16dp</item>
         <item name="android:paddingStart">15dp</item>
         <item name="android:paddingEnd">15dp</item>
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
+    </style>
+
+    <!-- Solar sheet heading: compact bold title over a divider -->
+    <style name="WatubeSheetTitle">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+
     </style>
 
     <style name="CustomDialogTextInputLayout" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -70,6 +101,7 @@
 
     </style>
 
+    <!-- Solar .act: pill action with chip surface + hairline stroke -->
     <style name="PlayerActionsButton" parent="@style/Widget.Material3.Button.ElevatedButton">
 
         <item name="android:layout_width">wrap_content</item>
@@ -77,8 +109,14 @@
         <item name="android:layout_marginStart">4dp</item>
         <item name="android:layout_marginEnd">4dp</item>
         <item name="iconGravity">textStart</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="iconTint">?colorPrimary</item>
+        <item name="shapeAppearance">@style/WatubeShape.Pill</item>
+        <item name="backgroundTint">?attr/colorSurfaceContainer</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="iconTint">?attr/colorOnSurfaceVariant</item>
 
     </style>
 
@@ -115,7 +153,7 @@
 
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">4dp</item>
-        <item name="android:background">?colorPrimaryDark</item>
+        <item name="android:background">?attr/colorPrimary</item>
         <item name="android:visibility">gone</item>
 
     </style>
@@ -144,7 +182,30 @@
         <item name="android:text">0</item>
     </style>
 
-    <style name="Chip" parent="Widget.Material3.Chip.Filter">
+    <!-- Solar chips: chip token (#242932 + hairline) that turns accent on selection -->
+    <style name="Watube.Chip" parent="Widget.Material3.Chip.Filter">
+
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+
+        <item name="shapeAppearance">@style/WatubeShape.Pill</item>
+        <item name="chipBackgroundColor">@color/watube_chip_bg</item>
+        <item name="chipStrokeColor">@color/watube_chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/watube_chip_text</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="android:elevation">0dp</item>
+
+    </style>
+
+    <style name="Watube.Chip.Elevated" parent="Watube.Chip">
+
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+
+    </style>
+
+    <style name="Chip" parent="Watube.Chip">
 
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -177,15 +238,19 @@
         <item name="animationMode">slide</item>
     </style>
 
+    <!-- Solar section heading: accent tick + compact bold title -->
     <style name="HomeCategoryTitle">
 
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:drawableStart">@drawable/watube_section_tick</item>
+        <item name="android:drawablePadding">8dp</item>
         <item name="android:padding">8dp</item>
+        <item name="android:paddingStart">@dimen/watube_gutter</item>
 
     </style>
 
@@ -199,7 +264,7 @@
 
     </style>
 
-    <style name="ElevatedFilterChip" parent="Widget.Material3.Chip.Filter.Elevated">
+    <style name="ElevatedFilterChip" parent="Watube.Chip.Elevated">
 
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -220,6 +285,12 @@
 
     <style name="PositiveButton" parent="Widget.Material3.Button">
         <item name="android:layout_marginStart">16dp</item>
+    </style>
+
+    <!-- Font option (Settings > Appearance): applied as a theme overlay so that every
+         view inheriting the theme picks it up. "system" (default) applies nothing. -->
+    <style name="WatubeFontFigtree">
+        <item name="android:fontFamily">@font/figtree</item>
     </style>
 
 </resources>

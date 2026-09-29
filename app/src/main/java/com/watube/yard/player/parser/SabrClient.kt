@@ -466,7 +466,7 @@ class SabrClient private constructor(
                 }
 
                 if (videoId != this.videoId) {
-                    Log.e(TAG, "processPart: Received unexpected media header for $videoId")
+                    Log.e(TAG, "processPart: Received unexpected media header")
                     throw Exception("Header mismatch")
                 }
 

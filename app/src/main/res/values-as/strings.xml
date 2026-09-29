@@ -108,11 +108,6 @@
     <string name="category_exclusive_access">এক্সক্লুছিভ প্ৰৱেশ</string>
     <string name="license">লাইচেন্স</string>
     <string name="color_accent">এক্সেণ্ট</string>
-    <string name="color_red">ৰঙা</string>
-    <string name="color_blue">নীলা</string>
-    <string name="color_yellow">হালধীয়া</string>
-    <string name="color_green">সেউজীয়া</string>
-    <string name="color_purple">বেঙুনীয়া</string>
     <string name="material_you">মেটেৰিয়েল ইউ</string>
     <string name="sponsorblock_notifications">জাননী</string>
     <string name="app_icon">আইকন</string>
@@ -315,7 +310,6 @@
     <string name="pinch_control_summary">জুম ইন/আউটৰ বাবে পিঞ্চ অঙ্গভঙ্গি ব্যৱহাৰ কৰক</string>
     <string name="comments_disabled">আপলোডাৰে মন্তব্য নিষ্ক্ৰিয় কৰিছে।</string>
     <string name="no_comments_available">এই ভিডিঅ’ত কোনো মন্তব্য নাই।</string>
-    <string name="theme_monochrome">মিনিমেলিষ্টিক মন’ক্ৰ’ম</string>
     <string name="captions_size">কেপচনৰ আকাৰ</string>
     <string name="double_tap_seek">দ্বি-টেপৰ জৰিয়তে সন্ধান</string>
     <string name="double_tap_seek_summary">প্লেয়াৰৰ অৱস্থান পিছুৱাই বা আগুৱাই যাবলৈ বাওঁ বা সোঁফালে দুবাৰ টেপ কৰক</string>
@@ -333,7 +327,6 @@
     <string name="proceed">আগবাঢ়ক</string>
     <string name="play_latest_videos">শেহতীয়া ভিডিঅ’ চলাওক</string>
     <string name="nothing_selected">কিছু নিৰ্বাচিত হোৱা নাই!</string>
-    <string name="color_violet">ভাৰ্চেটাইল ভায়লেট</string>
     <string name="hide_watched_from_feed">ইতিমধ্যে চোৱা ভিডিঅ’ লুকুৱাওক</string>
     <string name="playlistUrl">প্লেলিষ্ট URL</string>
     <string name="shuffle">শ্বাফল</string>

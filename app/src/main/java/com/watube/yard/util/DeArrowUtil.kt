@@ -37,7 +37,7 @@ object DeArrowUtil {
                 .also { cache.put(videoId, CachedContent(it)) }
         } catch (e: Exception) {
             // failed lookups are not cached so a network error stays retryable
-            Log.e(this::class.java.name, "Failed to fetch DeArrow content: ${e.message}")
+            Log.e(this::class.java.name, "Failed to fetch DeArrow content (${e.javaClass.simpleName})")
             null
         }
     }

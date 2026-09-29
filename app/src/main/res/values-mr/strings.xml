@@ -107,9 +107,6 @@
     <string name="least_recent">सर्वात जुनी</string>
     <string name="shapedIcon">मूर्ख आकाराचा</string>
     <string name="color_accent">उच्चार</string>
-    <string name="color_red">लाल</string>
-    <string name="color_yellow">पिवळा समारोह</string>
-    <string name="color_purple">आनंददायी जांभळा</string>
     <string name="shareTo">URL शेअर करा</string>
     <string name="pause">थांबवा</string>
     <string name="reset">पुर्वासपांदित करा</string>
@@ -128,7 +125,6 @@
     <string name="torchIcon">ट्रेंडी टॉर्च</string>
     <string name="version">व्हर्जन %1$s</string>
     <string name="category_preview_summary">अतिरिक्त माहितीशिवाय भविष्यातील सामग्री तपशीलवार विभागांसाठी. त्यात फक्त येथे दिसणार्‍या क्लिपचा समावेश असल्यास, ही बहुधा चुकीची श्रेणी आहे</string>
-    <string name="color_blue">आनंदी निळा</string>
     <string name="replies">प्रत्युत्तरे</string>
     <string name="watch_positions">प्लेबॅक स्थिती लक्षात ठेवा</string>
     <string name="reset_message">सर्व सेटिंग्ज रीसेट करून लॉग आउट करायचे\?</string>
@@ -143,7 +139,6 @@
     <string name="defaultIcon">डीफॉल्ट</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d व्हिडिओस</string>
     <string name="sponsorblock_notifications">सूचना</string>
-    <string name="color_green">खोबणी हिरवी</string>
     <string name="material_you">मटेरियल यू</string>
     <string name="update_available">%1$s आवृत्ती उपलब्ध आहे</string>
     <string name="appearance">अपेअरंस</string>
@@ -218,7 +213,6 @@
     <string name="mark_as_watched">पाहिले म्हणून चिन्हांकित करा</string>
     <string name="playlistCloned">प्लेलिस्ट क्लोन केली</string>
     <string name="local_playlists">स्थानिक प्लेलिस्ट</string>
-    <string name="color_violet">अष्टपैलू व्हायलेट</string>
     <string name="download_channel_description">मीडिया डाऊनलोड करताना नोटिफिकेशन दाखवते.</string>
     <string name="auto">ऑटो</string>
     <string name="add_to_queue">रांगेत जोडा</string>
@@ -291,7 +285,6 @@
     <string name="swipe_controls_summary">ब्राइटनेस आणि आवाज समायोजित करण्यासाठी स्वाइप जेश्चर वापरा</string>
     <string name="pinch_control_summary">झूम इन/आउट करण्यासाठी पिंच जेश्चर वापरा.</string>
     <string name="comments_disabled">अपलोडरद्वारे टिप्पण्या अक्षम केल्या आहेत.</string>
-    <string name="theme_monochrome">मिनिमलिस्टिक मोनोक्रोम</string>
     <string name="double_tap_seek">शोधण्यासाठी दोनदा टॅप करा</string>
     <string name="double_tap_seek_summary">प्लेअरची स्थिती रिवाइंड करण्यासाठी किंवा फॉरवर्ड करण्यासाठी डावीकडे किंवा उजवीकडे दोनदा टॅप करा</string>
     <string name="all_caught_up">आता पूर्ण झाले</string>

@@ -8,7 +8,6 @@
     <string name="empty">Вам необхідно ввести ім\'я користувача та пароль.</string>
     <string name="clear_history">Очистити історію</string>
     <string name="category_selfpromo_summary">Схоже до категорії \"Спонсор\", але стосується безплатних оголошень або самореклами. Це включає розділи про свої товари, фінансові внески або інформацію про тих з ким вони співпрацювали</string>
-    <string name="color_yellow">Yeeting yellow</string>
     <string name="color_accent">Акценти</string>
     <string name="startpage">Головна</string>
     <string name="subscriptions">Підписки</string>
@@ -92,10 +91,6 @@
     <string name="category_outro">Кінцеві карти та титри</string>
     <string name="category_outro_summary">Інформація після закінчення. Не для висновків з інформацією</string>
     <string name="license">Ліцензія</string>
-    <string name="color_red">Заспокійливий червоний</string>
-    <string name="color_blue">Блаженний синій</string>
-    <string name="color_green">Groovy green</string>
-    <string name="color_purple">Pleasurable purple</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Сповіщення</string>
     <string name="enabled">Увім.</string>
@@ -295,10 +290,8 @@
     <string name="export_playlists">Експорт добірок</string>
     <string name="pinch_control">Контроль розведенням пальців</string>
     <string name="pinch_control_summary">Зміна масштабу зведенням пальців</string>
-    <string name="theme_monochrome">Мінімалістична монохромна</string>
     <string name="play_latest_videos">Грати останні відео</string>
     <string name="nothing_selected">Нічого не вибрано!</string>
-    <string name="color_violet">Універсальний фіолетовий</string>
     <string name="hide_watched_from_feed">Приховати вже переглянуті відео</string>
     <string name="playlistUrl">URL добірки</string>
     <string name="shuffle">Перетасувати</string>

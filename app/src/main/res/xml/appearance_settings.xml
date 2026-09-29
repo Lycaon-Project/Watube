@@ -13,6 +13,15 @@
             app:title="@string/app_theme"
             app:useSimpleSummaryProvider="true" />
 
+        <ListPreference
+            android:icon="@drawable/ic_color"
+            app:defaultValue="aqua"
+            app:entries="@array/accents"
+            app:entryValues="@array/accentsValue"
+            app:key="accent_color"
+            app:title="@string/color_accent"
+            app:useSimpleSummaryProvider="true" />
+
         <SwitchPreferenceCompat
             android:icon="@drawable/ic_invert_colors"
             android:summary="@string/pure_theme_summary"
@@ -20,14 +29,32 @@
             app:key="pure_theme"
             app:title="@string/pure_theme" />
 
+        <SeekBarPreference
+            android:icon="@drawable/ic_text"
+            android:key="font_scale"
+            android:max="116"
+            android:title="@string/text_size"
+            app:defaultValue="100"
+            app:showSeekBarValue="true" />
+
         <ListPreference
-            android:icon="@drawable/ic_color"
-            app:defaultValue="watube"
-            app:entries="@array/accents"
-            app:entryValues="@array/accentsValue"
-            app:key="accent_color"
-            app:title="@string/color_accent"
+            android:icon="@drawable/ic_grid"
+            app:defaultValue="cozy"
+            app:entries="@array/feed_density_entries"
+            app:entryValues="@array/feed_density_values"
+            app:key="feed_density"
+            app:title="@string/feed_density"
             app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            android:icon="@drawable/ic_text"
+            android:defaultValue="system"
+            app:entries="@array/app_fonts"
+            app:entryValues="@array/app_fonts_value"
+            app:key="app_font"
+            app:title="@string/app_font"
+            app:useSimpleSummaryProvider="true" />
+
 
         <Preference
             android:icon="@drawable/ic_frame"
@@ -67,6 +94,17 @@
             app:entryValues="@array/grid"
             app:key="grid_landscape"
             app:title="@string/grid_landscape"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/location">
+
+        <ListPreference
+            android:icon="@drawable/ic_translate"
+            app:defaultValue="sys"
+            app:key="language"
+            app:title="@string/changeLanguage"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>

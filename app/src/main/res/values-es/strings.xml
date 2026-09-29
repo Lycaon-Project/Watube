@@ -88,12 +88,7 @@
     <string name="category_outro_summary">Contenido después del final. No usar para finales con contenido relevante</string>
     <string name="category_intro_summary">Un intervalo sin contenido real. Puede ser una pausa, un fotograma estático, una animación que se repite. No debe usarse para transiciones que contengan información</string>
     <string name="license">Licencia</string>
-    <string name="color_red">Rojo flojo</string>
     <string name="color_accent">Color de acento</string>
-    <string name="color_yellow">Amarillo armadillo</string>
-    <string name="color_green">Verde verdura</string>
-    <string name="color_blue">Azul a full</string>
-    <string name="color_purple">Púrpura pura</string>
     <string name="material_you">Material You</string>
     <string name="app_icon">Icono</string>
     <string name="sponsorblock_notifications">Notificaciones</string>
@@ -290,7 +285,6 @@
     <string name="app_backup">Respaldo de la aplicación</string>
     <string name="pinch_control">Pellizco</string>
     <string name="pinch_control_summary">Usa el pellizco para acercar/alejar</string>
-    <string name="theme_monochrome">Monocromo minimalista</string>
     <string name="backup_restore_summary">Importar y exportar suscripciones, listas, …</string>
     <string name="exportsuccess">Exportado.</string>
     <string name="privacy_alert">Alerta de privacidad</string>
@@ -298,7 +292,6 @@
     <string name="username_email">No se recomienda utilizar una dirección de correo electrónico como nombre de usuario. ¿Proceder de todos modos?</string>
     <string name="play_latest_videos">Reproducir últimos videos</string>
     <string name="nothing_selected">¡Nada seleccionado!</string>
-    <string name="color_violet">Violeta versátil</string>
     <string name="hide_watched_from_feed">Ocultar los vídeos ya vistos</string>
     <string name="playlistUrl">URL de la lista</string>
     <string name="shuffle">Mezclar</string>

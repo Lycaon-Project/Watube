@@ -88,12 +88,7 @@
     <string name="music_albums">Alba YT Music</string>
     <string name="music_playlists">Playlisty YT Music</string>
     <string name="license">Licence</string>
-    <string name="color_blue">Blažená modrá</string>
     <string name="color_accent">Barvy</string>
-    <string name="color_red">Odpočinková červená</string>
-    <string name="color_yellow">Neskutečně žlutá</string>
-    <string name="color_green">Pěkná zelená</string>
-    <string name="color_purple">Příjemná fialová</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Upozornění</string>
     <string name="enabled">Zap</string>
@@ -295,10 +290,8 @@
     <string name="import_playlists">Importovat playlisty</string>
     <string name="pinch_control">Ovládání dvěma prsty</string>
     <string name="pinch_control_summary">Použít gesto se dvěma prsty pro přiblížení/oddálení</string>
-    <string name="theme_monochrome">Minimalistický monochromatický</string>
     <string name="play_latest_videos">Přehrát nejnovější videa</string>
     <string name="nothing_selected">Nic není vybráno!</string>
-    <string name="color_violet">Všestranná fialová</string>
     <string name="hide_watched_from_feed">Skrýt zhlédnutá videa</string>
     <string name="playlistUrl">URL playlistu</string>
     <string name="shuffle">Náhodně</string>

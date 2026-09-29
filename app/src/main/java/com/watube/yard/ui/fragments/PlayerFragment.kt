@@ -49,6 +49,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.VideoSize
 import androidx.media3.session.MediaController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.watube.yard.R
@@ -150,6 +151,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private var pipActivity: Activity? = null
     private var isEnteringPiPMode = false
 
+    /** dernière taille vidéo connue : conserve le ratio de la fenêtre PiP pendant les pauses */
+    private var lastPipVideoSize: VideoSize? = null
+
+    /** limite les tentatives de reprise après une erreur source (évite la boucle infinie) */
+    private var playbackErrorRetries = 0
+
     private val baseActivity get() = activity as AbstractPlayerHostActivity
     private val windowInsetsControllerCompat
         get() = WindowCompat
@@ -229,6 +236,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
+            if (playbackState == Player.STATE_READY) playbackErrorRetries = 0
+
             if (!::playerController.isInitialized) return
 
             if (playbackState == Player.STATE_BUFFERING && streams.isLive &&
@@ -306,9 +315,21 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
+            // Seules les erreurs réellement récupérables sont retentées : sans ce
+            // plafond, un live dont la source est morte déclenche une boucle
+            // prepare()/play() infinie (toast "erreur source" à répétition).
+            val recoverable = error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_INVALID_HTTP_CONTENT_TYPE ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED ||
+                error.errorCode == PlaybackException.ERROR_CODE_DECODER_INIT_FAILED
             try {
-                if (::playerController.isInitialized) {
-                    playerController.play()
+                if (::playerController.isInitialized && recoverable && playbackErrorRetries < 3) {
+                    playbackErrorRetries++
+                    playerController.seekToDefaultPosition()
+                    // togglePlayPauseState prepares an errored player again before playing,
+                    // a plain play() left it stuck
+                    playerController.togglePlayPauseState()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -498,6 +519,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         toggleVideoInfoVisibility(false)
+
+        // onPictureInPictureModeChanged() n'est dispatché que sur TRANSITION : si
+        // l'activity est (re)créée alors qu'elle est déjà en PiP (réouverture de
+        // l'app), le callback n'arrive jamais et le lecteur reste dans le layout
+        // normal -> la fenêtre PiP affiche l'UI de l'application au lieu de la vidéo.
+        if (PictureInPictureCompat.isInPictureInPictureMode(requireActivity())) {
+            onPictureInPictureModeChanged(true)
+        }
     }
 
     private fun attachToPlayerService(playerData: PlayerData) {
@@ -1261,6 +1290,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode)
+        // dispatché aussi pendant la transition qui suit onDestroyView : sans cette
+        // garde l'accès au binding (et aux vues dérivées) provoquait un NPE
+        val binding = _binding ?: return
         if (isInPictureInPictureMode) {
             disableController()
 
@@ -1297,6 +1329,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         get() = run {
             val isPlaying = ::playerController.isInitialized && playerController.isPlaying
 
+            if (::playerController.isInitialized &&
+                playerController.videoSize.width > 0 &&
+                playerController.videoSize.height > 0
+            ) {
+                lastPipVideoSize = playerController.videoSize
+            }
+
             PictureInPictureParamsCompat.Builder()
                 .setActions(
                     PlayerHelper.getPiPModeActions(
@@ -1306,9 +1345,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 )
                 .setAutoEnterEnabled(isPlaying)
                 .apply {
-                    if (isPlaying) {
-                        setAspectRatio(playerController.videoSize)
-                    }
+                    // On ne retire JAMAIS l'aspect ratio : sans lui le système
+                    // re-border la fenêtre PiP avec le ratio par défaut (écran),
+                    // ce qui cassait l'affichage après réouverture de l'application.
+                    lastPipVideoSize?.let { setAspectRatio(it) }
                 }
                 .build()
         }

@@ -88,6 +88,18 @@ object DatabaseHolder {
     @DeleteColumn(tableName = "downloadItem", columnName = "url")
     class MIGRATION_23_24 : AutoMigrationSpec
 
+    private val MIGRATION_25_26 = object : Migration(25, 26) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE 'watchHistoryItem' ADD COLUMN 'watchedAt' INTEGER NOT NULL DEFAULT 0")
+            // entries written before the column existed have no known watch time, they are
+            // stamped now so that a retention period never wipes the whole history at once
+            db.execSQL(
+                "UPDATE 'watchHistoryItem' SET 'watchedAt' = ? WHERE watchedAt = 0",
+                arrayOf(System.currentTimeMillis())
+            )
+        }
+    }
+
     val Database by lazy {
         Room.databaseBuilder(WatubeApp.instance, AppDatabase::class.java, DATABASE_NAME)
             .addMigrations(
@@ -98,7 +110,8 @@ object DatabaseHolder {
                 MIGRATION_15_16,
                 MIGRATION_17_18,
                 MIGRATION_21_22,
-                MIGRATION_22_23
+                MIGRATION_22_23,
+                MIGRATION_25_26
             )
             .build()
     }

@@ -107,7 +107,6 @@
     <string name="category_music_offtopic_summary">இசை வீடியோக்களில் மட்டுமே பயன்படுத்த. இது அதிகாரப்பூர்வ கலவைகளின் ஒரு பகுதியாக அல்ல வீடியோவின் பகுதிகளை மறைக்க வேண்டும். முடிவில், வீடியோ ச்பாட்ஃபை அல்லது வேறு எந்த கலப்பு பதிப்பையும் முடிந்தவரை நெருக்கமாக ஒத்திருக்க வேண்டும், அல்லது பேசும் அல்லது பிற கவனச்சிதறல்களைக் குறைக்க வேண்டும்</string>
     <string name="category_preview_summary">கூடுதல் செய்தி இல்லாமல் எதிர்கால உள்ளடக்கத்தை விவரிக்கும் பிரிவுகளுக்கு. இங்கே மட்டுமே தோன்றும் கிளிப்புகள் இதில் இருந்தால், இது தவறான வகையாகும்</string>
     <string name="category_highlight_summary">விளம்பரப்படுத்தப்பட்ட தலைப்பு, சிறுபடம் அல்லது வீடியோவின் மிகவும் சுவையான பகுதியாக இருக்கலாம். அத்தியாயங்கள் பிரிவில் அதைத் தட்டுவதன் மூலம் அதைத் தவிர்க்கலாம்</string>
-    <string name="color_purple">மகிழ்ச்சிகரமான ஊதா</string>
     <string name="material_you">பொருள் நீங்கள்</string>
     <string name="sponsorblock_notifications">அறிவிப்புகள்</string>
     <string name="app_icon">படவுரு</string>
@@ -368,9 +367,6 @@
     <string name="website">வலைத்தளம்</string>
     <string name="sponsorblock">ஒப்புரவாளர் தொகுதி</string>
     <string name="sponsorblock_summary">Https://sponsor.ajay.app பநிஇ ஐப் பயன்படுத்துகிறது</string>
-    <string name="color_red">சிவப்பு ஓய்வெடுக்கும்</string>
-    <string name="color_yellow">மஞ்சள்</string>
-    <string name="color_green">க்ரூவி பச்சை</string>
     <string name="app_uptodate">அண்மைக் கால பதிப்பை இயக்குகிறது.</string>
     <string name="no_video">வீடியோ இல்லை</string>
     <string name="watch_positions_title">நினைவுகூரப்பட்ட பின்னணி நிலைகள்</string>
@@ -404,7 +400,6 @@
     <string name="sb_custom_colors_summary">ஒப்புரவாளர் பிளாக் பிரிவுகளுக்கான தனிப்பயன் வண்ண பிரிவுகளை மாற்றுகிறது</string>
     <string name="auto">தானி</string>
     <string name="pinch_control">கிள்ளுதல் கட்டுப்பாடு</string>
-    <string name="theme_monochrome">குறைந்தபட்ச மோனோக்ரோம்</string>
     <string name="forward">முன்னோக்கி</string>
     <string name="alternative_pip_controls">மாற்று குழாய் கட்டுப்பாடுகள்</string>
     <string name="external_download_provider_summary">வீடியோக்களைப் பதிவிறக்க நீங்கள் பயன்படுத்த விரும்பும் பயன்பாட்டின் தொகுப்பு பெயரை உள்ளிடவும். லிப்ரெட்யூப்பின் உள்ளடிக்கிய பதிவிறக்கத்தைப் பயன்படுத்த காலியாக விடவும்.</string>
@@ -419,7 +414,6 @@
     <string name="autoRotatePlayer_summary">சாதனம் திரும்பும்போது முழுத்திரை பின்னணி</string>
     <string name="pure_theme">தூய கருப்பொருள்</string>
     <string name="start_sleep_timer">தூக்க டைமரைத் தொடங்குங்கள்</string>
-    <string name="color_blue">ஆனந்தமான நீலம்</string>
     <string name="player">வீரர்</string>
     <string name="tooltip_play">விளையாடுங்கள்</string>
     <string name="channels">சேனல்கள்</string>
@@ -437,7 +431,6 @@
     <string name="export_playlist">ஏற்றுமதி பிளேலிச்ட்</string>
     <string name="proceed">தொடரவும்</string>
     <string name="play_latest_videos">அண்மைக் கால வீடியோக்களை இயக்கவும்</string>
-    <string name="color_violet">பல்துறை வயலட்</string>
     <string name="playlistUrl">பிளேலிச்ட் முகவரி</string>
     <string name="mark_as_watched">பார்த்தபடி குறி</string>
     <string name="category">வகை</string>

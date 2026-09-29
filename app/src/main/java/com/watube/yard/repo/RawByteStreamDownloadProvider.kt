@@ -88,7 +88,7 @@ class RawByteStreamDownloadProvider(val url: HttpUrl) : DownloadProvider {
 
                 if (response.code == 403) {
                     response.close()
-                    Log.e(TAG(), "Got HTTP 403 while downloading: ${response.body.string()}")
+                    Log.e(TAG(), "Got HTTP 403 while downloading")
                     return@withContext null
                 } else if (response.code !in 200..299) {
                     response.close()
@@ -97,7 +97,9 @@ class RawByteStreamDownloadProvider(val url: HttpUrl) : DownloadProvider {
 
                 return@withContext response.body
             } catch (e: IOException) {
-                Log.e(this.javaClass.name, e.printStackTrace().toString())
+                // printStackTrace() returns Unit: the old code logged "kotlin.Unit" and
+                // its output would survive the release log stripping anyway
+                Log.e(this.javaClass.name, "failed to open the raw media stream", e)
                 // TODO: forward error message
 
                 return@withContext null

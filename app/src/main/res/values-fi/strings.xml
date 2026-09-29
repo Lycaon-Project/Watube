@@ -74,8 +74,6 @@
     <string name="clear_history">Tyhjennä historia</string>
     <string name="sponsorblock">SponsoriBlokki</string>
     <string name="playOnBackground">Toista taustalla</string>
-    <string name="color_green">Svengaava vihreä</string>
-    <string name="color_purple">Miellyttävä violetti</string>
     <string name="sponsorblock_notifications">Ilmoitukset</string>
     <string name="update_available">Päivitys saatavilla</string>
     <string name="appearance">Ulkonäkö</string>
@@ -116,12 +114,9 @@
     <string name="category_music_offtopic">Musiikki: Ei musiikkiosio</string>
     <string name="category_preview">Esikatselu/Kertaus</string>
     <string name="license">Lisenssi</string>
-    <string name="color_red">Levollinen punainen</string>
-    <string name="color_blue">Autuas sininen</string>
     <string name="playback_speed">Toiston oletusnopeus</string>
     <string name="category_music_offtopic_summary">Käyttö ainoastaan musiikki videoissa. Sen tulisi kattaa videon osat, jotka eivät ole osa virallisia mixejä. Videon tulee muistuttaa Spotifytä tai mitä tahansa muuta mixattua versiota mahdollisimman paljon tai vähentää puhumista tai muita häiriötekijöitä</string>
     <string name="category_preview_summary">Segmenteille, jotka tarkentavat tulevaa sisältöä, mutta eivät tarjoa lisää tietoa. Jos se sisältää klippejä, jotka esiintyvät tässä, tämä on todennäköisesti väärä kategoria</string>
-    <string name="color_yellow">Kellertävä keltainen</string>
     <string name="update_summary">Tarkista päivitykset</string>
     <string name="player">Toistin</string>
     <string name="shareTo">Jaa linkki kohteeseen</string>
@@ -301,7 +296,6 @@
     <string name="brightness">Kirkkaus</string>
     <string name="swipe_controls_summary">Käytä pyyhkäisyelettä säätääksesi kirkkautta ja äänenvoimakkuutta kokoruudun tilassa</string>
     <string name="comments_disabled">Lataaja on poistanut kommentit käytöstä.</string>
-    <string name="theme_monochrome">Minimalistinen mustavalkoinen</string>
     <string name="import_playlists">Tuo soittolistoja</string>
     <string name="export_playlists">Vie soittolistoja</string>
     <string name="app_backup">Sovelluksen varmuuskopio</string>
@@ -309,7 +303,6 @@
     <string name="privacy_alert">Tietosuojavaroitus</string>
     <string name="proceed">Jatka</string>
     <string name="play_latest_videos">Toista uusimmat videot</string>
-    <string name="color_violet">Vaihteleva violetti</string>
     <string name="playlistUrl">Soittolistan URL-osoite</string>
     <string name="shuffle">Sekoita</string>
     <string name="add_to_bookmarks">Lisää kirjanmerkkeihin</string>

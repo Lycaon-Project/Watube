@@ -89,11 +89,6 @@
     <string name="category_interaction_summary">Όταν υπάρχει μια σύντομη υπενθύμιση για να πατήσετε μου αρέσει, να εγγραφείτε ή να ακολουθήσετε το κανάλι στη μέση του περιεχομένου. Αν είναι μακροσκελές ή αφορά κάτι συγκεκριμένο, θα πρέπει να παρατίθεται στην αυτοπροώθηση</string>
     <string name="license">Άδεια</string>
     <string name="color_accent">Αποχρώσεις</string>
-    <string name="color_blue">Ευτυχισμένο μπλε</string>
-    <string name="color_yellow">Κίτρινο που μυρίζει</string>
-    <string name="color_green">Αυλό πράσινο</string>
-    <string name="color_purple">Ευχάριστο μοβ</string>
-    <string name="color_red">Κόκκινο για ξεκούραση</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Ειδοποιήσεις</string>
     <string name="app_icon">Εικονίδιο</string>
@@ -257,11 +252,9 @@
     <string name="layout">Διάταξη</string>
     <string name="auto_quality">Αυτόματο</string>
     <string name="trending">Τι είναι σε τάση τώρα</string>
-    <string name="theme_monochrome">Μινιμαλιστική Μονόχρωμη</string>
     <string name="all_caught_up">Είστε έτοιμοι</string>
     <string name="app_backup">Αντίγραφο ασφαλείας εφαρμογής</string>
     <string name="privacy_alert">Ειδοποίηση απορρήτου</string>
-    <string name="color_violet">Ευέλικτο βιολετί</string>
     <string name="playlistUrl">URL λίστας αναπαραγωγής</string>
     <string name="shuffle">Ανακάτεμα</string>
     <string name="remove_bookmark">Αφαίρεση σελιδοδείκτη</string>

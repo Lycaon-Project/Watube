@@ -82,11 +82,6 @@
     <string name="category_selfpromo_summary">Šeit ietilpst neapmaksātas ziņas un pašreklāmas, tai skaitā dažādi ziņojumi par paša precēm vai ziedojumiem, kā arī informācija par to, ar ko viņi sadarbojās</string>
     <string name="license">Licence</string>
     <string name="color_accent">Akcents</string>
-    <string name="color_red">Sarkans</string>
-    <string name="color_blue">Zils</string>
-    <string name="color_yellow">Dzeltens</string>
-    <string name="color_green">Zaļš</string>
-    <string name="color_purple">Violets</string>
     <string name="material_you">Material You dizains</string>
     <string name="category_outro">Beigu ekrāns un titri</string>
     <string name="category_intro_summary">Šeit ietilpst brīži bez reāla satura, piemēram, pārtraukumi, statisks kadri, atkārtotas animācijas. Brīži, kuros ietilpst kaut kāda informācija, neskaitās</string>
@@ -278,7 +273,6 @@
     <string name="defaultIconLight">Gaišs (noklusējuma)</string>
     <string name="playlistCloned">Atskaņošanas saraksts ir noklonēts</string>
     <string name="double_tap_seek_summary">Pieskarities divreiz labajā vai kreisajā pusē, lai attītu vai ietu uz priekšu</string>
-    <string name="color_violet">Universāli violets</string>
     <string name="playlistUrl">Atskaņošanas saraksta saite</string>
     <string name="shuffle">Jaukta secība</string>
     <string name="mark_as_watched">Atzīmēt kā noskatītu</string>
@@ -293,7 +287,6 @@
     <string name="auto_quality">Automātiski</string>
     <string name="play_all">Atskaņot visus</string>
     <string name="notification_time">Ierobežot paziņošanas laiku</string>
-    <string name="theme_monochrome">Minimālisma vienkrāsains</string>
     <string name="comments_disabled">Augšupielādētājs ir atspējojis komentārus.</string>
     <string name="import_playlists">Ievietot atskaņošanas sarakstus</string>
     <string name="no_comments_available">Šim video nav komentāru.</string>

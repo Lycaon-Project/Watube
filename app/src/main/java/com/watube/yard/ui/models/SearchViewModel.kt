@@ -75,7 +75,7 @@ class SearchViewModel : ViewModel() {
             try {
                 MediaServiceRepository.instance.getSuggestions(query)
             } catch (e: Exception) {
-                Log.e("failed to fetch suggestions", e.stackTraceToString())
+                Log.e("search", "failed to fetch search suggestions", e)
                 emptyList<String>()
             }
         }.mapLatest { SearchDataType.SUGGESTION to it }

@@ -89,12 +89,7 @@
     <string name="category_outro_summary">엔딩 이후의 정보. 정보가 포함된 결론은 제외됩니다</string>
     <string name="license">라이선스</string>
     <string name="color_accent">강조색</string>
-    <string name="color_blue">시안 파란색</string>
     <string name="material_you">머티리얼 유(Material You)</string>
-    <string name="color_green">연두색</string>
-    <string name="color_red">강한 빨간색</string>
-    <string name="color_yellow">노란색</string>
-    <string name="color_purple">밝은 보라색</string>
     <string name="sponsorblock_notifications">알림</string>
     <string name="enabled">켬</string>
     <string name="disabled">끔</string>
@@ -291,11 +286,9 @@
     <string name="change_region">현재 지역에서는 인기 급상승 동영상을 사용할 수 없는 것 같습니다. 설정에서 다른 지역을 선택하십시오.</string>
     <string name="network_all">전부</string>
     <string name="bookmark">북마크</string>
-    <string name="theme_monochrome">단일 색조</string>
     <string name="take_a_break">휴식을 취할 시간</string>
     <string name="trending">최신 유행</string>
     <string name="mobile_data">모바일 데이터</string>
-    <string name="color_violet">화려한 보라색</string>
     <string name="hide_watched_from_feed">시청한 영상 피드에서 숨기기</string>
     <string name="pinch_control">핀치 컨트롤</string>
     <string name="misc">기타</string>

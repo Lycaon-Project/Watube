@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import com.watube.yard.api.obj.Streams
 import com.watube.yard.api.obj.Subtitle
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogDownloadBinding
+import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.getWhileDigit
 import com.watube.yard.extensions.sha256Sum
@@ -38,13 +40,14 @@ class DownloadDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        videoId = arguments?.getString(IntentData.videoId)!!
+        videoId = arguments?.getString(IntentData.videoId).orEmpty()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogDownloadBinding.inflate(layoutInflater)
 
         fetchAvailableSources(binding)
+        showVideoAlreadyDownloadedWarning(binding)
 
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.download)
@@ -57,6 +60,18 @@ class DownloadDialog : DialogFragment() {
                     onDownloadConfirm.invoke()
                 }
             }
+    }
+
+    private fun showVideoAlreadyDownloadedWarning(binding: DialogDownloadBinding) {
+        lifecycleScope.launch {
+            val alreadyDownloaded = withContext(Dispatchers.IO) {
+                runCatching {
+                    DatabaseHolder.Database.downloadDao().getDownloadById(videoId)
+                }.getOrNull()
+            } != null
+
+            binding.alreadyDownloadedCard.isVisible = alreadyDownloaded
+        }
     }
 
     private fun fetchAvailableSources(binding: DialogDownloadBinding) {
