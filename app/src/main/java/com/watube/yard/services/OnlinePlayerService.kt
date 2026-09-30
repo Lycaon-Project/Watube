@@ -169,8 +169,10 @@ open class OnlinePlayerService : AbstractPlayerService() {
             }
 
             launch {
-                val segments = getSponsorBlockSegments()
-                withContext(Dispatchers.Main) { setSponsorBlockSegments(segments) }
+                if (PlayerHelper.sponsorBlockEnabled) {
+                    val segments = getSponsorBlockSegments()
+                    withContext(Dispatchers.Main) { setSponsorBlockSegments(segments) }
+                }
             }
 
             withContext(Dispatchers.Main) {

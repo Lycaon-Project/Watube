@@ -1,7 +1,9 @@
 package com.watube.yard.ui.preferences
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
+import androidx.preference.SwitchPreferenceCompat
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.DatabaseHelper
@@ -25,6 +27,18 @@ class HistorySettings : BasePreferenceFragment() {
             }
             true
         }
+
+        // search history is not recorded anymore once the toggle is off, so the entries
+        // already stored have no reason to stay on the device
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.SEARCH_HISTORY_TOGGLE)
+            ?.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue == false) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        Database.searchHistoryDao().deleteAll()
+                    }
+                }
+                true
+            }
 
         // clear watch history and positions
         val clearWatchHistory = findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_HISTORY)

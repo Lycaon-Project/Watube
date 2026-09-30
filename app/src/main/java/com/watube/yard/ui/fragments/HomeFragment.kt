@@ -3,12 +3,13 @@ package com.watube.yard.ui.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
@@ -19,8 +20,14 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.constants.PreferenceKeys.HOME_TAB_CONTENT
 import com.watube.yard.databinding.FragmentHomeBinding
 import com.watube.yard.db.obj.PlaylistBookmark
+import com.watube.yard.extensions.dpToPx
+import com.watube.yard.extensions.toID
+import com.watube.yard.helpers.FeedDensity
+import com.watube.yard.helpers.ImageHelper
+import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.activities.SettingsActivity
 import com.watube.yard.ui.adapters.CarouselPlaylist
 import com.watube.yard.ui.adapters.CarouselPlaylistAdapter
@@ -28,6 +35,7 @@ import com.watube.yard.ui.adapters.VideoCardsAdapter
 import com.watube.yard.ui.models.HomeViewModel
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.models.TrendsViewModel
+import com.watube.yard.util.TextUtils
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.UncontainedCarouselStrategy
@@ -35,9 +43,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 
-/** Screen widths (dp) at which the home grid grows from two to three/four columns */
-private const val EXPANDED_COLUMNS_BP_3 = 600
-private const val EXPANDED_COLUMNS_BP_4 = 840
+/** Left inset of a feed row (trending_row / ItemRow), so card edges land on the gutter */
+private const val CARD_INSET_DP = 8f
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -60,15 +67,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.bookmarksRV.layoutManager = CarouselLayoutManager(UncontainedCarouselStrategy())
         binding.playlistsRV.layoutManager = CarouselLayoutManager(UncontainedCarouselStrategy())
 
-        // two columns on phones, one more as soon as the layout gets wider
-        binding.trendingRV.layoutManager = GridLayoutManager(
-            requireContext(),
-            when {
-                resources.configuration.screenWidthDp >= EXPANDED_COLUMNS_BP_4 -> 4
-                resources.configuration.screenWidthDp >= EXPANDED_COLUMNS_BP_3 -> 3
-                else -> 2
-            }
-        )
+        applyFeedDensity()
 
         val bookmarksSnapHelper = CarouselSnapHelper()
         bookmarksSnapHelper.attachToRecyclerView(binding.bookmarksRV)
@@ -181,6 +180,62 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setupFilterChips()
     }
 
+    // --- feed density: mockup pad/cgap tokens, re-applied on every resume ----
+
+    private fun applyFeedDensity() {
+        val pad = FeedDensity.padPx(requireContext())
+        val gap = FeedDensity.gapPx(requireContext())
+        val cardInset = CARD_INSET_DP.dpToPx()
+        val rowPadding = pad - cardInset
+
+        fun setGutterMargins(view: View) {
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                marginStart = pad
+                marginEnd = pad
+            }
+        }
+
+        setGutterMargins(binding.searchPill)
+        setGutterMargins(binding.heroContainer)
+
+        binding.filterChips.setPaddingRelative(
+            pad,
+            binding.filterChips.paddingTop,
+            pad,
+            binding.filterChips.paddingBottom
+        )
+
+        listOf(
+            binding.watchingTitle,
+            binding.trendingTitle,
+            binding.featuredTitle,
+            binding.bookmarksTitle,
+            binding.playlistsTitle
+        ).forEach { title ->
+            title.setPaddingRelative(pad, title.paddingTop, title.paddingEnd, title.paddingBottom)
+        }
+
+        listOf(
+            binding.watchingTV,
+            binding.trendingTV,
+            binding.featuredTV,
+            binding.bookmarksTV,
+            binding.playlistsTV
+        ).forEach { section ->
+            section.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = gap }
+        }
+
+        listOf(
+            binding.watchingRV,
+            binding.trendingRV,
+            binding.featuredRV,
+            binding.bookmarksRV,
+            binding.playlistsRV
+        ).forEach { rows ->
+            rows.setPaddingRelative(rowPadding, rows.paddingTop, rowPadding, rows.paddingBottom)
+        }
+    }
+
     // --- filter chips: one checkable chip per home section -------------------
 
     private fun enabledSections(): Set<String> {
@@ -236,6 +291,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             "featured" -> {
                 binding.featuredTV.isGone = true
                 binding.featuredRV.isGone = true
+                renderFeedLists()
             }
 
             "watching" -> {
@@ -246,6 +302,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             "trending" -> {
                 binding.trendingTV.isGone = true
                 binding.trendingRV.isGone = true
+                renderFeedLists()
             }
 
             "bookmarks" -> {
@@ -262,6 +319,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onResume() {
         super.onResume()
+        applyFeedDensity()
 
         // Avoid re-fetching when re-entering the screen if it was loaded successfully, except when
         // the value of trending region has changed
@@ -309,7 +367,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         )
 
         makeVisible(binding.trendingRV, binding.trendingTV)
-        trendingAdapter.submitList(trendingStreams.streams.take(10))
+        renderFeedLists()
     }
 
     private fun showFeed(streamItems: List<StreamItem>?) {
@@ -320,9 +378,58 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         makeVisible(binding.featuredRV, binding.featuredTV)
-        val feedVideos = streamItems.take(20)
+        renderFeedLists()
+    }
 
-        feedAdapter.submitList(feedVideos)
+    /**
+     * Hero card source: first item of the "featured" feed, else first item of the
+     * "Pour vous" feed. Both feeds drop that item so a video never shows up twice.
+     */
+    private fun renderFeedLists() {
+        val hero = resolveHero()
+        bindHero(hero)
+        val heroUrl = hero?.url
+
+        homeViewModel.feed.value?.let { feed ->
+            feedAdapter.submitList(withoutHero(feed.take(20), heroUrl))
+        }
+        homeViewModel.trending.value?.second?.streams?.let { streams ->
+            trendingAdapter.submitList(withoutHero(streams.take(10), heroUrl))
+        }
+    }
+
+    private fun withoutHero(items: List<StreamItem>, heroUrl: String?): List<StreamItem> =
+        if (heroUrl == null) items else items.filterNot { it.url == heroUrl }
+
+    private fun resolveHero(): StreamItem? {
+        if (isSectionEnabled("featured")) {
+            homeViewModel.feed.value?.firstOrNull()?.let { return it }
+        }
+        if (isSectionEnabled("trending")) {
+            homeViewModel.trending.value?.second?.streams?.firstOrNull()?.let { return it }
+        }
+        return null
+    }
+
+    private fun bindHero(item: StreamItem?) {
+        binding.heroContainer.isVisible = item != null
+        if (item == null) return
+
+        val context = requireContext()
+        binding.heroTitle.text = item.title
+        binding.heroMeta.text = TextUtils.formatViewsString(
+            context,
+            item.views ?: -1L,
+            item.uploaded,
+            item.uploaderName
+        )
+        ImageHelper.loadImage(item.thumbnail, binding.heroThumb)
+
+        val openVideo = View.OnClickListener {
+            NavigationHelper.navigateVideo(context, PlayerData(item.url.orEmpty().toID()))
+        }
+        binding.heroCard.setOnClickListener(openVideo)
+        binding.heroPlay.setOnClickListener(openVideo)
     }
 
     private fun showBookmarks(bookmarks: List<PlaylistBookmark>?) {

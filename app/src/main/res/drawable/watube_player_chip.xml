@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solar .pchip: scrim rgba(0,0,0,.62) + hairline rgba(255,255,255,.14) -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#9E000000" />
+            <stroke
+                android:width="1dp"
+                android:color="#24FFFFFF" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</ripple>

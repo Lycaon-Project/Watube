@@ -560,6 +560,12 @@
     <string name="tooltip_play">Play</string>
     <string name="tooltip_filter">Filter</string>
     <string name="tooltip_edit_groups">Edit groups</string>
+    <string name="tooltip_refresh">Refresh</string>
+    <string name="tooltip_theme">Change theme</string>
+    <string name="tooltip_cast">Cast</string>
+    <string name="tooltip_profile">Profile</string>
+    <string name="toast_cast_unavailable">Cast not available</string>
+    <string name="toast_no_notifications">No new notifications</string>
     <string name="tooltip_create_playlist">Create playlist</string>
     <string name="tooltip_scroll_to_top">Scroll to top</string>
     <string name="also_clear_watch_positions">Also clear watch positions</string>
@@ -578,6 +584,9 @@
     <string name="settings_data_maintenance">Data &amp; maintenance</string>
     <string name="home_search_pill">Search on Watube</string>
     <string name="local_badge">LOCAL</string>
+    <string name="home_continue_watching">Continue watching</string>
+    <string name="home_for_you">For you</string>
+    <string name="home_featured_tag">FEATURED</string>
 
     <!-- Privacy settings -->
     <string name="privacy">Privacy</string>
@@ -633,4 +642,40 @@
         <item>30</item>
         <item>90</item>
     </string-array>
+
+    <!-- Solar library shortcut tiles (.qtile) -->
+    <plurals name="watube_shortcut_history">
+        <item quantity="one">local · %1$d video</item>
+        <item quantity="other">local · %1$d videos</item>
+    </plurals>
+    <plurals name="watube_shortcut_playlists">
+        <item quantity="one">%1$d playlist</item>
+        <item quantity="other">%1$d playlists</item>
+    </plurals>
+    <string name="watube_shortcut_downloads">offline</string>
+    <string name="watube_shortcut_privacy_title">Private data</string>
+    <string name="watube_shortcut_privacy">never sent</string>
+    <string name="watube_shortcut_privacy_toast">Your data stays on this device</string>
+
+    <!-- Solar search pane (.slab labels, .noresult empty state) -->
+    <string name="watube_search_recent">Recents</string>
+    <string name="watube_search_recent_note">· stored on this device</string>
+    <string name="watube_no_search_result_for">No results for \"%1$s\"</string>
+    <string name="watube_search_try_other_keywords">Try other keywords</string>
+
+    <!-- Solar settings hub rows (.stx summaries) -->
+    <string name="watube_settings_summary_appearance">Mode, accent, OLED, text, density</string>
+    <string name="watube_settings_summary_player">Quality, speed, SponsorBlock, haptics</string>
+    <string name="watube_settings_summary_privacy">Local mode, Piped, DeArrow, RYD</string>
+    <string name="watube_settings_summary_data">Data saver, Wi-Fi, cache</string>
+    <string name="watube_settings_summary_about">Watube %1$s · GPL-3.0 · credits</string>
+
+    <!-- Watube player sheet (mockup v27.1) -->
+    <string name="up_next">Up next</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
+    <string name="toast_feature_soon">Not available yet</string>
+    <string name="player_chapter_chip">Ch. %1$d/%2$d</string>
+    <string name="player_speed_chip" translatable="false">%1$s×</string>
+    <string name="player_quality_chip" translatable="false">%1$dp</string>
 </resources>

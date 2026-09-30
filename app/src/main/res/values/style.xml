@@ -23,6 +23,24 @@
         <item name="shapeAppearance">@style/WatubeShape.Pill</item>
     </style>
 
+    <!-- Bottom bar only: 3.4rem x 1.85rem pill of the mockup (.nic), centered on the icon -->
+    <style name="WatubeBottomNavActiveIndicator"
+        parent="Widget.Material3Expressive.BottomNavigationView.ActiveIndicator">
+        <item name="android:width">46dp</item>
+        <item name="android:height">25dp</item>
+        <item name="android:color">@color/watube_nav_pill</item>
+        <item name="shapeAppearance">@style/WatubeShape.Pill</item>
+    </style>
+
+    <!-- Bottom bar labels: .64rem / 700 of the mockup (.bnav button), single line -->
+    <style name="WatubeBottomNavLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">8.6sp</item>
+        <item name="android:lineHeight">10sp</item>
+        <item name="lineHeight">10sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="RoundedImageView">
 
         <item name="cornerFamily">rounded</item>
@@ -106,9 +124,18 @@
 
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">4dp</item>
-        <item name="android:layout_marginEnd">4dp</item>
+        <item name="android:layout_marginStart">3.5dp</item>
+        <item name="android:layout_marginEnd">3.5dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">13dp</item>
+        <item name="android:paddingEnd">13dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:textSize">10.75sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="iconGravity">textStart</item>
+        <item name="iconSize">14dp</item>
+        <item name="iconPadding">6dp</item>
         <item name="shapeAppearance">@style/WatubeShape.Pill</item>
         <item name="backgroundTint">?attr/colorSurfaceContainer</item>
         <item name="strokeColor">?attr/colorOutlineVariant</item>
@@ -133,9 +160,10 @@
     <style name="PlayerControlCenter">
         <item name="android:layout_width">42dp</item>
         <item name="android:layout_height">42dp</item>
-        <item name="android:backgroundTint">@android:color/white</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:scaleType">fitCenter</item>
     </style>
 
     <style name="PlayerControlTop">
@@ -163,11 +191,30 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="paddingStart">5dp</item>
-        <item name="paddingEnd">5dp</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textSize">9.1sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowColor">#99000000</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:shadowDy">1</item>
+    </style>
+
+    <!-- Solar .pchip: dark scrim pill over the video, hairline stroke, 8.9sp bold -->
+    <style name="WatubePlayerChip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/watube_player_chip</item>
+        <item name="android:paddingStart">7.5dp</item>
+        <item name="android:paddingEnd">7.5dp</item>
+        <item name="android:paddingTop">3.5dp</item>
+        <item name="android:paddingBottom">3.5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">8.9sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="SwipeControlString">
@@ -269,6 +316,98 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
 
+    </style>
+
+    <!-- Mockup .shd h1: Bricolage Grotesque 800 / 1.62rem with -.02em tracking, the
+         screen title of Bibliothèque, Paramètres, Abonnements and the other panes.
+         Bricolage Grotesque is not shipped with the app, so the label falls back to
+         the theme typeface; textFontWeight 800 is applied when the platform honours
+         it and textStyle bold is the guaranteed floor. -->
+    <style name="WatubeScreenTitle">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Abonnements keeps its own name for the shared .shd h1 appearance. -->
+    <style name="WatubeSubsTitle" parent="WatubeScreenTitle" />
+
+    <!-- Mockup .phead h2: 1.25rem / 800 / -.02em, the title of a settings pane.
+         MainSettings keeps .shd h1 through the toolbar, the sub panes use this one. -->
+    <style name="WatubePaneTitle">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Mockup .slab of the search pane: .68rem / 800 / .16em tracking, uppercase,
+         t3 ink. -->
+    <style name="WatubeSectionLabel">
+        <item name="android:textSize">9.2sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:letterSpacing">0.16</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?attr/colorOutline</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Mockup .slab .deb: same size, 700, no tracking, no upper casing, acc ink. -->
+    <style name="WatubeSectionLabelNote">
+        <item name="android:textSize">9.2sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/watube_nav_active</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Mockup .word of the home header: Bricolage Grotesque 800 / 1.32rem with -.03em
+         tracking. Bricolage Grotesque is not shipped with the app, so the label falls
+         back to the theme typeface; textFontWeight 800 is applied when the platform
+         honours it and textStyle bold is the guaranteed floor. The 95deg
+         acc-text to acc gradient is painted by MainActivity. -->
+    <style name="WatubeBrandWord">
+        <item name="android:textSize">17.8sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:textColor">@color/watube_nav_active</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Mockup .chip label (.83rem / w600). Only the size is overridden: Material's
+         TextAppearance drives the Chip paint from this appearance, so keeping the
+         LabelLarge family is what preserves the medium weight, and no colour is set
+         here so @color/watube_chip_text (t2 -> acc-ink) stays in charge. -->
+    <style name="WatubeChipLabel" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">11.2sp</item>
+    </style>
+
+    <!-- Mockup .chip geometry for the Abonnements group chips: 27dp pill with the
+         .95rem horizontal inset. Kept out of Watube.Chip on purpose, the search and
+         watch history chips keep their own metrics. -->
+    <style name="Watube.Chip.Subs" parent="ElevatedFilterChip">
+        <item name="chipMinHeight">@dimen/watube_chip_min_height</item>
+        <item name="chipStartPadding">0dp</item>
+        <item name="textStartPadding">@dimen/watube_chip_h_padding</item>
+        <item name="textEndPadding">@dimen/watube_chip_h_padding</item>
+        <item name="chipEndPadding">0dp</item>
+        <item name="android:textAppearance">@style/WatubeChipLabel</item>
     </style>
 
     <style name="Widget.Material3.Button.IconButton.Elevated" parent="Widget.Material3.Button.IconButton">

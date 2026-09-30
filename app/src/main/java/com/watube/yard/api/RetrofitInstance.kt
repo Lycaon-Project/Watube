@@ -1,8 +1,10 @@
 package com.watube.yard.api
 
+import android.util.Log
 import com.watube.yard.BuildConfig
 import com.watube.yard.WatubeApp
 import com.watube.yard.constants.PreferenceKeys
+import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
 import okhttp3.Cache
@@ -69,7 +71,7 @@ object RetrofitInstance {
     fun clearHttpCache() {
         synchronized(cacheLock) {
             runCatching { httpCache?.delete() }
-                .onFailure { it.printStackTrace() }
+                .onFailure { Log.e(TAG(), "Failed to delete the http cache", it) }
             httpCache = null
 
             // the old cache instance is closed: drop the client and every retrofit service

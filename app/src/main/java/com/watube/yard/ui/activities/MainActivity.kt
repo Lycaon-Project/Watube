@@ -1,7 +1,10 @@
 package com.watube.yard.ui.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -11,10 +14,12 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.Key
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -52,6 +57,7 @@ import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.dialogs.ErrorDialog
 import com.watube.yard.ui.dialogs.ImportTempPlaylistDialog
+import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.fragments.DownloadsFragment
 import com.watube.yard.ui.models.DownloadsViewModel
@@ -151,13 +157,16 @@ class MainActivity : AbstractPlayerHostActivity() {
                             paddingBottom
                         )
                     }
-                    with(binding.bottomNav) {
-                        setPadding(
-                            paddingLeft,
-                            paddingTop,
-                            paddingRight,
-                            systemBarInsets.bottom
+                    binding.bottomNav.let { bar ->
+                        // The bar floats above the bottom edge instead of bleeding behind the
+                        // system bar: the inset is applied as a margin so the rounded corners
+                        // and the gap below stay visible (1.1rem of the mockup).
+                        val params = bar.layoutParams as ViewGroup.MarginLayoutParams
+                        params.bottomMargin = systemBarInsets.bottom.coerceAtLeast(
+                            bar.resources.getDimensionPixelSize(R.dimen.watube_nav_bottom_inset)
                         )
+                        // assigning back is what triggers the relayout (and the keyframe refresh)
+                        bar.layoutParams = params
                     }
                     with(binding.navRail) {
                         setPadding(
@@ -173,23 +182,57 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
         // manually update the bottom bar height in the mini player transition
         binding.bottomNav.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            // the bar floats above the system inset now, so the shift has to cover both
+            val shift = binding.bottomNav.height +
+                (binding.bottomNav.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
             val transition = binding.root.getTransition(R.id.bottom_bar_transition)
             transition.keyFrameList.forEach { keyFrame ->
                 // These frame positions are hardcoded in activity_main_scene.xml!
                 for (key in keyFrame.getKeyFramesForView(binding.bottomNav.id)) {
                     if (key.framePosition == 1) key.setValue(
                         Key.TRANSLATION_Y,
-                        binding.bottomNav.height
+                        shift
                     )
                 }
                 for (key in keyFrame.getKeyFramesForView(binding.container.id)) {
                     if (key.framePosition == 100) key.setValue(
                         Key.TRANSLATION_Y,
-                        -binding.bottomNav.height
+                        -shift
                     )
                 }
             }
             binding.root.scene.setTransition(transition)
+        }
+
+        applyBottomBarNightStyle()
+
+        // Header brand: icon + fallback colour first, then the gradient, which needs a
+        // laid out text box and is therefore refreshed from the layout listener.
+        applyBrandHeader()
+        binding.brandWord.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            applyBrandWordGradient()
+        }
+        // Mockup #themeBtn flips light/dark in place. MainActivity declares uiMode in
+        // configChanges, so AppCompat would only patch Resources and leave every already
+        // inflated view on the previous theme: store the value Settings > Appearance
+        // writes and reuse the restart dialog the app already shows for theme changes.
+        binding.themeToggle.setOnClickListener {
+            PreferenceHelper.putString(
+                PreferenceKeys.THEME_MODE,
+                if (isNightUiMode()) "L" else "D"
+            )
+            RequireRestartDialog().show(
+                supportFragmentManager,
+                RequireRestartDialog::class.java.name
+            )
+        }
+        // Mockup #castBtn / #bellBtn toast too: the app ships no cast stack and no
+        // notification screen, both stubs are a documented gap.
+        binding.castBtn.setOnClickListener {
+            Toast.makeText(this, R.string.toast_cast_unavailable, Toast.LENGTH_SHORT).show()
+        }
+        binding.bellBtn.setOnClickListener {
+            Toast.makeText(this, R.string.toast_no_notifications, Toast.LENGTH_SHORT).show()
         }
 
         // Check update automatically
@@ -237,8 +280,6 @@ class MainActivity : AbstractPlayerHostActivity() {
         if (binding.bottomNav.menu.children.none { it.itemId == startFragmentId }) deselectBottomBarItems()
 
         setupExpandedLayout()
-
-        binding.toolbar.title = ThemeHelper.getStyledAppName(this)
 
         // handle error logs
         PreferenceHelper.getErrorLog().ifBlank { null }?.let {
@@ -339,6 +380,11 @@ class MainActivity : AbstractPlayerHostActivity() {
         super.onConfigurationChanged(newConfig)
         if (!::binding.isInitialized) return
         setupExpandedLayout()
+        // uiMode is part of this activity's configChanges, so a system night flip is
+        // delivered here instead of through a recreation: both the bottom bar night
+        // styling and the header brand have to follow it manually.
+        applyBottomBarNightStyle()
+        applyBrandHeader()
     }
 
     /**
@@ -396,6 +442,104 @@ class MainActivity : AbstractPlayerHostActivity() {
                 }
             }
         }
+    }
+
+    /** True while the resources resolve against the night uiMode. */
+    private fun isNightUiMode(): Boolean =
+        resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
+
+    /**
+     * values-night sits outside the editable resource set, so the bottom bar styling is
+     * resolved here instead: the night scrim fill and the selected tab ink (values-night
+     * ships #35E08C for watube_nav_active, while the mockup uses its night --acc-text,
+     * watube_acc_text, on the pill). The day branch restores the drawable and the tint
+     * selector declared in activity_main.xml, so the method is idempotent in both
+     * directions and can follow a system uiMode flip.
+     *
+     * The theme's own outline attribute keeps the unselected tabs correct in both modes,
+     * so it is resolved instead of hard-coded.
+     */
+    private fun applyBottomBarNightStyle() {
+        val nightMode = isNightUiMode()
+
+        binding.bottomNav.setBackgroundResource(
+            if (nightMode) R.drawable.watube_bottom_nav_background_night
+            else R.drawable.watube_bottom_nav_background
+        )
+
+        val tint = if (nightMode) {
+            ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(
+                    getColor(R.color.watube_acc_text),
+                    ThemeHelper.getThemeColor(this, com.google.android.material.R.attr.colorOutline)
+                )
+            )
+        } else {
+            AppCompatResources.getColorStateList(this, R.color.watube_bottom_nav_item_tint)
+        }
+        binding.bottomNav.itemIconTintList = tint
+        binding.bottomNav.itemTextColor = tint
+    }
+
+    /**
+     * Header brand of the mockup: the theme button offers the mode that is not rendered
+     * (sun while the UI is dark, moon while it is light) and the word gets its day/night
+     * colour. Deliberately kept out of the brandWord layout listener: setTextColor and
+     * setImageResource can trigger a relayout, and a listener that feeds requestLayout
+     * back into itself would spin.
+     *
+     * values-night is outside the editable resource set, so the day/night pair of
+     * --acc-text is selected here: watube_nav_active (#2C674A) by day, watube_acc_text
+     * (#59E6A1) at night.
+     */
+    private fun applyBrandHeader() {
+        binding.themeToggle.setImageResource(
+            if (isNightUiMode()) R.drawable.watube_sun else R.drawable.watube_moon
+        )
+        binding.brandWord.setTextColor(
+            getColor(
+                if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+            )
+        )
+        applyBrandWordGradient()
+    }
+
+    /**
+     * Paints the mockup .word gradient, linear-gradient(95deg, --acc-text, --acc 75%)
+     * clipped to the text box (wrap_content makes the view bounds the text bounds). Only
+     * the paint shader changes here, so it is safe to re-run from the layout listener.
+     * The gradient end stays on colorPrimary so every accent follows.
+     */
+    private fun applyBrandWordGradient() {
+        val word = binding.brandWord
+        val width = word.width
+        val height = word.height
+        if (width == 0 || height == 0) return
+
+        val start = getColor(
+            if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+        )
+        // CSS 95deg points right, tilted five degrees down; the length below is the
+        // "cover the box corners" axis of a two point gradient, and the 0.75f stop is
+        // the mockup's "--acc at 75%".
+        val radians = Math.toRadians(95.0)
+        val dx = Math.sin(radians)
+        val dy = -Math.cos(radians)
+        val length = Math.abs(width * dx) + Math.abs(height * dy)
+        val x0 = width / 2.0 - dx * length / 2.0
+        val y0 = height / 2.0 - dy * length / 2.0
+        word.paint.shader = LinearGradient(
+            x0.toFloat(),
+            y0.toFloat(),
+            (x0 + dx * length).toFloat(),
+            (y0 + dy * length).toFloat(),
+            intArrayOf(start, ThemeHelper.getThemeColor(this, androidx.appcompat.R.attr.colorPrimary)),
+            floatArrayOf(0f, 0.75f),
+            Shader.TileMode.CLAMP
+        )
+        word.invalidate()
     }
 
     private fun isSearchInProgress(): Boolean {

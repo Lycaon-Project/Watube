@@ -84,13 +84,7 @@ object DatabaseHelper {
 
         if (PreferenceHelper.getBoolean(PreferenceKeys.UNLIMITED_SEARCH_HISTORY, false)) return
 
-        // delete the first watch history entry if the limit is reached
-        val searchHistory = Database.searchHistoryDao().getAll().toMutableList()
-
-        while (searchHistory.size > MAX_SEARCH_HISTORY_SIZE) {
-            Database.searchHistoryDao().delete(searchHistory.first())
-            searchHistory.removeAt(0)
-        }
+        Database.searchHistoryDao().deleteAllExceptLatest(MAX_SEARCH_HISTORY_SIZE)
     }
 
     suspend fun getWatchPosition(videoId: String): Long? {

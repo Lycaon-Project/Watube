@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mockup .mark tile behind the home header logo: the acc token at 13% over
+     transparent (color-mix), on a .72rem radius. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/watube_mark_bg" />
+    <corners android:radius="9.7dp" />
+</shape>

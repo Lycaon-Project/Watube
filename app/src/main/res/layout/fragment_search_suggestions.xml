@@ -7,11 +7,49 @@
     android:background="?android:colorBackground"
     tools:context=".ui.fragments.SearchSuggestionsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/suggestions_recycler"
+    <LinearLayout
+        android:id="@+id/search_suggestions_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/search_section_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/watube_gutter"
+            android:paddingTop="20dp"
+            android:paddingEnd="@dimen/watube_gutter"
+            android:paddingBottom="8dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/search_section_title"
+                style="@style/WatubeSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/watube_search_recent" />
+
+            <TextView
+                android:id="@+id/search_section_note"
+                style="@style/WatubeSectionLabelNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/watube_search_recent_note" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/suggestions_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/history_empty"
@@ -32,6 +70,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/history_empty"
             android:textAlignment="center"
             android:textColor="?attr/colorOnSurface"

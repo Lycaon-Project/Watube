@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.core.net.toUri
+import com.watube.yard.BuildConfig
 import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavigationHelper
@@ -27,7 +28,9 @@ class RouterActivity : BaseActivity() {
     private fun handleSendText(uri: Uri) {
         // debug only: the shared link can be private (channel, playlist, account...)
         // and must not end up in logcat on a user device
-        Log.d(TAG(), uri.toString())
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG(), uri.toString())
+        }
 
         val intent = packageManager.getLaunchIntentForPackage(packageName)!!.let { intent ->
             IntentHelper.resolveType(intent, uri)

@@ -117,6 +117,22 @@
                     android:tooltipText="@string/tooltip_options"
                     app:tint="@android:color/white" />
 
+                <LinearLayout
+                    android:id="@id/exo_basic_controls"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp">
+
+                    <ImageButton
+                        android:id="@+id/fullscreen"
+                        style="@style/PlayerControlBottom"
+                        android:src="@drawable/ic_fullscreen"
+                        android:tooltipText="@string/tooltip_fullscreen"
+                        android:contentDescription="@string/tooltip_fullscreen"
+                        app:tint="@android:color/white" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -133,44 +149,72 @@
         android:padding="20dp"
         android:layoutDirection="ltr">
 
-        <include
-            android:id="@+id/seek_button_rewind"
-            layout="@layout/seek_button_rewind"
-            android:visibility="invisible"
-            tools:visibility="visible" />
-
         <ImageView
             android:id="@+id/skip_prev"
             style="@style/PlayerControlCenter"
-            android:background="?android:selectableItemBackgroundBorderless"
+            android:background="@drawable/watube_player_ctrl_sm"
             android:src="@drawable/ic_prev"
             android:contentDescription="@string/exo_controls_previous_description"
             android:visibility="invisible"
             app:tint="@android:color/white" />
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-17dp"
+            android:background="@drawable/watube_player_ctrl_sm"
+            android:translationZ="2dp">
+
+            <include
+                android:id="@+id/seek_button_rewind"
+                layout="@layout/seek_button_rewind"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+        </FrameLayout>
+
         <ImageButton
             android:id="@+id/playPauseBTN"
             style="@style/ExoStyledControls.Button.Center.PlayPause"
-            android:layout_marginHorizontal="10dp"
-            android:background="?android:selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_play"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="0dp"
+            android:background="@drawable/watube_player_ctrl_lg"
             android:contentDescription="@string/tooltip_play"
+            android:padding="14.5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play"
             app:tint="@android:color/white" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-17dp"
+            android:background="@drawable/watube_player_ctrl_sm"
+            android:translationZ="2dp">
+
+            <include
+                android:id="@+id/seek_button_forward"
+                layout="@layout/seek_button_forward"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/skip_next"
             style="@style/PlayerControlCenter"
-            android:background="?android:selectableItemBackgroundBorderless"
+            android:background="@drawable/watube_player_ctrl_sm"
             android:src="@drawable/ic_next"
             android:contentDescription="@string/exo_controls_next_description"
             android:visibility="invisible"
             app:tint="@android:color/white" />
-
-        <include
-            android:id="@+id/seek_button_forward"
-            layout="@layout/seek_button_forward"
-            android:visibility="invisible"
-            tools:visibility="visible" />
 
     </LinearLayout>
 
@@ -228,86 +272,98 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/watube_meta_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-6dp"
-            android:baselineAligned="false"
-            android:paddingStart="10dp"
-            android:paddingEnd="20dp">
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="11.5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@id/exo_time"
+            <TextView
+                android:id="@+id/chapter_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp">
+                android:background="@drawable/watube_player_pill"
+                app:drawableStartCompat="@drawable/watube_chapter_dot"
+                android:drawablePadding="5dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:paddingStart="7.5dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="7.5dp"
+                android:paddingBottom="3dp"
+                android:textColor="@android:color/white"
+                android:textSize="8.6sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:ignore="SmallSp"
+                tools:text="Introduction"
+                tools:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/position"
-                    style="@style/TimeString"
-                    android:text="00:00"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    style="@style/TimeString"
-                    android:text="  •  "
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/duration"
-                    style="@style/TimeString"
-                    android:text="00:00"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/timeLeft"
-                    style="@style/TimeString"
-                    android:text="00:00"
-                    android:visibility="gone"
-                    tools:ignore="HardcodedText" />
-
-            </LinearLayout>
-
-            <FrameLayout
+            <Space
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1">
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/chapter_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:textColor="@android:color/white"
-                    android:visibility="gone"
-                    app:drawableEndCompat="@drawable/ic_arrow_right"
-                    app:drawableTint="@android:color/white"
-                    tools:drawableTint="?colorControlNormal"
-                    tools:text="some overflowing text that takes too much space"
-                    tools:textColor="@android:color/black"
-                    tools:visibility="visible" />
+            <TextView
+                android:id="@+id/watube_chapter_chip"
+                style="@style/WatubePlayerChip"
+                android:visibility="gone"
+                tools:text="Chap. 1/4" />
 
-            </FrameLayout>
+            <TextView
+                android:id="@+id/watube_speed_chip"
+                style="@style/WatubePlayerChip"
+                android:layout_marginStart="5.5dp"
+                android:visibility="gone"
+                tools:text="1,5×" />
 
-            <LinearLayout
-                android:id="@id/exo_basic_controls"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/watube_quality_chip"
+                style="@style/WatubePlayerChip"
+                android:layout_marginStart="5.5dp"
+                android:visibility="gone"
+                tools:text="720p" />
 
-                <ImageButton
-                    android:id="@+id/fullscreen"
-                    style="@style/PlayerControlBottom"
-                    android:src="@drawable/ic_fullscreen"
-                    android:tooltipText="@string/tooltip_fullscreen"
-                    android:contentDescription="@string/tooltip_fullscreen"
-                    app:tint="@android:color/white" />
+        </LinearLayout>
 
-            </LinearLayout>
+        <LinearLayout
+            android:id="@id/exo_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="-11.5dp"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="13.5dp"
+            android:paddingEnd="13.5dp">
+
+            <TextView
+                android:id="@+id/position"
+                style="@style/TimeString"
+                android:text="00:00"
+                tools:ignore="HardcodedText" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/duration"
+                style="@style/TimeString"
+                android:text="00:00"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/timeLeft"
+                style="@style/TimeString"
+                android:text="00:00"
+                android:visibility="gone"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -316,20 +372,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="11.5dp"
+            android:layout_marginBottom="5dp"
             android:translationZ="10dp">
 
             <com.watube.yard.ui.views.ChapterTimeBar
                 android:id="@+id/exo_progress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="6dp"
-                app:bar_height="2dp"
+                app:bar_height="3.5dp"
+                app:buffered_color="#59FFFFFF"
                 app:played_color="?attr/colorPrimary"
                 app:scrubber_color="?attr/colorPrimary"
                 app:scrubber_dragged_size="16dp"
-                app:scrubber_enabled_size="12dp"
-                app:touch_target_height="35dp" />
+                app:scrubber_enabled_size="10dp"
+                app:touch_target_height="35dp"
+                app:unplayed_color="#47FFFFFF" />
 
         </LinearLayout>
 

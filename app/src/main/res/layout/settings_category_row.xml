@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Solar settings hub row (.catrow): accent icon tile, title + summary, chevron.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="13.5dp"
+    android:paddingTop="13.5dp"
+    android:paddingEnd="13.5dp"
+    android:paddingBottom="13.5dp">
+
+    <ImageView
+        android:id="@+id/row_icon"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:background="@drawable/watube_icon_tile"
+        android:importantForAccessibility="no"
+        android:padding="8dp"
+        android:src="@drawable/ic_color"
+        android:tint="@color/watube_nav_active" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/row_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="12.4sp"
+            android:textStyle="bold"
+            tools:text="@string/appearance" />
+
+        <TextView
+            android:id="@+id/row_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1.5dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="?attr/colorOutline"
+            android:textSize="10.3sp"
+            tools:text="@string/appearance_summary" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/row_chevron"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="12dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_arrow_right"
+        android:tint="?attr/colorOutline" />
+</LinearLayout>

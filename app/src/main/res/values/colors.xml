@@ -195,7 +195,19 @@
     <color name="watube_coral">#FF7E67</color>
     <color name="watube_lavender">#BC9CFF</color>
     <color name="watube_amber">#FFC24D</color>
-    <color name="watube_nav_active">#062015</color>
+    <!-- Selected tab ink: the mockup acc-text token in day mode (color-mix acc 44% /
+         #14161A). values-night ships #35E08C for the same name, so MainActivity
+         re-applies watube_acc_text (the mockup's night acc-text) at runtime. -->
+    <color name="watube_nav_active">#2C674A</color>
+    <!-- Selected tab pill: the mockup acc-soft token (accent @22% over transparent) -->
+    <color name="watube_nav_pill">#3835E08C</color>
+    <!-- Floating bar fill: the mockup nav token, rgba(250,250,247,.94) -->
+    <color name="watube_nav_scrim">#F0FAFAF7</color>
+    <!-- Night sibling of watube_nav_scrim (values-night is out of the editable set):
+         the mockup dark nav token is rgba(15,17,20,.92) -->
+    <color name="watube_nav_scrim_night">#EB0F1114</color>
+    <!-- Brand tile behind the home header .mark: the acc token at 13% over transparent -->
+    <color name="watube_mark_bg">#2135E08C</color>
     <color name="watube_chip_fill">#E8EAE4</color>
     <color name="watube_link">#0A6B43</color>
 </resources>

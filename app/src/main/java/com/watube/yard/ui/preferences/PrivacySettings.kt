@@ -1,6 +1,7 @@
 package com.watube.yard.ui.preferences
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
@@ -58,6 +59,18 @@ class PrivacySettings : InstanceSettings() {
      * identical to the ones of [HistorySettings] but bound to the merged hub.
      */
     private fun bindHistoryPreferences() {
+        // search history is not recorded anymore once the toggle is off, so the entries
+        // already stored have no reason to stay on the device
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.SEARCH_HISTORY_TOGGLE)
+            ?.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue == false) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        Database.searchHistoryDao().deleteAll()
+                    }
+                }
+                true
+            }
+
         findPreference<Preference>(PreferenceKeys.CLEAR_SEARCH_HISTORY)
             ?.setOnPreferenceClickListener {
                 showClearDialog(R.string.clear_history) {

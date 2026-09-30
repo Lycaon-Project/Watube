@@ -417,6 +417,12 @@
     <string name="unknown_audio_track_type">Type de piste audio inconnu</string>
     <string name="group_name_error_empty">Veuillez saisir un nom</string>
     <string name="tooltip_edit_groups">Modifier les groupes</string>
+    <string name="tooltip_refresh">Actualiser</string>
+    <string name="tooltip_theme">Changer de thème</string>
+    <string name="tooltip_cast">Diffuser</string>
+    <string name="tooltip_profile">Profil</string>
+    <string name="toast_cast_unavailable">Cast indisponible</string>
+    <string name="toast_no_notifications">Aucune nouvelle notification</string>
     <string name="chapters_videoHighlight">Moment fort de la vidéo</string>
     <string name="screen_orientation">Orientation de l’écran</string>
     <string name="duration_span">Durée: %1$s</string>
@@ -571,6 +577,9 @@
     <string name="settings_data_maintenance">Données &amp; maintenance</string>
     <string name="home_search_pill">Rechercher sur Watube</string>
     <string name="local_badge">LOCAL</string>
+    <string name="home_continue_watching">Reprendre la lecture</string>
+    <string name="home_for_you">Pour vous</string>
+    <string name="home_featured_tag">À LA UNE</string>
     <string name="cache_cleared">Cache vidé</string>
     <string name="checking_for_updates">Recherche de mises à jour…</string>
     <string name="last_update_check">Dernière vérification : %1$s</string>
@@ -603,4 +612,38 @@
     <string name="history_retention_days_7">7 jours</string>
     <string name="history_retention_days_30">30 jours</string>
     <string name="history_retention_days_90">90 jours</string>
+
+    <!-- Tuiles raccourci de la bibliothèque (.qtile Solar) -->
+    <plurals name="watube_shortcut_history">
+        <item quantity="one">local · %1$d vidéo</item>
+        <item quantity="other">local · %1$d vidéos</item>
+    </plurals>
+    <plurals name="watube_shortcut_playlists">
+        <item quantity="one">%1$d playlist</item>
+        <item quantity="other">%1$d playlists</item>
+    </plurals>
+    <string name="watube_shortcut_downloads">hors-ligne</string>
+    <string name="watube_shortcut_privacy_title">Données privées</string>
+    <string name="watube_shortcut_privacy">jamais envoyées</string>
+    <string name="watube_shortcut_privacy_toast">Vos données restent sur cet appareil</string>
+
+    <!-- Panneau de recherche Solar (libellés .slab, état vide .noresult) -->
+    <string name="watube_search_recent">Récents</string>
+    <string name="watube_search_recent_note">· stockés sur l\'appareil</string>
+    <string name="watube_no_search_result_for">Aucun résultat pour « %1$s »</string>
+    <string name="watube_search_try_other_keywords">Essayez d\'autres mots-clés</string>
+
+    <!-- Lignes du hub Paramètres Solar (résumés .stx) -->
+    <string name="watube_settings_summary_appearance">Mode, accent, OLED, texte, densité</string>
+    <string name="watube_settings_summary_player">Qualité, vitesse, SponsorBlock, haptique</string>
+    <string name="watube_settings_summary_privacy">Mode local, Piped, DeArrow, RYD</string>
+    <string name="watube_settings_summary_data">Économiseur, Wi-Fi, cache</string>
+    <string name="watube_settings_summary_about">Watube %1$s · GPL-3.0 · crédits</string>
+
+    <!-- Feuille du lecteur Watube (maquette v27.1) -->
+    <string name="up_next">À suivre</string>
+    <string name="like">J\'aime</string>
+    <string name="dislike">Je n\'aime pas</string>
+    <string name="toast_feature_soon">Pas encore disponible</string>
+    <string name="player_chapter_chip">Chap. %1$d/%2$d</string>
 </resources>

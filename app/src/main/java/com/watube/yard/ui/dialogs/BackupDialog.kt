@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.watube.yard.R
 import com.watube.yard.constants.IntentData
 import com.watube.yard.db.DatabaseHolder.Database
+import com.watube.yard.helpers.BackupHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.obj.PipedImportPlaylist
@@ -65,16 +66,22 @@ class BackupDialog : DialogFragment() {
         })
 
         data object Preferences : BackupOption(R.string.preferences, onSelected = { file ->
-            file.preferences = PreferenceHelper.settings.all.map { (key, value) ->
-                val jsonValue = when (value) {
-                    is Number -> JsonPrimitive(value)
-                    is Boolean -> JsonPrimitive(value)
-                    is String -> JsonPrimitive(value)
-                    is Set<*> -> JsonPrimitive(value.joinToString(","))
-                    else -> JsonNull
+            // the keys the restore refuses to import are not exported either: a backup is
+            // a file the user may share, so it must not carry a stack trace (error_log,
+            // still present in the default preferences after an app update) nor the
+            // instance / privacy settings that would be dropped on restore anyway
+            file.preferences = PreferenceHelper.settings.all
+                .filterKeys { it !in BackupHelper.SENSITIVE_PREFERENCE_KEYS }
+                .map { (key, value) ->
+                    val jsonValue = when (value) {
+                        is Number -> JsonPrimitive(value)
+                        is Boolean -> JsonPrimitive(value)
+                        is String -> JsonPrimitive(value)
+                        is Set<*> -> JsonPrimitive(value.joinToString(","))
+                        else -> JsonNull
+                    }
+                    PreferenceItem(key, jsonValue)
                 }
-                PreferenceItem(key, jsonValue)
-            }
         })
     }
 

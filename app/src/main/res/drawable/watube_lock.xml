@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Solar i-lock glyph of the mockup: stroke family, used by the settings
+  hub "Privacy" row and by the library "Private data" tile.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M7.4,10.5 L16.6,10.5 A2.4,2.4 0 0 1 19,12.9 L19,18.1 A2.4,2.4 0 0 1 16.6,20.5 L7.4,20.5 A2.4,2.4 0 0 1 5,18.1 L5,12.9 A2.4,2.4 0 0 1 7.4,10.5 Z"
+        android:strokeColor="#000000"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M8.5,10.5 L8.5,8 A3.5,3.5 0 0 1 15.5,8 L15.5,10.5"
+        android:strokeColor="#000000"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+</vector>

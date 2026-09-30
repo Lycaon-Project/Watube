@@ -8,7 +8,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/watube_gutter"
-    android:paddingVertical="8dp">
+    android:paddingVertical="8.1dp">
 
     <com.watube.yard.ui.views.DrawableTextView
         android:id="@+id/suggestion_text"
@@ -16,8 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_weight="1"
-        android:drawablePadding="15dp"
+        android:drawablePadding="10.1dp"
+        android:drawableTint="?attr/colorOutline"
         android:textAlignment="viewStart"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="11.75sp"
+        app:drawableStartDimen="14.2dp"
         tools:drawableStartCompat="@drawable/ic_search"
         tools:text="Suggestion item" />
 
@@ -30,8 +34,6 @@
         android:padding="5dp"
         android:src="@drawable/ic_close"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/RoundedImageView" />
 
     <ImageView
@@ -41,7 +43,5 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="5dp"
         android:src="@drawable/ic_arrow_up_left"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/RoundedImageView" />
 </LinearLayout>

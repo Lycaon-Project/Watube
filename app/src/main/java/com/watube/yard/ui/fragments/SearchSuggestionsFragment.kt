@@ -66,6 +66,11 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
                         ) {
                             binding.suggestionsRecycler.scrollToPosition(0)
                         }
+                        // the .slab "Récents" header belongs to the local list only:
+                        // it disappears as soon as online suggestions take over
+                        binding.searchSectionLabel.isVisible =
+                            result.suggestionList.isNullOrEmpty() &&
+                                !result.historyList.isNullOrEmpty()
                     }
                 }
 
@@ -79,8 +84,8 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
     }
 
     private fun toggleEmptyHistoryMessageVisibility(show: Boolean) {
+        binding.searchSuggestionsContent.isGone = show
         binding.historyEmpty.isVisible = show
-        binding.suggestionsRecycler.isGone = show
     }
 
     override fun onDestroy() {

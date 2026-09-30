@@ -64,7 +64,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
-                app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                app:cardBackgroundColor="#C7000000"
                 app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toTopOf="@id/watch_progress"
@@ -76,7 +76,9 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
                     tools:text="05:36" />
 
             </androidx.cardview.widget.CardView>
@@ -148,8 +150,8 @@
 
         <ImageView
             android:id="@+id/channel_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:importantForAccessibility="no"
             tools:srcCompat="@mipmap/ic_launcher" />
 

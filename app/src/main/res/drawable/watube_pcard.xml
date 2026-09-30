@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solar .pcard: bg2 surface + hairline stroke + 1.3rem corners, keeps row ripple -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorSurfaceContainerLow" />
+            <stroke
+                android:width="1dp"
+                android:color="?attr/colorOutlineVariant" />
+            <corners android:radius="17dp" />
+        </shape>
+    </item>
+</ripple>

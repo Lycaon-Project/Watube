@@ -38,42 +38,43 @@ class MainSettings : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRow(
             binding.rowAppearance,
-            R.drawable.ic_color,
+            R.drawable.watube_spark,
             R.string.appearance,
-            R.string.appearance_summary
+            R.string.watube_settings_summary_appearance
         ) { navigate(R.id.action_global_appearanceSettings) }
 
         setupRow(
             binding.rowPlayer,
-            R.drawable.ic_play_filled,
+            R.drawable.ic_play,
             R.string.player,
-            R.string.player_summary
+            R.string.watube_settings_summary_player
         ) { navigate(R.id.action_global_playerSettings) }
 
         setupRow(
             binding.rowPrivacy,
-            R.drawable.ic_shield,
+            R.drawable.watube_lock,
             R.string.privacy,
-            R.string.privacy_summary
+            R.string.watube_settings_summary_privacy
         ) { navigate(R.id.action_global_privacySettings) }
 
         setupRow(
             binding.rowData,
-            R.drawable.ic_data_saver,
+            R.drawable.watube_disk,
             R.string.settings_data_maintenance,
-            R.string.general_summary
+            R.string.watube_settings_summary_data
         ) { navigate(R.id.action_global_maintenanceSettings) }
 
         setupRow(
             binding.rowAbout,
-            R.drawable.ic_info,
+            R.drawable.watube_info,
             R.string.about,
-            R.string.about
+            R.string.watube_settings_summary_about
         ) {
             startActivity(Intent(requireContext(), AboutActivity::class.java))
         }
         // mockup: "Watube 26.9 · GPL-3.0 · crédits"
-        binding.rowAbout.rowSummary.text = getString(R.string.version, BuildConfig.VERSION_NAME)
+        binding.rowAbout.rowSummary.text =
+            getString(R.string.watube_settings_summary_about, BuildConfig.VERSION_NAME)
     }
 
     private fun setupRow(

@@ -223,7 +223,13 @@ class SearchResultsAdapter(
     private fun bindPlaylist(item: ContentItem, binding: PlaylistsRowBinding) {
         binding.apply {
             ImageHelper.loadImage(item.thumbnail, playlistThumbnail)
-            if (item.videos >= 0) videoCount.text = item.videos.toString()
+            // the count band must not survive view recycling with a stale value
+            if (item.videos >= 0) {
+                playlistSide.isVisible = true
+                videoCount.text = item.videos.toString()
+            } else {
+                playlistSide.isVisible = false
+            }
             playlistTitle.text = item.name
             playlistDescription.text = item.uploaderName
             root.setOnClickListener {

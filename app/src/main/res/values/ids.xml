@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- View tag holding the id a row is currently bound to, so an async result can
+         never be applied to a row that has been recycled for another item. -->
+    <item name="bound_item_id" type="id" />
+</resources>

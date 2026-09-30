@@ -28,6 +28,14 @@ interface SearchHistoryDao {
     @Delete
     suspend fun delete(searchHistoryItem: SearchHistoryItem)
 
+    @Query(
+        """
+        DELETE FROM searchHistoryItem WHERE ROWID NOT IN
+            (SELECT ROWID FROM searchHistoryItem ORDER BY ROWID DESC LIMIT :limit)
+        """
+    )
+    suspend fun deleteAllExceptLatest(limit: Int)
+
     @Query("DELETE FROM searchHistoryItem")
     suspend fun deleteAll()
 }

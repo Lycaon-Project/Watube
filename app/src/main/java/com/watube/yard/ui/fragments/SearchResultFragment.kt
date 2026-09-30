@@ -73,11 +73,35 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
         val searchResultsAdapter = SearchResultsAdapter(timeStamp ?: 0)
         binding.searchRecycler.adapter = searchResultsAdapter
 
+        binding.noSearchResultTitle.text =
+            getString(R.string.watube_no_search_result_for, args.query)
+
         binding.searchRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
             }
+        })
+
+        // mockup .noresult: reachable only when a refresh settled with no item.
+        // item count and load state settle independently, so both signals update it.
+        var refreshLoadState: LoadState? = null
+        val updateNoResults = {
+            binding.noSearchResult.isVisible =
+                searchResultsAdapter.itemCount == 0 && refreshLoadState is LoadState.NotLoading
+        }
+
+        searchResultsAdapter.registerAdapterDataObserver(object :
+            RecyclerView.AdapterDataObserver() {
+            override fun onChanged() = updateNoResults()
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) =
+                updateNoResults()
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) =
+                updateNoResults()
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) =
+                updateNoResults()
         })
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -86,6 +110,8 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
                     val isLoading = it.source.refresh is LoadState.Loading
                     binding.progress.isVisible = isLoading
                     binding.searchResultsLayout.isGone = isLoading
+                    refreshLoadState = it.source.refresh
+                    updateNoResults()
                 }
             }
         }

@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.net.Uri
 import android.os.storage.StorageManager
+import android.util.Log
 import android.widget.ImageView
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -23,6 +24,7 @@ import coil3.request.crossfade
 import coil3.toBitmap
 import com.watube.yard.BuildConfig
 import com.watube.yard.api.RetrofitInstance
+import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toAndroidUri
 import com.watube.yard.util.DataSaverMode
 import kotlinx.coroutines.Dispatchers
@@ -195,11 +197,11 @@ object ImageHelper {
         val applicationContext = context.applicationContext
 
         runCatching { applicationContext.imageLoader.diskCache?.clear() }
-            .onFailure { it.printStackTrace() }
+            .onFailure { Log.e(TAG(), "Failed to clear the image disk cache", it) }
         runCatching { applicationContext.imageLoader.memoryCache?.clear() }
-            .onFailure { it.printStackTrace() }
+            .onFailure { Log.e(TAG(), "Failed to clear the image memory cache", it) }
         runCatching { RetrofitInstance.clearHttpCache() }
-            .onFailure { it.printStackTrace() }
+            .onFailure { Log.e(TAG(), "Failed to clear the http cache", it) }
 
         // remove what is left (webview cache, temp files) but keep the managed cache
         // directories alive so that Coil and OkHttp can keep using their instances

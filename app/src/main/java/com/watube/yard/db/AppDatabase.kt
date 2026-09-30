@@ -50,7 +50,7 @@ import com.watube.yard.db.obj.WatchPosition
         SubscriptionGroup::class,
         SubscriptionsFeedItem::class
     ],
-    version = 26,
+    version = 27,
     autoMigrations = [
         AutoMigration(from = 7, to = 8),
         AutoMigration(from = 8, to = 9),
@@ -62,6 +62,7 @@ import com.watube.yard.db.obj.WatchPosition
         AutoMigration(from = 20, to = 21),
         AutoMigration(from = 23, to = 24, spec = DatabaseHolder.MIGRATION_23_24::class),
         AutoMigration(from = 24, to = 25),
+        AutoMigration(from = 26, to = 27),
     ]
 )
 @TypeConverters(Converters::class)

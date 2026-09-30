@@ -107,12 +107,14 @@ import com.watube.yard.ui.models.CommentsViewModel
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.PlayerViewModel
 import com.watube.yard.ui.sheets.CommentsSheet
+import com.watube.yard.ui.sheets.PlayingQueueSheet
 import com.watube.yard.util.OfflineTimeFrameReceiver
 import com.watube.yard.util.OnlineTimeFrameReceiver
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.toTimeInSeconds
 import com.google.android.material.snackbar.Snackbar
+import java.text.NumberFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -146,6 +148,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
     private var seekBarPreviewListener: SeekbarPreviewListener? = null
     private var closedVideo = false
+
+    /** la liste des vidéos associées est elle affichée sous la feuille ? (titre « À suivre ») */
+    private var hasRelatedStreams = false
+
+    /** format de la vitesse de lecture affiché par la pastille flottante (1,5× / 1.5x) */
+    private val speedFormat = NumberFormat.getNumberInstance().apply {
+        isGroupingUsed = false
+        maximumFractionDigits = 2
+    }
     private var autoPlayCountdownEnabled = PlayerHelper.autoPlayCountdown
     private var playerLayoutOrientation = Int.MIN_VALUE
     private var pipActivity: Activity? = null
@@ -232,6 +243,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 ) && _binding != null
             ) {
                 updatePlayPauseButton()
+            }
+
+            if (events.containsAny(
+                    Player.EVENT_PLAYBACK_PARAMETERS_CHANGED,
+                    Player.EVENT_VIDEO_SIZE_CHANGED
+                ) && _binding != null
+            ) {
+                updateOverlayChips()
             }
         }
 
@@ -440,6 +459,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         chaptersViewModel.chaptersLiveData.observe(viewLifecycleOwner) {
             binding.player.setCurrentChapterName()
             playerControlsBinding.exoProgress.setChapters(it.orEmpty())
+            updateOverlayChips()
+        }
+
+        chaptersViewModel.currentChapterIndex.observe(viewLifecycleOwner) {
+            updateOverlayChips()
         }
 
         viewModel.segments.observe(viewLifecycleOwner) { segments ->
@@ -746,6 +770,22 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                     if (::playerController.isInitialized) playerController.currentPosition.toFloat() / 1000 else 0f
                 openScreenshotFile.launch("${streams.title}-${currentPosition}.png")
             }, handler)
+        }
+
+        binding.relPlayerLike.setOnClickListener {
+            requireContext().toastFromMainThread(R.string.toast_feature_soon)
+        }
+
+        binding.relPlayerDislike.setOnClickListener {
+            requireContext().toastFromMainThread(R.string.toast_feature_soon)
+        }
+
+        binding.relPlayerQueue.setOnClickListener {
+            PlayingQueueSheet().show(requireActivity().supportFragmentManager)
+        }
+
+        playerControlsBinding.watubeChapterChip.setOnClickListener {
+            playerControlsBinding.chapterName.callOnClick()
         }
 
         binding.playerChannel.setOnClickListener {
@@ -1067,6 +1107,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         binding.descriptionLayout.isInvisible = !show
         binding.relatedRecView.isInvisible = !show
         binding.playerChannel.isInvisible = !show
+        binding.watubeNextTitle.isInvisible = !show || !hasRelatedStreams
         playerBackgroundBinding.videoTransitionProgress.isVisible = !show
     }
 
@@ -1116,8 +1157,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             playerChannelSubCount.isVisible = streams.uploaderSubscriberCount >= 0
 
             relPlayerDownload.isVisible = !streams.isLive && !isOffline
+
+            relPlayerLike.text = streams.likes.formatShort()
+            relPlayerDislike.text =
+                if (streams.dislikes >= 0) streams.dislikes.formatShort() else ""
         }
         playerControlsBinding.exoTitle.text = streams.title
+        updateOverlayChips()
 
         chaptersViewModel.chaptersLiveData.postValue(streams.chapters)
 
@@ -1160,6 +1206,36 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
     }
 
+    /** Met à jour les pastilles flottantes du contrôleur : chapitre, vitesse de lecture, qualité. */
+    private fun updateOverlayChips() {
+        if (_binding == null || !::playerController.isInitialized) return
+        val controls = playerControlsBinding
+
+        val chapters = chaptersViewModel.chapters
+        if (chapters.isEmpty()) {
+            controls.watubeChapterChip.isGone = true
+        } else {
+            val index = (chaptersViewModel.currentChapterIndex.value ?: 0)
+                .coerceIn(0, chapters.size - 1)
+            controls.watubeChapterChip.isVisible = true
+            controls.watubeChapterChip.text =
+                getString(R.string.player_chapter_chip, index + 1, chapters.size)
+        }
+
+        controls.watubeSpeedChip.isVisible = true
+        controls.watubeSpeedChip.text = getString(
+            R.string.player_speed_chip,
+            speedFormat.format(playerController.playbackParameters.speed.toDouble())
+        )
+
+        val videoHeight = playerController.videoSize.height
+        controls.watubeQualityChip.isVisible = videoHeight > 0
+        if (videoHeight > 0) {
+            controls.watubeQualityChip.text =
+                getString(R.string.player_quality_chip, videoHeight)
+        }
+    }
+
     private suspend fun showRelatedStreams() {
         if (!PlayerHelper.relatedStreamsEnabled) return
 
@@ -1176,6 +1252,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         withContext(Dispatchers.Main) {
             val binding = _binding ?: return@withContext
             val relatedLayoutManager = binding.relatedRecView.layoutManager as LinearLayoutManager
+
+            hasRelatedStreams = relatedStreams.isNotEmpty()
+            binding.watubeNextTitle.isInvisible =
+                !hasRelatedStreams || !binding.descriptionLayout.isVisible
+
             binding.relatedRecView.adapter = VideoCardsAdapter(
                 columnWidthDp = if (relatedLayoutManager.orientation == LinearLayoutManager.HORIZONTAL) 250f else null
             ).also { adapter ->

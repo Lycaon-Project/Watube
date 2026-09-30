@@ -13,6 +13,13 @@ import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.helpers.LocaleHelper.getDetectedCountry
 import kotlin.math.roundToInt
 
+/**
+ * Preference file holding the last crash log. It deliberately lives outside of the default
+ * preferences so the backup rules (backup_rules.xml, data_extraction_rules.xml) can exclude
+ * it: a stack trace may contain video ids and urls and must not reach a cloud backup.
+ */
+private const val ERROR_LOG_PREF_FILE = "errors"
+
 object PreferenceHelper {
     private val TAG = PreferenceHelper::class.simpleName
 
@@ -416,11 +423,17 @@ object PreferenceHelper {
     }
 
     fun saveErrorLog(log: String) {
-        putString(PreferenceKeys.ERROR_LOG, log)
+        // stored in its own preference file, which every backup rule excludes, so the
+        // stack trace (it can contain video ids and urls) is never uploaded to the cloud.
+        // commit() instead of apply(): this runs in the uncaught exception handler and the
+        // process is about to die, an async write would simply be dropped
+        WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
+            .edit(commit = true) { putString(PreferenceKeys.ERROR_LOG, log) }
     }
 
     fun getErrorLog(): String {
-        return getString(PreferenceKeys.ERROR_LOG, "")
+        return WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
+            .getString(PreferenceKeys.ERROR_LOG, "") ?: ""
     }
 
     /**

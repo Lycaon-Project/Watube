@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mockup #i-logo: play outline (evenodd hole) filled AND stroked with the
+     9BF25C -> 1FD47E gradient of the SVG symbol. The gradient runs on the path
+     geometry bounding box diagonal (8.2,4.9 -> 19.4,19.1), which is how the
+     symbol's objectBoundingBox linearGradient maps onto viewport units. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:pathData="M8.2,4.9L19.4,12L8.2,19.1Z M11.5,9.7L15.5,12L11.5,14.3Z"
+        android:fillType="evenOdd"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2.6">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endColor="#1FD47E"
+                android:endX="19.4"
+                android:endY="19.1"
+                android:startColor="#9BF25C"
+                android:startX="8.2"
+                android:startY="4.9"
+                android:type="linear" />
+        </aapt:attr>
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:endColor="#1FD47E"
+                android:endX="19.4"
+                android:endY="19.1"
+                android:startColor="#9BF25C"
+                android:startX="8.2"
+                android:startY="4.9"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+</vector>

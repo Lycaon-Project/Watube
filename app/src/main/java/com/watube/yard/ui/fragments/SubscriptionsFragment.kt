@@ -166,6 +166,11 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
             viewModel.fetchFeed(requireContext(), forceRefresh = true)
         }
 
+        // header button of the mockup's .shd row: same refresh action as the swipe
+        binding.headerRefresh.setOnClickListener {
+            viewModel.fetchFeed(requireContext(), forceRefresh = true)
+        }
+
         binding.toggleSubs.isVisible = true
 
         binding.toggleSubs.setOnClickListener {
@@ -298,6 +303,14 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
                 id = View.generateViewId()
                 isCheckable = true
                 text = group.name
+                // filter_chip.xml is not part of the editable shell file set, so the
+                // mockup metrics carried by @style/Watube.Chip.Subs are mirrored here
+                setTextAppearance(R.style.WatubeChipLabel)
+                setChipMinHeight(resources.getDimension(R.dimen.watube_chip_min_height))
+                setChipStartPadding(0f)
+                setTextStartPadding(resources.getDimension(R.dimen.watube_chip_h_padding))
+                setTextEndPadding(resources.getDimension(R.dimen.watube_chip_h_padding))
+                setChipEndPadding(0f)
                 setOnLongClickListener {
                     // the index must be increased by one to skip the "all channels" group button
                     lifecycleScope.launch { playByGroup(index + 1) }
@@ -371,8 +384,6 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         val notLoaded = viewModel.videoFeed.value.isNullOrEmpty()
         binding.subFeed.isGone = notLoaded
         binding.emptyFeed.isVisible = notLoaded
-
-        binding.toggleSubs.text = getString(R.string.subscriptions)
 
         binding.subRefresh.isRefreshing = false
 

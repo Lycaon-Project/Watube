@@ -8,6 +8,15 @@
     <dimen name="watube_cgap">15dp</dimen>
     <dimen name="watube_card_radius">17.5dp</dimen>
     <dimen name="watube_nav_inset">10dp</dimen>
+    <!-- Floating bar offset from the screen bottom (1.1rem of the mockup) -->
+    <dimen name="watube_nav_bottom_inset">15dp</dimen>
+
+    <!-- Mockup chip geometry: .42rem/.95rem padding and .83rem label (visual pill
+         height, the 48dp touch target is added by Chip itself) -->
+    <dimen name="watube_chip_min_height">27dp</dimen>
+    <dimen name="watube_chip_h_padding">13dp</dimen>
+    <!-- Mockup .ib: 2.45rem circle -->
+    <dimen name="watube_ib_size">33dp</dimen>
 
     <dimen name="normal_button_margin_bottom">0dp</dimen>
     <dimen name="normal_button_margin_end">0dp</dimen>
