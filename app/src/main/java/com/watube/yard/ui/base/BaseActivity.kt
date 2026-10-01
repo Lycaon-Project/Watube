@@ -115,7 +115,7 @@ open class BaseActivity : AppCompatActivity() {
 
         // IMPORTANT : l'appel au thème est conservé nécessaire au comportement de l'app
         // (changement de thème dynamique à la volée, ou Application non configurée)
-        val uiPref = PreferenceHelper.getString(PreferenceKeys.THEME_MODE, "A")
+        val uiPref = PreferenceHelper.getString(PreferenceKeys.THEME_MODE, "D")
         AppCompatDelegate.setDefaultNightMode(getThemeMode(uiPref))
 
         if (needsConfig) {

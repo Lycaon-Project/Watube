@@ -17,6 +17,17 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--
+        Cast: seule permission ajoutee pour la decouverte de recepteurs.
+        Aucune permission de localisation (ACCESS_FINE_LOCATION / ACCESS_COARSE_LOCATION)
+        n'est declaree ni demandee. neverForLocation affirme formellement que
+        l'application ne derive jamais de position a partir des API Wi-Fi.
+        API < 33 : le bouton Cast est masque (voir PlayerFragment), aucun fallback.
+    -->
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="s" />
 
     <application
         android:name=".WatubeApp"
@@ -52,6 +63,10 @@
         <activity
             android:name=".ui.activities.AboutActivity"
             android:label="@string/settings"
+            android:screenOrientation="locked" />
+
+        <activity
+            android:name=".ui.activities.MissionActivity"
             android:screenOrientation="locked" />
 
         <activity
@@ -335,6 +350,16 @@
                 <data android:host="piped.video" />
             </intent-filter>
         </activity>
+
+        <!--
+            Google Cast: point d'entree de configuration du SDK
+            (voir https://developers.google.com/cast/docs/android_sender/integrate).
+            CastOptionsProvider fournit l'identifiant du recepteur public
+            "styled media receiver" et desactives reconnexion / reprise auto.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.watube.yard.cast.CastOptionsProvider" />
 
         <!--
             Foreground Services (Android 14+):

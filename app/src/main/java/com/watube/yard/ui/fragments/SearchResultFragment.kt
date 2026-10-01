@@ -45,10 +45,6 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
         _binding = FragmentSearchResultBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
-        // fixes a bug that the search query will stay the old one when searching for multiple
-        // different queries in a row and navigating to the previous ones through back presses
-        mainActivity.setQuerySilent(args.query)
-
         // filter options
         binding.filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
             viewModel.setFilter(
@@ -135,7 +131,7 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
                 getString(R.string.showing_results_for)
             } else {
                 binding.searchSuggestionContainer.setOnClickListener {
-                    mainActivity.setQuery(suggestion, true)
+                    mainActivity.openSearchResults(suggestion)
                 }
                 getString(R.string.did_you_mean)
             }

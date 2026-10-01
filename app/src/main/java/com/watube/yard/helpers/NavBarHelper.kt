@@ -120,6 +120,11 @@ object NavBarHelper {
         }
         if (navBarItems.none { (_, isVisible) -> isVisible }) bottomNav.isGone = true
 
+        // every remove()/add() above created brand new items: they lost the exclusive
+        // checkable flag of the previous generation, and without it a check (NavigationUI
+        // only ever checks its new destination item) leaves the old tab lit as well
+        bottomNav.menu.setGroupCheckable(0, true, true)
+
         return startFragmentId
     }
 

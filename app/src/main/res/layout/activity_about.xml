@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  About screen (mockup "A propos"): green .aboutcard header carrying the version
+  read from BuildConfig, then a single .setcard with every entry - the four rows
+  of the mockup first, the legacy entries appended in the same row style so that
+  nothing reachable today is lost.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,101 +22,199 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIcon="?homeAsUpIndicator"
             android:fitsSystemWindows="true"
+            app:navigationIcon="?homeAsUpIndicator"
             app:title="@string/about"
             app:titleTextColor="?attr/colorOnSurface" />
 
-        <com.watube.yard.ui.views.AppIconHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <LinearLayout style="@style/WatubeAboutHeader">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/website"
-            style="@style/AboutCard">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/website"
-                app:drawableStartCompat="@drawable/ic_region" />
+                <ImageView
+                    android:id="@+id/about_logo"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:background="@drawable/watube_mark_bg"
+                    android:padding="6dp"
+                    android:src="@drawable/watube_logo"
+                    tools:ignore="ContentDescription" />
 
-        </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/github"
-            style="@style/AboutCard">
+                    <TextView
+                        android:id="@+id/about_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        tools:text="Watube 26.10" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/github"
-                app:drawableStartCompat="@drawable/ic_github" />
+                    <TextView
+                        android:id="@+id/about_build"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        android:textSize="12sp"
+                        tools:text="Build 2610 · GPL-3.0" />
+                </LinearLayout>
+            </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/about_header_subtitle"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12.5sp"
+                tools:ignore="HardcodedText" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/piped"
-            style="@style/AboutCard">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/check_updates"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/update_summary" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/piped"
-                app:drawableStartCompat="@drawable/ic_piped" />
+        </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/WatubeAboutRows">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/translate"
-            style="@style/AboutCard">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/translate"
-                app:drawableStartCompat="@drawable/ic_weblate" />
+                <include
+                    android:id="@+id/row_code_source"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        </com.google.android.material.card.MaterialCardView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/libraries"
-            style="@style/AboutCard">
+                <include
+                    android:id="@+id/row_libraries"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/open_source_licenses"
-                app:drawableStartCompat="@drawable/ic_library" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
 
-        </com.google.android.material.card.MaterialCardView>
+                <include
+                    android:id="@+id/row_privacy"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/features"
-            style="@style/AboutCard">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/watube_features"
-                app:drawableStartCompat="@drawable/ic_shield" />
+                <include
+                    android:id="@+id/row_report"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        </com.google.android.material.card.MaterialCardView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/license"
-            style="@style/AboutCard">
+                <include
+                    android:id="@+id/row_mission"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/license"
-                app:drawableStartCompat="@drawable/ic_license" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
 
-        </com.google.android.material.card.MaterialCardView>
+                <include
+                    android:id="@+id/row_website"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/device"
-            style="@style/AboutCard">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/device_info"
-                app:drawableStartCompat="@drawable/ic_device" />
+                <include
+                    android:id="@+id/row_piped"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <include
+                    android:id="@+id/row_translate"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <include
+                    android:id="@+id/row_features"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <include
+                    android:id="@+id/row_license"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <include
+                    android:id="@+id/row_device"
+                    layout="@layout/settings_category_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>

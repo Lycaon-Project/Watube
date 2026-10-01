@@ -13,11 +13,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.Key
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -44,9 +45,7 @@ import com.watube.yard.databinding.ActivityMainBinding
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.obj.SearchHistoryItem
 import com.watube.yard.enums.ImportFormat
-import com.watube.yard.enums.SearchType
 import com.watube.yard.enums.TopLevelDestination
-import com.watube.yard.extensions.anyChildFocused
 import com.watube.yard.helpers.ImportHelper
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavBarHelper
@@ -60,14 +59,12 @@ import com.watube.yard.ui.dialogs.ImportTempPlaylistDialog
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.fragments.DownloadsFragment
-import com.watube.yard.ui.models.DownloadsViewModel
-import com.watube.yard.ui.models.PlaylistViewModel
-import com.watube.yard.ui.models.SearchViewModel
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.preferences.BackupRestoreSettings
 import com.watube.yard.ui.preferences.BackupRestoreSettings.Companion.FILETYPE_ANY
 import com.watube.yard.util.UpdateChecker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -87,20 +84,7 @@ class MainActivity : AbstractPlayerHostActivity() {
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
 
-    /** kept so that a rebuilt options menu doesn't stack a second destination listener */
-    private var searchDestinationListener: NavController.OnDestinationChangedListener? = null
-
     private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
-
-    // search related stuff
-    private lateinit var searchView: SearchView
-    private lateinit var searchItem: MenuItem
-    private var savedSearchQuery: String? = null
-    private var shouldOpenSuggestions = true
-    private var currentSearchType: SearchType = SearchType.ONLINE
-    private val searchViewModel: SearchViewModel by viewModels()
-    private val downloadViewModel: DownloadsViewModel by viewModels()
-    private val playlistViewModel: PlaylistViewModel by viewModels()
 
     // registering for activity results is only possible, this here should have been part of
     // PlaylistOptionsBottomSheet instead if Android allowed us to
@@ -244,6 +228,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         // set the action bar for the activity
         setSupportActionBar(binding.toolbar)
+        // the mockup chrome is the brand row + the kebab only: the activity label
+        // (app/src/debug "Watube Debug") must not be rendered as a toolbar title
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val navHostFragment = binding.fragment.getFragment<NavHostFragment>()
         navController = navHostFragment.navController
@@ -281,6 +268,14 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         setupExpandedLayout()
 
+        // setupWithNavController only checks the item of a new destination, it never
+        // repairs a bar desynced by a menu rebuild or a state restore: converge both
+        // bars on the destination ourselves. The listener fires immediately for the
+        // current destination, so onCreate() ends in a consistent state.
+        navController.addOnDestinationChangedListener(
+            NavController.OnDestinationChangedListener { _, _, _ -> syncBottomBarSelection() }
+        )
+
         // handle error logs
         PreferenceHelper.getErrorLog().ifBlank { null }?.let {
             if (!BuildConfig.DEBUG)
@@ -298,13 +293,19 @@ class MainActivity : AbstractPlayerHostActivity() {
      * Deselect all bottom bar items
      */
     private fun deselectBottomBarItems() {
-        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
-            bar.menu.setGroupCheckable(0, true, false)
-            for (child in bar.menu.children) {
-                child.isChecked = false
-            }
-            bar.menu.setGroupCheckable(0, true, true)
+        listOf(binding.bottomNav, binding.navRail).forEach { forceExclusiveCheck(it, null) }
+    }
+
+    /**
+     * Highlight [checked] and only it, then restore the exclusive checkable group so
+     * any later check can never leave a second tab lit.
+     */
+    private fun forceExclusiveCheck(bar: NavigationBarView, checked: MenuItem?) {
+        bar.menu.setGroupCheckable(0, true, false)
+        for (child in bar.menu.children) {
+            child.isChecked = child == checked
         }
+        bar.menu.setGroupCheckable(0, true, true)
     }
 
     /**
@@ -380,6 +381,9 @@ class MainActivity : AbstractPlayerHostActivity() {
         super.onConfigurationChanged(newConfig)
         if (!::binding.isInitialized) return
         setupExpandedLayout()
+        // setupExpandedLayout() rebuilt the visible bar's menu, which can re-check the
+        // wrong item: no destination change follows on a config change, so re-sync now
+        syncBottomBarSelection()
         // uiMode is part of this activity's configChanges, so a system night flip is
         // delivered here instead of through a recreation: both the bottom bar night
         // styling and the header brand have to follow it manually.
@@ -576,156 +580,38 @@ class MainActivity : AbstractPlayerHostActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // The toolbar only carries the kebab now: the search input lives in
+        // fragment_search_suggestions.xml and is fed by SearchSuggestionsFragment.
         menuInflater.inflate(R.menu.action_bar, menu)
-
-        // stuff for the search in the topBar
-        val searchItem = menu.findItem(R.id.action_search)
-        this.searchItem = searchItem
-        searchView = searchItem.actionView as SearchView
-
-        // automatically set a different search icon in the playlists
-        searchDestinationListener?.let { navController.removeOnDestinationChangedListener(it) }
-        val destinationListener = NavController.OnDestinationChangedListener { _, destination, _ ->
-            currentSearchType = when (destination.id) {
-                R.id.downloadsFragment -> SearchType.DOWNLOADS
-                R.id.playlistFragment -> SearchType.PLAYLIST
-                else -> SearchType.ONLINE
-            }
-            // clear query in unused page so that they're reset when visiting the page the next time
-            if (currentSearchType != SearchType.DOWNLOADS) downloadViewModel.setQuery(null)
-            if (currentSearchType != SearchType.PLAYLIST) playlistViewModel.setQuery(null)
-
-            val searchIconResource = when (currentSearchType) {
-                SearchType.DOWNLOADS -> R.drawable.ic_download_search
-                SearchType.PLAYLIST -> R.drawable.ic_playlist_search
-                SearchType.ONLINE -> R.drawable.ic_search
-            }
-
-            searchItem.setIcon(searchIconResource)
-        }
-        searchDestinationListener = destinationListener
-        navController.addOnDestinationChangedListener(destinationListener)
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                searchView.clearFocus()
-
-                // playlist and download search don't do anything on submit
-                // as they search while typing
-                if (currentSearchType != SearchType.ONLINE) return true
-
-                // handle inserted YouTube-like URLs and directly open the referenced
-                // channel, playlist or video instead of showing search results
-                if (query.toHttpUrlOrNull() != null) {
-                    val queryIntent = IntentHelper.resolveType(query.toUri())
-
-                    val didNavigate = navigateToMediaByIntent(queryIntent) {
-                        navController.popBackStack(R.id.searchFragment, true)
-                        searchItem.collapseActionView()
-                    }
-                    if (didNavigate) return true
-                }
-
-                navController.navigate(NavDirections.showSearchResults(query))
-
-                addSearchQueryToHistory(query)
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                when (currentSearchType) {
-                    SearchType.ONLINE -> {
-                        if (!shouldOpenSuggestions) return true
-
-                        // Prevent navigation when search view is collapsed
-                        if (searchView.isIconified ||
-                            binding.bottomNav.menu.children.any {
-                                it.itemId == navController.currentDestination?.id
-                            }
-                        ) {
-                            return true
-                        }
-
-                        // prevent malicious navigation when the search view is getting collapsed
-                        if (navController.currentDestination?.id == R.id.searchResultFragment && newText == null) {
-                            return false
-                        }
-
-                        if (navController.currentDestination?.id != R.id.searchFragment) {
-                            val args = Bundle().apply {
-                                putString(IntentData.query, newText)
-                            }
-                            navController.navigate(R.id.searchFragment, args)
-                        } else {
-                            searchViewModel.setQuery(newText)
-                        }
-                    }
-
-                    SearchType.PLAYLIST -> {
-                        playlistViewModel.setQuery(newText)
-                    }
-
-                    SearchType.DOWNLOADS -> {
-                        downloadViewModel.setQuery(newText)
-                    }
-                }
-
-                return true
-            }
-        })
-
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                if (currentSearchType == SearchType.ONLINE && navController.currentDestination?.id != R.id.searchResultFragment) {
-                    searchViewModel.setQuery(null)
-                    navController.navigate(R.id.openSearch)
-                }
-                item.setShowAsAction(
-                    MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-                )
-                return true
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                // Handover back press to `BackPressedDispatcher` if not on a root destination
-                if (navController.previousBackStackEntry != null) {
-                    this@MainActivity.onBackPressedDispatcher.onBackPressed()
-                }
-
-                // Suppress collapsing of search when search in progress.
-                return !isSearchInProgress()
-            }
-        })
-
-        // handle search queries passed by the intent
-        if (savedSearchQuery != null) {
-            searchItem.expandActionView()
-            searchView.setQuery(savedSearchQuery, true)
-            savedSearchQuery = null
-        }
 
         return super.onCreateOptionsMenu(menu)
     }
 
     /**
-     * Update the query text in the search bar without opening the search suggestions
+     * Runs a search query the way the toolbar SearchView submit used to: pasted
+     * URLs open their video, channel or playlist right away, everything else lands
+     * on the results screen and is recorded in the search history.
+     *
+     * @param query raw user input, trimmed and ignored when blank
      */
-    fun setQuerySilent(query: String) {
-        if (!this::searchView.isInitialized) return
+    fun openSearchResults(query: String) {
+        val trimmed = query.trim()
+        if (trimmed.isEmpty()) return
 
-        shouldOpenSuggestions = false
-        searchView.setQuery(query, false)
-        shouldOpenSuggestions = true
-    }
+        // handle inserted YouTube-like URLs and directly open the referenced
+        // channel, playlist or video instead of showing search results
+        if (trimmed.toHttpUrlOrNull() != null) {
+            val queryIntent = IntentHelper.resolveType(trimmed.toUri())
 
-    /**
-     * Update the query text in the search bar and load the search suggestions
-     * @param submit whether to immediately load the search results (not suggestions)
-     */
-    fun setQuery(query: String, submit: Boolean) {
-        if (::searchView.isInitialized) searchView.setQuery(query, submit)
+            val didNavigate = navigateToMediaByIntent(queryIntent) {
+                navController.popBackStack(R.id.searchFragment, true)
+            }
+            if (didNavigate) return
+        }
+
+        navController.navigate(NavDirections.showSearchResults(trimmed))
+
+        addSearchQueryToHistory(trimmed)
     }
 
     private fun loadIntentData() {
@@ -759,9 +645,10 @@ class MainActivity : AbstractPlayerHostActivity() {
         // navigate to (temporary) playlist or channel if available
         if (navigateToMediaByIntent(intent)) return
 
-        // Get saved search query if available
+        // Run a search query passed by the intent (search_query links). It used to be
+        // parked until the next menu rebuild, which could drop it on onNewIntent().
         intent?.getStringExtra(IntentData.query)?.let {
-            savedSearchQuery = it
+            openSearchResults(it)
         }
 
         // Open the Downloads screen if requested
@@ -870,9 +757,6 @@ class MainActivity : AbstractPlayerHostActivity() {
             binding.navRail.removeBadge(R.id.subscriptionsFragment)
         }
 
-        // Remove focus from search view when navigating to bottom view.
-        searchItem.collapseActionView()
-
         // settings are hosted by their own activity, not by this nav graph
         if (item.itemId == R.id.settingsFragment) {
             startActivity(Intent(this, SettingsActivity::class.java))
@@ -886,14 +770,40 @@ class MainActivity : AbstractPlayerHostActivity() {
      * The settings tab opens a separate activity, so the checked item no longer matches
      * the current destination when coming back. Re-sync both bars, without triggering
      * [setOnItemSelectedListener] (a plain [MenuItem.isChecked] never does).
+     *
+     * Destinations missing from the menu (search, channel, playlist...) keep the
+     * highlight of the tab they were opened from, exactly like NavigationUI does.
+     * Hidden destinations (trends, downloads) leave no visible tab lit.
      */
     private fun syncBottomBarSelection() {
-        if (!::binding.isInitialized) return
+        if (!::binding.isInitialized || !this::navController.isInitialized) return
         val destinationId = navController.currentDestination?.id ?: return
         listOf(binding.bottomNav, binding.navRail).forEach { bar ->
             val item = bar.menu.findItem(destinationId) ?: return@forEach
-            if (item.isVisible && !item.isChecked) item.isChecked = true
+            if (!item.isVisible) {
+                if (bar.menu.children.any { it.isChecked }) forceExclusiveCheck(bar, null)
+                return@forEach
+            }
+            // already the unique checked item with Material's internal id in sync
+            if (item.isChecked && bar.selectedItemId == destinationId) return@forEach
+            forceExclusiveCheck(bar, item)
+            // if the menu already matched, no flag changed, nothing was dispatched and
+            // NavigationBarView kept its stale selectedItemId: toggle once to force the
+            // dispatch that re-reads it (no frame is drawn between the two calls)
+            if (bar.selectedItemId != destinationId) {
+                bar.menu.setGroupCheckable(0, true, false)
+                item.isChecked = false
+                item.isChecked = true
+                bar.menu.setGroupCheckable(0, true, true)
+            }
         }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // the view hierarchy restore re-selects NavigationBarView's saved item, which
+        // can disagree with the destination the NavController restored in onCreate()
+        syncBottomBarSelection()
     }
 
     override fun onUserLeaveHint() {
@@ -922,7 +832,9 @@ class MainActivity : AbstractPlayerHostActivity() {
         // onCreate() peut avoir quitté avant d'initialiser binding (pas de réseau)
         if (!::binding.isInitialized) return super.onKeyUp(keyCode, event)
         // don't forward key events to the player while the search text input is used
-        if (::searchItem.isInitialized && searchItem.isActionViewExpanded) return false
+        if (this::navController.isInitialized &&
+            navController.currentDestination?.id == R.id.searchFragment
+        ) return false
 
         if (runOnPlayerFragment { this@runOnPlayerFragment.onKeyUp(keyCode, event) }) {
             return true
@@ -974,6 +886,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     override fun minimizePlayerContainerLayout() {
         binding.mainMotionLayout.transitionToEnd()
+        // predictive-back / channel navigation closes the player without a resume and
+        // without a destination change: re-check the highlight the player covered
+        syncBottomBarSelection()
     }
 
     override fun maximizePlayerContainerLayout() {
@@ -984,15 +899,24 @@ class MainActivity : AbstractPlayerHostActivity() {
         if (!NavBarHelper.hasTabs()) return
 
         binding.mainMotionLayout.progress = progress
+        // 1f is only reported once the player container finished closing, which is the
+        // one signal fired on that path (PlayerFragment reports it on transition end)
+        if (progress >= 1f) syncBottomBarSelection()
     }
 
     /**
-     * @return whether the search view focus was cleared successfully
+     * Clears the focus of the in-content search input when one currently holds it
+     *
+     * @return whether an input was focused and has been cleared
      */
     override fun clearSearchViewFocus(): Boolean {
-        if (!this::searchView.isInitialized || !searchView.anyChildFocused()) return false
+        val focused = currentFocus
+        if (focused !is EditText) return false
 
-        searchView.clearFocus()
+        focused.clearFocus()
+        // an EditText does not dismiss the IME on clearFocus() by itself
+        getSystemService(InputMethodManager::class.java)
+            ?.hideSoftInputFromWindow(focused.windowToken, 0)
         return true
     }
 }

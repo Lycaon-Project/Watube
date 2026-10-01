@@ -18,6 +18,12 @@
     <!-- Mockup .ib: 2.45rem circle -->
     <dimen name="watube_ib_size">33dp</dimen>
 
+    <!-- Fullscreen player: offset between the bottom edge of the player controls and the
+         bottom control cluster (seekbar row). Declared as a dimen so the value is resolved
+         through the app Resources configuration of the current screen instead of being
+         converted from dp in code. -->
+    <dimen name="watube_player_controls_fullscreen_bottom_margin">10dp</dimen>
+
     <dimen name="normal_button_margin_bottom">0dp</dimen>
     <dimen name="normal_button_margin_end">0dp</dimen>
     <dimen name="fullscreen_button_margin_bottom">5dp</dimen>

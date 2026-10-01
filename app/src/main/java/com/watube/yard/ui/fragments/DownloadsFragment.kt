@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -17,6 +19,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -82,6 +85,12 @@ enum class DownloadSortingOrder(@StringRes val stringId: Int) {
 class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
     private var _binding: FragmentDownloadsBinding? = null
     private val binding get() = _binding!!
+    private val downloadsViewModel: DownloadsViewModel by activityViewModels()
+
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDownloadsBinding.bind(view)
@@ -97,6 +106,46 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
                 else -> throw IllegalArgumentException()
             }
         }.attach()
+
+        setupSearchInput()
+    }
+
+    private fun setupSearchInput() {
+        val input = binding.searchInput
+
+        input.doAfterTextChanged { syncQueryToViewModel() }
+
+        input.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId != EditorInfo.IME_ACTION_SEARCH) {
+                return@setOnEditorActionListener false
+            }
+            input.hideKeyboard()
+            true
+        }
+
+        binding.searchClear.setOnClickListener {
+            input.text?.clear()
+            input.requestFocus()
+        }
+
+        binding.searchBack.setOnClickListener {
+            input.hideKeyboard()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun inputQuery(): String? =
+        binding.searchInput.text?.toString()?.takeIf { it.isNotEmpty() }
+
+    private fun syncQueryToViewModel() {
+        val query = inputQuery()
+        downloadsViewModel.setQuery(query)
+        binding.searchClear.isVisible = query != null
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        syncQueryToViewModel()
     }
 
     fun bindDownloadService() {

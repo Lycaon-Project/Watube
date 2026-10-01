@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  About screen styles, kept out of values/style.xml (owned by the parallel Solar
+  refactor). Geometry follows the mockup: .aboutcard (1.2rem padding, r-l radius,
+  accent gradient) and .setcard (one card, rows split by 1dp dividers).
+-->
+<resources>
+
+    <style name="WatubeAboutHeader">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/watube_gutter</item>
+        <item name="android:layout_marginEnd">@dimen/watube_gutter</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:background">@drawable/watube_about_header_bg</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">19dp</item>
+    </style>
+
+    <style name="WatubeAboutRows" parent="Widget.Material3.CardView.Elevated">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/watube_gutter</item>
+        <item name="android:layout_marginEnd">@dimen/watube_gutter</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="cardCornerRadius">@dimen/watube_card_radius</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+</resources>

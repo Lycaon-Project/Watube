@@ -646,4 +646,13 @@
     <string name="dislike">Je n\'aime pas</string>
     <string name="toast_feature_soon">Pas encore disponible</string>
     <string name="player_chapter_chip">Chap. %1$d/%2$d</string>
+    <string name="about_code_source">Code source</string>
+    <string name="about_privacy">Politique de confidentialité</string>
+    <string name="about_report_issue">Signaler un problème</string>
+    <string name="about_mission">Pourquoi Watube</string>
+    <string name="about_header_subtitle">Fork indépendant de LibreTube · Mode local par défaut · instances Piped optionnelles</string>
+<string name="search_back">Retour</string>
+<string name="search_clear">Effacer</string>
+<string name="downloads_search_hint">Rechercher dans les téléchargements</string>
+<string name="playlist_search_hint">Rechercher dans la playlist</string>
 </resources>

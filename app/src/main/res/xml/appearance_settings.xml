@@ -6,7 +6,7 @@
 
         <ListPreference
             android:icon="@drawable/ic_theme"
-            app:defaultValue="A"
+            app:defaultValue="D"
             app:entries="@array/themes"
             app:entryValues="@array/themesValue"
             app:key="theme_toggle"

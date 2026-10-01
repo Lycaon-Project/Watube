@@ -46,19 +46,12 @@
                     android:paddingHorizontal="0dp">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/relPlayer_like"
+                        android:id="@+id/relPlayer_cast"
                         style="@style/PlayerActionsButton"
                         android:layout_marginStart="0dp"
-                        android:contentDescription="@string/like"
-                        app:icon="@drawable/ic_like"
-                        tools:text="1.2M" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/relPlayer_dislike"
-                        style="@style/PlayerActionsButton"
-                        android:contentDescription="@string/dislike"
-                        app:icon="@drawable/ic_dislike"
-                        tools:text="42 k" />
+                        android:text="@string/tooltip_cast"
+                        android:contentDescription="@string/tooltip_cast"
+                        app:icon="@drawable/watube_cast" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/relPlayer_share"
@@ -211,12 +204,13 @@
 
     <com.watube.yard.ui.views.CustomExoPlayerView
         android:id="@+id/player"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@android:color/black"
         app:player_layout_id="@layout/custom_exo_player_view"
         app:controller_layout_id="@layout/exo_styled_player_control_view"
         app:layout_constraintBottom_toBottomOf="@id/main_container"
+        app:layout_constraintEnd_toEndOf="@id/main_container"
         app:layout_constraintStart_toStartOf="@id/main_container"
         app:layout_constraintTop_toTopOf="@id/main_container"
         app:show_buffering="when_playing"

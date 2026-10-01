@@ -1,5 +1,6 @@
 package com.watube.yard.ui.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -7,9 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.media.session.PlaybackState
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -57,6 +60,7 @@ import com.watube.yard.api.JsonHelper
 import com.watube.yard.api.obj.ChapterSegment
 import com.watube.yard.api.obj.Segment
 import com.watube.yard.api.obj.Streams
+import com.watube.yard.cast.CastHelper
 import com.watube.yard.compat.PictureInPictureCompat
 import com.watube.yard.compat.PictureInPictureParamsCompat
 import com.watube.yard.constants.IntentData
@@ -113,6 +117,13 @@ import com.watube.yard.util.OnlineTimeFrameReceiver
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.toTimeInSeconds
+import androidx.mediarouter.app.MediaRouteChooserDialogFragment
+import androidx.mediarouter.app.MediaRouteControllerDialogFragment
+import androidx.mediarouter.media.MediaRouter
+import com.google.android.gms.cast.MediaLoadRequestData
+import com.google.android.gms.cast.framework.CastContext
+import com.google.android.gms.cast.framework.CastSession
+import com.google.android.gms.cast.framework.SessionManagerListener
 import com.google.android.material.snackbar.Snackbar
 import java.text.NumberFormat
 import kotlinx.coroutines.Dispatchers
@@ -120,6 +131,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 import kotlin.math.absoluteValue
+
+private const val CAST_ROUTE_DIALOG_TAG = "cast_route_dialog"
 
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
@@ -161,6 +174,18 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private var playerLayoutOrientation = Int.MIN_VALUE
     private var pipActivity: Activity? = null
     private var isEnteringPiPMode = false
+
+    /** Cast : contexte SDK partage au sein du fragment, obtenu lazily au premier appui */
+    private var castContext: CastContext? = null
+    private var castSessionListener: SessionManagerListener<CastSession>? = null
+    /** Google Play services indisponible : le bouton est masque pour la session du fragment */
+    private var castUnavailable = false
+
+    private val requestNearbyWifiPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) showCastRoutePicker()
+            else context?.toastFromMainThread(R.string.toast_cast_unavailable)
+        }
 
     /** dernière taille vidéo connue : conserve le ratio de la fenêtre PiP pendant les pauses */
     private var lastPipVideoSize: VideoSize? = null
@@ -751,6 +776,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             PlayingQueue.getNext()?.let { next -> playVideo(next) }
         }
 
+        binding.relPlayerCast.isVisible =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isOffline && !castUnavailable
+        binding.relPlayerCast.setOnClickListener {
+            onCastButtonClick()
+        }
+
         binding.relPlayerDownload.setOnClickListener {
             if (!this::streams.isInitialized) return@setOnClickListener
 
@@ -772,14 +803,6 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             }, handler)
         }
 
-        binding.relPlayerLike.setOnClickListener {
-            requireContext().toastFromMainThread(R.string.toast_feature_soon)
-        }
-
-        binding.relPlayerDislike.setOnClickListener {
-            requireContext().toastFromMainThread(R.string.toast_feature_soon)
-        }
-
         binding.relPlayerQueue.setOnClickListener {
             PlayingQueueSheet().show(requireActivity().supportFragmentManager)
         }
@@ -795,6 +818,123 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         binding.descriptionLayout.handleLink = this::handleLink
+    }
+
+    /**
+     * Clic sur le bouton Cast :
+     * - API < 33 : le bouton est desactive (masque), aucun permission fallback
+     *   (decouverte de route exigerait la localisation, interdite).
+     * - API 33+ : NEARBY_WIFI_DEVICES (neverForLocation) doit etre accordee.
+     * - CastContext lazily : si Google Play services est absent, le bouton est
+     *   masque et un toast existe deja, sans crash.
+     */
+    private fun onCastButtonClick() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || castUnavailable) return
+        if (!::streams.isInitialized || isOffline) return
+
+        val granted = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.NEARBY_WIFI_DEVICES
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (granted) showCastRoutePicker()
+        else requestNearbyWifiPermission.launch(Manifest.permission.NEARBY_WIFI_DEVICES)
+    }
+
+    private fun showCastRoutePicker() {
+        if (_binding == null) return
+        val ctx = context ?: return
+
+        val cast = castContext
+            ?: runCatching { CastHelper.getCastContext(ctx) }.getOrElse {
+                markCastUnavailable(ctx)
+                return
+            }
+
+        castContext = cast
+
+        val selector = runCatching {
+            registerCastSessionListener(cast)
+            cast.mergedSelector
+        }.getOrElse {
+            markCastUnavailable(ctx)
+            return
+        }
+
+        if (selector == null || selector.isEmpty()) {
+            ctx.toastFromMainThread(R.string.toast_cast_unavailable)
+            return
+        }
+
+        // Connecte deja a un recepteur : controle ; sinon : choix de la route.
+        val selectedRoute = MediaRouter.getInstance(ctx).selectedRoute
+        val connected = selectedRoute != null && selectedRoute.matchesSelector(selector)
+        val dialog = if (connected) {
+            MediaRouteControllerDialogFragment()
+        } else {
+            MediaRouteChooserDialogFragment().apply { setRouteSelector(selector) }
+        }
+        dialog.show(childFragmentManager, CAST_ROUTE_DIALOG_TAG)
+    }
+
+    private fun markCastUnavailable(ctx: Context) {
+        castUnavailable = true
+        if (_binding != null) binding.relPlayerCast.isVisible = false
+        ctx.toastFromMainThread(R.string.toast_cast_unavailable)
+    }
+
+    private fun registerCastSessionListener(cast: CastContext) {
+        if (castSessionListener != null) return
+
+        val listener = object : SessionManagerListener<CastSession> {
+            override fun onSessionStarting(session: CastSession) = Unit
+
+            override fun onSessionStarted(session: CastSession, sessionId: String) {
+                loadCurrentStreamOnCast(session)
+            }
+
+            override fun onSessionStartFailed(session: CastSession, errorCode: Int) = Unit
+            override fun onSessionEnding(session: CastSession) = Unit
+            override fun onSessionEnded(session: CastSession, errorCode: Int) = Unit
+            override fun onSessionResuming(session: CastSession, sessionId: String) = Unit
+            override fun onSessionResumed(session: CastSession, wasSuspended: Boolean) = Unit
+            override fun onSessionResumeFailed(session: CastSession, errorCode: Int) = Unit
+            override fun onSessionSuspended(session: CastSession, reason: Int) = Unit
+        }
+        cast.sessionManager.addSessionManagerListener(listener, CastSession::class.java)
+        castSessionListener = listener
+    }
+
+    /**
+     * Chargement sur le recepteur : uniquement l'URL https du flux courant et
+     * les metadonnees minimales (titre, duree, vignette publique). Aucun journal
+     * d'URL (jetons signes). La lecture locale est mise en pause ; en fin de
+     * session elle reste en pause (reprise manuelle, aucun auto-resume).
+     */
+    private fun loadCurrentStreamOnCast(session: CastSession) {
+        if (_binding == null || !::streams.isInitialized || isOffline) return
+
+        val remoteClient = session.remoteMediaClient ?: return
+        val mediaInfo = CastHelper.buildMediaInfo(streams)
+        if (mediaInfo == null) {
+            context?.toastFromMainThread(R.string.toast_cast_unavailable)
+            return
+        }
+
+        val startPosition = if (!streams.isLive && ::playerController.isInitialized) {
+            playerController.currentPosition
+        } else {
+            0L
+        }
+        if (::playerController.isInitialized) playerController.pause()
+
+        remoteClient.load(
+            MediaLoadRequestData.Builder()
+                .setMediaInfo(mediaInfo)
+                .setAutoplay(true)
+                .setCurrentTime(startPosition)
+                .build()
+        )
     }
 
     private fun updateMaxSheetHeight() {
@@ -981,6 +1121,18 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             context?.unregisterReceiver(playerActionReceiver)
         }
 
+        castSessionListener?.let { listener ->
+            castContext?.let { cast ->
+                runCatching {
+                    cast.sessionManager.removeSessionManagerListener(
+                        listener,
+                        CastSession::class.java
+                    )
+                }
+            }
+        }
+        castSessionListener = null
+
         baseActivity.requestOrientationChange()
 
         _binding = null
@@ -1158,9 +1310,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
             relPlayerDownload.isVisible = !streams.isLive && !isOffline
 
-            relPlayerLike.text = streams.likes.formatShort()
-            relPlayerDislike.text =
-                if (streams.dislikes >= 0) streams.dislikes.formatShort() else ""
+            relPlayerCast.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !isOffline && !castUnavailable
         }
         playerControlsBinding.exoTitle.text = streams.title
         updateOverlayChips()

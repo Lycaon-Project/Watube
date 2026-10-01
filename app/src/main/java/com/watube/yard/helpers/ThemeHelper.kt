@@ -149,7 +149,6 @@ object ThemeHelper {
     /** The accent currently in use, falling back to the same default as [updateTheme] */
     private fun currentAccent(): String {
         val accentColor = PreferenceHelper.getString(PreferenceKeys.ACCENT_COLOR, "")
-        return if (isValidAccent(accentColor)) accentColor
-        else if (DynamicColors.isDynamicColorAvailable()) "my" else "aqua"
+        return if (isValidAccent(accentColor)) accentColor else "aqua"
     }
 }

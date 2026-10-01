@@ -46,19 +46,12 @@
                     android:paddingHorizontal="0dp">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/relPlayer_like"
+                        android:id="@+id/relPlayer_cast"
                         style="@style/PlayerActionsButton"
                         android:layout_marginStart="0dp"
-                        android:contentDescription="@string/like"
-                        app:icon="@drawable/ic_like"
-                        tools:text="1.2M" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/relPlayer_dislike"
-                        style="@style/PlayerActionsButton"
-                        android:contentDescription="@string/dislike"
-                        app:icon="@drawable/ic_dislike"
-                        tools:text="42 k" />
+                        android:text="@string/tooltip_cast"
+                        android:contentDescription="@string/tooltip_cast"
+                        app:icon="@drawable/watube_cast" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/relPlayer_share"

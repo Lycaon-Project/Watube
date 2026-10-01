@@ -139,6 +139,10 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.session)
 
+    /* Google Cast */
+    implementation(libs.google.play.services.cast.framework)
+    implementation(libs.androidx.mediarouter)
+
     /* Retrofit and Kotlinx Serialization */
     implementation(libs.square.retrofit)
     implementation(libs.logging.interceptor)

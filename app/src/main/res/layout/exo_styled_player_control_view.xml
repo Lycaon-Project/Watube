@@ -121,11 +121,12 @@
                     android:id="@id/exo_basic_controls"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginStart="2dp">
 
                     <ImageButton
                         android:id="@+id/fullscreen"
-                        style="@style/PlayerControlBottom"
+                        style="@style/PlayerControlTop"
                         android:src="@drawable/ic_fullscreen"
                         android:tooltipText="@string/tooltip_fullscreen"
                         android:contentDescription="@string/tooltip_fullscreen"
@@ -158,54 +159,18 @@
             android:visibility="invisible"
             app:tint="@android:color/white" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="-17dp"
-            android:background="@drawable/watube_player_ctrl_sm"
-            android:translationZ="2dp">
-
-            <include
-                android:id="@+id/seek_button_rewind"
-                layout="@layout/seek_button_rewind"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-
-        </FrameLayout>
-
         <ImageButton
             android:id="@+id/playPauseBTN"
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_marginHorizontal="0dp"
+            android:layout_marginHorizontal="8dp"
             android:background="@drawable/watube_player_ctrl_lg"
             android:contentDescription="@string/tooltip_play"
             android:padding="14.5dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_play"
             app:tint="@android:color/white" />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="-17dp"
-            android:background="@drawable/watube_player_ctrl_sm"
-            android:translationZ="2dp">
-
-            <include
-                android:id="@+id/seek_button_forward"
-                layout="@layout/seek_button_forward"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-
-        </FrameLayout>
 
         <ImageView
             android:id="@+id/skip_next"

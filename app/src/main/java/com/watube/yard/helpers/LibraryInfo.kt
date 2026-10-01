@@ -18,7 +18,7 @@ data class LibraryInfo(
     val licenseUrl: String,
 ) {
     /** Single line shown in the licenses dialog */
-    val label: String get() = "$name $version · $license"
+    val label: String get() = if (version.isBlank()) "$name · $license" else "$name $version · $license"
 
     companion object {
         private const val APACHE = "Apache-2.0"
@@ -63,6 +63,9 @@ data class LibraryInfo(
             LibraryInfo("NewPipeExtractor", "3e863d7", GPL3, GPL3_URL),
             LibraryInfo("Coil", "3.4.0", APACHE, APACHE_URL),
             LibraryInfo("desugar_jdk_libs_nio", "2.1.5", APACHE, APACHE_URL),
+
+            // --- Watube itself ---
+            LibraryInfo("GNU General Public License v3.0", "", GPL3, GPL3_URL),
         )
     }
 }
