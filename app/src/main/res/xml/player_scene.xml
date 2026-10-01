@@ -46,7 +46,9 @@
         <Constraint
             android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="@dimen/watube_nav_inset"
+            android:layout_marginEnd="@dimen/watube_nav_inset"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHorizontal_bias="0.5"

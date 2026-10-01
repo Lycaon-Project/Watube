@@ -49,6 +49,25 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
         // different queries in a row and navigating to the previous ones through back presses
         mainActivity.setQuerySilent(args.query)
 
+        // Persistent search bar: keeps the query visible, animates in, and re-opens the
+        // editable search on tap (back to the search input, which still holds the query).
+        binding.resultSearchText.text = args.query
+        binding.resultSearchBar.setOnClickListener {
+            val nav = findNavController()
+            if (nav.previousBackStackEntry?.destination?.id == R.id.searchFragment) {
+                nav.popBackStack()
+            } else {
+                nav.navigate(R.id.openSearch)
+            }
+        }
+        if (savedInstanceState == null) {
+            binding.resultSearchBar.apply {
+                alpha = 0f
+                translationY = -16f * resources.displayMetrics.density
+                animate().alpha(1f).translationY(0f).setDuration(220L).start()
+            }
+        }
+
         // filter options
         binding.filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
             viewModel.setFilter(

@@ -150,18 +150,44 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <com.google.android.material.button.MaterialButton
+            <!-- Comments entry: Solar card row, consistent with the portrait layout. -->
+            <LinearLayout
                 android:id="@+id/comments_toggle"
-                style="@style/PlayerActionsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginVertical="16dp"
-                android:text="@string/comments"
-                android:textAlignment="viewStart"
-                android:textColor="?colorPrimary"
-                app:drawableEndCompat="@drawable/ic_arrow_up_down"
-                app:drawableTint="?colorPrimary" />
+                android:layout_marginHorizontal="@dimen/watube_gutter"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/watube_pcard"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="13dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_comment"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/comments"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_arrow_up_down"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -28,7 +28,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.models.ChannelViewModel
 import com.watube.yard.ui.sheets.ChannelOptionsBottomSheet
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.chip.Chip
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,6 +46,7 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
     private lateinit var channelContentAdapter: ChannelContentAdapter
 
     private var isAppBarFullyExpanded: Boolean = true
+    private var pageCallbackRegistered = false
     private val tabList = mutableListOf<ChannelTab>()
 
     private val tabNamesMap = mapOf(
@@ -206,9 +207,6 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
             this@ChannelFragment
         )
         binding.pager.adapter = channelContentAdapter
-        TabLayoutMediator(binding.tabParent, binding.pager) { tab, position ->
-            tab.text = tabList[position].name
-        }.attach()
 
         tabList.clear()
 
@@ -218,7 +216,41 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
                 ?: channelTab.name.replaceFirstChar(Char::titlecase)
             tabList.add(ChannelTab(tabName, channelTab.data))
         }
-        channelContentAdapter.notifyItemRangeChanged(0, tabList.size - 1)
+        channelContentAdapter.notifyItemRangeChanged(0, tabList.size)
+
+        setupTabChips()
+    }
+
+    /**
+     * Builds the channel content tabs as filter chips (identical style to the search
+     * filters) and keeps them in sync with the pager in both directions.
+     */
+    private fun setupTabChips() {
+        val chipGroup = binding.tabParent
+        chipGroup.removeAllViews()
+
+        tabList.forEachIndexed { index, tab ->
+            val chip = (layoutInflater.inflate(R.layout.item_channel_tab_chip, chipGroup, false) as Chip)
+                .apply {
+                    text = tab.name
+                    id = View.generateViewId()
+                    isChecked = index == binding.pager.currentItem
+                    setOnClickListener { binding.pager.currentItem = index }
+                }
+            chipGroup.addView(chip)
+        }
+
+        if (!pageCallbackRegistered) {
+            pageCallbackRegistered = true
+            binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    val chip = binding.tabParent.getChildAt(position) as? Chip ?: return
+                    if (!chip.isChecked) chip.isChecked = true
+                    // keep the active chip visible in the horizontal scroller
+                    binding.tabScroll.smoothScrollTo(chip.left - chip.paddingLeft, 0)
+                }
+            })
+        }
     }
 
     companion object {
