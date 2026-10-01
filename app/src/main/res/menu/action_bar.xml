@@ -2,10 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/settings"
-        app:showAsAction="never" />
+    <!-- Settings is reachable from the bottom navigation, so it is intentionally not
+         duplicated in this overflow menu. -->
 
     <item
         android:id="@+id/action_help"

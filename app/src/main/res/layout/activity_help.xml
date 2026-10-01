@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIcon="?homeAsUpIndicator"
             android:fitsSystemWindows="true"
+            app:navigationIcon="?homeAsUpIndicator"
             app:title="@string/help"
             app:titleTextColor="?attr/colorOnSurface" />
 
@@ -23,53 +25,95 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/faq"
-            style="@style/AboutCard">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/watube_gutter"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/help_intro"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="@string/faq"
-                app:drawableStartCompat="@drawable/ic_help" />
+        <TextView
+            style="@style/HomeCategoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/help_faq_title" />
 
-        </com.google.android.material.card.MaterialCardView>
+        <LinearLayout
+            android:id="@+id/faq_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/matrix"
-            style="@style/AboutCard">
+        <TextView
+            style="@style/HomeCategoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/help_tips_title" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="Matrix"
-                app:drawableStartCompat="@drawable/ic_matrix"
-                tools:ignore="HardcodedText" />
+        <LinearLayout
+            android:id="@+id/tips_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
-        </com.google.android.material.card.MaterialCardView>
+        <LinearLayout
+            android:id="@+id/why_watube"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/watube_gutter"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/watube_pcard"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="15dp">
 
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginEnd="14dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/watube_info"
+                app:tint="?attr/colorPrimary" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mastodon"
-            style="@style/AboutCard">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="Mastodon"
-                app:drawableStartCompat="@drawable/ic_mastodon"
-                tools:ignore="HardcodedText" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/help_why_watube"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
 
-        </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/help_why_watube_desc"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/lemmy"
-            style="@style/AboutCard">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AboutItem"
-                android:text="Lemmy"
-                app:drawableStartCompat="@drawable/ic_lemmy"
-                tools:ignore="HardcodedText" />
-
-        </com.google.android.material.card.MaterialCardView>
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
 
     </LinearLayout>
 
