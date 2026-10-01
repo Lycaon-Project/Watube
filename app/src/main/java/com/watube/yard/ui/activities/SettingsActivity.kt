@@ -40,13 +40,16 @@ class SettingsActivity : BaseActivity() {
         }
         navController.addOnDestinationChangedListener(titleAppearanceListener)
 
-        if (intent.extras?.getString(REDIRECT_KEY) == REDIRECT_TO_INTENT_SETTINGS) {
-            navController.navigate(R.id.action_global_instanceSettings)
+        when (intent.extras?.getString(REDIRECT_KEY)) {
+            REDIRECT_TO_INTENT_SETTINGS -> navController.navigate(R.id.action_global_instanceSettings)
+            REDIRECT_TO_NOTIFICATION_SETTINGS ->
+                navController.navigate(R.id.action_global_notificationSettings)
         }
     }
 
     companion object {
         const val REDIRECT_KEY = "redirect"
         const val REDIRECT_TO_INTENT_SETTINGS = "intent_settings"
+        const val REDIRECT_TO_NOTIFICATION_SETTINGS = "notification_settings"
     }
 }

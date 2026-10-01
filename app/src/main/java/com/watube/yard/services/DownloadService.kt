@@ -239,8 +239,6 @@ class DownloadService : LifecycleService() {
     ) {
         coroutineScope {
             launch {
-                // privacy: never query SponsorBlock when the setting is off
-                if (!PlayerHelper.sponsorBlockEnabled) return@launch
                 val segmentData = try {
                     val categories = PlayerHelper.getSponsorBlockCategories()
                     MediaServiceRepository.instance.getSegments(videoId, categories.map { it.key })

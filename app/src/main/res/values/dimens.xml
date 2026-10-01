@@ -8,8 +8,9 @@
     <dimen name="watube_cgap">15dp</dimen>
     <dimen name="watube_card_radius">17.5dp</dimen>
     <dimen name="watube_nav_inset">10dp</dimen>
-    <!-- Floating bar offset from the screen bottom (1.1rem of the mockup) -->
-    <dimen name="watube_nav_bottom_inset">15dp</dimen>
+    <!-- Floating bar offset from the screen bottom: kept clear of the physical screen
+         edge / gesture area so nothing is clipped by rounded device corners. -->
+    <dimen name="watube_nav_bottom_inset">22dp</dimen>
 
     <!-- Mockup chip geometry: .42rem/.95rem padding and .83rem label (visual pill
          height, the 48dp touch target is added by Chip itself) -->

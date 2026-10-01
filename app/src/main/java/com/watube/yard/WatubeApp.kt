@@ -86,7 +86,7 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
      */
     private fun setupExceptionHandler() {
         val defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
-        val exceptionHandler = ExceptionHandler(defaultExceptionHandler)
+        val exceptionHandler = ExceptionHandler(applicationContext, defaultExceptionHandler)
         Thread.setDefaultUncaughtExceptionHandler(exceptionHandler)
     }
 

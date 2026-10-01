@@ -5,6 +5,7 @@ import android.util.LruCache
 import com.watube.yard.api.obj.Subscription
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.obj.SubscriptionsFeedItem
+import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.repo.AccountSubscriptionsRepository
 import com.watube.yard.repo.FeedProgress
@@ -30,8 +31,14 @@ object SubscriptionHelper {
 
     private val subscribedState = LruCache<String, CachedSubscription>(512)
 
+    /**
+     * Whether subscriptions and the feed are fetched locally (NewPipe) instead of through
+     * a Piped instance. Full local mode always implies local feed extraction, so enabling
+     * it never leaves a Piped request behind that would fail with a "server error" while
+     * the app is supposed to be fully offline/local.
+     */
     private val localFeedExtraction
-        get() = PreferenceHelper.getBoolean(
+        get() = PlayerHelper.fullLocalMode || PreferenceHelper.getBoolean(
             PreferenceKeys.LOCAL_FEED_EXTRACTION,
             true
         )

@@ -19,7 +19,6 @@ import com.watube.yard.ui.base.BasePreferenceFragment
 import com.watube.yard.ui.dialogs.NavBarOptionsDialog
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.sheets.IconsBottomSheet
-import com.google.android.material.color.DynamicColors
 import java.util.Locale
 
 class AppearanceSettings : BasePreferenceFragment() {
@@ -27,7 +26,11 @@ class AppearanceSettings : BasePreferenceFragment() {
         setPreferencesFromResource(R.xml.appearance_settings, rootKey)
 
         val themeToggle = findPreference<ListPreference>(PreferenceKeys.THEME_MODE)
-        themeToggle?.setOnPreferenceChangeListener { _, _ ->
+        themeToggle?.setOnPreferenceChangeListener { _, newValue ->
+            // OLED / pure black only makes sense in dark mode: switching to light turns it off
+            if (newValue == "L") {
+                findPreference<SwitchPreferenceCompat>(PreferenceKeys.PURE_THEME)?.isChecked = false
+            }
             RequireRestartDialog().show(childFragmentManager, RequireRestartDialog::class.java.name)
             true
         }
@@ -49,13 +52,6 @@ class AppearanceSettings : BasePreferenceFragment() {
 
         // Feed density (cozy/compact) is read when feeds are rebuilt: no restart needed
         findPreference<ListPreference>(PreferenceKeys.FEED_DENSITY)
-
-        val accentColor = findPreference<ListPreference>(PreferenceKeys.ACCENT_COLOR)
-        updateAccentColorValues(accentColor!!)
-        accentColor.setOnPreferenceChangeListener { _, _ ->
-            RequireRestartDialog().show(childFragmentManager, RequireRestartDialog::class.java.name)
-            true
-        }
 
         val appFont = findPreference<ListPreference>(PreferenceKeys.APP_FONT)
         appFont?.setOnPreferenceChangeListener { _, _ ->
@@ -138,15 +134,5 @@ class AppearanceSettings : BasePreferenceFragment() {
         if (preference.key == "language" && LocaleHelper.isPerAppLocaleSettingSupported()) return
 
         super.onDisplayPreferenceDialog(preference)
-    }
-
-    /**
-     * Remove material you from accent color option if not available
-     */
-    private fun updateAccentColorValues(pref: ListPreference) {
-        if (!DynamicColors.isDynamicColorAvailable()) {
-            pref.entries = pref.entries.toList().subList(1, pref.entries.size).toTypedArray()
-            pref.entryValues = pref.entryValues.toList().subList(1, pref.entryValues.size).toTypedArray()
-        }
     }
 }

@@ -563,9 +563,8 @@
     <string name="tooltip_refresh">Refresh</string>
     <string name="tooltip_theme">Change theme</string>
     <string name="tooltip_cast">Cast</string>
-    <string name="tooltip_profile">Profile</string>
+    <string name="tooltip_more">More options</string>
     <string name="toast_cast_unavailable">Cast not available</string>
-    <string name="toast_no_notifications">No new notifications</string>
     <string name="tooltip_create_playlist">Create playlist</string>
     <string name="tooltip_scroll_to_top">Scroll to top</string>
     <string name="also_clear_watch_positions">Also clear watch positions</string>
@@ -607,6 +606,8 @@
     <string name="current_sponsorblock_id">Current SponsorBlock ID</string>
     <string name="sb_user_id_info">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers">Identifiers</string>
+    <string name="privacy_category_protection">Anti-tracking protection</string>
+    <string name="privacy_category_data">Browsing data</string>
     <string name="reset_identifiers">Reset identifiers and WebView data</string>
     <string name="reset_identifiers_summary">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
     <string name="reset_identifiers_dialog_message">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>

@@ -54,6 +54,15 @@ class MissionActivity : BaseActivity() {
             // local asset only: no remote resource may be fetched
             settings.blockNetworkLoads = true
             settings.blockNetworkImage = true
+            // Hardening: the page only needs bundled assets, so deny every other data
+            // source a file:// document could otherwise reach (arbitrary files, content://
+            // providers and cross-origin file access are all turned off).
+            settings.allowFileAccess = false
+            settings.allowContentAccess = false
+            @Suppress("DEPRECATION")
+            settings.allowFileAccessFromFileURLs = false
+            @Suppress("DEPRECATION")
+            settings.allowUniversalAccessFromFileURLs = false
 
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(

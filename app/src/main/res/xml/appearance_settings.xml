@@ -13,15 +13,6 @@
             app:title="@string/app_theme"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
-            android:icon="@drawable/ic_color"
-            app:defaultValue="aqua"
-            app:entries="@array/accents"
-            app:entryValues="@array/accentsValue"
-            app:key="accent_color"
-            app:title="@string/color_accent"
-            app:useSimpleSummaryProvider="true" />
-
         <SwitchPreferenceCompat
             android:icon="@drawable/ic_invert_colors"
             android:summary="@string/pure_theme_summary"

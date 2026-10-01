@@ -15,6 +15,7 @@ import android.media.session.PlaybackState
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.graphics.Outline
 import android.os.Looper
 import android.os.PowerManager
 import android.view.KeyEvent
@@ -23,6 +24,7 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
+import android.view.ViewOutlineProvider
 import androidx.activity.BackEventCompat
 import androidx.activity.ComponentDialog
 import androidx.activity.OnBackPressedCallback
@@ -565,6 +567,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 setOnBackPressed(onBackPressedCallback)
             }
             onBackPressedCallback.isEnabled = isMiniPlayerVisible != true
+
+            // mini-player chrome: rounded video corners + discreet progress bar
+            updateMiniPlayerChrome(isMiniPlayerVisible == true)
         }
 
         toggleVideoInfoVisibility(false)
@@ -1026,6 +1031,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             )
             fullscreenDialog.show()
+            // Force the dialog window to fill the whole screen. Without this it keeps its
+            // default (smaller) size, so the player - and therefore the seek bar - only
+            // reaches part of the way down, leaving an empty band below the controls.
+            fullscreenDialog.window?.setLayout(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
+            )
             playerView.currentWindow = fullscreenDialog.window
         } else {
             binding.playerMotionLayout.addView(playerView)
@@ -1638,8 +1650,51 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         return _binding?.player?.onKeyUp(keyCode, event) ?: false
     }
 
+    /** Ticks the mini-player progress bar while the player is collapsed. */
+    private val miniProgressUpdater = object : Runnable {
+        override fun run() {
+            val binding = _binding ?: return
+            if (::playerController.isInitialized) {
+                val duration = playerController.duration
+                if (duration > 0) {
+                    binding.miniplayerProgress?.progress =
+                        (playerController.currentPosition * 1000 / duration).toInt()
+                }
+            }
+            handler.postDelayed(this, 500L)
+        }
+    }
+
+    /**
+     * Applies the collapsed mini-player chrome: the video thumbnail gets rounded corners
+     * matching the card, and a discreet progress bar tracks playback. Both are reverted
+     * (square corners, hidden bar) once the player is expanded again.
+     */
+    private fun updateMiniPlayerChrome(mini: Boolean) {
+        if (_binding == null) return
+
+        binding.player.clipToOutline = mini
+        binding.player.outlineProvider = if (mini) {
+            object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    outline.setRoundRect(
+                        0, 0, view.width, view.height,
+                        resources.getDimension(R.dimen.watube_card_radius)
+                    )
+                }
+            }
+        } else {
+            ViewOutlineProvider.BACKGROUND
+        }
+
+        binding.miniplayerProgress?.isVisible = mini
+        handler.removeCallbacks(miniProgressUpdater)
+        if (mini) handler.post(miniProgressUpdater)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        handler.removeCallbacks(miniProgressUpdater)
         _binding = null
     }
 

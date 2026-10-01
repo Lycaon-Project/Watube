@@ -19,7 +19,6 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.base.BasePreferenceFragment
 import com.watube.yard.ui.dialogs.ErrorDialog
-import com.watube.yard.util.UpdateChecker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +39,6 @@ class MaintenanceSettings : BasePreferenceFragment() {
         setupReset()
         setupNotifications()
         setupBackup()
-        setupUpdate()
         setupClearCache()
         setupCrashLog()
     }
@@ -87,22 +85,6 @@ class MaintenanceSettings : BasePreferenceFragment() {
     private fun setupBackup() {
         findPreference<Preference>("backup_restore")?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.action_global_backupRestoreSettings)
-            true
-        }
-    }
-
-    private fun setupUpdate() {
-        val update = findPreference<Preference>("update")
-        update?.summary = "v${BuildConfig.VERSION_NAME}"
-
-        update?.setOnPreferenceClickListener {
-            lifecycleScope.launch {
-                update.summary = getString(R.string.checking_for_updates)
-                withContext(Dispatchers.IO) {
-                    UpdateChecker(requireContext()).checkUpdate(true)
-                }
-                update.summary = "v${BuildConfig.VERSION_NAME}"
-            }
             true
         }
     }

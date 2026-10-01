@@ -420,9 +420,8 @@
     <string name="tooltip_refresh">Actualiser</string>
     <string name="tooltip_theme">Changer de thème</string>
     <string name="tooltip_cast">Diffuser</string>
-    <string name="tooltip_profile">Profil</string>
+    <string name="tooltip_more">Plus d\'options</string>
     <string name="toast_cast_unavailable">Cast indisponible</string>
-    <string name="toast_no_notifications">Aucune nouvelle notification</string>
     <string name="chapters_videoHighlight">Moment fort de la vidéo</string>
     <string name="screen_orientation">Orientation de l’écran</string>
     <string name="duration_span">Durée: %1$s</string>
@@ -567,6 +566,8 @@
     <string name="current_sponsorblock_id">ID SponsorBlock actuel</string>
     <string name="sb_user_id_info">Les soumissions à SponsorBlock utilisent un identifiant aléatoire et rotatif au lieu d’un identifiant d’appareil permanent.</string>
     <string name="privacy_identifiers">Identifiants</string>
+    <string name="privacy_category_protection">Protection anti-pistage</string>
+    <string name="privacy_category_data">Données de navigation</string>
     <string name="reset_identifiers">Réinitialiser les identifiants et les données WebView</string>
     <string name="reset_identifiers_summary">Supprime l’ID SponsorBlock, les cookies WebView et le stockage de sites utilisé pour les jetons d’intégrité</string>
     <string name="reset_identifiers_dialog_message">Cette action réinitialise votre ID de soumission SponsorBlock et efface tous les cookies et le stockage WebView. Les jetons d’intégrité devront peut-être être régénérés lors de la prochaine lecture vidéo.</string>

@@ -14,21 +14,16 @@ import androidx.core.text.parseAsHtml
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.ui.adapters.IconsSheetAdapter
-import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.MaterialColors
 
 object ThemeHelper {
     /**
-     * Set the theme, including accent color and night mode
+     * Set the single app theme ("Material Forest"). It adapts automatically between light
+     * and dark through the day/night resource qualifiers, so there is no accent to pick
+     * anymore. The optional OLED / pure-black variant is layered on top in dark mode.
      */
     fun updateTheme(activity: AppCompatActivity) {
-        val accentColor = currentAccent()
-        if (PreferenceHelper.getString(PreferenceKeys.ACCENT_COLOR, "") != accentColor) {
-            PreferenceHelper.putString(PreferenceKeys.ACCENT_COLOR, accentColor)
-        }
-
-        activity.setTheme(getTheme(accentColor))
-        if (accentColor == "my") DynamicColors.applyToActivityIfAvailable(activity)
+        activity.setTheme(R.style.Theme_Watube)
 
         val pureThemeEnabled = PreferenceHelper.getBoolean(
             PreferenceKeys.PURE_THEME,
@@ -48,27 +43,6 @@ object ThemeHelper {
             activity.theme.applyStyle(R.style.WatubeFontFigtree, true)
         }
     }
-
-    /**
-     * Update the accent color of the app and apply dynamic colors if needed
-     */
-    private fun getTheme(accentColor: String): Int {
-        return when (accentColor) {
-            // set the accent color, use the pure black/white theme if enabled
-            "my" -> R.style.BaseTheme
-            "aqua" -> R.style.Theme_Watube
-            "azur" -> R.style.Theme_Azur
-            "corail" -> R.style.Theme_Corail
-            "lavande" -> R.style.Theme_Lavande
-            "ambre" -> R.style.Theme_Ambre
-            else -> throw IllegalArgumentException()
-        }
-    }
-
-    /** true if the given stored accent value is still supported by the current version */
-    fun isValidAccent(accentColor: String): Boolean = accentColor in setOf(
-        "my", "aqua", "azur", "corail", "lavande", "ambre"
-    )
 
     fun applyDialogActivityTheme(activity: Activity) {
         activity.theme.applyStyle(R.style.DialogActivity, true)
@@ -130,25 +104,13 @@ object ThemeHelper {
     }
 
     /**
-     * True when the UI currently renders with dark surfaces.
-     *
-     * The system night flag alone is not enough: every Watube accent ships with dark-grey
-     * neutrals (dark UI in light mode) while Material You and the pure theme still follow
-     * the system and stay light.
+     * True when the UI currently renders with dark surfaces. Material Forest adapts through
+     * the day/night resources, so this simply follows the effective night configuration
+     * (pure-black / OLED in dark mode is still a dark surface).
      */
     fun isDarkMode(context: Context): Boolean {
         val darkModeFlag =
             context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (darkModeFlag == Configuration.UI_MODE_NIGHT_YES) return true
-        // flat white surfaces, whatever the accent
-        if (PreferenceHelper.getBoolean(PreferenceKeys.PURE_THEME, false)) return false
-        // Material You follows the wallpaper: light surfaces while the system is light
-        return currentAccent() != "my"
-    }
-
-    /** The accent currently in use, falling back to the same default as [updateTheme] */
-    private fun currentAccent(): String {
-        val accentColor = PreferenceHelper.getString(PreferenceKeys.ACCENT_COLOR, "")
-        return if (isValidAccent(accentColor)) accentColor else "aqua"
+        return darkModeFlag == Configuration.UI_MODE_NIGHT_YES
     }
 }

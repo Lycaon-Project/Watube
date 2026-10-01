@@ -1,6 +1,7 @@
 package com.watube.yard.helpers
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,6 +20,18 @@ object NavBarHelper {
 
     private const val TAG = "NavBarHelper"
     private const val SEPARATOR = ","
+
+    /**
+     * Copy of a menu item taken before the menu is rebuilt, so the live menu is never read
+     * while it is being modified.
+     */
+    private data class NavItemSnapshot(
+        val groupId: Int,
+        val itemId: Int,
+        val title: CharSequence?,
+        val icon: Drawable?,
+        val isVisible: Boolean
+    )
 
     fun hasTabs(): Boolean {
         val prefsItems = try {
@@ -102,28 +115,47 @@ object NavBarHelper {
      * Accepts any [NavigationBarView] (the bottom bar on phones, the navigation rail on
      * tablets / unfolded foldables) so both bars always show the very same tabs.
      *
+     * The menu is rebuilt in a single pass (snapshot -> clear -> re-add) instead of
+     * removing and re-adding items one by one on the live menu: removing the checked item
+     * made Material re-check it while rebuilding its views, which re-triggered the
+     * rebuild endlessly (StackOverflowError in MainActivity.onCreate).
+     *
      * @return Id of the start fragment
      */
     fun applyNavBarStyle(bottomNav: NavigationBarView): Int {
         val navBarItems = getNavBarItemPreference(bottomNav.context)
         val startFragmentId = getStartFragmentId(bottomNav.context)
+        val menu = bottomNav.menu
 
-        // copy menu items 1:1, but add them in user-preferred order
-        navBarItems.forEach { (menuItemId, isVisible) ->
-            val oldMenuItem = bottomNav.menu.findItem(menuItemId) ?: return@forEach
-            bottomNav.menu.removeItem(oldMenuItem.itemId)
-
-            // we re-add all items, even if they're hidden, otherwise the nav graph breaks
-            val newMenuItem = bottomNav.menu.add(oldMenuItem.groupId, oldMenuItem.itemId, Menu.NONE, oldMenuItem.title)
-            newMenuItem.icon = oldMenuItem.icon
-            newMenuItem.isVisible = isVisible
+        // 1. read everything BEFORE touching the menu, in the user-preferred order
+        val snapshots = navBarItems.mapNotNull { (menuItemId, isVisible) ->
+            menu.findItem(menuItemId)?.let { oldMenuItem ->
+                NavItemSnapshot(
+                    groupId = oldMenuItem.groupId,
+                    itemId = oldMenuItem.itemId,
+                    title = oldMenuItem.title,
+                    icon = oldMenuItem.icon,
+                    isVisible = isVisible
+                )
+            }
         }
-        if (navBarItems.none { (_, isVisible) -> isVisible }) bottomNav.isGone = true
 
-        // every remove()/add() above created brand new items: they lost the exclusive
-        // checkable flag of the previous generation, and without it a check (NavigationUI
-        // only ever checks its new destination item) leaves the old tab lit as well
-        bottomNav.menu.setGroupCheckable(0, true, true)
+        // 2. empty menu: no item is checked anymore, so Material has nothing to re-check
+        menu.clear()
+
+        // 3. we re-add all items, even if they're hidden, otherwise the nav graph breaks
+        snapshots.forEach { snapshot ->
+            menu.add(snapshot.groupId, snapshot.itemId, Menu.NONE, snapshot.title).apply {
+                icon = snapshot.icon
+                isVisible = snapshot.isVisible
+            }
+        }
+        if (snapshots.none { it.isVisible }) bottomNav.isGone = true
+
+        // the new items lost the exclusive checkable flag of the previous generation, and
+        // without it a check (NavigationUI only ever checks its new destination item)
+        // leaves the old tab lit as well
+        menu.setGroupCheckable(0, true, true)
 
         return startFragmentId
     }

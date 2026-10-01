@@ -8,7 +8,6 @@ import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
@@ -16,7 +15,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.motion.widget.Key
@@ -201,22 +199,36 @@ class MainActivity : AbstractPlayerHostActivity() {
         // inflated view on the previous theme: store the value Settings > Appearance
         // writes and reuse the restart dialog the app already shows for theme changes.
         binding.themeToggle.setOnClickListener {
+            val switchingToLight = isNightUiMode()
             PreferenceHelper.putString(
                 PreferenceKeys.THEME_MODE,
-                if (isNightUiMode()) "L" else "D"
+                if (switchingToLight) "L" else "D"
             )
+            // OLED / pure black only applies in dark mode: disable it when going light
+            if (switchingToLight) {
+                PreferenceHelper.putBoolean(PreferenceKeys.PURE_THEME, false)
+            }
             RequireRestartDialog().show(
                 supportFragmentManager,
                 RequireRestartDialog::class.java.name
             )
         }
-        // Mockup #castBtn / #bellBtn toast too: the app ships no cast stack and no
-        // notification screen, both stubs are a documented gap.
-        binding.castBtn.setOnClickListener {
-            Toast.makeText(this, R.string.toast_cast_unavailable, Toast.LENGTH_SHORT).show()
-        }
+        // The bell opens the notification settings (which channels notify on new streams),
+        // the only place the app actually manages notifications.
         binding.bellBtn.setOnClickListener {
-            Toast.makeText(this, R.string.toast_no_notifications, Toast.LENGTH_SHORT).show()
+            startActivity(
+                Intent(this, SettingsActivity::class.java).putExtra(
+                    SettingsActivity.REDIRECT_KEY,
+                    SettingsActivity.REDIRECT_TO_NOTIFICATION_SETTINGS
+                )
+            )
+        }
+        // The overflow button replaces the removed toolbar: it hosts Settings/Help/About.
+        binding.overflowBtn.setOnClickListener { anchor ->
+            androidx.appcompat.widget.PopupMenu(this, anchor).apply {
+                menuInflater.inflate(R.menu.action_bar, menu)
+                setOnMenuItemClickListener(::onOptionsItemSelected)
+            }.show()
         }
 
         // Check update automatically
@@ -225,12 +237,6 @@ class MainActivity : AbstractPlayerHostActivity() {
                 UpdateChecker(this@MainActivity).checkUpdate(false)
             }
         }
-
-        // set the action bar for the activity
-        setSupportActionBar(binding.toolbar)
-        // the mockup chrome is the brand row + the kebab only: the activity label
-        // (app/src/debug "Watube Debug") must not be rendered as a toolbar title
-        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val navHostFragment = binding.fragment.getFragment<NavHostFragment>()
         navController = navHostFragment.navController
@@ -546,18 +552,6 @@ class MainActivity : AbstractPlayerHostActivity() {
         word.invalidate()
     }
 
-    private fun isSearchInProgress(): Boolean {
-        if (!this::navController.isInitialized) return false
-        val id = navController.currentDestination?.id ?: return false
-
-        return id in listOf(
-            R.id.searchFragment,
-            R.id.searchResultFragment,
-            R.id.channelFragment,
-            R.id.playlistFragment
-        )
-    }
-
     private fun addSearchQueryToHistory(query: String) {
         val searchHistoryEnabled =
             PreferenceHelper.getBoolean(PreferenceKeys.SEARCH_HISTORY_TOGGLE, true)
@@ -567,24 +561,6 @@ class MainActivity : AbstractPlayerHostActivity() {
                 DatabaseHelper.addToSearchHistory(newItem)
             }
         }
-    }
-
-    override fun invalidateMenu() {
-        // Don't invalidate menu when in search in progress
-        // this is a workaround as there is bug in android code
-        // details of bug: https://issuetracker.google.com/issues/244336571
-        if (isSearchInProgress()) {
-            return
-        }
-        super.invalidateMenu()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // The toolbar only carries the kebab now: the search input lives in
-        // fragment_search_suggestions.xml and is fed by SearchSuggestionsFragment.
-        menuInflater.inflate(R.menu.action_bar, menu)
-
-        return super.onCreateOptionsMenu(menu)
     }
 
     /**

@@ -16,11 +16,7 @@
             app:summary="@string/clear_cache_summary"
             app:title="@string/clear_cache" />
 
-        <Preference
-            android:icon="@drawable/ic_update"
-            app:key="update"
-            app:summary="@string/version"
-            app:title="@string/update_summary" />
+        <!-- The manual update check lives in the About screen only, to avoid duplication. -->
 
         <Preference
             android:icon="@drawable/ic_info"
