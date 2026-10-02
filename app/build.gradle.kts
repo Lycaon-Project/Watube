@@ -26,7 +26,7 @@ android {
         minSdk = 28
         targetSdk = 37
 
-        versionCode = 6113
+        versionCode = 6115
         versionName = "26.10.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -38,6 +38,10 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+            // Hardening: never ship a debuggable release, and keep the source control
+            // revision (commit hash / branch) out of the packaged APK.
+            isDebuggable = false
+            vcsInfo { include = false }
             signingConfig = signingConfigs.findByName("release")?.takeIf { it.storeFile != null }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

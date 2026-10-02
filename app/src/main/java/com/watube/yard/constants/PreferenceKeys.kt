@@ -137,6 +137,8 @@ object PreferenceKeys {
 
     // Advanced
     const val AUTOMATIC_UPDATE_CHECKS = "automatic_update_checks"
+    /** Minimum delay (in hours, as a string) between two automatic update checks; "0" = every launch. */
+    const val UPDATE_CHECK_INTERVAL = "update_check_interval"
     const val DATA_SAVER_MODE = "data_saver_mode_key"
     const val RESET_SETTINGS = "reset_settings"
     const val CLEAR_SEARCH_HISTORY = "clear_search_history"

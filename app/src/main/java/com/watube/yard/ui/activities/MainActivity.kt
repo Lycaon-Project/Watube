@@ -18,6 +18,7 @@ import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.motion.widget.Key
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
@@ -82,6 +83,9 @@ class MainActivity : AbstractPlayerHostActivity() {
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
 
+    /** Resolved bottom gap for the floating nav bar (max of system inset and the design inset). */
+    private var navBarBottomInset = 0
+
     private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
     // registering for activity results is only possible, this here should have been part of
@@ -143,12 +147,24 @@ class MainActivity : AbstractPlayerHostActivity() {
                         // The bar floats above the bottom edge instead of bleeding behind the
                         // system bar: the inset is applied as a margin so the rounded corners
                         // and the gap below stay visible (1.1rem of the mockup).
-                        val params = bar.layoutParams as ViewGroup.MarginLayoutParams
-                        params.bottomMargin = systemBarInsets.bottom.coerceAtLeast(
+                        navBarBottomInset = systemBarInsets.bottom.coerceAtLeast(
                             bar.resources.getDimensionPixelSize(R.dimen.watube_nav_bottom_inset)
                         )
-                        // assigning back is what triggers the relayout (and the keyframe refresh)
-                        bar.layoutParams = params
+                        // The root is a MotionLayout whose (empty) start/end ConstraintSets are
+                        // derived from the layout at init and re-applied on every layout pass,
+                        // silently reverting a bottomMargin set through layoutParams. On devices
+                        // with gesture navigation or curved edges that left the bar flush against
+                        // the physical edge. Writing the inset into both ConstraintSets is what
+                        // makes the floating gap actually stick.
+                        intArrayOf(R.id.start, R.id.end).forEach { setId ->
+                            binding.root.getConstraintSet(setId)?.let { set ->
+                                set.setMargin(R.id.bottomNav, ConstraintSet.BOTTOM, navBarBottomInset)
+                                binding.root.updateState(setId, set)
+                            }
+                        }
+                        (bar.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
+                            navBarBottomInset
+                        bar.requestLayout()
                     }
                     with(binding.navRail) {
                         setPadding(
@@ -165,8 +181,7 @@ class MainActivity : AbstractPlayerHostActivity() {
         // manually update the bottom bar height in the mini player transition
         binding.bottomNav.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             // the bar floats above the system inset now, so the shift has to cover both
-            val shift = binding.bottomNav.height +
-                (binding.bottomNav.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+            val shift = binding.bottomNav.height + navBarBottomInset
             val transition = binding.root.getTransition(R.id.bottom_bar_transition)
             transition.keyFrameList.forEach { keyFrame ->
                 // These frame positions are hardcoded in activity_main_scene.xml!
@@ -231,8 +246,9 @@ class MainActivity : AbstractPlayerHostActivity() {
             }.show()
         }
 
-        // Check update automatically
-        if (PreferenceHelper.getBoolean(PreferenceKeys.AUTOMATIC_UPDATE_CHECKS, false)) {
+        // Check update automatically (on by default; the first launch always checks because
+        // no previous check time is stored yet, then it throttles to the configured interval)
+        if (PreferenceHelper.getBoolean(PreferenceKeys.AUTOMATIC_UPDATE_CHECKS, true)) {
             lifecycleScope.launch(Dispatchers.IO) {
                 UpdateChecker(this@MainActivity).checkUpdate(false)
             }

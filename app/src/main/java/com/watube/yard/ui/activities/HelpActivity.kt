@@ -62,9 +62,9 @@ class HelpActivity : BaseActivity() {
     }
 
     private data class Tip(
-        @DrawableRes val icon: Int,
-        @StringRes val title: Int,
-        @StringRes val desc: Int
+        @param:DrawableRes val icon: Int,
+        @param:StringRes val title: Int,
+        @param:StringRes val desc: Int
     )
 
     companion object {

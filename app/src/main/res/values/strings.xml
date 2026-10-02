@@ -161,6 +161,13 @@
     <string name="version">Version %1$s</string>
     <string name="show_updates">Check updates automatically</string>
     <string name="show_updates_summary">Check for updates automatically every time the app is started.</string>
+    <string name="update_check_interval">Check frequency</string>
+    <string name="update_check_interval_summary">How often the app looks for a new version.</string>
+    <string name="update_interval_launch">Every launch</string>
+    <string name="update_interval_6h">Every 6 hours</string>
+    <string name="update_interval_12h">Every 12 hours</string>
+    <string name="update_interval_daily">Once a day</string>
+    <string name="update_interval_weekly">Once a week</string>
     <string name="related_streams">Related content</string>
     <string name="related_streams_summary">Show similar streams alongside what you watch</string>
     <string name="buffering_goal">Preloading</string>

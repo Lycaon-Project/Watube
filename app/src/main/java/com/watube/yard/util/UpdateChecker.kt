@@ -22,13 +22,27 @@ import java.util.Locale
 class UpdateChecker(private val context: Context) {
 
     companion object {
-        /** Minimum delay between two automatic update checks. */
-        private const val AUTO_CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000L
+        /** Default delay (hours) between two automatic update checks, used when the user hasn't picked one. */
+        private const val DEFAULT_CHECK_INTERVAL_HOURS = "12"
+    }
+
+    /**
+     * User-configurable minimum delay between two automatic checks, in milliseconds.
+     * A value of "0" means "check on every launch" (no throttling).
+     */
+    private fun autoCheckIntervalMs(): Long {
+        val hours = PreferenceHelper
+            .getString(PreferenceKeys.UPDATE_CHECK_INTERVAL, DEFAULT_CHECK_INTERVAL_HOURS)
+            .toLongOrNull() ?: DEFAULT_CHECK_INTERVAL_HOURS.toLong()
+        return hours * 60 * 60 * 1000L
     }
 
     private fun isCheckThrottled(): Boolean {
+        val interval = autoCheckIntervalMs()
+        // "every launch" disables throttling entirely
+        if (interval <= 0L) return false
         val lastCheck = PreferenceHelper.getLong(PreferenceKeys.LAST_UPDATE_CHECK_TIME, 0L)
-        return System.currentTimeMillis() - lastCheck < AUTO_CHECK_INTERVAL_MS
+        return System.currentTimeMillis() - lastCheck < interval
     }
 
     private fun recordCheckAttempt() {
