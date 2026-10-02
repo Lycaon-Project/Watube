@@ -46,7 +46,7 @@ object DownloadHelper {
         val storageDir =
             try {
                 context.getExternalFilesDir(null)!!
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 context.filesDir
             }
         val base = storageDir.toPath().normalize()
@@ -136,7 +136,7 @@ object DownloadHelper {
             CoroutineScope(Dispatchers.IO).launch {
                 val playlistVideoIds = try {
                     PlaylistsHelper.getPlaylist(playlistId)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     context.toastFromMainDispatcher(R.string.unknown_error)
                     return@launch
                 }.relatedStreams.mapNotNull { it.url?.toID() }.joinToString(",")

@@ -58,7 +58,7 @@ object IntentHelper {
         if (resolveInfoList.isEmpty() || forceDefaultOpen) {
             try {
                 context.startActivity(getResolveIntent(link))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 context.toastFromMainThread(R.string.error)
             }
         } else {

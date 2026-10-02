@@ -210,4 +210,7 @@
     <color name="watube_mark_bg">#2135E08C</color>
     <color name="watube_chip_fill">#E8EAE4</color>
     <color name="watube_link">#0A6B43</color>
+    <!-- Voile sombre (60 % noir) derrière les contrôles du lecteur, remplace la ressource
+         privée androidx.media3.ui.R.color.exo_black_opacity_60 -->
+    <color name="player_scrim_60">#99000000</color>
 </resources>

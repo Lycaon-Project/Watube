@@ -78,7 +78,7 @@ class ColorPreference(context: Context, attrs: AttributeSet) : Preference(contex
         }
     }
 
-    override fun getTitle(): CharSequence? {
+    override fun getTitle(): CharSequence {
         return "${super.getTitle()}:"
     }
 }

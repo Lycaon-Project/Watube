@@ -95,14 +95,6 @@ class AboutActivity : BaseActivity() {
 
         // --- Legacy entries, same behaviour as before ------------------------
         setupRow(
-            binding.rowWebsite,
-            R.drawable.ic_region,
-            title = R.string.website,
-            external = true,
-            copyHref = WEBSITE_URL
-        ) { openLink(WEBSITE_URL) }
-
-        setupRow(
             binding.rowPiped,
             R.drawable.ic_piped,
             title = R.string.piped,
@@ -329,7 +321,6 @@ class AboutActivity : BaseActivity() {
     }
 
     companion object {
-        private const val WEBSITE_URL = "https://github.com/Lycaon-Project/Watube"
         const val GITHUB_URL = "https://github.com/Lycaon-Project/Watube"
         private const val PIPED_GITHUB_URL = "https://github.com/TeamPiped/Piped"
         private const val WEBLATE_URL = "https://hosted.weblate.org/projects/libretube/libretube/"

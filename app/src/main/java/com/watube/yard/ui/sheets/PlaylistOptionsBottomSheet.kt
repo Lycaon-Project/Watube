@@ -177,7 +177,7 @@ class PlaylistOptionsBottomSheet : BaseBottomSheet() {
                         } else {
                             val bookmark = try {
                                 MediaServiceRepository.instance.getPlaylist(playlistId)
-                            } catch (e: Exception) {
+                            } catch (_: Exception) {
                                 return@withContext
                             }.toPlaylistBookmark(playlistId)
                             DatabaseHolder.Database.playlistBookmarkDao().insert(bookmark)

@@ -115,6 +115,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
                 Player.STATE_READY -> {
                     isTransitioning = false
                 }
+
+                else -> Unit
             }
         }
     }
@@ -263,6 +265,13 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
     @CallSuper
     open fun navigateVideo(videoId: String) {
         sponsorBlockSegments = emptyList()
+
+        // Couper net l'audio de la vidéo courante avant d'extraire la suivante.
+        // clearMediaItems() seul laissait filtrer un court résidu audio de la vidéo précédente
+        // pendant l'extraction asynchrone de la nouvelle (chevauchement signalé). On sauvegarde
+        // d'abord la position (sinon stop() la ferait perdre), puis on arrête et on vide.
+        saveWatchPosition()
+        exoPlayer?.stop()
         exoPlayer?.clearMediaItems()
 
         this.videoId = videoId

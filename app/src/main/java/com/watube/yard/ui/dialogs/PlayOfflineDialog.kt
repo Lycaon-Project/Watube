@@ -16,7 +16,6 @@ class PlayOfflineDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogPlayOfflineBinding.inflate(layoutInflater)
-        val videoId = requireArguments().getString(IntentData.videoId)
         binding.videoTitle.text = requireArguments().getString(IntentData.videoTitle)
 
         val downloadInfo = requireArguments().getStringArray(IntentData.downloadInfo)

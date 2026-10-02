@@ -12,10 +12,6 @@ inline fun <reified T : Parcelable> Bundle.parcelable(key: String?): T? {
     return BundleCompat.getParcelable(this, key, T::class.java)
 }
 
-inline fun <reified T : Parcelable> Bundle.parcelableList(key: String?): ArrayList<T>? {
-    return BundleCompat.getParcelableArrayList(this, key, T::class.java)
-}
-
 inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String?): ArrayList<T>? {
     return BundleCompat.getParcelableArrayList(this, key, T::class.java)
 }
@@ -103,13 +99,17 @@ fun bundleOf(vararg pairs: Pair<String, Any?>): Bundle = Bundle(pairs.size).appl
             // Dernier recours : tester après Array<*> car tous les tableaux sont sérialisables
             is Serializable -> putSerializable(key, value)
 
-            is IBinder -> putBinder(key, value)
-            is Size -> putSize(key, value)
-            is SizeF -> putSizeF(key, value)
-
-            else -> {
-                val valueType = value.javaClass.canonicalName
-                throw IllegalArgumentException("Illegal value type $valueType for key \"$key\"")
+            // IBinder/Size/SizeF sont testés dans la branche `else` (comme dans androidx) : en
+            // faire des branches `is` du `when` déclenche un avertissement « branche inaccessible ».
+            // minSdk = 28 : les anciennes gardes `Build.VERSION.SDK_INT` d'androidx sont inutiles.
+            else -> when {
+                value is IBinder -> putBinder(key, value)
+                value is Size -> putSize(key, value)
+                value is SizeF -> putSizeF(key, value)
+                else -> {
+                    val valueType = value.javaClass.canonicalName
+                    throw IllegalArgumentException("Illegal value type $valueType for key \"$key\"")
+                }
             }
         }
     }

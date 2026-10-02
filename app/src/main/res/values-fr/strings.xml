@@ -37,6 +37,8 @@
     <string name="deletePlaylist">Supprimer la playlist</string>
     <string name="areYouSure">Souhaitez-vous supprimer la playlist ?</string>
     <string name="createPlaylist">Créer une playlist</string>
+    <string name="create">Créer</string>
+    <string name="clone">Cloner</string>
     <string name="playlistCreated">Playlist créée.</string>
     <string name="playlistName">Nom de la playlist</string>
     <string name="about">À propos</string>

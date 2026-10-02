@@ -1,6 +1,6 @@
 package com.watube.yard.extensions
 
-import android.support.v4.media.MediaMetadataCompat
+import android.media.MediaMetadata as FrameworkMediaMetadata
 import androidx.annotation.OptIn
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
@@ -17,8 +17,8 @@ fun MediaItem.Builder.setMetadata(streams: Streams, videoId: String) = apply {
     // Avoid reaching the max parcelable size of 1MB for binder transactions.
     val clearedStreams = streams.copy(audioStreams = emptyList(), videoStreams = emptyList())
     val extras = bundleOf(
-        MediaMetadataCompat.METADATA_KEY_TITLE to streams.title,
-        MediaMetadataCompat.METADATA_KEY_ARTIST to streams.uploader,
+        FrameworkMediaMetadata.METADATA_KEY_TITLE to streams.title,
+        FrameworkMediaMetadata.METADATA_KEY_ARTIST to streams.uploader,
         IntentData.videoId to videoId,
         // JSON-encode as work-around for https://github.com/androidx/media/issues/564
         IntentData.streams to JsonHelper.json.encodeToString(clearedStreams),
@@ -45,8 +45,8 @@ fun MediaItem.Builder.setMetadata(downloadWithItems: DownloadWithItems) = apply 
     val streams = downloadWithItems.toStreams()
 
     val extras = bundleOf(
-        MediaMetadataCompat.METADATA_KEY_TITLE to download.title,
-        MediaMetadataCompat.METADATA_KEY_ARTIST to download.uploader,
+        FrameworkMediaMetadata.METADATA_KEY_TITLE to download.title,
+        FrameworkMediaMetadata.METADATA_KEY_ARTIST to download.uploader,
         IntentData.videoId to download.videoId,
         IntentData.streams to JsonHelper.json.encodeToString(streams),
         IntentData.chapters to JsonHelper.json.encodeToString(chapters)

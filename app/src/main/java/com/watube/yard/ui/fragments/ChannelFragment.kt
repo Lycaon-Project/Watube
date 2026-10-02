@@ -16,7 +16,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.obj.ChannelTab
-import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.FragmentChannelBinding
 import com.watube.yard.extensions.TAG

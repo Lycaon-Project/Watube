@@ -91,6 +91,7 @@ import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.helpers.WindowHelper
 import com.watube.yard.obj.ShareData
+import com.watube.yard.obj.VideoResolution
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.services.AbstractPlayerService
 import com.watube.yard.services.OfflinePlayerService
@@ -292,8 +293,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         override fun onPlaybackStateChanged(playbackState: Int) {
             if (playbackState == Player.STATE_READY) {
+                // On réarme seulement les tentatives « en place ». hasReExtractedOnError n'est
+                // volontairement PAS réarmé ici : sinon une erreur qui revient toujours au même
+                // point relancerait une ré-extraction → redémarrage → même erreur, en boucle.
                 playbackErrorRetries = 0
-                hasReExtractedOnError = false
             }
 
             if (!::playerController.isInitialized) return
@@ -1291,6 +1294,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     fun playVideo(videoId: String) {
         if (!::playerController.isInitialized) return
 
+        // Nouvelle vidéo (navigation, file d'attente) : on réarme les garde-fous de
+        // récupération d'erreur. Une ré-extraction de la vidéo courante (même id, déclenchée
+        // depuis onPlayerError) les laisse inchangés, garantissant une seule ré-extraction par
+        // vidéo et évitant la boucle « erreur → redémarrage » signalée par les utilisateurs.
+        if (!this::videoId.isInitialized || this.videoId != videoId) {
+            playbackErrorRetries = 0
+            hasReExtractedOnError = false
+        }
+
         playerController.sendCustomCommand(
             AbstractPlayerService.runPlayerActionCommand,
             Bundle().apply {
@@ -1446,7 +1458,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         controls.watubeQualityChip.isVisible = videoHeight > 0
         if (videoHeight > 0) {
             controls.watubeQualityChip.text =
-                getString(R.string.player_quality_chip, videoHeight)
+                getString(
+                    R.string.player_quality_chip,
+                    VideoResolution.snapToStandardHeight(videoHeight)
+                )
         }
     }
 
@@ -1511,7 +1526,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             onUserLeaveHint()
             try {
                 startActivity(intent)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ctx.toastFromMainThread(R.string.error)
             }
 

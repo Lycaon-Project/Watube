@@ -44,6 +44,8 @@
     <string name="areYouSure">Delete the playlist?</string>
     <string name="createPlaylist">Create playlist</string>
     <string name="createNewPlaylist">Create new playlist</string>
+    <string name="create">Create</string>
+    <string name="clone">Clone</string>
     <string name="playlistCreated">Playlist created.</string>
     <string name="playlistName">Playlist name</string>
     <string name="emptyPlaylistName">The playlist name can\'t be empty</string>
@@ -271,6 +273,7 @@
     <string name="translate">Translation</string>
     <string name="no_search_result">No results.</string>
     <string name="error_occurred">Error</string>
+    <string name="error_occurred_retry">%1$s – %2$s</string>
     <string name="copied">Copied</string>
     <string name="share_with_time">Share with time code</string>
     <string name="export_subscriptions">Export subscriptions</string>

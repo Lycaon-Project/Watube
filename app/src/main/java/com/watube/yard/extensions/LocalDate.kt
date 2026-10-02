@@ -8,9 +8,6 @@ import kotlinx.datetime.toLocalDateTime
 
 fun LocalDate.toMillis() = this.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
 
-fun Long.toLocalDateTime() =
-    Instant.fromEpochMilliseconds(this).toLocalDateTime()
-
 fun Long.toLocalDate() =
     Instant.fromEpochMilliseconds(this).toLocalDate()
 

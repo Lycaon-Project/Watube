@@ -418,7 +418,7 @@
     <string name="download_playlist">Atsisiųsti grojaraštį</string>
     <string name="download_playlist_note">Bus atsisiųsti visi šiame grojaraštyje esantys vaizdo įrašai.</string>
     <string name="enqueue_playlist_description">Pridėti grojaraštį į eilę</string>
-    <string name="enqueueing_playlist_download">Grojaraštis pridedamas į atsisiuntimų eilę...</string>
+    <string name="enqueueing_playlist_download">Grojaraštis „%1$s“ pridedamas į atsisiuntimų eilę...</string>
     <string name="audio_language">Garso takelio kalba</string>
     <string name="default_language">Numatytoji kalba</string>
     <string name="external_player">Išorinis grotuvas</string>
@@ -484,7 +484,7 @@
     <string name="local_ryd_summary">Gauti nepatiktukų skaičių vietoje, tiesiogiai per RYD API</string>
     <string name="dialog_play_offline_title">Žiūrėti neprisijungus</string>
     <string name="dialog_play_offline_body">Ar norite paleisti atsisiųstą šio vaizdo įrašo versiją?</string>
-    <string name="view_count">Peržiūrų skaičius</string>
+    <string name="view_count">%1$s peržiūrų</string>
     <string name="delete_only_watched_videos">Ištrinti tik peržiūrėtus vaizdo įrašus</string>
     <string name="local_feed_extraction">Vietinis srauto išgavimas</string>
     <string name="local_feed_extraction_summary">Gauti prenumeratas vietoje tiesiai iš „YouTube“</string>

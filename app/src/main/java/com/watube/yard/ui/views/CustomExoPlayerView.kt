@@ -770,7 +770,7 @@ class CustomExoPlayerView(
             if (isLocked) {
                 ContextCompat.getColor(
                     context,
-                    androidx.media3.ui.R.color.exo_black_opacity_60
+                    R.color.player_scrim_60
                 )
             } else {
                 Color.TRANSPARENT
@@ -1017,23 +1017,34 @@ class CustomExoPlayerView(
     }
 
     /**
-     * Get all available player resolutions
+     * Get all available player resolutions.
+     *
+     * Les hauteurs renvoyées par les pistes ne sont pas toujours « rondes » (une vidéo qui
+     * n'est pas exactement en 16:9 peut donner 2026, 1012, …). On ramène chaque hauteur au
+     * palier de qualité YouTube standard le plus proche et on dédoublonne par palier, afin
+     * d'afficher une échelle correcte (2160p 4K / 1440p HD / … / 144p) au lieu de valeurs
+     * incohérentes comme « 2026p ». Seules les pistes réellement présentes dans le flux sont
+     * listées : si la source plafonne à 720p, rien au-dessus n'apparaît.
      */
     private fun getAvailableResolutions(): List<VideoResolution> {
         val player = player ?: return emptyList()
 
         val resolutions = player.currentTracks.groups.asSequence()
+            .filter { it.type == C.TRACK_TYPE_VIDEO }
             .flatMap { group ->
-                (0 until group.length).map {
-                    group.getTrackFormat(it).height
-                }
+                (0 until group.length).map { group.getTrackFormat(it).height }
             }
             .filter { it > 0 }
-            .map { VideoResolution("${it}p", it) }
-            .toSortedSet(compareByDescending { it.resolution })
+            .distinct()
+            .map { VideoResolution(VideoResolution.qualityLabel(it), it) }
+            // garder la hauteur la plus haute de chaque palier (ex. 1080p avc/vp9/av1, ou une
+            // hauteur non standard ramenée au même palier) pour que la sélection inclue la piste
+            .sortedByDescending { it.resolution }
+            .distinctBy { it.name }
+            .toMutableList()
 
-        resolutions.add(VideoResolution(context.getString(R.string.auto_quality), Int.MAX_VALUE))
-        return resolutions.toList()
+        resolutions.add(0, VideoResolution(context.getString(R.string.auto_quality), Int.MAX_VALUE))
+        return resolutions
     }
 
     override fun onQualityClicked() {

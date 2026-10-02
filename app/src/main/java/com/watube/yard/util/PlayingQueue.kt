@@ -53,7 +53,7 @@ object PlayingQueue {
     fun clearAfterCurrent() {
         clearJobs()
         synchronized(queue) {
-            val newQueue = queue.filterIndexed { index, item -> index <= currentIndex() }
+            val newQueue = queue.filterIndexed { index, _ -> index <= currentIndex() }
             setStreams(newQueue)
         }
     }
