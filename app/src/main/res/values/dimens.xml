@@ -8,6 +8,14 @@
     <dimen name="watube_cgap">15dp</dimen>
     <dimen name="watube_card_radius">17.5dp</dimen>
     <dimen name="watube_nav_inset">10dp</dimen>
+    <!-- Collapsed mini player: 56dp card holding a 16:9 video inset by 6dp, whose corner
+         radius is the card radius minus the inset so both curves stay concentric. -->
+    <dimen name="watube_mini_player_margin_start">@dimen/watube_nav_inset</dimen>
+    <dimen name="watube_mini_player_height">56dp</dimen>
+    <dimen name="watube_mini_player_video_inset">6dp</dimen>
+    <dimen name="watube_mini_player_video_height">44dp</dimen>
+    <dimen name="watube_mini_player_video_width">78dp</dimen>
+    <dimen name="watube_mini_player_video_radius">11.5dp</dimen>
     <!-- Floating bar offset from the screen bottom: kept clear of the physical screen
          edge / gesture area so nothing is clipped by rounded device corners. -->
     <dimen name="watube_nav_bottom_inset">22dp</dimen>

@@ -3,7 +3,6 @@ package com.watube.yard.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
@@ -25,7 +24,7 @@ class AddToPlaylistActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val videoId = intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-            IntentHelper.resolveType(it.toUri())
+            IntentHelper.resolveType(IntentHelper.sharedTextToUri(it))
         }?.getStringExtra(IntentData.videoId)
 
         if (videoId == null) {

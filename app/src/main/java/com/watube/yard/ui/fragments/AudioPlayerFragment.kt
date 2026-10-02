@@ -14,6 +14,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.TransitionAdapter
 import androidx.core.math.MathUtils.clamp
 import com.watube.yard.extensions.bundleOf
+import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -274,6 +275,19 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
             // if the player is minimized, the fragment behind the player should handle the event
             onBackPressedCallback.isEnabled = isMiniPlayerVisible != true
+
+            // collapsed: the same rounded Solar card as the video mini player; expanded: the
+            // plain full screen surface (the card outline must not frame the whole screen)
+            if (isMiniPlayerVisible == true) {
+                binding.audioPlayerContainer.setBackgroundResource(R.drawable.watube_miniplayer_background)
+            } else {
+                binding.audioPlayerContainer.setBackgroundColor(
+                    ThemeHelper.getThemeColor(
+                        requireContext(),
+                        com.google.android.material.R.attr.colorSurfaceContainer
+                    )
+                )
+            }
         }
     }
 
@@ -343,12 +357,14 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
             }
         })
 
-        if (arguments?.getBoolean(IntentData.minimizeByDefault, false) != true) {
-            binding.playerMotionLayout.progress = 1f
-            binding.playerMotionLayout.transitionToStart()
-        } else {
-            binding.playerMotionLayout.progress = 0f
-            binding.playerMotionLayout.transitionToEnd()
+        // fix the initial state now, animate once laid out: a transition started before the
+        // first layout pass of the MotionLayout is sometimes dropped (same as PlayerFragment)
+        val minimize = arguments?.getBoolean(IntentData.minimizeByDefault, false) == true
+        binding.playerMotionLayout.progress = if (minimize) 0f else 1f
+        binding.playerMotionLayout.doOnLayout {
+            val binding = _binding ?: return@doOnLayout
+            if (minimize) binding.playerMotionLayout.transitionToEnd()
+            else binding.playerMotionLayout.transitionToStart()
         }
     }
 
@@ -389,9 +405,10 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
         // reset color filter if data saver mode got toggled or conditions for it changed
         binding.thumbnail.setColorFilter(Color.TRANSPARENT)
 
-        lifecycleScope.launch {
-            val binding = _binding ?: return@launch
+        // tied to the view: the bitmap must never land in the views of a destroyed fragment
+        viewLifecycleOwner.lifecycleScope.launch {
             val bitmap = ImageHelper.getImage(requireContext(), thumbnailUri)
+            val binding = _binding ?: return@launch
             binding.thumbnail.setImageBitmap(bitmap)
             binding.miniPlayerThumbnail.setImageBitmap(bitmap)
             binding.thumbnail.isVisible = true

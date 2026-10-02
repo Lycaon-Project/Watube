@@ -252,7 +252,8 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
         val filterOptions = DownloadSortingOrder.entries.map { getString(it.stringId) }
         binding.sortType.text = filterOptions[selectedSortType]
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        // view scoped: the database answer can arrive after the user left this tab
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val playlistItems = downloadPlaylistId?.let { playlistId ->
                 val playlist = withContext(Dispatchers.IO) {
                     Database.downloadDao().getDownloadPlaylistById(playlistId)
@@ -594,7 +595,8 @@ class PlaylistDownloadsFragmentPage : Fragment(R.layout.fragment_download_conten
         val filterOptions = DownloadSortingOrder.entries.map { getString(it.stringId) }
         binding.sortType.text = filterOptions[selectedSortType]
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        // view scoped: the database answer can arrive after the user left this tab
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val downloadPlaylists = withContext(Dispatchers.IO) {
                 Database.downloadDao().getDownloadPlaylists()
             }

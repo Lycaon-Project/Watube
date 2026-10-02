@@ -17,8 +17,6 @@ import android.widget.EditText
 import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.constraintlayout.motion.widget.Key
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
@@ -74,6 +72,12 @@ private const val EXPANDED_WIDTH_DP = 600
 /** Mirrors the 80dp width of the nav rail declared in res/layout/activity_main.xml */
 private const val EXPANDED_RAIL_WIDTH_DP = 80f
 
+/** Player progress at which the bottom bar is fully pushed off screen */
+private const val BAR_HIDDEN_PROGRESS = 0.01f
+
+/** Player progress from which the mini player starts lifting above the bottom bar */
+private const val CONTAINER_LIFT_START = 0.35f
+
 class MainActivity : AbstractPlayerHostActivity() {
     private lateinit var binding: ActivityMainBinding
 
@@ -87,18 +91,13 @@ class MainActivity : AbstractPlayerHostActivity() {
     private var navBarBottomInset = 0
 
     /**
-     * Last mini-player shift (bottom-bar height + inset) actually written into the root
-     * MotionLayout scene. Sentinel so the first real measure always applies. The bottom bar
-     * relays out for many reasons besides a genuine size change (tab switches, and the churn
-     * of a heavier fragment loading in), and each call to scene.setTransition() re-seeds the
-     * scene and makes the root MotionLayout re-snap toward the transition start for ~2 frames
-     * -> the minimized mini player + nav bar visibly jumped. We only re-seed when the shift
-     * really changed, and only after it has settled (see applyBottomBarShift).
+     * Progress of the player container: 0 = player maximized, 1 = mini player docked above
+     * the bottom bar. It drives plain translations (see [applyPlayerContainerProgress]) and
+     * not a root MotionLayout anymore: a MotionLayout re-evaluates its scene on every layout
+     * pass, so navigating to a heavy tab made it drift for ~2 frames and the bar jumped behind
+     * the mini player. A translation is never touched by a layout pass, so it cannot drift.
      */
-    private var lastBottomBarShift = Int.MIN_VALUE
-
-    /** Pending debounced bottom-bar shift application, so a transient remeasure is dropped. */
-    private var pendingBottomBarShift: Runnable? = null
+    private var playerContainerProgress = 1f
 
     private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
@@ -164,21 +163,12 @@ class MainActivity : AbstractPlayerHostActivity() {
                         navBarBottomInset = systemBarInsets.bottom.coerceAtLeast(
                             bar.resources.getDimensionPixelSize(R.dimen.watube_nav_bottom_inset)
                         )
-                        // The root is a MotionLayout whose (empty) start/end ConstraintSets are
-                        // derived from the layout at init and re-applied on every layout pass,
-                        // silently reverting a bottomMargin set through layoutParams. On devices
-                        // with gesture navigation or curved edges that left the bar flush against
-                        // the physical edge. Writing the inset into both ConstraintSets is what
-                        // makes the floating gap actually stick.
-                        intArrayOf(R.id.start, R.id.end).forEach { setId ->
-                            binding.root.getConstraintSet(setId)?.let { set ->
-                                set.setMargin(R.id.bottomNav, ConstraintSet.BOTTOM, navBarBottomInset)
-                                binding.root.updateState(setId, set)
-                            }
+                        val params = bar.layoutParams as ViewGroup.MarginLayoutParams
+                        if (params.bottomMargin != navBarBottomInset) {
+                            params.bottomMargin = navBarBottomInset
+                            bar.layoutParams = params
                         }
-                        (bar.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
-                            navBarBottomInset
-                        bar.requestLayout()
+                        applyPlayerContainerProgress()
                     }
                     with(binding.navRail) {
                         setPadding(
@@ -192,18 +182,9 @@ class MainActivity : AbstractPlayerHostActivity() {
                 }
             })
         }
-        // Keep the mini-player transition's bottom-bar height in sync, but debounced: the bar
-        // relays out far more often than it actually resizes (every tab switch, and while a
-        // heavier fragment measures itself in). Re-seeding the scene on each of those made the
-        // root MotionLayout re-snap toward the transition start for ~2 frames -> the minimized
-        // nav bar jumped up behind the mini player. We react only once the size has settled.
-        binding.bottomNav.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            pendingBottomBarShift?.let { binding.bottomNav.removeCallbacks(it) }
-            val apply = Runnable { applyBottomBarShift() }
-            pendingBottomBarShift = apply
-            // runs after the current layout pass: a transient remeasure is superseded before
-            // it is ever written into the scene, so setTransition() fires only on real changes
-            binding.bottomNav.post(apply)
+        // the mini player docks above the bar: follow a real change of its height only
+        binding.bottomNav.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
+            if (bottom - top != oldBottom - oldTop) applyPlayerContainerProgress()
         }
 
         applyBottomBarNightStyle()
@@ -351,12 +332,19 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         if (!expanded) {
             // compact layout: bring the bottom bar back, the nav preference still
-            // decides whether it is visible at all (e.g. "hide every tab")
+            // decides whether it is visible at all (e.g. "hide every tab").
+            // applyNavBarStyle() only ever hides the bar: it must be made visible first,
+            // otherwise a pass through the expanded layout (fullscreen player forcing landscape,
+            // or a launch while the device was turned) left it gone for good once back in
+            // portrait - no bar, no way to navigate.
+            binding.bottomNav.isVisible = true
             try {
                 NavBarHelper.applyNavBarStyle(binding.bottomNav)
             } catch (_: Exception) {
-                binding.bottomNav.isVisible = true
+                // a corrupted nav preference must never hide the bar
             }
+            // the bar was gone while the player docked: re-place both for its real height
+            binding.bottomNav.post { applyPlayerContainerProgress() }
             return
         }
 
@@ -405,38 +393,24 @@ class MainActivity : AbstractPlayerHostActivity() {
     }
 
     /**
-     * Writes the current bottom-bar height (+ system inset) into the mini-player transition
-     * keyframes, which the scene needs so the bar slides fully off screen when the player is
-     * maximized. Called debounced from the bottom bar's layout listener (and directly isn't
-     * needed elsewhere). It re-seeds the scene via setTransition(), which briefly perturbs the
-     * root MotionLayout, so it must run ONLY when the height truly changed — the guard below
-     * makes repeated layout passes with the same size no-ops.
+     * Places the bottom bar and the player container for [progress] (0 = player maximized,
+     * 1 = mini player). As soon as the player leaves the maximized state the bar is pushed off
+     * screen, then slides back in while the mini player is lifted by the same amount to dock
+     * right above it. Only translations change, so this never triggers a layout pass.
      */
-    private fun applyBottomBarShift() {
+    private fun applyPlayerContainerProgress(progress: Float = playerContainerProgress) {
+        playerContainerProgress = progress
         if (!::binding.isInitialized) return
-        // the bar floats above the system inset now, so the shift has to cover both
-        val shift = binding.bottomNav.height + navBarBottomInset
-        // height not measured yet, or nothing changed since the last applied value
-        if (shift <= 0 || shift == lastBottomBarShift) return
-        lastBottomBarShift = shift
-        val transition = binding.root.getTransition(R.id.bottom_bar_transition)
-        transition.keyFrameList.forEach { keyFrame ->
-            // These frame positions are hardcoded in activity_main_scene.xml!
-            for (key in keyFrame.getKeyFramesForView(binding.bottomNav.id)) {
-                if (key.framePosition == 1) key.setValue(Key.TRANSLATION_Y, shift)
-            }
-            for (key in keyFrame.getKeyFramesForView(binding.container.id)) {
-                if (key.framePosition == 100) key.setValue(Key.TRANSLATION_Y, -shift)
-            }
+        val bar = binding.bottomNav
+        // the bar floats above the system inset, so the shift has to cover both
+        val shift = (if (bar.isVisible) bar.height else 0) + navBarBottomInset
+        bar.translationY = shift * when {
+            progress <= 0f -> 0f
+            progress < BAR_HIDDEN_PROGRESS -> progress / BAR_HIDDEN_PROGRESS
+            else -> (1f - progress) / (1f - BAR_HIDDEN_PROGRESS)
         }
-        // Because this now runs only on a real, settled size change (never mid-navigation),
-        // the current progress is a stable resting value. setTransition() re-seeds the scene
-        // and can leave it at the start position, so snapshot the resting progress and pin it
-        // right back — covers the rare genuine change while the mini player is open (e.g. a
-        // rotation), so the re-seed can't move what's on screen.
-        val restingProgress = binding.root.progress
-        binding.root.scene.setTransition(transition)
-        binding.root.progress = restingProgress
+        binding.container.translationY = -shift *
+            ((progress - CONTAINER_LIFT_START) / (1f - CONTAINER_LIFT_START)).coerceIn(0f, 1f)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -917,20 +891,18 @@ class MainActivity : AbstractPlayerHostActivity() {
     }
 
     override fun minimizePlayerContainerLayout() {
-        binding.mainMotionLayout.transitionToEnd()
+        applyPlayerContainerProgress(1f)
         // predictive-back / channel navigation closes the player without a resume and
         // without a destination change: re-check the highlight the player covered
         syncBottomBarSelection()
     }
 
-    override fun maximizePlayerContainerLayout() {
-        binding.mainMotionLayout.transitionToStart()
-    }
+    override fun maximizePlayerContainerLayout() = applyPlayerContainerProgress(0f)
 
     override fun setPlayerContainerProgress(progress: Float) {
         if (!NavBarHelper.hasTabs()) return
 
-        binding.mainMotionLayout.progress = progress
+        applyPlayerContainerProgress(progress.coerceIn(0f, 1f))
         // 1f is only reported once the player container finished closing, which is the
         // one signal fired on that path (PlayerFragment reports it on transition end)
         if (progress >= 1f) syncBottomBarSelection()

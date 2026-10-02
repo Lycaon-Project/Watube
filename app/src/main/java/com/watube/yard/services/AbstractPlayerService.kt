@@ -303,7 +303,11 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
      * Check for SponsorBlock segments. This method automatically schedules itself to repeat every
      * 100ms using [handler], so it's not needed to schedule it manually.
      */
+    private val segmentsChecker = Runnable { checkForSegments() }
+
     private fun checkForSegments() {
+        // a single loop: this is (re)started on every play and every segments update
+        handler.removeCallbacks(segmentsChecker)
         val player = exoPlayer
         // The loop must only run while it can actually do something: no player, paused,
         // no segments or SponsorBlock disabled would otherwise keep 10 wake-ups/second
@@ -317,7 +321,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             return
         }
 
-        handler.postDelayed(this::checkForSegments, 100)
+        handler.postDelayed(segmentsChecker, 100)
 
         val (currentSegment, sbSkipOption) = player.getCurrentSegment(
             sponsorBlockSegments,

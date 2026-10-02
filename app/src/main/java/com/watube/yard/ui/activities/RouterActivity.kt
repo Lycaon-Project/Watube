@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.core.net.toUri
 import com.watube.yard.BuildConfig
 import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.IntentHelper
@@ -14,7 +13,9 @@ import com.watube.yard.ui.base.BaseActivity
 class RouterActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val uri = intent.getStringExtra(Intent.EXTRA_TEXT)?.toUri() ?: intent.data
+        // shared text often wraps the link ("Title https://youtu.be/..."): keep the link only
+        val uri = intent.getStringExtra(Intent.EXTRA_TEXT)
+            ?.let(IntentHelper::sharedTextToUri) ?: intent.data
         if (uri != null) {
             // Start processing the given text, if available. otherwise use the link shared as text
             // to the app.
@@ -32,9 +33,10 @@ class RouterActivity : BaseActivity() {
             Log.d(TAG(), uri.toString())
         }
 
-        val intent = packageManager.getLaunchIntentForPackage(packageName)!!.let { intent ->
-            IntentHelper.resolveType(intent, uri)
-        }
+        // the launcher entry is an activity-alias that the icon picker swaps: never assume it
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+            ?: Intent(this, MainActivity::class.java)
+        val intent = IntentHelper.resolveType(launchIntent, uri)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finishAndRemoveTask()

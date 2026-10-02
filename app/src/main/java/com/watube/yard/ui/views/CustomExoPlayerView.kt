@@ -431,9 +431,14 @@ class CustomExoPlayerView(
         // stop the polling loops tied to the player, otherwise they keep this view alive
         runnableHandler.removeCallbacksAndMessages(UPDATE_POSITION_TOKEN)
         handler.removeCallbacksAndMessages(null)
+        removeCallbacks(chapterNameUpdater)
     }
 
+    private val queueButtonsSync = Runnable { syncQueueButtons() }
+
     private fun syncQueueButtons() {
+        // one loop only, initialize() can run again for the same view
+        handler.removeCallbacks(queueButtonsSync)
         if (player == null) {
             // without a player the buttons are unusable, stop the polling loop
             handler.removeCallbacksAndMessages(null)
@@ -447,7 +452,7 @@ class CustomExoPlayerView(
         // battery: la visibilité des boutons précédent/suivant n'est pas critique en
         // temps réel — 250 ms au lieu de 100 ms divise par ~2,5 les réveils de cette
         // boucle qui tourne en continu tant qu'un lecteur est attaché
-        handler.postDelayed(this::syncQueueButtons, 250)
+        handler.postDelayed(queueButtonsSync, 250)
     }
 
     private fun setQueueButtonState(button: View, isInvisible: Boolean) {
@@ -489,6 +494,8 @@ class CustomExoPlayerView(
         )
     }
 
+    private val chapterNameUpdater = Runnable { setCurrentChapterName() }
+
     /**
      * Set the name of the video chapter in the [CustomExoPlayerView]
      * @param forceUpdate Update the current chapter name no matter if the seek bar is scrubbed
@@ -506,10 +513,9 @@ class CustomExoPlayerView(
         // call the function again soon, the delay only needs to be short while actually
         // playing since the chapter changes together with the playback position
         if (enqueueNew) {
-            postDelayed(
-                this::setCurrentChapterName,
-                if (player.isPlaying) 100L else 1000L
-            )
+            // a single chain: every chapters update calls this again, which used to stack loops
+            removeCallbacks(chapterNameUpdater)
+            postDelayed(chapterNameUpdater, if (player.isPlaying) 100L else 1000L)
         }
 
         // if the user is scrubbing the time bar, don't update
@@ -702,14 +708,19 @@ class CustomExoPlayerView(
 
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     private fun getCurrentResolutionSummary(): String {
-        val currentQuality = player?.videoSize?.height ?: 0
-        var summary = "${currentQuality}p"
-        if (selectedResolution == null) {
-            summary += " - ${context.getString(R.string.auto)}"
-        } else if ((selectedResolution ?: 0) > currentQuality) {
-            summary += " - ${context.getString(R.string.resolution_limited)}"
+        val currentHeight = player?.videoSize?.height ?: 0
+        if (currentHeight <= 0) return context.getString(R.string.auto)
+        // same standard tiers as the quality menu, so 1012p reads 1080p in both places
+        val currentTier = VideoResolution.snapToStandardHeight(currentHeight)
+        val selected = selectedResolution
+        return when {
+            // "Auto" is stored as Int.MAX_VALUE: it must not read as a limited resolution
+            selected == null || selected == Int.MAX_VALUE ->
+                "${currentTier}p - ${context.getString(R.string.auto)}"
+            VideoResolution.snapToStandardHeight(selected) > currentTier ->
+                "${currentTier}p - ${context.getString(R.string.resolution_limited)}"
+            else -> "${currentTier}p"
         }
-        return summary
     }
 
     private fun getCurrentAudioTrackTitle(): String {
@@ -937,9 +948,8 @@ class CustomExoPlayerView(
         BaseBottomSheet()
             .setSimpleItems(
                 resizeModes.map { context.getString(it.second) },
-                preselectedItem = resizeModes.first { it.first == resizeMode }.second.let {
-                    context.getString(it)
-                }
+                preselectedItem = resizeModes.firstOrNull { it.first == resizeMode }
+                    ?.let { context.getString(it.second) }
             ) { index ->
                 resizeMode = resizeModes[index].first
             }
@@ -1036,7 +1046,7 @@ class CustomExoPlayerView(
             }
             .filter { it > 0 }
             .distinct()
-            .map { VideoResolution(VideoResolution.qualityLabel(it), it) }
+            .map(VideoResolution::fromHeight)
             // garder la hauteur la plus haute de chaque palier (ex. 1080p avc/vp9/av1, ou une
             // hauteur non standard ramenée au même palier) pour que la sélection inclue la piste
             .sortedByDescending { it.resolution }
@@ -1051,23 +1061,28 @@ class CustomExoPlayerView(
         // get the available resolutions
         val resolutions = getAvailableResolutions()
 
+        // "Auto" (first entry) is preselected when no listed resolution is the selected one
+        val selectedIndex = resolutions.indexOfFirst { it.resolution == selectedResolution }
+            .coerceAtLeast(0)
+
         // Dialog for quality selection
         BaseBottomSheet()
-            .setSimpleItems(
-                resolutions.map(VideoResolution::name),
-                preselectedItem = resolutions.firstOrNull {
-                    it.resolution == selectedResolution
-                }?.name ?: context.getString(R.string.auto_quality)
+            .setItems(
+                resolutions.mapIndexed { index, resolution ->
+                    BottomSheetItem(
+                        resolution.name,
+                        isSelected = index == selectedIndex,
+                        badge = resolution.badge
+                    )
+                }
             ) { which ->
                 val newResolution = resolutions[which].resolution
                 setPlayerResolution(newResolution, true)
 
-                // save the selected resolution to update on fullscreen change
-                if (noFullscreenResolution != null && isFullscreen()) {
-                    noFullscreenResolution = newResolution
-                } else {
-                    fullscreenResolution = newResolution
-                }
+                // a manual choice holds in both modes: toggling fullscreen used to bring back
+                // the default of the other mode and silently drop the user's selection
+                fullscreenResolution = newResolution
+                if (noFullscreenResolution != null) noFullscreenResolution = newResolution
             }
             .show(supportFragmentManager)
     }
@@ -1246,11 +1261,11 @@ class CustomExoPlayerView(
      */
     @SuppressLint("SetTextI18n")
     private fun updateCurrentPosition() {
-        if (player == null) {
-            // no player attached anymore, stop the polling loop to avoid leaking this view
-            runnableHandler.removeCallbacksAndMessages(UPDATE_POSITION_TOKEN)
-            return
-        }
+        // one polling chain only: this is also called on every play/pause change, and each
+        // call used to start an extra 100 ms loop next to the running one
+        runnableHandler.removeCallbacksAndMessages(UPDATE_POSITION_TOKEN)
+        // no player attached anymore: the loop stops here, so it can not leak this view
+        if (player == null) return
 
         val position = player?.currentPosition?.div(1000) ?: 0
         val duration = player?.duration?.takeIf { it != C.TIME_UNSET }?.div(1000) ?: 0

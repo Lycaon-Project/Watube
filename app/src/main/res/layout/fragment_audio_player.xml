@@ -310,8 +310,9 @@
 
     <LinearLayout
         android:id="@+id/miniPlayerControls"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/watube_mini_player_height"
+        android:paddingEnd="16dp"
         android:alpha="0"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/audio_player_container"
@@ -319,12 +320,16 @@
         app:layout_constraintStart_toStartOf="@id/audio_player_container"
         app:layout_constraintTop_toTopOf="@id/audio_player_container">
 
-        <ImageView
+        <!-- Same 16:9 inset thumbnail with concentric corners as the video mini player -->
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/miniPlayerThumbnail"
-            android:layout_width="96dp"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp" />
+            android:layout_width="@dimen/watube_mini_player_video_width"
+            android:layout_height="@dimen/watube_mini_player_video_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/watube_mini_player_video_inset"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/WatubeShape.MiniPlayerVideo" />
 
         <TextView
             android:id="@+id/miniPlayerTitle"

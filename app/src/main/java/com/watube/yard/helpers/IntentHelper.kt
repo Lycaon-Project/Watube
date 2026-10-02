@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
+import android.util.Patterns
 import androidx.core.net.toUri
 import com.watube.yard.extensions.bundleOf
 import androidx.fragment.app.FragmentManager
@@ -68,12 +69,19 @@ object IntentHelper {
         }
     }
 
+    /** The link inside a shared text, which apps often wrap ("Title https://youtu.be/..."). */
+    fun sharedTextToUri(text: String): Uri =
+        (Patterns.WEB_URL.matcher(text).takeIf { it.find() }?.group() ?: text).toUri()
+
     fun resolveType(uri: Uri) = resolveType(Intent(), uri)
 
     /**
      * Resolve the uri and return a bundle with the arguments
      */
     fun resolveType(intent: Intent, uri: Uri) = with(intent) {
+        // an opaque uri (shared text such as "look: abc") has no path nor query: reading its
+        // query parameters throws, so it simply resolves to nothing
+        if (!uri.isHierarchical) return@with this
         val lastSegment = uri.lastPathSegment
         val secondLastSegment = uri.pathSegments.getOrNull(uri.pathSegments.size - 2)
         when {

@@ -206,11 +206,12 @@ class TrendsContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_tre
         })
 
         viewModel.fetchTrending(requireContext(), category)
-        lifecycleScope.launch {
+        // view scoped: a fragment scoped collector was added again on every view recreation
+        viewLifecycleOwner.lifecycleScope.launch {
             // every time the user navigates to the fragment for the selected category,
             // fetch the trends for the selected category if they're not yet cached or if the value
             // for trending region has been changed
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 val trendingRegion = PreferenceHelper.getTrendingRegion(requireContext())
                 val trendingVideos = viewModel.trendingVideos.value.orEmpty()[category]
                 if (trendingVideos == null || (trendingVideos.region != trendingRegion)) {

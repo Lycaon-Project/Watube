@@ -213,7 +213,7 @@
         android:id="@+id/main_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="?attr/colorSurfaceContainerLow"
+        android:background="@drawable/watube_miniplayer_background"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toStartOf="@id/related_container"
         app:layout_constraintStart_toStartOf="parent"
@@ -275,6 +275,24 @@
         app:show_buffering="when_playing"
         app:surface_type="surface_view" />
 
+    <!-- Same discreet mini-player progress as the portrait layout -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/miniplayer_progress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/watube_card_radius"
+        android:layout_marginBottom="1dp"
+        android:max="1000"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/main_container"
+        app:layout_constraintEnd_toEndOf="@id/main_container"
+        app:layout_constraintStart_toStartOf="@id/main_container"
+        app:trackColor="@android:color/transparent"
+        app:trackCornerRadius="2dp"
+        app:trackStopIndicatorSize="0dp"
+        app:trackThickness="3dp" />
+
     <ImageView
         android:id="@+id/close_imageView"
         android:layout_width="wrap_content"
@@ -298,6 +316,7 @@
         android:padding="8dp"
         android:src="@drawable/ic_play"
         android:tooltipText="@string/tooltip_play"
+        android:contentDescription="@string/tooltip_play"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/close_imageView"
         app:layout_constraintEnd_toStartOf="@+id/close_imageView"

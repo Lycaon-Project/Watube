@@ -138,6 +138,9 @@ import kotlin.math.absoluteValue
 
 private const val CAST_ROUTE_DIALOG_TAG = "cast_route_dialog"
 
+/** Time given to a restored orientation request to rotate the activity before re-checking */
+private const val ORIENTATION_SETTLE_DELAY_MS = 1000L
+
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback {
@@ -263,10 +266,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             PictureInPictureCompat.setPictureInPictureParams(requireActivity(), pipParams)
 
             if (isPlaying && PlayerHelper.sponsorBlockEnabled) {
-                handler.postDelayed(
-                    this@PlayerFragment::checkForSegments,
-                    100
-                )
+                handler.removeCallbacks(segmentsChecker)
+                handler.postDelayed(segmentsChecker, 100)
             }
         }
 
@@ -501,7 +502,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         playerLayoutOrientation = resources.configuration.orientation
 
-        initializeTransitionLayout()
+        initializeTransitionLayout(
+            restoreMiniPlayer = savedInstanceState != null &&
+                commonPlayerViewModel.isMiniPlayerVisible.value == true
+        )
         initializeOnClickActions()
 
         if (PlayerHelper.autoFullscreenEnabled && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -653,11 +657,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun initializeTransitionLayout() {
+    private fun initializeTransitionLayout(restoreMiniPlayer: Boolean) {
         baseActivity.setPlayerContainerProgress(0f)
-
-        var transitionStartId = 0
-        var transitionEndId = 0
 
         binding.playerMotionLayout.addTransitionListener(object : TransitionAdapter() {
             override fun onTransitionChange(
@@ -671,33 +672,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 baseActivity.setPlayerContainerProgress(progress.absoluteValue)
                 disableController()
                 commonPlayerViewModel.setSheetExpand(false)
-                transitionEndId = endId
-                transitionStartId = startId
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
                 if (_binding == null) return
 
-                if (currentId == transitionStartId) {
-                    commonPlayerViewModel.isMiniPlayerVisible.value = false
-                    binding.player.updateCurrentSubtitle(viewModel.currentCaptionId)
-                    binding.player.useController = true
-                    commonPlayerViewModel.setSheetExpand(true)
-                    baseActivity.setPlayerContainerProgress(0f)
-                    changeOrientationMode()
-                    baseActivity.clearSearchViewFocus()
-                } else if (currentId == transitionEndId) {
-                    commonPlayerViewModel.isMiniPlayerVisible.value = true
-                    binding.player.updateCurrentSubtitle(null)
-                    disableController()
-                    commonPlayerViewModel.setSheetExpand(null)
-                    playerBackgroundBinding.sbSkipBtn.isGone = true
-
-                    baseActivity.setPlayerContainerProgress(1f)
-                    baseActivity.requestOrientationChange()
+                when (currentId) {
+                    R.id.start -> onPlayerMaximized()
+                    R.id.end -> onPlayerMinimized()
                 }
-
-                updateMaxSheetHeight()
             }
         })
 
@@ -714,14 +697,40 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         // était ignorée et le lecteur restait en mini (petit carré à gauche, le son
         // tournant). On fixe l'état mini tout de suite, puis on anime une fois le
         // layout effectué (doOnLayout s'exécute aussitôt si la vue est déjà mesurée).
+        // A player that was collapsed when the activity got recreated (rotation) stays the
+        // mini player instead of popping back open over the content.
         binding.playerMotionLayout.progress = 1F
         binding.playerMotionLayout.doOnLayout {
             if (_binding == null) return@doOnLayout
-            binding.playerMotionLayout.transitionToStart()
+            if (restoreMiniPlayer) onPlayerMinimized()
+            else binding.playerMotionLayout.transitionToStart()
         }
 
         val activity = requireActivity()
         PictureInPictureCompat.setPictureInPictureParams(activity, pipParams)
+    }
+
+    private fun onPlayerMaximized() {
+        commonPlayerViewModel.isMiniPlayerVisible.value = false
+        binding.player.updateCurrentSubtitle(viewModel.currentCaptionId)
+        binding.player.useController = true
+        commonPlayerViewModel.setSheetExpand(true)
+        baseActivity.setPlayerContainerProgress(0f)
+        changeOrientationMode()
+        baseActivity.clearSearchViewFocus()
+        updateMaxSheetHeight()
+    }
+
+    private fun onPlayerMinimized() {
+        commonPlayerViewModel.isMiniPlayerVisible.value = true
+        binding.player.updateCurrentSubtitle(null)
+        disableController()
+        commonPlayerViewModel.setSheetExpand(null)
+        playerBackgroundBinding.sbSkipBtn.isGone = true
+
+        baseActivity.setPlayerContainerProgress(1f)
+        baseActivity.requestOrientationChange()
+        updateMaxSheetHeight()
     }
 
     private fun closeMiniPlayer() {
@@ -1050,6 +1059,17 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         windowInsetsControllerCompat.isAppearanceLightStatusBars =
             !ThemeHelper.isDarkMode(requireContext())
+
+        // Leaving fullscreen while the device is still held in landscape causes no
+        // configuration change (the activity already is in landscape), so the player kept its
+        // portrait layout: a cropped video overflowing the screen. Check again once the
+        // restored orientation request has been applied; it is a no-op when a rotation back to
+        // the layout orientation happens (or already triggered the check) in the meantime.
+        handler.postDelayed(ORIENTATION_SETTLE_DELAY_MS) {
+            if (_binding != null &&
+                !PictureInPictureCompat.isInPictureInPictureMode(requireActivity())
+            ) restartActivityIfNeeded()
+        }
     }
 
     override fun toggleFullscreen() {
@@ -1203,6 +1223,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     }
 
     private fun killPlayerFragment() {
+        // a second close request (double tap on X, end of the swipe-out animation) may come
+        // in once the view is already gone
+        val binding = _binding ?: return
         binding.playerMotionLayout.transitionToEnd()
 
         commonPlayerViewModel.isMiniPlayerVisible.value = false
@@ -1226,12 +1249,16 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
     }
 
+    private val segmentsChecker = Runnable { checkForSegments() }
+
     private fun checkForSegments() {
+        // a single loop: play / pause / play within one tick used to leave two of them running
+        handler.removeCallbacks(segmentsChecker)
         if (!::playerController.isInitialized || !playerController.isPlaying || !PlayerHelper.sponsorBlockEnabled) return
 
         // battery: 200 ms au lieu de 100 ms — latence de saut imperceptible, mais
         // deux fois moins de réveils du thread principal pendant toute la lecture
-        handler.postDelayed(this::checkForSegments, 200)
+        handler.postDelayed(segmentsChecker, 200)
         if (viewModel.segments.value.isNullOrEmpty()) return
 
         val segmentData = playerController.getCurrentSegment(
@@ -1365,6 +1392,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         viewModel.isOrientationChangeInProgress = false
+        // a rotation that arrived while the previous recreation was still in progress was
+        // skipped by restartActivityIfNeeded(): catch up now, or the layout of the wrong
+        // orientation would stay on screen (never from picture-in-picture, whose window has
+        // its own orientation)
+        if (!PictureInPictureCompat.isInPictureInPictureMode(requireActivity())) {
+            restartActivityIfNeeded()
+        }
 
         binding.descriptionLayout.setStreams(streams)
 
@@ -1723,7 +1757,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             if (::playerController.isInitialized) {
                 val duration = playerController.duration
                 if (duration > 0) {
-                    binding.miniplayerProgress?.progress =
+                    binding.miniplayerProgress.progress =
                         (playerController.currentPosition * 1000 / duration).toInt()
                 }
             }
@@ -1745,7 +1779,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 override fun getOutline(view: View, outline: Outline) {
                     outline.setRoundRect(
                         0, 0, view.width, view.height,
-                        resources.getDimension(R.dimen.watube_card_radius)
+                        resources.getDimension(R.dimen.watube_mini_player_video_radius)
                     )
                 }
             }
@@ -1753,7 +1787,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             ViewOutlineProvider.BACKGROUND
         }
 
-        binding.miniplayerProgress?.isVisible = mini
+        binding.miniplayerProgress.isVisible = mini
         handler.removeCallbacks(miniProgressUpdater)
         if (mini) handler.post(miniProgressUpdater)
     }

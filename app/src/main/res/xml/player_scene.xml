@@ -40,14 +40,21 @@
             motion:layout_constraintStart_toStartOf="@id/main_container"
             motion:layout_constraintTop_toTopOf="@id/main_container" />
         <Constraint android:id="@+id/doubleTapOverlay" />
+        <!-- shown / hidden by PlayerFragment.updateMiniPlayerChrome: the scene must not reset it -->
+        <Constraint android:id="@+id/miniplayer_progress">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
+        <Constraint android:id="@+id/miniplayer_progress">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
         <Constraint
             android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginStart="@dimen/watube_nav_inset"
+            android:layout_height="@dimen/watube_mini_player_height"
+            android:layout_marginStart="@dimen/watube_mini_player_margin_start"
             android:layout_marginEnd="@dimen/watube_nav_inset"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -55,10 +62,13 @@
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintVertical_bias="1.0" />
+        <!-- The video sits inside the rounded card (inset on its three sides) instead of
+             covering its corner and stroke: a 16:9 thumbnail with concentric corners. -->
         <Constraint
             android:id="@+id/player"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/watube_mini_player_video_width"
+            android:layout_height="@dimen/watube_mini_player_video_height"
+            android:layout_marginStart="@dimen/watube_mini_player_video_inset"
             motion:layout_constraintBottom_toBottomOf="@id/main_container"
             motion:layout_constraintStart_toStartOf="@id/main_container"
             motion:layout_constraintTop_toTopOf="@id/main_container" />

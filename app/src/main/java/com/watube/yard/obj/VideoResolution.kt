@@ -4,7 +4,9 @@ import kotlin.math.abs
 
 data class VideoResolution(
     val name: String,
-    val resolution: Int
+    val resolution: Int,
+    /** HD / 2K / 4K marker shown as a pill next to [name], null below HD */
+    val badge: String? = null
 ) {
     companion object {
         // Paliers de qualité YouTube standard (hauteur en px), du plus haut au plus bas.
@@ -18,18 +20,18 @@ data class VideoResolution(
         fun snapToStandardHeight(height: Int): Int =
             STANDARD_TIERS.minByOrNull { abs(it - height) } ?: height
 
-        /**
-         * Libellé de qualité façon YouTube : palier standard + annotation 4K/HD
-         * (ex. « 2160p 4K », « 1080p HD », « 720p »).
-         */
-        fun qualityLabel(height: Int): String {
-            val tier = snapToStandardHeight(height)
-            val suffix = when {
-                tier >= 2160 -> " 4K"
-                tier >= 1080 -> " HD"
-                else -> ""
-            }
-            return "${tier}p$suffix"
+        /** Libellé de qualité façon YouTube : palier standard (ex. « 2160p », « 720p »). */
+        fun qualityLabel(height: Int): String = "${snapToStandardHeight(height)}p"
+
+        /** Pastille de définition : 4K (2160p+), 2K (1440p), HD (720p / 1080p), sinon aucune. */
+        fun qualityBadge(height: Int): String? = when (snapToStandardHeight(height)) {
+            2160 -> "4K"
+            1440 -> "2K"
+            1080, 720 -> "HD"
+            else -> null
         }
+
+        fun fromHeight(height: Int) =
+            VideoResolution(qualityLabel(height), height, qualityBadge(height))
     }
 }
