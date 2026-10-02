@@ -86,6 +86,20 @@ class MainActivity : AbstractPlayerHostActivity() {
     /** Resolved bottom gap for the floating nav bar (max of system inset and the design inset). */
     private var navBarBottomInset = 0
 
+    /**
+     * Last mini-player shift (bottom-bar height + inset) actually written into the root
+     * MotionLayout scene. Sentinel so the first real measure always applies. The bottom bar
+     * relays out for many reasons besides a genuine size change (tab switches, and the churn
+     * of a heavier fragment loading in), and each call to scene.setTransition() re-seeds the
+     * scene and makes the root MotionLayout re-snap toward the transition start for ~2 frames
+     * -> the minimized mini player + nav bar visibly jumped. We only re-seed when the shift
+     * really changed, and only after it has settled (see applyBottomBarShift).
+     */
+    private var lastBottomBarShift = Int.MIN_VALUE
+
+    /** Pending debounced bottom-bar shift application, so a transient remeasure is dropped. */
+    private var pendingBottomBarShift: Runnable? = null
+
     private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
     // registering for activity results is only possible, this here should have been part of
@@ -178,27 +192,18 @@ class MainActivity : AbstractPlayerHostActivity() {
                 }
             })
         }
-        // manually update the bottom bar height in the mini player transition
+        // Keep the mini-player transition's bottom-bar height in sync, but debounced: the bar
+        // relays out far more often than it actually resizes (every tab switch, and while a
+        // heavier fragment measures itself in). Re-seeding the scene on each of those made the
+        // root MotionLayout re-snap toward the transition start for ~2 frames -> the minimized
+        // nav bar jumped up behind the mini player. We react only once the size has settled.
         binding.bottomNav.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            // the bar floats above the system inset now, so the shift has to cover both
-            val shift = binding.bottomNav.height + navBarBottomInset
-            val transition = binding.root.getTransition(R.id.bottom_bar_transition)
-            transition.keyFrameList.forEach { keyFrame ->
-                // These frame positions are hardcoded in activity_main_scene.xml!
-                for (key in keyFrame.getKeyFramesForView(binding.bottomNav.id)) {
-                    if (key.framePosition == 1) key.setValue(
-                        Key.TRANSLATION_Y,
-                        shift
-                    )
-                }
-                for (key in keyFrame.getKeyFramesForView(binding.container.id)) {
-                    if (key.framePosition == 100) key.setValue(
-                        Key.TRANSLATION_Y,
-                        -shift
-                    )
-                }
-            }
-            binding.root.scene.setTransition(transition)
+            pendingBottomBarShift?.let { binding.bottomNav.removeCallbacks(it) }
+            val apply = Runnable { applyBottomBarShift() }
+            pendingBottomBarShift = apply
+            // runs after the current layout pass: a transient remeasure is superseded before
+            // it is ever written into the scene, so setTransition() fires only on real changes
+            binding.bottomNav.post(apply)
         }
 
         applyBottomBarNightStyle()
@@ -397,6 +402,41 @@ class MainActivity : AbstractPlayerHostActivity() {
             layoutParams.marginStart = (widthDp * resources.displayMetrics.density).toInt()
             binding.fragment.layoutParams = layoutParams
         }
+    }
+
+    /**
+     * Writes the current bottom-bar height (+ system inset) into the mini-player transition
+     * keyframes, which the scene needs so the bar slides fully off screen when the player is
+     * maximized. Called debounced from the bottom bar's layout listener (and directly isn't
+     * needed elsewhere). It re-seeds the scene via setTransition(), which briefly perturbs the
+     * root MotionLayout, so it must run ONLY when the height truly changed — the guard below
+     * makes repeated layout passes with the same size no-ops.
+     */
+    private fun applyBottomBarShift() {
+        if (!::binding.isInitialized) return
+        // the bar floats above the system inset now, so the shift has to cover both
+        val shift = binding.bottomNav.height + navBarBottomInset
+        // height not measured yet, or nothing changed since the last applied value
+        if (shift <= 0 || shift == lastBottomBarShift) return
+        lastBottomBarShift = shift
+        val transition = binding.root.getTransition(R.id.bottom_bar_transition)
+        transition.keyFrameList.forEach { keyFrame ->
+            // These frame positions are hardcoded in activity_main_scene.xml!
+            for (key in keyFrame.getKeyFramesForView(binding.bottomNav.id)) {
+                if (key.framePosition == 1) key.setValue(Key.TRANSLATION_Y, shift)
+            }
+            for (key in keyFrame.getKeyFramesForView(binding.container.id)) {
+                if (key.framePosition == 100) key.setValue(Key.TRANSLATION_Y, -shift)
+            }
+        }
+        // Because this now runs only on a real, settled size change (never mid-navigation),
+        // the current progress is a stable resting value. setTransition() re-seeds the scene
+        // and can leave it at the start position, so snapshot the resting progress and pin it
+        // right back — covers the rare genuine change while the mini player is open (e.g. a
+        // rotation), so the re-seed can't move what's on screen.
+        val restingProgress = binding.root.progress
+        binding.root.scene.setTransition(transition)
+        binding.root.progress = restingProgress
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

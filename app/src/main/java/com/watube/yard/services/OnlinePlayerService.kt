@@ -80,8 +80,11 @@ open class OnlinePlayerService : AbstractPlayerService() {
                 Player.STATE_IDLE -> {
                     // keep the service alive when the player is only idle because of an
                     // error: destroying it here dropped the playback after the device
-                    // slept for a long time and there was nothing left to resume
-                    if (shouldStopOnlinePlayerService(exoPlayer, playbackState)) {
+                    // slept for a long time and there was nothing left to resume.
+                    // Idem pendant une transition : navigateVideo() appelle stop() (-> STATE_IDLE
+                    // sans erreur) juste avant d'extraire la vidéo suivante ; détruire le service
+                    // ici couperait la navigation (chargement en boucle sur la nouvelle vidéo).
+                    if (!isTransitioning && shouldStopOnlinePlayerService(exoPlayer, playbackState)) {
                         onDestroy()
                     }
                 }

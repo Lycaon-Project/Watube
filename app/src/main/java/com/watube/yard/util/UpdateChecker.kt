@@ -22,8 +22,12 @@ import java.util.Locale
 class UpdateChecker(private val context: Context) {
 
     companion object {
-        /** Default delay (hours) between two automatic update checks, used when the user hasn't picked one. */
-        private const val DEFAULT_CHECK_INTERVAL_HOURS = "12"
+        /**
+         * Default delay (hours) between two automatic update checks, used when the user hasn't picked one.
+         * "0" = check on every launch (no throttling). Must stay in sync with the `update_check_interval`
+         * ListPreference default in res/xml/general_settings.xml.
+         */
+        private const val DEFAULT_CHECK_INTERVAL_HOURS = "0"
     }
 
     /**

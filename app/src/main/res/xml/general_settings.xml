@@ -22,7 +22,7 @@
             app:summary="@string/show_updates_summary" />
 
         <ListPreference
-            android:defaultValue="12"
+            android:defaultValue="0"
             android:dependency="automatic_update_checks"
             android:entries="@array/updateIntervalOptions"
             android:entryValues="@array/updateIntervalValues"

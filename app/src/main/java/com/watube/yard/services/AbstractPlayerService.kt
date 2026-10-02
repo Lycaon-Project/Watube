@@ -271,6 +271,11 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         // pendant l'extraction asynchrone de la nouvelle (chevauchement signalé). On sauvegarde
         // d'abord la position (sinon stop() la ferait perdre), puis on arrête et on vide.
         saveWatchPosition()
+        // On marque la transition AVANT stop() : stop() fait passer le player en STATE_IDLE
+        // sans erreur, ce que OnlinePlayerService interprète sinon comme « plus rien à jouer »
+        // et détruit le service en pleine navigation (nouvelle vidéo qui ne charge jamais,
+        // chargement en boucle quand on enchaîne une autre vidéo depuis le mini-lecteur).
+        isTransitioning = true
         exoPlayer?.stop()
         exoPlayer?.clearMediaItems()
 
