@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Shared list row (library playlists, library bookmarks, search playlists,
+     downloaded playlists). Metrics follow the mockup .nrow list row
+     (.5rem .15rem padding, 8.6rem 16:9 thumb, .85rem/650 title, .73rem t3 meta)
+     with the mockup .plside count band on the thumbnail. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/playlist"
-    style="@style/ItemRow">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent=".45" />
+    style="@style/ItemRow"
+    android:paddingHorizontal="2dp"
+    android:paddingVertical="6.75dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_playlist_thumbnail"
-        android:layout_width="0dp"
+        android:layout_width="116dp"
         android:layout_height="0dp"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="9.5dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -32,67 +31,84 @@
             android:layout_height="match_parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="10dp"
-            app:strokeWidth="0dp">
+        <LinearLayout
+            android:id="@+id/playlist_side"
+            android:layout_width="39.5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@drawable/watube_plside"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="15.5dp"
+                android:layout_height="15.5dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_playlist"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/video_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingVertical="2dp">
+                android:layout_marginTop="3dp"
+                android:includeFontPadding="false"
+                android:textColor="#FFFFFF"
+                android:textSize="12.8sp"
+                android:textStyle="bold"
+                android:textFontWeight="800"
+                tools:text="20" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_playlist"
-                    app:tint="?colorControlNormal" />
+            <TextView
+                android:id="@+id/video_count_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:alpha="0.75"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.08"
+                android:text="@string/videos"
+                android:textAllCaps="true"
+                android:textColor="#FFFFFF"
+                android:textSize="7.6sp"
+                android:textFontWeight="700"
+                tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:id="@+id/video_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingStart="5dp"
-                    android:textColor="?colorControlNormal"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="20" />
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/playlist_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="9.5dp"
+        android:layout_marginTop="1.35dp"
         android:ellipsize="end"
+        android:lineHeight="15sp"
         android:maxLines="2"
-        android:textSize="18sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="11.5sp"
+        android:textFontWeight="650"
         app:layout_constraintEnd_toStartOf="@+id/bookmark_playlist"
         app:layout_constraintStart_toEndOf="@+id/card_playlist_thumbnail"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Playlist title" />
 
     <TextView
         android:id="@+id/playlist_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginStart="9.5dp"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textSize="14sp"
+        android:textColor="?attr/colorOutline"
+        android:textSize="9.85sp"
         app:layout_constraintEnd_toStartOf="@id/bookmark_playlist"
         app:layout_constraintStart_toEndOf="@+id/card_playlist_thumbnail"
-        app:layout_constraintTop_toBottomOf="@+id/playlist_title" />
+        app:layout_constraintTop_toBottomOf="@+id/playlist_title"
+        tools:text="Channel" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/bookmark_playlist"

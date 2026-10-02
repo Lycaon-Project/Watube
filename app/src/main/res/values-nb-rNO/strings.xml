@@ -48,15 +48,10 @@
     <string name="clear_history">Tøm historikk</string>
     <string name="sponsorblock">SponsorBlock</string>
     <string name="license">Lisens</string>
-    <string name="color_red">Rolig rød</string>
-    <string name="color_green">Gjestende grønn</string>
     <string name="subscribers">%1$s abonnenter</string>
     <string name="category_segments">Segmenter</string>
     <string name="category_sponsor">Sponsor</string>
-    <string name="color_yellow">Gallisk gul</string>
     <string name="color_accent">Aksentfarger</string>
-    <string name="color_blue">Beleilig blå</string>
-    <string name="color_purple">Lemfeldig lilla</string>
     <string name="okay">OK</string>
     <string name="emptyPlaylistName">Spillelistenavnet kan ikke være tomt</string>
     <string name="import_from_yt_summary">Fra YouTube eller NewPipe</string>
@@ -295,9 +290,7 @@
     <string name="username_email">Fortsett med en e-postadresse som ikke er anbefalt?</string>
     <string name="pinch_control">Knipekontroll</string>
     <string name="pinch_control_summary">Bruk knipehåndvending for forminskelse/forstørrelse</string>
-    <string name="theme_monochrome">Minimalistisk monokrom</string>
     <string name="play_latest_videos">Spill nyeste videoer</string>
-    <string name="color_violet">Lårkort lilla</string>
     <string name="hide_watched_from_feed">Skjul sette videoer i informasjonsstrøm</string>
     <string name="nothing_selected">Ingenting valgt.</string>
     <string name="playlistUrl">Spilleliste-nettadresse</string>

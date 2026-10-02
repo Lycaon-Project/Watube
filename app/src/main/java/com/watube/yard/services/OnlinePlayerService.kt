@@ -33,7 +33,6 @@ import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.extensions.updateParameters
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getSubtitleRoleFlags
-import com.watube.yard.helpers.ProxyHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.player.SabrMediaSource
 import com.watube.yard.player.manifest.SabrManifest
@@ -79,7 +78,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
                 }
 
                 Player.STATE_IDLE -> {
-                    onDestroy()
+                    // keep the service alive when the player is only idle because of an
+                    // error: destroying it here dropped the playback after the device
+                    // slept for a long time and there was nothing left to resume
+                    if (shouldStopOnlinePlayerService(exoPlayer, playbackState)) {
+                        onDestroy()
+                    }
                 }
 
                 Player.STATE_BUFFERING -> {}
@@ -110,7 +114,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
         isAudioOnlyPlayer = args.getBoolean(IntentData.audioOnly)
 
         // get the intent arguments
-        videoId = playerData.videoId!!
+        val requestedVideoId = playerData.videoId
+        if (requestedVideoId.isNullOrEmpty()) {
+            stopSelf()
+            return
+        }
+        videoId = requestedVideoId
         playlistId = playerData.playlistId
         channelId = playerData.channelId
         startTimestampSeconds = playerData.timestamp
@@ -213,6 +222,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
     private fun setStreamSource() {
         val streams = streams ?: return
 
+        // NewPipeExtractor renvoie "" (jamais null) quand un manifest est absent : sans
+        // cette normalisation les tests "hls != null"/"dash != null" sont toujours vrais,
+        // ExoPlayer reçoit une URI vide et le live échoue immédiatement en "erreur source".
+        val hlsUrl = streams.hls?.takeIf { it.isNotBlank() }
+        val dashUrl = streams.dash?.takeIf { it.isNotBlank() }
+
         when {
             // SABR
             // skip SABR for livestreams, as the player impl has no support for it
@@ -226,96 +241,93 @@ open class OnlinePlayerService : AbstractPlayerService() {
                     streams
                 )
                 val mediaSource = sabrMediaSourceFactory.createMediaSource(mediaItem)
-                val mediaSources = listOf<MediaSource>(mediaSource) + streams.subtitles.map {
-                    val format = Format.Builder()
-                        .setSampleMimeType(it.mimeType)
-                        .setLanguage(it.code)
-                        .setRoleFlags(getSubtitleRoleFlags(it))
-                        .build()
-                    val subtitleParserFactory = DefaultSubtitleParserFactory()
-                    val extractorsFactory = ExtractorsFactory {
-                        arrayOf(
-                            SubtitleExtractor(
-                                subtitleParserFactory.create(format), format
+                val mediaSources = listOf<MediaSource>(mediaSource) +
+                    streams.subtitles.mapNotNull {
+                        val subtitleUrl = it.url
+                        if (subtitleUrl.isNullOrEmpty()) return@mapNotNull null
+                        val format = Format.Builder()
+                            .setSampleMimeType(it.mimeType)
+                            .setLanguage(it.code)
+                            .setRoleFlags(getSubtitleRoleFlags(it))
+                            .build()
+                        val subtitleParserFactory = DefaultSubtitleParserFactory()
+                        val extractorsFactory = ExtractorsFactory {
+                            arrayOf(
+                                SubtitleExtractor(
+                                    subtitleParserFactory.create(format), format
+                                )
                             )
-                        )
-                    }
-                    val progressiveMediaSourceFactory = ProgressiveMediaSource.Factory(
-                        DefaultDataSource.Factory(this), extractorsFactory
-                    ).setLoadOnlySelectedTracks(true)
-                    try {
-                        // `enableLazyLoadingWithSingleTrack` is private
-                        val method =
-                            ProgressiveMediaSource.Factory::class.java.getDeclaredMethod(
-                                "enableLazyLoadingWithSingleTrack",
-                                Int::class.java,
-                                Format::class.java
+                        }
+                        val progressiveMediaSourceFactory = ProgressiveMediaSource.Factory(
+                            DefaultDataSource.Factory(this), extractorsFactory
+                        ).setLoadOnlySelectedTracks(true)
+                        try {
+                            // `enableLazyLoadingWithSingleTrack` is private
+                            val method =
+                                ProgressiveMediaSource.Factory::class.java.getDeclaredMethod(
+                                    "enableLazyLoadingWithSingleTrack",
+                                    Int::class.java,
+                                    Format::class.java
+                                )
+                            method.isAccessible = true
+                            method.invoke(
+                                progressiveMediaSourceFactory, SubtitleExtractor.TRACK_ID,
+                                format
+                                    .buildUpon()
+                                    .setSampleMimeType(MimeTypes.APPLICATION_MEDIA3_CUES)
+                                    .setCodecs(format.sampleMimeType)
+                                    .setCueReplacementBehavior( subtitleParserFactory.getCueReplacementBehavior(format))
+                                    .build()
                             )
-                        method.isAccessible = true
-                        method.invoke(
-                            progressiveMediaSourceFactory, SubtitleExtractor.TRACK_ID,
-                            format
-                                .buildUpon()
-                                .setSampleMimeType(MimeTypes.APPLICATION_MEDIA3_CUES)
-                                .setCodecs(format.sampleMimeType)
-                                .setCueReplacementBehavior( subtitleParserFactory.getCueReplacementBehavior(format))
-                                .build()
-                        )
-                    } catch (e: Exception) {
-                        Log.w(this::class.simpleName, "failed to set subtitle lazy-loading: ${e.stackTrace}")
+                        } catch (e: Exception) {
+                            Log.w(this::class.simpleName, "failed to set subtitle lazy-loading: ${e.stackTrace}")
+                        }
+                        progressiveMediaSourceFactory.createMediaSource(MediaItem.fromUri(subtitleUrl))
                     }
-                    progressiveMediaSourceFactory.createMediaSource(MediaItem.fromUri(it.url!!))
-                }.toList()
 
                 exoPlayer?.setMediaSource(MergingMediaSource(*mediaSources.toTypedArray()))
                 return
             }
-            // DASH
+
+            // LIVE : HLS en priorité. Les manifests ne passent PAS par le proxy d'images
+            // de l'instance (il ne relaie ni playlist ni MPD -> le live ne démarrait pas).
+            streams.isLive && hlsUrl != null -> {
+                val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))
+                    .setPlaylistParserFactory(YoutubeHlsPlaylistParser.Factory())
+
+                val mediaItem = createMediaItem(hlsUrl.toUri(), MimeTypes.APPLICATION_M3U8, streams)
+                exoPlayer?.setMediaSource(hlsMediaSourceFactory.createMediaSource(mediaItem))
+                return
+            }
+            streams.isLive && dashUrl != null -> {
+                val mediaItem = createMediaItem(dashUrl.toUri(), MimeTypes.APPLICATION_MPD, streams)
+                exoPlayer?.setMediaItem(mediaItem)
+                return
+            }
+
+            // DASH : manifest généré localement (qualité sélectionnable)
             streams.videoStreams.any { it.url?.startsWith("sabr://") != true } -> {
-                // only use the dash manifest generated by YT if either it's a livestream or no other source is available
-                val dashUri =
-                    if (streams.isLive && streams.dash != null) {
-                        ProxyHelper.rewriteUrlUsingProxyPreference(
-                            streams.dash
-                        ).toUri()
-                    } else {
-                        PlayerHelper.createDashSource(streams.copy(videoStreams = streams.videoStreams.filter {
-                            it.url?.startsWith("sabr://") != true
-                        }), this)
-                    }
+                val dashUri = PlayerHelper.createDashSource(streams.copy(videoStreams = streams.videoStreams.filter {
+                    it.url?.startsWith("sabr://") != true
+                }), this)
 
                 val mediaItem = createMediaItem(dashUri, MimeTypes.APPLICATION_MPD, streams)
                 exoPlayer?.setMediaItem(mediaItem)
             }
-            // HLS: preferred source for livestreams (YouTube serves live content over HLS,
-            // and the DASH manifests it exposes for live are frequently incomplete/failing)
-            streams.isLive && streams.hls != null -> {
-                val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))
-                    .setPlaylistParserFactory(YoutubeHlsPlaylistParser.Factory())
-
-                val mediaItem = createMediaItem(
-                    ProxyHelper.rewriteUrlUsingProxyPreference(streams.hls).toUri(),
-                    MimeTypes.APPLICATION_M3U8,
-                    streams
+            // DASH YouTube en secours quand aucun manifest local n'est construisible
+            dashUrl != null -> {
+                exoPlayer?.setMediaItem(
+                    createMediaItem(dashUrl.toUri(), MimeTypes.APPLICATION_MPD, streams)
                 )
-                val mediaSource = hlsMediaSourceFactory.createMediaSource(mediaItem)
-
-                exoPlayer?.setMediaSource(mediaSource)
                 return
             }
-            // HLS as last fallback
-            streams.hls != null -> {
+            // HLS en dernier recours
+            hlsUrl != null -> {
                 val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))
                     .setPlaylistParserFactory(YoutubeHlsPlaylistParser.Factory())
 
-                val mediaItem = createMediaItem(
-                    ProxyHelper.rewriteUrlUsingProxyPreference(streams.hls).toUri(),
-                    MimeTypes.APPLICATION_M3U8,
-                    streams
-                )
-                val mediaSource = hlsMediaSourceFactory.createMediaSource(mediaItem)
-
-                exoPlayer?.setMediaSource(mediaSource)
+                val mediaItem = createMediaItem(hlsUrl.toUri(), MimeTypes.APPLICATION_M3U8, streams)
+                exoPlayer?.setMediaSource(hlsMediaSourceFactory.createMediaSource(mediaItem))
                 return
             }
             // NO STREAM FOUND
@@ -326,13 +338,16 @@ open class OnlinePlayerService : AbstractPlayerService() {
         }
     }
 
-    private fun getSubtitleConfigs(): List<SubtitleConfiguration> = streams?.subtitles?.map {
-        val roleFlags = getSubtitleRoleFlags(it)
-        SubtitleConfiguration.Builder(it.url!!.toUri())
-            .setRoleFlags(roleFlags)
-            .setLanguage(it.code)
-            .setMimeType(it.mimeType).build()
-    }.orEmpty()
+    private fun getSubtitleConfigs(): List<SubtitleConfiguration> = streams?.subtitles
+        ?.mapNotNull {
+            val subtitleUrl = it.url
+            if (subtitleUrl.isNullOrEmpty()) return@mapNotNull null
+            val roleFlags = getSubtitleRoleFlags(it)
+            SubtitleConfiguration.Builder(subtitleUrl.toUri())
+                .setRoleFlags(roleFlags)
+                .setLanguage(it.code)
+                .setMimeType(it.mimeType).build()
+        }.orEmpty()
 
     private fun createMediaItem(uri: Uri, mimeType: String, streams: Streams) =
         MediaItem.Builder()
@@ -341,4 +356,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
             .setSubtitleConfigurations(getSubtitleConfigs())
             .setMetadata(streams, videoId)
             .build()
+}
+
+/**
+ * The player goes idle both when playback is over and when it failed. Only the first case
+ * means the service has nothing left to do, otherwise the error could not be recovered.
+ */
+internal fun shouldStopOnlinePlayerService(player: Player?, playbackState: Int): Boolean {
+    return playbackState == Player.STATE_IDLE && player?.playerError == null
 }

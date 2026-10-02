@@ -31,14 +31,23 @@ import com.google.common.collect.ImmutableList
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
-class InstanceSettings : BasePreferenceFragment() {
+open class InstanceSettings : BasePreferenceFragment() {
     private val token get() = PreferenceHelper.getToken()
     private var instances = mutableListOf<PipedInstance>()
     private val customInstancesModel: InstancesModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.instance_settings, rootKey)
+        bindInstancePreferences()
+    }
 
+    /**
+     * Binds the instance / authentication / account rows. Extracted from
+     * [onCreatePreferences] so [PrivacySettings], which merges the very same preference
+     * XML into its hub, can reuse the whole behaviour (dialogs included, see
+     * [onDisplayPreferenceDialog]) without duplicating the logic.
+     */
+    protected fun bindInstancePreferences() {
         val instancePref = findPreference<ListPreference>(PreferenceKeys.FETCH_INSTANCE)!!
         val authInstanceToggle = findPreference<SwitchPreferenceCompat>(
             PreferenceKeys.AUTH_INSTANCE_TOGGLE

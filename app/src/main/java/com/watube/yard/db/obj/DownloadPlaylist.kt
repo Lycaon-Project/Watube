@@ -2,6 +2,7 @@ package com.watube.yard.db.obj
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
@@ -16,7 +17,10 @@ data class DownloadPlaylist(
     val description: String? = null,
 )
 
-@Entity(primaryKeys = ["playlistId", "videoId"])
+@Entity(
+    primaryKeys = ["playlistId", "videoId"],
+    indices = [Index(value = ["videoId"], name = "index_DownloadPlaylistVideosCrossRef_videoId")]
+)
 data class DownloadPlaylistVideosCrossRef(
     val playlistId: String,
     val videoId: String,

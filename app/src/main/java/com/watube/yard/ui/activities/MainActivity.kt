@@ -1,20 +1,25 @@
 package com.watube.yard.ui.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.Key
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -39,9 +44,7 @@ import com.watube.yard.databinding.ActivityMainBinding
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.obj.SearchHistoryItem
 import com.watube.yard.enums.ImportFormat
-import com.watube.yard.enums.SearchType
 import com.watube.yard.enums.TopLevelDestination
-import com.watube.yard.extensions.anyChildFocused
 import com.watube.yard.helpers.ImportHelper
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavBarHelper
@@ -52,16 +55,15 @@ import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.dialogs.ErrorDialog
 import com.watube.yard.ui.dialogs.ImportTempPlaylistDialog
+import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.fragments.DownloadsFragment
-import com.watube.yard.ui.models.DownloadsViewModel
-import com.watube.yard.ui.models.PlaylistViewModel
-import com.watube.yard.ui.models.SearchViewModel
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.preferences.BackupRestoreSettings
 import com.watube.yard.ui.preferences.BackupRestoreSettings.Companion.FILETYPE_ANY
 import com.watube.yard.util.UpdateChecker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -81,22 +83,19 @@ class MainActivity : AbstractPlayerHostActivity() {
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
 
-    private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
+    /** Resolved bottom gap for the floating nav bar (max of system inset and the design inset). */
+    private var navBarBottomInset = 0
 
-    // search related stuff
-    private lateinit var searchView: SearchView
-    private lateinit var searchItem: MenuItem
-    private var savedSearchQuery: String? = null
-    private var shouldOpenSuggestions = true
-    private var currentSearchType: SearchType = SearchType.ONLINE
-    private val searchViewModel: SearchViewModel by viewModels()
-    private val downloadViewModel: DownloadsViewModel by viewModels()
-    private val playlistViewModel: PlaylistViewModel by viewModels()
+    private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
     // registering for activity results is only possible, this here should have been part of
     // PlaylistOptionsBottomSheet instead if Android allowed us to
     private var playlistExportFormat: ImportFormat = ImportFormat.NEWPIPE
     private var exportPlaylistId: String? = null
+
+    /** garde one-shot : loadIntentData() peut être ré-entré par onNewIntent() suite à la
+     *  relance auto PiP, et une boucle d'intents fait pin/unpin de la fenêtre PiP. */
+    private var pipRelaunchPending = false
     private val createPlaylistsFile = registerForActivityResult(
         ActivityResultContracts.CreateDocument(FILETYPE_ANY)
     ) { uri ->
@@ -144,13 +143,28 @@ class MainActivity : AbstractPlayerHostActivity() {
                             paddingBottom
                         )
                     }
-                    with(binding.bottomNav) {
-                        setPadding(
-                            paddingLeft,
-                            paddingTop,
-                            paddingRight,
-                            systemBarInsets.bottom
+                    binding.bottomNav.let { bar ->
+                        // The bar floats above the bottom edge instead of bleeding behind the
+                        // system bar: the inset is applied as a margin so the rounded corners
+                        // and the gap below stay visible (1.1rem of the mockup).
+                        navBarBottomInset = systemBarInsets.bottom.coerceAtLeast(
+                            bar.resources.getDimensionPixelSize(R.dimen.watube_nav_bottom_inset)
                         )
+                        // The root is a MotionLayout whose (empty) start/end ConstraintSets are
+                        // derived from the layout at init and re-applied on every layout pass,
+                        // silently reverting a bottomMargin set through layoutParams. On devices
+                        // with gesture navigation or curved edges that left the bar flush against
+                        // the physical edge. Writing the inset into both ConstraintSets is what
+                        // makes the floating gap actually stick.
+                        intArrayOf(R.id.start, R.id.end).forEach { setId ->
+                            binding.root.getConstraintSet(setId)?.let { set ->
+                                set.setMargin(R.id.bottomNav, ConstraintSet.BOTTOM, navBarBottomInset)
+                                binding.root.updateState(setId, set)
+                            }
+                        }
+                        (bar.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
+                            navBarBottomInset
+                        bar.requestLayout()
                     }
                     with(binding.navRail) {
                         setPadding(
@@ -166,34 +180,79 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
         // manually update the bottom bar height in the mini player transition
         binding.bottomNav.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            // the bar floats above the system inset now, so the shift has to cover both
+            val shift = binding.bottomNav.height + navBarBottomInset
             val transition = binding.root.getTransition(R.id.bottom_bar_transition)
             transition.keyFrameList.forEach { keyFrame ->
                 // These frame positions are hardcoded in activity_main_scene.xml!
                 for (key in keyFrame.getKeyFramesForView(binding.bottomNav.id)) {
                     if (key.framePosition == 1) key.setValue(
                         Key.TRANSLATION_Y,
-                        binding.bottomNav.height
+                        shift
                     )
                 }
                 for (key in keyFrame.getKeyFramesForView(binding.container.id)) {
                     if (key.framePosition == 100) key.setValue(
                         Key.TRANSLATION_Y,
-                        -binding.bottomNav.height
+                        -shift
                     )
                 }
             }
             binding.root.scene.setTransition(transition)
         }
 
-        // Check update automatically
-        if (PreferenceHelper.getBoolean(PreferenceKeys.AUTOMATIC_UPDATE_CHECKS, false)) {
+        applyBottomBarNightStyle()
+
+        // Header brand: icon + fallback colour first, then the gradient, which needs a
+        // laid out text box and is therefore refreshed from the layout listener.
+        applyBrandHeader()
+        binding.brandWord.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            applyBrandWordGradient()
+        }
+        // Mockup #themeBtn flips light/dark in place. MainActivity declares uiMode in
+        // configChanges, so AppCompat would only patch Resources and leave every already
+        // inflated view on the previous theme: store the value Settings > Appearance
+        // writes and reuse the restart dialog the app already shows for theme changes.
+        binding.themeToggle.setOnClickListener {
+            val switchingToLight = isNightUiMode()
+            PreferenceHelper.putString(
+                PreferenceKeys.THEME_MODE,
+                if (switchingToLight) "L" else "D"
+            )
+            // OLED / pure black only applies in dark mode: disable it when going light
+            if (switchingToLight) {
+                PreferenceHelper.putBoolean(PreferenceKeys.PURE_THEME, false)
+            }
+            RequireRestartDialog().show(
+                supportFragmentManager,
+                RequireRestartDialog::class.java.name
+            )
+        }
+        // The bell opens the notification settings (which channels notify on new streams),
+        // the only place the app actually manages notifications.
+        binding.bellBtn.setOnClickListener {
+            startActivity(
+                Intent(this, SettingsActivity::class.java).putExtra(
+                    SettingsActivity.REDIRECT_KEY,
+                    SettingsActivity.REDIRECT_TO_NOTIFICATION_SETTINGS
+                )
+            )
+        }
+        // The overflow button replaces the removed toolbar: it hosts Settings/Help/About.
+        binding.overflowBtn.setOnClickListener { anchor ->
+            androidx.appcompat.widget.PopupMenu(this, anchor).apply {
+                menuInflater.inflate(R.menu.action_bar, menu)
+                setOnMenuItemClickListener(::onOptionsItemSelected)
+            }.show()
+        }
+
+        // Check update automatically (on by default; the first launch always checks because
+        // no previous check time is stored yet, then it throttles to the configured interval)
+        if (PreferenceHelper.getBoolean(PreferenceKeys.AUTOMATIC_UPDATE_CHECKS, true)) {
             lifecycleScope.launch(Dispatchers.IO) {
                 UpdateChecker(this@MainActivity).checkUpdate(false)
             }
         }
-
-        // set the action bar for the activity
-        setSupportActionBar(binding.toolbar)
 
         val navHostFragment = binding.fragment.getFragment<NavHostFragment>()
         navController = navHostFragment.navController
@@ -231,7 +290,13 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         setupExpandedLayout()
 
-        binding.toolbar.title = ThemeHelper.getStyledAppName(this)
+        // setupWithNavController only checks the item of a new destination, it never
+        // repairs a bar desynced by a menu rebuild or a state restore: converge both
+        // bars on the destination ourselves. The listener fires immediately for the
+        // current destination, so onCreate() ends in a consistent state.
+        navController.addOnDestinationChangedListener(
+            NavController.OnDestinationChangedListener { _, _, _ -> syncBottomBarSelection() }
+        )
 
         // handle error logs
         PreferenceHelper.getErrorLog().ifBlank { null }?.let {
@@ -250,13 +315,19 @@ class MainActivity : AbstractPlayerHostActivity() {
      * Deselect all bottom bar items
      */
     private fun deselectBottomBarItems() {
-        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
-            bar.menu.setGroupCheckable(0, true, false)
-            for (child in bar.menu.children) {
-                child.isChecked = false
-            }
-            bar.menu.setGroupCheckable(0, true, true)
+        listOf(binding.bottomNav, binding.navRail).forEach { forceExclusiveCheck(it, null) }
+    }
+
+    /**
+     * Highlight [checked] and only it, then restore the exclusive checkable group so
+     * any later check can never leave a second tab lit.
+     */
+    private fun forceExclusiveCheck(bar: NavigationBarView, checked: MenuItem?) {
+        bar.menu.setGroupCheckable(0, true, false)
+        for (child in bar.menu.children) {
+            child.isChecked = child == checked
         }
+        bar.menu.setGroupCheckable(0, true, true)
     }
 
     /**
@@ -330,7 +401,16 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        if (!::binding.isInitialized) return
         setupExpandedLayout()
+        // setupExpandedLayout() rebuilt the visible bar's menu, which can re-check the
+        // wrong item: no destination change follows on a config change, so re-sync now
+        syncBottomBarSelection()
+        // uiMode is part of this activity's configChanges, so a system night flip is
+        // delivered here instead of through a recreation: both the bottom bar night
+        // styling and the header brand have to follow it manually.
+        applyBottomBarNightStyle()
+        applyBrandHeader()
     }
 
     /**
@@ -390,16 +470,102 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
     }
 
-    private fun isSearchInProgress(): Boolean {
-        if (!this::navController.isInitialized) return false
-        val id = navController.currentDestination?.id ?: return false
+    /** True while the resources resolve against the night uiMode. */
+    private fun isNightUiMode(): Boolean =
+        resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
 
-        return id in listOf(
-            R.id.searchFragment,
-            R.id.searchResultFragment,
-            R.id.channelFragment,
-            R.id.playlistFragment
+    /**
+     * values-night sits outside the editable resource set, so the bottom bar styling is
+     * resolved here instead: the night scrim fill and the selected tab ink (values-night
+     * ships #35E08C for watube_nav_active, while the mockup uses its night --acc-text,
+     * watube_acc_text, on the pill). The day branch restores the drawable and the tint
+     * selector declared in activity_main.xml, so the method is idempotent in both
+     * directions and can follow a system uiMode flip.
+     *
+     * The theme's own outline attribute keeps the unselected tabs correct in both modes,
+     * so it is resolved instead of hard-coded.
+     */
+    private fun applyBottomBarNightStyle() {
+        val nightMode = isNightUiMode()
+
+        binding.bottomNav.setBackgroundResource(
+            if (nightMode) R.drawable.watube_bottom_nav_background_night
+            else R.drawable.watube_bottom_nav_background
         )
+
+        val tint = if (nightMode) {
+            ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(
+                    getColor(R.color.watube_acc_text),
+                    ThemeHelper.getThemeColor(this, com.google.android.material.R.attr.colorOutline)
+                )
+            )
+        } else {
+            AppCompatResources.getColorStateList(this, R.color.watube_bottom_nav_item_tint)
+        }
+        binding.bottomNav.itemIconTintList = tint
+        binding.bottomNav.itemTextColor = tint
+    }
+
+    /**
+     * Header brand of the mockup: the theme button offers the mode that is not rendered
+     * (sun while the UI is dark, moon while it is light) and the word gets its day/night
+     * colour. Deliberately kept out of the brandWord layout listener: setTextColor and
+     * setImageResource can trigger a relayout, and a listener that feeds requestLayout
+     * back into itself would spin.
+     *
+     * values-night is outside the editable resource set, so the day/night pair of
+     * --acc-text is selected here: watube_nav_active (#2C674A) by day, watube_acc_text
+     * (#59E6A1) at night.
+     */
+    private fun applyBrandHeader() {
+        binding.themeToggle.setImageResource(
+            if (isNightUiMode()) R.drawable.watube_sun else R.drawable.watube_moon
+        )
+        binding.brandWord.setTextColor(
+            getColor(
+                if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+            )
+        )
+        applyBrandWordGradient()
+    }
+
+    /**
+     * Paints the mockup .word gradient, linear-gradient(95deg, --acc-text, --acc 75%)
+     * clipped to the text box (wrap_content makes the view bounds the text bounds). Only
+     * the paint shader changes here, so it is safe to re-run from the layout listener.
+     * The gradient end stays on colorPrimary so every accent follows.
+     */
+    private fun applyBrandWordGradient() {
+        val word = binding.brandWord
+        val width = word.width
+        val height = word.height
+        if (width == 0 || height == 0) return
+
+        val start = getColor(
+            if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+        )
+        // CSS 95deg points right, tilted five degrees down; the length below is the
+        // "cover the box corners" axis of a two point gradient, and the 0.75f stop is
+        // the mockup's "--acc at 75%".
+        val radians = Math.toRadians(95.0)
+        val dx = Math.sin(radians)
+        val dy = -Math.cos(radians)
+        val length = Math.abs(width * dx) + Math.abs(height * dy)
+        val x0 = width / 2.0 - dx * length / 2.0
+        val y0 = height / 2.0 - dy * length / 2.0
+        word.paint.shader = LinearGradient(
+            x0.toFloat(),
+            y0.toFloat(),
+            (x0 + dx * length).toFloat(),
+            (y0 + dy * length).toFloat(),
+            intArrayOf(start, ThemeHelper.getThemeColor(this, androidx.appcompat.R.attr.colorPrimary)),
+            floatArrayOf(0f, 0.75f),
+            Shader.TileMode.CLAMP
+        )
+        word.invalidate()
     }
 
     private fun addSearchQueryToHistory(query: String) {
@@ -413,169 +579,41 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
     }
 
-    override fun invalidateMenu() {
-        // Don't invalidate menu when in search in progress
-        // this is a workaround as there is bug in android code
-        // details of bug: https://issuetracker.google.com/issues/244336571
-        if (isSearchInProgress()) {
-            return
-        }
-        super.invalidateMenu()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.action_bar, menu)
-
-        // stuff for the search in the topBar
-        val searchItem = menu.findItem(R.id.action_search)
-        this.searchItem = searchItem
-        searchView = searchItem.actionView as SearchView
-
-        // automatically set a different search icon in the playlists
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            currentSearchType = when (destination.id) {
-                R.id.downloadsFragment -> SearchType.DOWNLOADS
-                R.id.playlistFragment -> SearchType.PLAYLIST
-                else -> SearchType.ONLINE
-            }
-            // clear query in unused page so that they're reset when visiting the page the next time
-            if (currentSearchType != SearchType.DOWNLOADS) downloadViewModel.setQuery(null)
-            if (currentSearchType != SearchType.PLAYLIST) playlistViewModel.setQuery(null)
-
-            val searchIconResource = when (currentSearchType) {
-                SearchType.DOWNLOADS -> R.drawable.ic_download_search
-                SearchType.PLAYLIST -> R.drawable.ic_playlist_search
-                SearchType.ONLINE -> R.drawable.ic_search
-            }
-
-            searchItem.setIcon(searchIconResource)
-        }
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                searchView.clearFocus()
-
-                // playlist and download search don't do anything on submit
-                // as they search while typing
-                if (currentSearchType != SearchType.ONLINE) return true
-
-                // handle inserted YouTube-like URLs and directly open the referenced
-                // channel, playlist or video instead of showing search results
-                if (query.toHttpUrlOrNull() != null) {
-                    val queryIntent = IntentHelper.resolveType(query.toUri())
-
-                    val didNavigate = navigateToMediaByIntent(queryIntent) {
-                        navController.popBackStack(R.id.searchFragment, true)
-                        searchItem.collapseActionView()
-                    }
-                    if (didNavigate) return true
-                }
-
-                navController.navigate(NavDirections.showSearchResults(query))
-
-                addSearchQueryToHistory(query)
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                when (currentSearchType) {
-                    SearchType.ONLINE -> {
-                        if (!shouldOpenSuggestions) return true
-
-                        // Prevent navigation when search view is collapsed
-                        if (searchView.isIconified ||
-                            binding.bottomNav.menu.children.any {
-                                it.itemId == navController.currentDestination?.id
-                            }
-                        ) {
-                            return true
-                        }
-
-                        // prevent malicious navigation when the search view is getting collapsed
-                        if (navController.currentDestination?.id == R.id.searchResultFragment && newText == null) {
-                            return false
-                        }
-
-                        if (navController.currentDestination?.id != R.id.searchFragment) {
-                            val args = Bundle().apply {
-                                putString(IntentData.query, newText)
-                            }
-                            navController.navigate(R.id.searchFragment, args)
-                        } else {
-                            searchViewModel.setQuery(newText)
-                        }
-                    }
-
-                    SearchType.PLAYLIST -> {
-                        playlistViewModel.setQuery(newText)
-                    }
-
-                    SearchType.DOWNLOADS -> {
-                        downloadViewModel.setQuery(newText)
-                    }
-                }
-
-                return true
-            }
-        })
-
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                if (currentSearchType == SearchType.ONLINE && navController.currentDestination?.id != R.id.searchResultFragment) {
-                    searchViewModel.setQuery(null)
-                    navController.navigate(R.id.openSearch)
-                }
-                item.setShowAsAction(
-                    MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-                )
-                return true
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                // Handover back press to `BackPressedDispatcher` if not on a root destination
-                if (navController.previousBackStackEntry != null) {
-                    this@MainActivity.onBackPressedDispatcher.onBackPressed()
-                }
-
-                // Suppress collapsing of search when search in progress.
-                return !isSearchInProgress()
-            }
-        })
-
-        // handle search queries passed by the intent
-        if (savedSearchQuery != null) {
-            searchItem.expandActionView()
-            searchView.setQuery(savedSearchQuery, true)
-            savedSearchQuery = null
-        }
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
     /**
-     * Update the query text in the search bar without opening the search suggestions
+     * Runs a search query the way the toolbar SearchView submit used to: pasted
+     * URLs open their video, channel or playlist right away, everything else lands
+     * on the results screen and is recorded in the search history.
+     *
+     * @param query raw user input, trimmed and ignored when blank
      */
-    fun setQuerySilent(query: String) {
-        if (!this::searchView.isInitialized) return
+    fun openSearchResults(query: String) {
+        val trimmed = query.trim()
+        if (trimmed.isEmpty()) return
 
-        shouldOpenSuggestions = false
-        searchView.setQuery(query, false)
-        shouldOpenSuggestions = true
-    }
+        // handle inserted YouTube-like URLs and directly open the referenced
+        // channel, playlist or video instead of showing search results
+        if (trimmed.toHttpUrlOrNull() != null) {
+            val queryIntent = IntentHelper.resolveType(trimmed.toUri())
 
-    /**
-     * Update the query text in the search bar and load the search suggestions
-     * @param submit whether to immediately load the search results (not suggestions)
-     */
-    fun setQuery(query: String, submit: Boolean) {
-        if (::searchView.isInitialized) searchView.setQuery(query, submit)
+            val didNavigate = navigateToMediaByIntent(queryIntent) {
+                navController.popBackStack(R.id.searchFragment, true)
+            }
+            if (didNavigate) return
+        }
+
+        navController.navigate(NavDirections.showSearchResults(trimmed))
+
+        addSearchQueryToHistory(trimmed)
     }
 
     private fun loadIntentData() {
         // If activity is running in PiP mode, then start it in front.
-        if (PictureInPictureCompat.isInPictureInPictureMode(this)) {
+        // one-shot : sans cette garde, onNewIntent() rappelle cette méthode et la
+        // relance auto s'exécute en boucle (la fenêtre PiP se re-border en permanence).
+        if (!pipRelaunchPending &&
+            PictureInPictureCompat.isInPictureInPictureMode(this)
+        ) {
+            pipRelaunchPending = true
             val nIntent = Intent(this, MainActivity::class.java)
             nIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(nIntent)
@@ -599,9 +637,10 @@ class MainActivity : AbstractPlayerHostActivity() {
         // navigate to (temporary) playlist or channel if available
         if (navigateToMediaByIntent(intent)) return
 
-        // Get saved search query if available
+        // Run a search query passed by the intent (search_query links). It used to be
+        // parked until the next menu rebuild, which could drop it on onNewIntent().
         intent?.getStringExtra(IntentData.query)?.let {
-            savedSearchQuery = it
+            openSearchResults(it)
         }
 
         // Open the Downloads screen if requested
@@ -710,10 +749,53 @@ class MainActivity : AbstractPlayerHostActivity() {
             binding.navRail.removeBadge(R.id.subscriptionsFragment)
         }
 
-        // Remove focus from search view when navigating to bottom view.
-        searchItem.collapseActionView()
+        // settings are hosted by their own activity, not by this nav graph
+        if (item.itemId == R.id.settingsFragment) {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            return true
+        }
 
         return item.onNavDestinationSelected(navController)
+    }
+
+    /**
+     * The settings tab opens a separate activity, so the checked item no longer matches
+     * the current destination when coming back. Re-sync both bars, without triggering
+     * [setOnItemSelectedListener] (a plain [MenuItem.isChecked] never does).
+     *
+     * Destinations missing from the menu (search, channel, playlist...) keep the
+     * highlight of the tab they were opened from, exactly like NavigationUI does.
+     * Hidden destinations (trends, downloads) leave no visible tab lit.
+     */
+    private fun syncBottomBarSelection() {
+        if (!::binding.isInitialized || !this::navController.isInitialized) return
+        val destinationId = navController.currentDestination?.id ?: return
+        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+            val item = bar.menu.findItem(destinationId) ?: return@forEach
+            if (!item.isVisible) {
+                if (bar.menu.children.any { it.isChecked }) forceExclusiveCheck(bar, null)
+                return@forEach
+            }
+            // already the unique checked item with Material's internal id in sync
+            if (item.isChecked && bar.selectedItemId == destinationId) return@forEach
+            forceExclusiveCheck(bar, item)
+            // if the menu already matched, no flag changed, nothing was dispatched and
+            // NavigationBarView kept its stale selectedItemId: toggle once to force the
+            // dispatch that re-reads it (no frame is drawn between the two calls)
+            if (bar.selectedItemId != destinationId) {
+                bar.menu.setGroupCheckable(0, true, false)
+                item.isChecked = false
+                item.isChecked = true
+                bar.menu.setGroupCheckable(0, true, true)
+            }
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // the view hierarchy restore re-selects NavigationBarView's saved item, which
+        // can disagree with the destination the NavController restored in onCreate()
+        syncBottomBarSelection()
     }
 
     override fun onUserLeaveHint() {
@@ -728,12 +810,23 @@ class MainActivity : AbstractPlayerHostActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
+        if (!::binding.isInitialized) return
         loadIntentData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        pipRelaunchPending = false
+        syncBottomBarSelection()
+    }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        // onCreate() peut avoir quitté avant d'initialiser binding (pas de réseau)
+        if (!::binding.isInitialized) return super.onKeyUp(keyCode, event)
         // don't forward key events to the player while the search text input is used
-        if (searchItem.isActionViewExpanded) return false
+        if (this::navController.isInitialized &&
+            navController.currentDestination?.id == R.id.searchFragment
+        ) return false
 
         if (runOnPlayerFragment { this@runOnPlayerFragment.onKeyUp(keyCode, event) }) {
             return true
@@ -785,6 +878,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     override fun minimizePlayerContainerLayout() {
         binding.mainMotionLayout.transitionToEnd()
+        // predictive-back / channel navigation closes the player without a resume and
+        // without a destination change: re-check the highlight the player covered
+        syncBottomBarSelection()
     }
 
     override fun maximizePlayerContainerLayout() {
@@ -795,15 +891,24 @@ class MainActivity : AbstractPlayerHostActivity() {
         if (!NavBarHelper.hasTabs()) return
 
         binding.mainMotionLayout.progress = progress
+        // 1f is only reported once the player container finished closing, which is the
+        // one signal fired on that path (PlayerFragment reports it on transition end)
+        if (progress >= 1f) syncBottomBarSelection()
     }
 
     /**
-     * @return whether the search view focus was cleared successfully
+     * Clears the focus of the in-content search input when one currently holds it
+     *
+     * @return whether an input was focused and has been cleared
      */
     override fun clearSearchViewFocus(): Boolean {
-        if (!this::searchView.isInitialized || !searchView.anyChildFocused()) return false
+        val focused = currentFocus
+        if (focused !is EditText) return false
 
-        searchView.clearFocus()
+        focused.clearFocus()
+        // an EditText does not dismiss the IME on clearFocus() by itself
+        getSystemService(InputMethodManager::class.java)
+            ?.hideSoftInputFromWindow(focused.windowToken, 0)
         return true
     }
 }

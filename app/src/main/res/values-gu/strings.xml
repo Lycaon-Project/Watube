@@ -39,7 +39,6 @@
     <string name="category_interaction">ક્રિયાપ્રતિક્રિયા યાદ અપાવનાર (પસંદ અને સબ્સ્ક્રાઇબ કરો)</string>
     <string name="category_outro">અંતિમ પત્તાઓ અને ક્રેડિટ્સ</string>
     <string name="color_accent">ઉચ્ચારો</string>
-    <string name="color_red">લાલ આરામ</string>
     <string name="appearance_summary">એપ્લિકેશનને તમારી પસંદ પ્રમાણે સમાયોજિત કરો</string>
     <string name="instance_api_url">URL નો નમૂનો API</string>
     <string name="addInstance">નમૂનો ઉમેરો</string>
@@ -47,7 +46,6 @@
     <string name="comments_disabled">ટિપ્પણીઓ અપલોડ કરનાર દ્વારા નિષ્ક્રિય કરવામાં આવી છે.</string>
     <string name="captions_size">કેપ્શનનું માપ</string>
     <string name="network_metered">મીટર થયેલ</string>
-    <string name="color_blue">આનંદી વાદળી</string>
     <string name="all_caught_up">તમે બધા પકડાઈ ગયા છો</string>
     <string name="all_caught_up_summary">તમે બધી નવી વિડિઓઝ જોઈ છે</string>
     <string name="skip_segment">સેગમેન્ટ અવગણો</string>
@@ -134,9 +132,6 @@
     <string name="category_preview">પૂર્વદર્શન/રીકેપ</string>
     <string name="category_music_offtopic">સંગીત: બિન-સંગીત વિભાગ</string>
     <string name="license">લાઇસન્સ</string>
-    <string name="color_yellow">પીળો રંગ</string>
-    <string name="color_green">ગ્રુવી લીલો</string>
-    <string name="color_purple">આનંદદાયક જાંબલી</string>
     <string name="sponsorblock_notifications">સૂચનાઓ</string>
     <string name="app_icon">ચિહ્ન</string>
     <string name="appearance">દેખાવ</string>
@@ -192,7 +187,6 @@
     <string name="darkTheme">અંધારું</string>
     <string name="pinch_control">પિંચ નિયંત્રણ</string>
     <string name="pinch_control_summary">ઝૂમ ઇન/આઉટ કરવા માટે પિન્ચ જેસ્ચરનો ઉપયોગ કરો</string>
-    <string name="theme_monochrome">ન્યૂનતમ મોનોક્રોમ</string>
     <string name="double_tap_seek">શોધવા માટે બે વાર ટૅપ કરો</string>
     <string name="import_playlists">પ્લેલીસ્ટને આયાત કરો</string>
     <string name="export_playlists">પ્લેલીસ્ટોની નિકાસ કરો</string>

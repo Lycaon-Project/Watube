@@ -13,6 +13,13 @@ import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.helpers.LocaleHelper.getDetectedCountry
 import kotlin.math.roundToInt
 
+/**
+ * Preference file holding the last crash log. It deliberately lives outside of the default
+ * preferences so the backup rules (backup_rules.xml, data_extraction_rules.xml) can exclude
+ * it: a stack trace may contain video ids and urls and must not reach a cloud backup.
+ */
+private const val ERROR_LOG_PREF_FILE = "errors"
+
 object PreferenceHelper {
     private val TAG = PreferenceHelper::class.simpleName
 
@@ -190,6 +197,22 @@ object PreferenceHelper {
             )
             // the old per-day stamp format is superseded by the shared cycle stamp
             remove("sb_user_id_day")
+        },
+        PreferenceMigration(12, 13) {
+            // Watube: only five accents remain (aqua/azur/corail/lavande/ambre).
+            // Remap every retired value to the closest surviving hue.
+            val legacyAccents = mapOf(
+                "watube" to "aqua",
+                "forest" to "aqua",
+                "emeraude" to "aqua",
+                "menthe" to "aqua",
+                "lime" to "ambre",
+                "citron" to "ambre",
+                "graphite" to "azur",
+                "neon" to "azur",
+            )
+            val stored = getString(PreferenceKeys.ACCENT_COLOR, "")
+            legacyAccents[stored]?.let { putString(PreferenceKeys.ACCENT_COLOR, it) }
         }
     )
 
@@ -328,19 +351,55 @@ object PreferenceHelper {
     }
 
     fun getToken(): String {
-        return authSettings.getString(PreferenceKeys.TOKEN, "")!!
+        val stored = authPreferences().getString(PreferenceKeys.TOKEN, "").orEmpty()
+        if (stored.isEmpty() || TokenCipher.isEncrypted(stored)) return TokenCipher.decrypt(stored)
+
+        // transparent migration: a token written before the encryption existed gets
+        // re-encrypted in place on the first read, and is returned unchanged either way
+        val encrypted = TokenCipher.encrypt(stored)
+        if (TokenCipher.isEncrypted(encrypted)) {
+            authPreferences().edit(commit = true) {
+                putString(PreferenceKeys.TOKEN, encrypted)
+            }
+        }
+        return stored
     }
 
     fun setToken(newValue: String) {
-        authSettings.edit { putString(PreferenceKeys.TOKEN, newValue) }
+        authPreferences().edit {
+            putString(PreferenceKeys.TOKEN, TokenCipher.encrypt(newValue))
+        }
     }
 
     fun getUsername(): String {
-        return authSettings.getString(PreferenceKeys.USERNAME, "")!!
+        return authPreferences().getString(PreferenceKeys.USERNAME, "").orEmpty()
     }
 
     fun setUsername(newValue: String) {
-        authSettings.edit { putString(PreferenceKeys.USERNAME, newValue) }
+        authPreferences().edit { putString(PreferenceKeys.USERNAME, newValue) }
+    }
+
+    /**
+     * Watube: no browsing trace (watch history, searches, playback positions) may be
+     * written to the device while this is enabled.
+     */
+    fun isTouristModeEnabled(): Boolean = getBoolean(PreferenceKeys.TOURIST_MODE, false)
+
+    /**
+     * Watube: automatic retention of the watch history in days, 0 keeps it forever.
+     */
+    fun getHistoryRetentionDays(): Int =
+        getString(PreferenceKeys.HISTORY_RETENTION_DAYS, "0").toIntOrNull()?.coerceAtLeast(0) ?: 0
+
+    /**
+     * The auth preferences are opened lazily so that accessing them before [initialize]
+     * (or from a context that got torn down) can never crash the caller.
+     */
+    private fun authPreferences(): SharedPreferences {
+        if (!::authSettings.isInitialized) {
+            authSettings = getAuthenticationPreferences(WatubeApp.instance)
+        }
+        return authSettings
     }
 
     fun updateLastFeedWatchedTime(time: Long, seenByUser: Boolean) {
@@ -364,11 +423,17 @@ object PreferenceHelper {
     }
 
     fun saveErrorLog(log: String) {
-        putString(PreferenceKeys.ERROR_LOG, log)
+        // stored in its own preference file, which every backup rule excludes, so the
+        // stack trace (it can contain video ids and urls) is never uploaded to the cloud.
+        // commit() instead of apply(): this runs in the uncaught exception handler and the
+        // process is about to die, an async write would simply be dropped
+        WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
+            .edit(commit = true) { putString(PreferenceKeys.ERROR_LOG, log) }
     }
 
     fun getErrorLog(): String {
-        return getString(PreferenceKeys.ERROR_LOG, "")
+        return WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
+            .getString(PreferenceKeys.ERROR_LOG, "") ?: ""
     }
 
     /**

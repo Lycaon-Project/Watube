@@ -72,11 +72,6 @@
     <string name="category_preview">Преглед/Рекапитулација</string>
     <string name="category_preview_summary">За сегменте са детаљима будућег садржаја без додатних информација. Ако укључује клипове који се појављују само овде, ово је врло вероватно погрешна категорија</string>
     <string name="color_accent">Боја наглашавања</string>
-    <string name="color_yellow">Јарко жута</string>
-    <string name="color_green">Дивна зелена</string>
-    <string name="color_purple">Пријатна љубичаста</string>
-    <string name="color_blue">Блажено плава</string>
-    <string name="color_red">Одмарајућа црвена</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Обавештења</string>
     <string name="app_icon">Иконица</string>
@@ -272,7 +267,6 @@
     <string name="bookmarks">Обележивачи</string>
     <string name="bookmark">Обележивач</string>
     <string name="local_playlists">Локалне плејлисте</string>
-    <string name="color_violet">Свестрана љубичаста</string>
     <string name="brightness">Осветљеност</string>
     <string name="volume">Јачина звука</string>
     <string name="auto">Аутоматски</string>
@@ -293,7 +287,6 @@
     <string name="download_paused">Преузимање је паузирано</string>
     <string name="download_completed">Преузимање је завршено</string>
     <string name="no_comments_available">Овај видео снимак нема коментара.</string>
-    <string name="theme_monochrome">Минималистички монохром</string>
     <string name="all_caught_up_summary">Видели сте све нове видео снимке</string>
     <string name="all_caught_up">Све је прегледано</string>
     <string name="import_playlists">Увези плејлисте</string>

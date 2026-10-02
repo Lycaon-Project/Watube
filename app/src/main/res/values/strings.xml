@@ -11,6 +11,7 @@
     <string name="unsubscribe">Unsubscribe</string>
     <string name="share">Share</string>
     <string name="download">Download</string>
+    <string name="already_downloaded">You already downloaded this video!</string>
     <string name="save">Save</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -75,6 +76,7 @@
     <string name="all">All</string>
     <string name="playlists">Playlists</string>
     <string name="okay">OK</string>
+    <string name="dialog_ok">OK</string>
     <string name="finished">Finished</string>
     <string name="history">History</string>
     <string name="search_history">Search history</string>
@@ -111,13 +113,15 @@
     <string name="category_hook_summary">For narrative hooks that grab the viewer\'s attention (often as the first scene) by teasing or describing events from later in the same video or future episodes in a series</string>
     <string name="license">License</string>
     <string name="color_accent">Accents</string>
-    <string name="color_red">Resting red</string>
-    <string name="color_blue">Blissful blue</string>
-    <string name="color_watube" translatable="false">Watube aqua</string>
-    <string name="color_yellow">Yeeting yellow</string>
-    <string name="color_green">Groovy green</string>
-    <string name="color_purple">Pleasurable purple</string>
+    <string name="color_watube" translatable="false">Aqua</string>
+    <string name="color_azur" translatable="false">Azur</string>
+    <string name="color_corail" translatable="false">Corail</string>
+    <string name="color_lavande" translatable="false">Lavande</string>
+    <string name="color_ambre" translatable="false">Ambre</string>
     <string name="material_you">Material You</string>
+    <string name="app_font">App font</string>
+    <string name="font_system">System (default)</string>
+    <string name="font_figtree">Figtree</string>
     <string name="sponsorblock_notifications">Notifications</string>
     <string name="app_icon">Icon</string>
     <string name="enabled">On</string>
@@ -157,6 +161,13 @@
     <string name="version">Version %1$s</string>
     <string name="show_updates">Check updates automatically</string>
     <string name="show_updates_summary">Check for updates automatically every time the app is started.</string>
+    <string name="update_check_interval">Check frequency</string>
+    <string name="update_check_interval_summary">How often the app looks for a new version.</string>
+    <string name="update_interval_launch">Every launch</string>
+    <string name="update_interval_6h">Every 6 hours</string>
+    <string name="update_interval_12h">Every 12 hours</string>
+    <string name="update_interval_daily">Once a day</string>
+    <string name="update_interval_weekly">Once a week</string>
     <string name="related_streams">Related content</string>
     <string name="related_streams_summary">Show similar streams alongside what you watch</string>
     <string name="buffering_goal">Preloading</string>
@@ -209,8 +220,12 @@
     <string name="never">Never</string>
     <string name="autoRotatePlayer">Auto-fullscreen</string>
     <string name="autoRotatePlayer_summary">Fullscreen playback when the device gets turned</string>
-    <string name="pure_theme">Pure theme</string>
-    <string name="pure_theme_summary">Pure white/black theme</string>
+    <string name="pure_theme">Deep black (OLED)</string>
+    <string name="pure_theme_summary">Saves battery on OLED screens</string>
+    <string name="text_size">Text size</string>
+    <string name="feed_density">Feed density</string>
+    <string name="density_cozy">Cozy</string>
+    <string name="density_compact">Compact</string>
     <string name="data_saver_mode">Data-saver mode</string>
     <string name="data_saver_mode_summary">Skip thumbnails and other images</string>
     <string name="search_history_summary">Remember searches</string>
@@ -341,7 +356,6 @@
     <string name="pinch_control_summary">Use pinch gesture to zoom in/out</string>
     <string name="comments_disabled">Comments are disabled by the uploader.</string>
     <string name="no_comments_available">This video has no comments.</string>
-    <string name="theme_monochrome">Minimalistic monochrome</string>
     <string name="captions_size">Captions size</string>
     <string name="double_tap_seek">Double tap to seek</string>
     <string name="double_tap_seek_summary">Tap twice at the left or right to rewind or forward the player position</string>
@@ -359,7 +373,6 @@
     <string name="proceed">Proceed</string>
     <string name="play_latest_videos">Play latest videos</string>
     <string name="nothing_selected">Nothing selected!</string>
-    <string name="color_violet">Versatile violet</string>
     <string name="hide_watched_from_feed">Hide already watched videos</string>
     <string name="playlistUrl">Playlist URL</string>
     <string name="shuffle">Shuffle</string>
@@ -375,6 +388,32 @@
     <string name="skip_silence">Skip silence</string>
     <string name="help">Help</string>
     <string name="faq">FAQ</string>
+    <!-- Help page -->
+    <string name="help_intro">Everything you need to get the most out of Watube — a private, account-free way to watch.</string>
+    <string name="help_faq_title">Frequently asked questions</string>
+    <string name="help_tips_title">Getting started</string>
+    <string name="help_q_account">Do I need an account?</string>
+    <string name="help_a_account">No. Watube works entirely without any account or sign-in. Your subscriptions, history and playlists stay on your device.</string>
+    <string name="help_q_local">What is full local mode?</string>
+    <string name="help_a_local">In full local mode the app fetches everything directly, without going through any third-party server. It is the most private way to use Watube.</string>
+    <string name="help_q_download">How do I download a video?</string>
+    <string name="help_a_download">Open a video, then tap Download in the action row under the player. Downloads are available offline from the Library tab.</string>
+    <string name="help_q_sponsorblock">What is SponsorBlock?</string>
+    <string name="help_a_sponsorblock">SponsorBlock automatically skips sponsored segments, intros and other interruptions, using a community database. You can configure it in Settings.</string>
+    <string name="help_q_privacy">How does Watube protect my privacy?</string>
+    <string name="help_a_privacy">Watube sends no personal identifiers, rotates anonymous identifiers, can request a neutral region, and hardens its embedded WebView. See Settings → Privacy.</string>
+    <string name="help_q_backup">Can I back up my data?</string>
+    <string name="help_a_backup">Yes. Settings → Data &amp; maintenance → Backup lets you export and restore your subscriptions, playlists and history.</string>
+    <string name="help_tip_search_title">Search</string>
+    <string name="help_tip_search">Tap the search bar on the home screen. You can also paste a YouTube link to open it directly.</string>
+    <string name="help_tip_player_title">Player gestures</string>
+    <string name="help_tip_player">Swipe vertically on the left or right of the video for brightness and volume, double-tap to seek, and pinch to zoom.</string>
+    <string name="help_tip_subs_title">Subscriptions</string>
+    <string name="help_tip_subs">Subscribe to channels without an account. Group them and get notified of new videos from the bell in the header.</string>
+    <string name="help_tip_library_title">Library</string>
+    <string name="help_tip_library">Find your downloads, playlists, bookmarks and watch history in the Library tab.</string>
+    <string name="help_why_watube">Why Watube?</string>
+    <string name="help_why_watube_desc">Discover the project\'s philosophy and goals.</string>
     <string name="mark_as_watched">Mark as watched</string>
     <string name="category">Category</string>
     <string name="stats_for_nerds">Stats for nerds</string>
@@ -554,6 +593,11 @@
     <string name="tooltip_play">Play</string>
     <string name="tooltip_filter">Filter</string>
     <string name="tooltip_edit_groups">Edit groups</string>
+    <string name="tooltip_refresh">Refresh</string>
+    <string name="tooltip_theme">Change theme</string>
+    <string name="tooltip_cast">Cast</string>
+    <string name="tooltip_more">More options</string>
+    <string name="toast_cast_unavailable">Cast not available</string>
     <string name="tooltip_create_playlist">Create playlist</string>
     <string name="tooltip_scroll_to_top">Scroll to top</string>
     <string name="also_clear_watch_positions">Also clear watch positions</string>
@@ -569,6 +613,12 @@
     <string name="checking_for_updates">Checking for updates…</string>
     <string name="last_update_check">Last checked: %1$s</string>
     <string name="maintenance">Maintenance</string>
+    <string name="settings_data_maintenance">Data &amp; maintenance</string>
+    <string name="home_search_pill">Search on Watube</string>
+    <string name="local_badge">LOCAL</string>
+    <string name="home_continue_watching">Continue watching</string>
+    <string name="home_for_you">For you</string>
+    <string name="home_featured_tag">FEATURED</string>
 
     <!-- Privacy settings -->
     <string name="privacy">Privacy</string>
@@ -589,9 +639,86 @@
     <string name="current_sponsorblock_id">Current SponsorBlock ID</string>
     <string name="sb_user_id_info">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers">Identifiers</string>
+    <string name="privacy_category_protection">Anti-tracking protection</string>
+    <string name="privacy_category_data">Browsing data</string>
     <string name="reset_identifiers">Reset identifiers and WebView data</string>
     <string name="reset_identifiers_summary">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
     <string name="reset_identifiers_dialog_message">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
     <string name="sponsorblock_id_rotated">SponsorBlock ID reset</string>
     <string name="dialog_reset">Reset</string>
+
+    <!-- Tourist mode -->
+    <string name="tourist_mode">Tourist mode</string>
+    <string name="tourist_mode_summary">No trace kept on the device: history, searches and playback positions are not recorded.</string>
+    <string name="tourist_mode_clear_dialog">Turning on tourist mode immediately and permanently deletes your watch history, recent searches and playback positions. Continue?</string>
+
+    <!-- Watch history retention -->
+    <string name="history_retention_title">Watch history: automatic retention</string>
+    <string name="history_retention_summary">History entries older than the selected period are deleted automatically, at every app start and after each new entry.</string>
+    <string name="history_retention_never">Never</string>
+    <string name="history_retention_days_1">1 day</string>
+    <string name="history_retention_days_7">7 days</string>
+    <string name="history_retention_days_30">30 days</string>
+    <string name="history_retention_days_90">90 days</string>
+
+    <string-array name="history_retention_entries">
+        <item>@string/history_retention_never</item>
+        <item>@string/history_retention_days_1</item>
+        <item>@string/history_retention_days_7</item>
+        <item>@string/history_retention_days_30</item>
+        <item>@string/history_retention_days_90</item>
+    </string-array>
+
+    <string-array name="history_retention_values">
+        <item>0</item>
+        <item>1</item>
+        <item>7</item>
+        <item>30</item>
+        <item>90</item>
+    </string-array>
+
+    <!-- Solar library shortcut tiles (.qtile) -->
+    <plurals name="watube_shortcut_history">
+        <item quantity="one">local · %1$d video</item>
+        <item quantity="other">local · %1$d videos</item>
+    </plurals>
+    <plurals name="watube_shortcut_playlists">
+        <item quantity="one">%1$d playlist</item>
+        <item quantity="other">%1$d playlists</item>
+    </plurals>
+    <string name="watube_shortcut_downloads">offline</string>
+    <string name="watube_shortcut_privacy_title">Private data</string>
+    <string name="watube_shortcut_privacy">never sent</string>
+    <string name="watube_shortcut_privacy_toast">Your data stays on this device</string>
+
+    <!-- Solar search pane (.slab labels, .noresult empty state) -->
+    <string name="watube_search_recent">Recents</string>
+    <string name="watube_search_recent_note">· stored on this device</string>
+    <string name="watube_no_search_result_for">No results for \"%1$s\"</string>
+    <string name="watube_search_try_other_keywords">Try other keywords</string>
+
+    <!-- Solar settings hub rows (.stx summaries) -->
+    <string name="watube_settings_summary_appearance">Mode, accent, OLED, text, density</string>
+    <string name="watube_settings_summary_player">Quality, speed, SponsorBlock, haptics</string>
+    <string name="watube_settings_summary_privacy">Local mode, Piped, DeArrow, RYD</string>
+    <string name="watube_settings_summary_data">Data saver, Wi-Fi, cache</string>
+    <string name="watube_settings_summary_about">Watube %1$s · GPL-3.0 · credits</string>
+
+    <!-- Watube player sheet (mockup v27.1) -->
+    <string name="up_next">Up next</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
+    <string name="toast_feature_soon">Not available yet</string>
+    <string name="player_chapter_chip">Ch. %1$d/%2$d</string>
+    <string name="player_speed_chip" translatable="false">%1$s×</string>
+    <string name="player_quality_chip" translatable="false">%1$dp</string>
+    <string name="about_code_source">Code source</string>
+    <string name="about_privacy">Privacy policy</string>
+    <string name="about_report_issue">Report an issue</string>
+    <string name="about_mission">Why Watube</string>
+    <string name="about_header_subtitle">Independent LibreTube fork · Local mode by default · optional Piped instances</string>
+<string name="search_back">Back</string>
+<string name="search_clear">Clear</string>
+<string name="downloads_search_hint">Search downloads</string>
+<string name="playlist_search_hint">Search in playlist</string>
 </resources>

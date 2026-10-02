@@ -174,12 +174,12 @@ object PrivacyHelper {
      * region sent to the backend is picked from [NEUTRAL_REGIONS] instead of the device
      * locale country, so requests don't reveal where the user actually lives. The region
      * is re-picked on every rotation cycle, synchronized with the SponsorBlock id.
-     * Off by default because it changes visible content recommendations; it can be
-     * toggled in the privacy settings.
+     * On by default (hardening is opt-out in this app); it can be toggled in the privacy
+     * settings, as it changes visible content recommendations.
      */
     fun isNeutralRegionEnabled(): Boolean {
         return isHardeningEnabled() &&
-            PreferenceHelper.getBoolean(PreferenceKeys.PRIVACY_NEUTRAL_REGION, false)
+            PreferenceHelper.getBoolean(PreferenceKeys.PRIVACY_NEUTRAL_REGION, true)
     }
 
     /**

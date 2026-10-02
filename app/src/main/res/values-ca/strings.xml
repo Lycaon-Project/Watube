@@ -112,11 +112,6 @@
     <string name="category_preview_summary">Per als segments que detallin el contingut proper d\'aquest o de futurs vídeos de la seva sèrie, però no proporcioneu informació addicional. Si inclou clips que només apareixen aquí, és molt probable que aquesta sigui la categoria incorrecta</string>
     <string name="license">llicència</string>
     <string name="color_accent">Accents</string>
-    <string name="color_red">Repòs vermell</string>
-    <string name="color_blue">Blau feliç</string>
-    <string name="color_yellow">Groc exaltat</string>
-    <string name="color_green">Verd guai</string>
-    <string name="color_purple">Porpra agradable</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Notificacions</string>
     <string name="app_icon">Icona</string>
@@ -309,7 +304,6 @@
     <string name="pure_theme_summary">Tema purament blanc/negre</string>
     <string name="play_automatically_summary">Comença a reproduir el vídeo automàticament quan sigui seleccionat</string>
     <string name="duration">Durada</string>
-    <string name="theme_monochrome">Monocrom minimalista</string>
     <string name="seek_increment">Increment del salt</string>
     <string name="device_info">Informació del dispositiu</string>
     <string name="renamePlaylist">Canvia el nom de la llista de reproducció</string>
@@ -323,7 +317,6 @@
     <string name="proceed">Continua</string>
     <string name="play_latest_videos">Reprodueix els vídeos més recents</string>
     <string name="nothing_selected">No hi ha res seleccionat</string>
-    <string name="color_violet">Violeta versàtil</string>
     <string name="playlistUrl">URL de la llista de reproducció</string>
     <string name="audio_only_mode_summary">Converteix LibreTube en un reproductor de música</string>
     <string name="sleep_timer">Temporitzador</string>

@@ -15,25 +15,39 @@
     <string-array name="accents">
         <item>@string/material_you</item>
         <item>@string/color_watube</item>
-        <item>@string/color_red</item>
-        <item>@string/color_blue</item>
-        <item>@string/color_yellow</item>
-        <item>@string/color_green</item>
-        <item>@string/color_purple</item>
-        <item>@string/theme_monochrome</item>
-        <item>@string/color_violet</item>
+        <item>@string/color_azur</item>
+        <item>@string/color_corail</item>
+        <item>@string/color_lavande</item>
+        <item>@string/color_ambre</item>
     </string-array>
 
     <string-array name="accentsValue">
         <item>my</item>
-        <item>watube</item>
-        <item>red</item>
-        <item>blue</item>
-        <item>yellow</item>
-        <item>green</item>
-        <item>purple</item>
-        <item>monochrome</item>
-        <item>violet</item>
+        <item>aqua</item>
+        <item>azur</item>
+        <item>corail</item>
+        <item>lavande</item>
+        <item>ambre</item>
+    </string-array>
+
+    <string-array name="app_fonts">
+        <item>@string/font_system</item>
+        <item>@string/font_figtree</item>
+    </string-array>
+
+    <string-array name="feed_density_entries">
+        <item>@string/density_cozy</item>
+        <item>@string/density_compact</item>
+    </string-array>
+
+    <string-array name="feed_density_values">
+        <item>cozy</item>
+        <item>compact</item>
+    </string-array>
+
+    <string-array name="app_fonts_value">
+        <item>system</item>
+        <item>figtree</item>
     </string-array>
 
     <string-array name="defres">
@@ -279,5 +293,22 @@
         <item>12h</item>
         <item>24h</item>
         <item>manual</item>
+    </string-array>
+
+    <!-- How often the app looks for a new release when automatic checks are enabled -->
+    <string-array name="updateIntervalOptions">
+        <item>@string/update_interval_launch</item>
+        <item>@string/update_interval_6h</item>
+        <item>@string/update_interval_12h</item>
+        <item>@string/update_interval_daily</item>
+        <item>@string/update_interval_weekly</item>
+    </string-array>
+
+    <string-array name="updateIntervalValues">
+        <item>0</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+        <item>168</item>
     </string-array>
 </resources>

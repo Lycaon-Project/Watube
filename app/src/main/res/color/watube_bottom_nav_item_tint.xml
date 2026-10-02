@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Watube bottom tab bar: the selected tab uses the mockup acc-text token (dark accent
+  ink on the light pill by day, watube_acc_text on the dark one at night), every other
+  tab uses the mockup t3 token, i.e. ?attr/colorOutline, muted in both modes.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:color="@color/watube_nav_active"
+        android:state_checked="true" />
+    <item android:color="?attr/colorOutline" />
+</selector>

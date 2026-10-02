@@ -80,11 +80,6 @@
     <string name="category_preview_summary">對於沒有附加資訊的詳細未來內容的片段。 如果它包含只出現在這裡的剪輯，這很可能是錯誤的類別</string>
     <string name="license">授權</string>
     <string name="color_accent">強調色</string>
-    <string name="color_red">放鬆紅</string>
-    <string name="color_blue">幸福藍</string>
-    <string name="color_yellow">活力黃</string>
-    <string name="color_green">時髦綠</string>
-    <string name="color_purple">愉快紫</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">通知</string>
     <string name="app_icon">圖示</string>
@@ -163,7 +158,6 @@
     <string name="playlistCloned">已複製播放清單</string>
     <string name="default_subtitle_language">字幕語言</string>
     <string name="local_playlists">本機播放清單</string>
-    <string name="color_violet">多彩紫</string>
     <string name="push_channel_description">新串流上線時顯示通知。</string>
     <string name="chapters">章節</string>
     <string name="play_all">全部播放</string>
@@ -304,7 +298,6 @@
     <string name="auto_quality">自動</string>
     <string name="trending">現正熱門</string>
     <string name="comments_disabled">上傳者停用了留言功能。</string>
-    <string name="theme_monochrome">極簡單色</string>
     <string name="bookmarks">書籤</string>
     <string name="bookmark">加入書籤</string>
     <string name="clear_bookmarks">清除書籤</string>

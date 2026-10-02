@@ -70,11 +70,6 @@
     <string name="category_intro">Intervale de pauză / Animațiile de introducere</string>
     <string name="license">Licență</string>
     <string name="color_accent">Accente</string>
-    <string name="color_red">Roșu odihnitor</string>
-    <string name="color_blue">Albastru fericit</string>
-    <string name="color_yellow">Galben viu</string>
-    <string name="color_green">Verde activ</string>
-    <string name="color_purple">Mov plăcut</string>
     <string name="startpage">Acasă</string>
     <string name="save">Salvați</string>
     <string name="login">Autentificare</string>
@@ -319,7 +314,6 @@
     <string name="pinch_control">Controlul prin ciupire</string>
     <string name="category">Categoria</string>
     <string name="sleep_timer">Cronometru de somn</string>
-    <string name="color_violet">Violet versatil</string>
     <string name="auto">Automat</string>
     <string name="playback_pitch">Înălțime</string>
     <string name="autoplay_countdown">Numărătoarea inversă pentru redarea automată</string>
@@ -330,7 +324,6 @@
     <string name="import_playlists">Importați liste de redare</string>
     <string name="export_playlists">Exportați liste de redare</string>
     <string name="skip_silence">Omiteți tăcerea</string>
-    <string name="theme_monochrome">Monocrom minimalist</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d videoclipuri</string>
     <string name="subscriberAndVideoCounts">%1$s abonați • %2$d videoclipuri</string>
     <string name="auto_fullscreen_shorts">Ecran complet automat pentru videoclipuri scurte</string>

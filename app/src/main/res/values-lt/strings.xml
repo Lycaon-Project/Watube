@@ -215,10 +215,6 @@
     <string name="category_filler_summary">Mažai susijusios scenos, pridėtos tik užpildui ar humorui, žiūrint nereikia suprasti pagrindinio vaizdo įrašo turinio</string>
     <string name="category_music_offtopic">Muzika: su muzika nesusijusi dalis</string>
     <string name="category_preview">Peržiūra / apibendrinimas</string>
-    <string name="color_red">Rami raudona</string>
-    <string name="color_blue">Maloni mėlyna</string>
-    <string name="color_yellow">Gaivi geltona</string>
-    <string name="color_green">Žavinti žalia</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Pranešimai</string>
     <string name="downloads">Atsiuntimai</string>
@@ -252,7 +248,6 @@
     <string name="category_intro_summary">Intervalas be faktinio turinio. Tai gali būti pauzė, statiškas kadras, pasikartojanti animacija. Neturėtų būti naudojamas perėjimams su informacija</string>
     <string name="category_music_offtopic_summary">Naudoti tik muzikiniuose vaizdo įrašuose. Ji turėtų apimti vaizdo įrašo dalis, kurios nėra oficialių miksų dalis. Galų gale vaizdo įrašas turėtų būti kuo panašesnis į „Spotify“ ar bet kurią kitą mišrią versiją arba turėtų sumažinti kalbėjimą ar kitus trukdžius</string>
     <string name="category_preview_summary">Segmentams, kuriuose išsamiai nupasakojamas būsimas šio ar būsimų serijos vaizdo įrašų turinys, bet nepateikiama papildomos informacijos. Jei joje yra klipų, kurie rodomi tik čia, labai tikėtina, kad tai netinkama kategorija</string>
-    <string name="color_purple">Viliojanti violetinė</string>
     <string name="aspect_ratio">Vaizdo įrašo rezoliucija</string>
     <string name="livestreams">Tiesioginės transliacijos</string>
     <string name="defaultIconLight">Numatyta šviesi</string>
@@ -295,7 +290,6 @@
     <string name="username_email">Tęsti naudojant el. pašto adresą, nors tai ir nėra rekomenduojama?</string>
     <string name="pinch_control">Valdymas dviem pirštais</string>
     <string name="pinch_control_summary">Norėdami padidinti / sumažinti, sutraukite pirštais arba atvirkščiai</string>
-    <string name="theme_monochrome">Minimalistinė vienspalvė</string>
     <string name="play_latest_videos">Groti naujausius vaizdo įrašus</string>
     <string name="nothing_selected">Niekas nepasirinkta!</string>
     <string name="grid_landscape">Tinklelio stulpeliai (gulsčiai)</string>
@@ -353,7 +347,6 @@
     <string name="unsupported_file_format">Nepalaikomas failo formatas: %1$s</string>
     <string name="export_playlist">Eksportuoti grojaraštį</string>
     <string name="import_watch_history">Importuoti žiūrėjimo istorija</string>
-    <string name="color_violet">Universali violetinė</string>
     <string name="hide_watched_from_feed">Slėpti peržiūrėtus vaizdo įrašus</string>
     <string name="playlistUrl">Grojaraščio naršyklės nuorodą</string>
     <string name="shuffle">Sumaišyti</string>

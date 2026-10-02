@@ -45,9 +45,24 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
         _binding = FragmentSearchResultBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
-        // fixes a bug that the search query will stay the old one when searching for multiple
-        // different queries in a row and navigating to the previous ones through back presses
-        mainActivity.setQuerySilent(args.query)
+        // Persistent search bar: keeps the query visible, animates in, and re-opens the
+        // editable search on tap (back to the search input, which still holds the query).
+        binding.resultSearchText.text = args.query
+        binding.resultSearchBar.setOnClickListener {
+            val nav = findNavController()
+            if (nav.previousBackStackEntry?.destination?.id == R.id.searchFragment) {
+                nav.popBackStack()
+            } else {
+                nav.navigate(R.id.openSearch)
+            }
+        }
+        if (savedInstanceState == null) {
+            binding.resultSearchBar.apply {
+                alpha = 0f
+                translationY = -16f * resources.displayMetrics.density
+                animate().alpha(1f).translationY(0f).setDuration(220L).start()
+            }
+        }
 
         // Persistent search bar: keeps the query visible, animates in, and re-opens the
         // editable search on tap (back to the search input, which still holds the query).
@@ -92,11 +107,35 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
         val searchResultsAdapter = SearchResultsAdapter(timeStamp ?: 0)
         binding.searchRecycler.adapter = searchResultsAdapter
 
+        binding.noSearchResultTitle.text =
+            getString(R.string.watube_no_search_result_for, args.query)
+
         binding.searchRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
             }
+        })
+
+        // mockup .noresult: reachable only when a refresh settled with no item.
+        // item count and load state settle independently, so both signals update it.
+        var refreshLoadState: LoadState? = null
+        val updateNoResults = {
+            binding.noSearchResult.isVisible =
+                searchResultsAdapter.itemCount == 0 && refreshLoadState is LoadState.NotLoading
+        }
+
+        searchResultsAdapter.registerAdapterDataObserver(object :
+            RecyclerView.AdapterDataObserver() {
+            override fun onChanged() = updateNoResults()
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) =
+                updateNoResults()
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) =
+                updateNoResults()
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) =
+                updateNoResults()
         })
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -105,6 +144,8 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
                     val isLoading = it.source.refresh is LoadState.Loading
                     binding.progress.isVisible = isLoading
                     binding.searchResultsLayout.isGone = isLoading
+                    refreshLoadState = it.source.refresh
+                    updateNoResults()
                 }
             }
         }
@@ -128,7 +169,7 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
                 getString(R.string.showing_results_for)
             } else {
                 binding.searchSuggestionContainer.setOnClickListener {
-                    mainActivity.setQuery(suggestion, true)
+                    mainActivity.openSearchResults(suggestion)
                 }
                 getString(R.string.did_you_mean)
             }

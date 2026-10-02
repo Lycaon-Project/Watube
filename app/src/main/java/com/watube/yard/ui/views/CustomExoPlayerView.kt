@@ -212,6 +212,8 @@ class CustomExoPlayerView(
         this.playerCallback = playerCallback
         super.player = player
 
+        playerGestureController.observeFullscreen(viewLifecycleOwner)
+
         initializeGestureProgress()
 
         initRewindAndForward()
@@ -295,6 +297,11 @@ class CustomExoPlayerView(
                 sheet.show(activity.supportFragmentManager)
             }
         }
+
+        // the floating speed and quality chips reuse the exact pickers the portrait
+        // controls open, so a selection always applies to the running playback
+        binding.watubeSpeedChip.setOnClickListener { onPlaybackSpeedClicked() }
+        binding.watubeQualityChip.setOnClickListener { onQualityClicked() }
 
         supportFragmentManager.setFragmentResultListener(
             PlayingQueueSheet.PLAYING_QUEUE_REQUEST_KEY,
@@ -590,22 +597,9 @@ class CustomExoPlayerView(
         val seekIncrementText = (PlayerHelper.seekIncrement / 1000).toString()
         listOf(
             doubleTapOverlayBinding.rewindLayout.rewindTV,
-            doubleTapOverlayBinding.forwardLayout.forwardTV,
-            binding.seekButtonForward.forwardTV,
-            binding.seekButtonRewind.rewindTV
+            doubleTapOverlayBinding.forwardLayout.forwardTV
         ).forEach {
             it.text = seekIncrementText
-        }
-        binding.seekButtonForward.forwardBTN.setOnClickListener {
-            player?.seekBy(PlayerHelper.seekIncrement)
-        }
-        binding.seekButtonRewind.rewindBTN.setOnClickListener {
-            player?.seekBy(-PlayerHelper.seekIncrement)
-        }
-
-        if (!PlayerHelper.doubleTapToSeek) {
-            binding.seekButtonForward.forwardBTN.isVisible = !isPlayerLocked
-            binding.seekButtonRewind.rewindBTN.isVisible = !isPlayerLocked
         }
     }
 
@@ -767,11 +761,6 @@ class CustomExoPlayerView(
         binding.closeImageButton.isVisible = isLocked
         binding.exoTitle.isVisible = isLocked
         binding.playPauseBTN.isVisible = isLocked
-
-        if (!PlayerHelper.doubleTapToSeek) {
-            binding.seekButtonRewind.rewindBTN.isVisible = isLocked
-            binding.seekButtonForward.forwardBTN.isVisible = isLocked
-        }
 
         // hide the dimming background overlay if locked
         backgroundBinding.exoControlsBackground.setBackgroundColor(
@@ -1182,9 +1171,20 @@ class CustomExoPlayerView(
      * Updates the margins according to the current orientation and fullscreen mode
      */
     fun updateMarginsByFullscreenMode() {
-        // add a larger bottom margin to the time bar in landscape mode
-        binding.exoProgress.updateLayoutParams<MarginLayoutParams> {
-            bottomMargin = (if (isFullscreen()) 20f else 0f).dpToPx()
+        // Anchor the bottom control cluster (seekbar row) to the bottom of the control
+        // container: a small fullscreen lift only, read from this view's Resources so the
+        // value follows the configuration of the current screen. Converting dp in code went
+        // through Resources.getSystem(), which the Android docs describe as "not configured
+        // for the current screen (can not use dimension units)" and which can therefore
+        // inflate the offset on some devices.
+        binding.bottomBar.updateLayoutParams<MarginLayoutParams> {
+            bottomMargin = if (isFullscreen()) {
+                resources.getDimensionPixelSize(
+                    R.dimen.watube_player_controls_fullscreen_bottom_margin
+                )
+            } else {
+                0
+            }
         }
 
         updateTopBarMargin()
@@ -1206,22 +1206,6 @@ class CustomExoPlayerView(
                 marginEnd = horizontalMargin
             }
         }
-
-        binding.fullscreen.layoutParams =
-            (binding.fullscreen.layoutParams as MarginLayoutParams).apply {
-                if (isFullscreen()) {
-                    // Add extra bottom margin in fullscreen mode
-                    bottomMargin =
-                        resources.getDimensionPixelSize(R.dimen.fullscreen_button_margin_bottom)
-                    marginEnd =
-                        resources.getDimensionPixelSize(R.dimen.fullscreen_button_margin_end)
-                } else {
-                    // Reset to default margin
-                    bottomMargin =
-                        resources.getDimensionPixelSize(R.dimen.normal_button_margin_bottom)
-                    marginEnd = resources.getDimensionPixelSize(R.dimen.normal_button_margin_end)
-                }
-            }
     }
 
     /**

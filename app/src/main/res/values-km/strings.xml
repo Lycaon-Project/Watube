@@ -3,7 +3,6 @@
     <string name="darkTheme">ងងឹត</string>
     <string name="subscriberAndVideoCounts">អ្នកជាវ %1$s នាក់ • %2$d វីដេអូ</string>
     <string name="save">រក្សាទុក</string>
-    <string name="color_blue">ខៀវចាស់</string>
     <string name="subscribe">ជាវ</string>
     <string name="region">តំបន់</string>
     <string name="sponsorblock_notifications">ការជូនដំណឹង</string>
@@ -14,7 +13,6 @@
     <string name="playOnBackground">ចាក់នៅផ្ទៃខាងក្រោយ</string>
     <string name="music_albums">អាល់ប៊ុម យូធូបតន្ត្រី</string>
     <string name="website">វេបសាយ</string>
-    <string name="color_green">បៃតងឆើត</string>
     <string name="playlists">កម្រងវីដេអូ</string>
     <string name="all">ទាំងអស់</string>
     <string name="videos">វីដេអូ</string>
@@ -56,12 +54,10 @@
     <string name="location">ទីតាំង</string>
     <string name="emptyPlaylistName">ឈ្មោះកម្រងវីដេអូ មិនអាចទទេឡើយ</string>
     <string name="library">បណ្ណាល័យ</string>
-    <string name="color_yellow">លឿងទុំ</string>
     <string name="unknown_error">កំហុសបណ្ដាញ។</string>
     <string name="license">កម្មសិទ្ធិបញ្ញា</string>
     <string name="playlistName">ឈ្មោះកម្រងវីដេអូ</string>
     <string name="category_selfpromo_summary">ស្រដៀងទៅនឹង \"ឧបត្ថម្ភក\" លើកលែងតែការមិនបង់ប្រាក់ ឬការផ្សព្វផ្សាយខ្លួនឯង។ នេះរួមបញ្ចូលផ្នែកសម្រាប់ព័ត៌មានអំពីផលិតផល ការបរិច្ចាគ ឬដៃគូ</string>
-    <string name="color_purple">ស្វាយអ</string>
     <string name="about">អំពី</string>
     <string name="systemDefault">ប្រព័ន្ធ</string>
     <string name="emptyList">គ្មានអ្វីនៅទីនេះឡើយ។</string>
@@ -102,7 +98,6 @@
     <string name="noInternet">ភ្ជាប់ទៅកាន់អ៊ិនធឺណិតសិន។</string>
     <string name="category_interaction">ការរំលឹកអន្តរកម្ម</string>
     <string name="share">ចែករំលែក</string>
-    <string name="color_red">ក្រហមស្រាល</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d វីដេអូ</string>
     <string name="comments">មតិ</string>
     <string name="unsubscribe">ឈប់ជាវ</string>

@@ -73,24 +73,26 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
             updateFABMargin(it)
         }
 
-        // hide watch history button of history disabled
+        setupShortcuts()
+
+        // hide watch history tile when history is disabled
         val watchHistoryEnabled =
             PreferenceHelper.getBoolean(PreferenceKeys.WATCH_HISTORY_TOGGLE, true)
         if (!watchHistoryEnabled) {
-            binding.watchHistory.isGone = true
+            binding.watchHistoryCell.isGone = true
         } else {
-            binding.watchHistory.setOnClickListener {
+            binding.watchHistory.root.setOnClickListener {
                 findNavController().navigate(R.id.action_libraryFragment_to_watchHistoryFragment)
             }
         }
 
-        binding.downloads.setOnClickListener {
+        binding.downloads.root.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_downloadsFragment)
         }
 
         val navBarItems = NavBarHelper.getNavBarItemPreference(requireContext())
         if (navBarItems.any { (itemId, isVisible) -> isVisible && itemId == R.id.downloadsFragment }) {
-            binding.downloads.isGone = true
+            binding.downloadsCell.isGone = true
         }
 
         fetchPlaylists()
@@ -100,6 +102,7 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
         binding.playlistRefresh.setOnRefreshListener {
             fetchPlaylists()
             initBookmarks()
+            refreshHistoryCount()
         }
 
         childFragmentManager.setFragmentResultListener(
@@ -140,6 +143,55 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    /**
+     * Fills the four shortcut tiles of the mockup qgrid. History and downloads keep
+     * their existing navigation, playlists scrolls to its own section and private data
+     * only states that nothing ever leaves the device.
+     */
+    private fun setupShortcuts() {
+        binding.watchHistory.let { shortcut ->
+            shortcut.shortcutIcon.setImageResource(R.drawable.ic_time_outlined)
+            shortcut.shortcutTitle.setText(R.string.history)
+        }
+        binding.downloads.let { shortcut ->
+            shortcut.shortcutIcon.setImageResource(R.drawable.ic_download)
+            shortcut.shortcutTitle.setText(R.string.downloads)
+            shortcut.shortcutSummary.setText(R.string.watube_shortcut_downloads)
+        }
+        binding.shortcutPlaylists.let { shortcut ->
+            shortcut.shortcutIcon.setImageResource(R.drawable.watube_list)
+            shortcut.shortcutTitle.setText(R.string.playlists)
+        }
+        binding.shortcutPrivacy.let { shortcut ->
+            shortcut.shortcutIcon.setImageResource(R.drawable.watube_lock)
+            shortcut.shortcutTitle.setText(R.string.watube_shortcut_privacy_title)
+            shortcut.shortcutSummary.setText(R.string.watube_shortcut_privacy)
+        }
+
+        binding.shortcutPlaylists.root.setOnClickListener {
+            binding.libraryScroll.post {
+                binding.libraryScroll.smoothScrollTo(0, binding.playlistsSection.top)
+            }
+        }
+        binding.shortcutPrivacy.root.setOnClickListener {
+            Toast.makeText(context, R.string.watube_shortcut_privacy_toast, Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        refreshHistoryCount()
+    }
+
+    private fun refreshHistoryCount() {
+        lifecycleScope.launch {
+            val count = withContext(Dispatchers.IO) {
+                DatabaseHolder.Database.watchHistoryDao().getSize()
+            }
+            val binding = _binding ?: return@launch
+            binding.watchHistory.shortcutSummary.text =
+                resources.getQuantityString(R.plurals.watube_shortcut_history, count, count)
+        }
     }
 
     private fun initBookmarks() {
@@ -197,6 +249,9 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
 
         binding.nothingHere.isGone = true
         binding.sortTV.isVisible = true
+        binding.shortcutPlaylists.shortcutSummary.text = resources.getQuantityString(
+            R.plurals.watube_shortcut_playlists, playlists.size, playlists.size
+        )
         playlistsAdapter.submitList(playlists)
     }
 }

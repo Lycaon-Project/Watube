@@ -155,7 +155,6 @@
     <string name="default_or_unknown_audio_track">По подразбиране</string>
     <string name="export_subscriptions_to">Изнеси абонаменти към</string>
     <string name="shareTo">Сподели URL към</string>
-    <string name="color_blue">Син</string>
     <string name="resolution_limited">ограничена</string>
     <string name="player_resize_mode">Режим на преоразмеряване</string>
     <string name="birdIcon">Подсилена птица</string>
@@ -186,7 +185,6 @@
     <string name="playOnBackground">Изпълни във фонов режим</string>
     <string name="sb_create_segment">Създай сегмент</string>
     <string name="start_time">Начално време</string>
-    <string name="theme_monochrome">Едноцветен</string>
     <string name="push_channel_name">Агент за известие</string>
     <string name="visibility_unlisted">Скрит</string>
     <string name="sb_invalid_segment">Невалидно начало или край на сегмент</string>
@@ -203,7 +201,6 @@
     <string name="misc">Разни</string>
     <string name="deleteAccount_summary">Изтрий своя Piped профил</string>
     <string name="tooltip_locked">Заключи плейъра</string>
-    <string name="color_green">Зелен</string>
     <string name="featured">Представено</string>
     <string name="remove_watched_videos">Премахни гледани видеоклипове</string>
     <string name="watch_history_summary">Проследяване на гледаните видеоклипове локално</string>
@@ -269,7 +266,6 @@
     <string name="category_music_offtopic_summary">Само за използване в музикални видеоклипове. Трябва да покрива части от видеоклипа, които не са част от официални миксове. В крайна сметка видеоклипът трябва да наподобява Spotify или всяка друга смесена версия възможно най-близо или да намали говоренето или други разсейвания</string>
     <string name="group_name">Име на група</string>
     <string name="remove_bookmark">Премахни отметка</string>
-    <string name="color_violet">Виолетов</string>
     <string name="play_automatically_summary">Започни автоматично изпълнение при избор на видео</string>
     <string name="local_playlists">Местни плейлисти</string>
     <string name="tooltip_clear_queue">Изчисти опашката</string>
@@ -298,7 +294,6 @@
     <string name="download_paused">Изтеглянето е на пауза</string>
     <string name="sleep_timer">Таймер за заспиване</string>
     <string name="add_to_queue">Добави към опашката</string>
-    <string name="color_yellow">Жълт</string>
     <string name="captions">Надписи</string>
     <string name="original_or_main_audio_track">Оригинал</string>
     <string name="caption_settings">Надписи</string>
@@ -307,7 +302,6 @@
     <string name="search_history_summary">Запомнете търсенията</string>
     <string name="auth_instances">Избери инстанция за удостоверяване</string>
     <string name="category_selfpromo_summary">Подобно на „спонсор“, с изключение на неплатено или самореклама. Това включва секции за стоки, дарения или информация за това с кого са си сътрудничили</string>
-    <string name="color_purple">Лилав</string>
     <string name="export_playlists">Изнеси плейлисти</string>
     <string name="forward">Напред</string>
     <string name="no_subtitle">Няма субтитри</string>
@@ -408,7 +402,6 @@
     <string name="invalid_color">Въведена е невалидна стойност на цвета!</string>
     <string name="push_channel_description">Показва известие, когато са налични нови потоци.</string>
     <string name="layout">Оформление</string>
-    <string name="color_red">Червен</string>
     <string name="stats_for_nerds">Статистика за маниаци</string>
     <string name="livestreams">Потоци на живо</string>
     <string name="alphabetic_reversed">Азбучен (обърнато)</string>

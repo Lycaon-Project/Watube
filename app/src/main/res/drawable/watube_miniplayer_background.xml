@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Mini-player surface: Solar rounded card (bg2 surface + hairline stroke + card corners).
+  In the expanded player state the full-bleed video covers this background entirely, so
+  the rounding and stroke only appear once the player is collapsed into the floating
+  mini-player bar, matching the floating rounded bottom navigation.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="?attr/colorSurfaceContainer" />
+    <stroke
+        android:width="1dp"
+        android:color="?attr/colorOutlineVariant" />
+    <corners android:radius="@dimen/watube_card_radius" />
+</shape>

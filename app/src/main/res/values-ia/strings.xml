@@ -33,7 +33,6 @@
     <string name="notify_new_streams">Monstrar notificationes pro nove fluxos</string>
     <string name="least_views">Minus visualisate</string>
     <string name="shareTo">Inviar URL a</string>
-    <string name="color_blue">Blau beate</string>
     <string name="birdIcon">Ave</string>
     <string name="appearance_summary">Adjusta le application a tu agradamento</string>
     <string name="no_audio">Sin audio</string>
@@ -57,7 +56,6 @@
     <string name="category_filler">Contentos de replen/Burlas</string>
     <string name="translate">Traduction</string>
     <string name="deleteAccount_summary">Deler tu conto de Piped</string>
-    <string name="color_green">Verde genial</string>
     <string name="playlists">Listas de reproduction</string>
     <string name="all">Toto</string>
     <string name="unknown">Incognite</string>
@@ -126,7 +124,6 @@
     <string name="location">Localisation</string>
     <string name="reset_watch_positions">Reinitialisar</string>
     <string name="emptyPlaylistName">Le nomine del lista de reproduction non pote esser vacue</string>
-    <string name="color_yellow">Jalne intense</string>
     <string name="captions">Subtitulos</string>
     <string name="caption_settings">Subtitulos</string>
     <string name="unknown_error">Error de rete.</string>
@@ -135,7 +132,6 @@
     <string name="search_history_summary">Rememorar recercas</string>
     <string name="auth_instances">Selige un instantia de authentication</string>
     <string name="category_selfpromo_summary">Simile a \"sponsor\" ma pro promotion proprie o non pagate. Isto include sectiones re mercantias, donationes o information sur con qui habeva collaborate</string>
-    <string name="color_purple">Purpura placente</string>
     <string name="about">A proposito de</string>
     <string name="no_subtitle">Sin subtitulos</string>
     <string name="concurrent_downloads_limit_reached">Limite maxime de discargas simultanee attingite.</string>
@@ -199,7 +195,6 @@
     <string name="flameIcon">Flamma volante</string>
     <string name="playerAudioQuality">Qualitate de audio</string>
     <string name="category_interaction">Rememoration de interaction</string>
-    <string name="color_red">Rubie reposante</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d videos</string>
     <string name="seek_increment">Augmento in le recerca</string>
     <string name="audio">Audio</string>
@@ -265,7 +260,6 @@
     <string name="added_to_playlist">Addite al lista de reproduction %1$s</string>
     <string name="sb_create_segment">Crear segmento</string>
     <string name="start_time">Hora de initio</string>
-    <string name="theme_monochrome">Monochromatic Minimalistic</string>
     <string name="visibility_unlisted">Non listate</string>
     <string name="sb_invalid_segment">Initio o fin de segmento invalide</string>
     <string name="visibility">Visibilitate</string>
@@ -304,7 +298,6 @@
     <string name="auto_quality">Auto</string>
     <string name="group_name">Nomine de gruppo</string>
     <string name="remove_bookmark">Remover marcapagina</string>
-    <string name="color_violet">Violetta versatile</string>
     <string name="play_automatically_summary">Initiar le reproduction automatic del video quando es seligite</string>
     <string name="local_playlists">Listas de reproduction local</string>
     <string name="faq">FAQ</string>

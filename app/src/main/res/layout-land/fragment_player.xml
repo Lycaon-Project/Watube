@@ -33,6 +33,8 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/watube_gutter"
+                android:paddingEnd="@dimen/watube_gutter"
                 android:paddingBottom="10dp"
                 android:scrollbars="none">
 
@@ -41,7 +43,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="2dp">
+                    android:paddingHorizontal="0dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/relPlayer_cast"
+                        style="@style/PlayerActionsButton"
+                        android:layout_marginStart="0dp"
+                        android:text="@string/tooltip_cast"
+                        android:contentDescription="@string/tooltip_cast"
+                        app:icon="@drawable/watube_cast" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/relPlayer_share"
@@ -54,6 +64,12 @@
                         style="@style/PlayerActionsButton"
                         android:text="@string/download"
                         app:icon="@drawable/ic_download" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/relPlayer_queue"
+                        style="@style/PlayerActionsButton"
+                        android:text="@string/queue"
+                        app:icon="@drawable/ic_queue" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/relPlayer_save"
@@ -217,10 +233,27 @@
         app:layout_constraintStart_toEndOf="@id/main_container"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/watube_next_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/watube_gutter"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="@dimen/watube_gutter"
+            android:text="@string/up_next"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="13.6sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/related_rec_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/watube_next_title"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"

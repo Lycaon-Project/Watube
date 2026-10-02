@@ -51,6 +51,9 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
     private var isAppBarFullyExpanded = true
 
+    /** guards the feed progress bar hide animation against stale, still-pending end actions */
+    private var feedProgressAnimToken = 0
+
     private var feedAdapter = VideoCardsAdapter()
     private var selectedSortOrder = PreferenceHelper.getInt(PreferenceKeys.FEED_SORT_ORDER, 0)
         set(value) {
@@ -74,7 +77,6 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.subFeed?.layoutManager = GridLayoutManager(context, gridItems)
-        _binding?.subFeed?.setHasFixedSize(true)
     }
 
     @SuppressLint("SetTextI18n")
@@ -126,30 +128,46 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         }
 
         viewModel.feedProgress.observe(viewLifecycleOwner) { progress ->
-            if (progress == null || progress.currentProgress == progress.total) {
-                // the automatic animation by setting animateLayoutChanges looks very buggy
-                // so we display a custom animation when the feed finished loading
-                // https://stackoverflow.com/questions/37704046/animatelayoutchanges-buggy-when-changing-visibility-to-gone
+            // Every update invalidates a hide animation that is still in flight: its
+            // end action is still scheduled (it also runs after cancel()) and used to
+            // hide the bar again one frame after a new progress had re-shown it.
+            val loading = progress != null && progress.currentProgress < progress.total
+            if (loading) {
+                feedProgressAnimToken++
+                binding.feedProgressContainer.animate().cancel()
+                binding.feedProgressContainer.isVisible = true
+                binding.feedProgressContainer.alpha = 1f
+                binding.feedProgressContainer.scaleY = 1f
+                binding.feedProgressText.text = "${progress.currentProgress}/${progress.total}"
+                if (progress.total > 0) {
+                    binding.feedProgressBar.max = progress.total
+                    binding.feedProgressBar.progress = progress.currentProgress
+                }
+            } else {
+                if (!binding.feedProgressContainer.isVisible) return@observe
+
+                val token = ++feedProgressAnimToken
                 binding.feedProgressContainer.animate()
                     .alpha(0.5f)
                     .scaleY(0.5f)
                     .withEndAction {
                         val binding = _binding ?: return@withEndAction
+                        if (token != feedProgressAnimToken) return@withEndAction
                         binding.feedProgressContainer.isGone = true
                         binding.feedProgressContainer.scaleY = 1f
                         binding.feedProgressContainer.alpha = 1f
                     }
                     .setDuration(200)
                     .start()
-            } else {
-                binding.feedProgressContainer.isVisible = true
-                binding.feedProgressText.text = "${progress.currentProgress}/${progress.total}"
-                binding.feedProgressBar.max = progress.total
-                binding.feedProgressBar.progress = progress.currentProgress
             }
         }
 
         binding.subRefresh.setOnRefreshListener {
+            viewModel.fetchFeed(requireContext(), forceRefresh = true)
+        }
+
+        // header button of the mockup's .shd row: same refresh action as the swipe
+        binding.headerRefresh.setOnClickListener {
             viewModel.fetchFeed(requireContext(), forceRefresh = true)
         }
 
@@ -285,6 +303,14 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
                 id = View.generateViewId()
                 isCheckable = true
                 text = group.name
+                // filter_chip.xml is not part of the editable shell file set, so the
+                // mockup metrics carried by @style/Watube.Chip.Subs are mirrored here
+                setTextAppearance(R.style.WatubeChipLabel)
+                setChipMinHeight(resources.getDimension(R.dimen.watube_chip_min_height))
+                setChipStartPadding(0f)
+                setTextStartPadding(resources.getDimension(R.dimen.watube_chip_h_padding))
+                setTextEndPadding(resources.getDimension(R.dimen.watube_chip_h_padding))
+                setChipEndPadding(0f)
                 setOnLongClickListener {
                     // the index must be increased by one to skip the "all channels" group button
                     lifecycleScope.launch { playByGroup(index + 1) }
@@ -358,8 +384,6 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         val notLoaded = viewModel.videoFeed.value.isNullOrEmpty()
         binding.subFeed.isGone = notLoaded
         binding.emptyFeed.isVisible = notLoaded
-
-        binding.toggleSubs.text = getString(R.string.subscriptions)
 
         binding.subRefresh.isRefreshing = false
 

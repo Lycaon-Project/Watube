@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="customization">התאמות</string>
-    <string name="color_blue">כחול כובש</string>
     <string name="search_hint">חיפוש</string>
     <string name="videos">סרטונים</string>
     <string name="subscribe">רישום</string>
@@ -47,10 +46,6 @@
     <string name="category_outro_summary">מידע לאחר הסיום. לא למסקנות עם מידע</string>
     <string name="license">רישיון</string>
     <string name="color_accent">צבעים משניים</string>
-    <string name="color_red">אדום אתנחתא</string>
-    <string name="color_yellow">צהוב צורח</string>
-    <string name="color_green">ירוק יוקד</string>
-    <string name="color_purple">סגול סובלני</string>
     <string name="sponsorblock_notifications">התראות</string>
     <string name="app_icon">סמל</string>
     <string name="enabled">פעיל</string>
@@ -289,7 +284,6 @@
     <string name="export_playlists">ייצוא רשימות נגינה</string>
     <string name="pinch_control_summary">להשתמש בבקרת צביטה כדי להתקרב/להתרחק</string>
     <string name="pinch_control">בקרת צביטה</string>
-    <string name="theme_monochrome">מונוכרום פשטני</string>
     <string name="app_backup">גיבוי היישומון</string>
     <string name="backup_restore_summary">ייבוא וייצוא מינויים, רשימות נגינה ועוד…</string>
     <string name="exportsuccess">הייצוא הושלם.</string>
@@ -298,7 +292,6 @@
     <string name="play_latest_videos">לנגן את הסרטונים העדכניים ביותר</string>
     <string name="privacy_alert">התראת פרטיות</string>
     <string name="nothing_selected">שום דבר לא נבחר!</string>
-    <string name="color_violet">סגול מסתגל</string>
     <string name="hide_watched_from_feed">להסתיר סרטונים שנצפו כבר</string>
     <string name="playlistUrl">כתובת רשימת נגינה</string>
     <string name="shuffle">ערבול</string>

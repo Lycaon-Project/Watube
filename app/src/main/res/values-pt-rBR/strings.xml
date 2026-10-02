@@ -89,11 +89,6 @@
     <string name="category_interaction_summary">Quando houver um breve lembrete para curtir, inscrever-se ou seguir no meio do conteúdo. Se for longo ou sobre algo específico, deve ser uma autopromoção</string>
     <string name="category_outro_summary">Informações após o final. Não para conclusões com informações</string>
     <string name="color_accent">Cor de destaque</string>
-    <string name="color_red">Vermelho relaxante</string>
-    <string name="color_blue">Azul alegre</string>
-    <string name="color_yellow">Amarelo empolgante</string>
-    <string name="color_green">Verde daora</string>
-    <string name="color_purple">Roxo prazeroso</string>
     <string name="material_you">Material You</string>
     <string name="app_icon">Estilo de ícone (app)</string>
     <string name="sponsorblock_notifications">Notificações</string>
@@ -295,10 +290,8 @@
     <string name="username_email">Usar um endereço de e-mail como nome de usuário não é recomendado. Continuar mesmo assim?</string>
     <string name="pinch_control">Controle de pinças</string>
     <string name="pinch_control_summary">Use o gesto de pinça para aumentar ou diminuir o zoom</string>
-    <string name="theme_monochrome">Monocromático minimalista</string>
     <string name="play_latest_videos">Reproduzir os vídeos mais recentes</string>
     <string name="nothing_selected">Nada selecionado!</string>
-    <string name="color_violet">Violeta versátil</string>
     <string name="hide_watched_from_feed">Ocultar vídeos já assistidos</string>
     <string name="playlistUrl">URL da playlist</string>
     <string name="shuffle">Aleatório</string>

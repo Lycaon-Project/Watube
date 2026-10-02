@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <!--
+      DEBUG ONLY: identical to the main config, except that user installed CAs are
+      trusted as well, so the developer/tester can inspect the traffic with
+      mitmproxy/Charles. The release build uses res/xml/network_security_config.xml,
+      which trusts system CAs only.
+    -->
+    <base-config
+        cleartextTrafficPermitted="false"
+        tools:ignore="CleartextTrafficPermitted">
+        <trust-anchors>
+            <certificates src="system" />
+            <!-- Trusted for diagnostics only, never in release -->
+            <certificates
+                src="user"
+                tools:ignore="AcceptsUserCertificates" />
+        </trust-anchors>
+    </base-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

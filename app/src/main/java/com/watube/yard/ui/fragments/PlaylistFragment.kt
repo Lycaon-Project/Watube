@@ -1,18 +1,22 @@
 package com.watube.yard.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.core.view.updatePadding
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -84,6 +88,11 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
     private val sortOptions by lazy { resources.getStringArray(R.array.playlistSortOptions) }
     private var recyclerViewState: Parcelable? = null
 
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         playlistId = args.playlistId
@@ -92,7 +101,6 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.playlistRecView?.layoutManager = GridLayoutManager(context, gridItems.ceilHalf())
-        _binding?.playlistRecView?.setHasFixedSize(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,6 +108,8 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
         super.onViewCreated(view, savedInstanceState)
 
         binding.playlistProgress.isVisible = true
+
+        setupSearchInput()
 
         // a database read must never block the frame: the bookmark icon is applied as
         // soon as the result is there
@@ -128,6 +138,48 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupSearchInput() {
+        val input = binding.searchInput
+
+        input.doAfterTextChanged { syncQueryToViewModel() }
+
+        input.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId != EditorInfo.IME_ACTION_SEARCH) {
+                return@setOnEditorActionListener false
+            }
+            input.hideKeyboard()
+            true
+        }
+
+        binding.searchClear.setOnClickListener {
+            input.text?.clear()
+            input.requestFocus()
+        }
+
+        binding.searchBack.setOnClickListener {
+            input.hideKeyboard()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun inputQuery(): String? =
+        binding.searchInput.text?.toString()?.takeIf { it.isNotEmpty() }
+
+    private fun syncQueryToViewModel() {
+        val query = inputQuery()
+        playlistViewModel.setQuery(query)
+        binding.searchClear.isVisible = query != null
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        syncQueryToViewModel()
+    }
+
+    private fun updateEmptyState() {
+        _binding?.nothingHere?.isVisible = playlistAdapter?.itemCount == 0
     }
 
     private fun updateBookmarkRes() {
@@ -187,6 +239,13 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
 
                     binding.playlistInfo.text =
                         getChannelAndVideoString(response, playlistFeed.size)
+
+                    updateEmptyState()
+                }
+
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    super.onItemRangeInserted(positionStart, itemCount)
+                    updateEmptyState()
                 }
             })
 
@@ -390,7 +449,7 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
             }
         }
 
-        playlistAdapter?.submitList(videos)
+        playlistAdapter?.submitList(videos) { updateEmptyState() }
 
         updatePlaylistDuration(videos)
     }

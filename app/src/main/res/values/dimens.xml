@@ -2,6 +2,29 @@
 <resources>
     <integer name="grid_items">1</integer>
     <integer name="grid_items_landscape">2</integer>
+
+    <!-- Solar spacing: pad (1.1rem) and cgap (1.15rem) of the mockup -->
+    <dimen name="watube_gutter">15dp</dimen>
+    <dimen name="watube_cgap">15dp</dimen>
+    <dimen name="watube_card_radius">17.5dp</dimen>
+    <dimen name="watube_nav_inset">10dp</dimen>
+    <!-- Floating bar offset from the screen bottom: kept clear of the physical screen
+         edge / gesture area so nothing is clipped by rounded device corners. -->
+    <dimen name="watube_nav_bottom_inset">22dp</dimen>
+
+    <!-- Mockup chip geometry: .42rem/.95rem padding and .83rem label (visual pill
+         height, the 48dp touch target is added by Chip itself) -->
+    <dimen name="watube_chip_min_height">27dp</dimen>
+    <dimen name="watube_chip_h_padding">13dp</dimen>
+    <!-- Mockup .ib: 2.45rem circle -->
+    <dimen name="watube_ib_size">33dp</dimen>
+
+    <!-- Fullscreen player: offset between the bottom edge of the player controls and the
+         bottom control cluster (seekbar row). Declared as a dimen so the value is resolved
+         through the app Resources configuration of the current screen instead of being
+         converted from dp in code. -->
+    <dimen name="watube_player_controls_fullscreen_bottom_margin">10dp</dimen>
+
     <dimen name="normal_button_margin_bottom">0dp</dimen>
     <dimen name="normal_button_margin_end">0dp</dimen>
     <dimen name="fullscreen_button_margin_bottom">5dp</dimen>

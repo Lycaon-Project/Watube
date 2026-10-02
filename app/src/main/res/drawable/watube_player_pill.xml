@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solar .pchap: scrim rgba(0,0,0,.62), 1.3rem-ish pill corners, no stroke -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#9E000000" />
+            <corners android:radius="7dp" />
+        </shape>
+    </item>
+</ripple>

@@ -28,7 +28,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_list" />
+            android:src="@drawable/ic_list"
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,7 +37,8 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="10dp"
             android:text="@string/emptyList"
-            android:textSize="20sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -68,44 +70,66 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <com.google.android.material.button.MaterialButtonGroup
-                            style="@style/Widget.Material3.MaterialSplitButton"
+                        <LinearLayout
+                            android:id="@+id/subs_header"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="12dp"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="0dp">
+                            android:layout_marginHorizontal="@dimen/watube_gutter"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/toggle_subs"
-                                style="?materialButtonElevatedStyle"
+                            <TextView
+                                android:id="@+id/subs_title"
+                                style="@style/WatubeSubsTitle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
                                 android:layout_weight="1"
-                                android:text="@string/subscriptions"
-                                android:textAlignment="viewStart"
-                                app:iconGravity="end"
-                                app:iconSize="14dp"
-                                app:icon="@drawable/ic_arrow_up_down" />
+                                android:text="@string/subscriptions" />
 
-                            <com.google.android.material.button.MaterialButton
+                            <ImageButton
+                                android:id="@+id/toggle_subs"
+                                android:layout_width="@dimen/watube_ib_size"
+                                android:layout_height="@dimen/watube_ib_size"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/channels"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_arrow_up_down"
+                                android:tooltipText="@string/channels"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+
+                            <ImageButton
                                 android:id="@+id/filter_sort"
-                                style="@style/Widget.Material3.Button.IconButton.Elevated"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/watube_ib_size"
+                                android:layout_height="@dimen/watube_ib_size"
+                                android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/tooltip_filter"
-                                app:icon="@drawable/ic_filter_sort" />
+                                android:padding="8dp"
+                                android:src="@drawable/ic_filter_sort"
+                                android:tooltipText="@string/tooltip_filter"
+                                app:tint="?attr/colorOnSurfaceVariant" />
 
-                        </com.google.android.material.button.MaterialButtonGroup>
+                            <ImageButton
+                                android:id="@+id/header_refresh"
+                                android:layout_width="@dimen/watube_ib_size"
+                                android:layout_height="@dimen/watube_ib_size"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/tooltip_refresh"
+                                android:padding="8dp"
+                                android:src="@drawable/watube_bell"
+                                android:tooltipText="@string/tooltip_refresh"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+
+                        </LinearLayout>
 
                         <HorizontalScrollView
                             android:id="@+id/channel_groups_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="6dp"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="@dimen/watube_gutter"
                             android:scrollbars="none">
 
                             <LinearLayout
@@ -134,12 +158,12 @@
 
                                     <com.google.android.material.chip.Chip
                                         android:id="@+id/chip_all"
-                                        style="@style/ElevatedFilterChip"
+                                        style="@style/Watube.Chip.Subs"
                                         android:text="@string/all" />
 
                                     <com.google.android.material.chip.Chip
                                         android:id="@+id/chip_ungrouped"
-                                        style="@style/ElevatedFilterChip"
+                                        style="@style/Watube.Chip.Subs"
                                         android:text="@string/ungrouped_channels" />
 
                                 </com.google.android.material.chip.ChipGroup>
@@ -152,7 +176,7 @@
                             android:id="@+id/feed_progress_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="12dp"
+                            android:layout_marginHorizontal="@dimen/watube_gutter"
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="10dp"
                             android:orientation="vertical"

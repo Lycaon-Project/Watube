@@ -87,11 +87,6 @@
     <string name="category_interaction">تذكير التفاعل</string>
     <string name="license">الترخيص</string>
     <string name="color_accent">ألوان ديناميكية</string>
-    <string name="color_red">أحمر</string>
-    <string name="color_blue">أزرق</string>
-    <string name="color_yellow">أصفر</string>
-    <string name="color_green">أخضر</string>
-    <string name="color_purple">وردي</string>
     <string name="material_you">تطبيق ألوان النظام (Material You)</string>
     <string name="category_sponsor_summary">ترويج مدفوع و إحالات مدفوعة و إعلانات مباشرة. ليس للترويج الذاتي أو الترويج المجاني لأهداف أو منشئي محتوى أو مواقع ويب أو منتجات</string>
     <string name="category_outro">شارة النهاية / أسماء المساهمين في العمل</string>
@@ -295,10 +290,8 @@
     <string name="username_email">لا ينصح باستخدام عنوان بريد إلكتروني كاسم مستخدم. هل تريد المتابعة على أي حال ؟</string>
     <string name="pinch_control">التحكم في ايماءة القرص</string>
     <string name="pinch_control_summary">استخدم إيماءة القرص للتكبير / التصغير</string>
-    <string name="theme_monochrome">رمادي</string>
     <string name="play_latest_videos">تشغيل أحدث مقاطع الفيديو</string>
     <string name="nothing_selected">لا شيء محدد!</string>
-    <string name="color_violet">بنفسجي</string>
     <string name="hide_watched_from_feed">أخفِ مقاطع الفيديو التي شاهدتها بالفعل</string>
     <string name="playlistUrl">عنوان URL لقائمة التشغيل</string>
     <string name="shuffle">خلط</string>

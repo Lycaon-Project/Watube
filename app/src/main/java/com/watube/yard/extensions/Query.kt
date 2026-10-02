@@ -1,11 +1,13 @@
 package com.watube.yard.extensions
 
+import android.util.Log
+
 fun query(block: () -> Unit) {
     Thread {
         try {
             block.invoke()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("Query", "Background query failed", e)
         }
     }.start()
 }

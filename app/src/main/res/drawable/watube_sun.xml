@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mockup #i-sun: stroke outline sun (2px, round caps), shown by the header
+     theme button while the UI renders dark. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,8A4,4 0 1,1 12,16A4,4 0 1,1 12,8"
+        android:strokeColor="?attr/colorControlNormal"
+        android:strokeLineCap="round"
+        android:strokeWidth="2" />
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,2v2M12,20v2M4.9,4.9l1.4,1.4M17.7,17.7l1.4,1.4M2,12h2M20,12h2M4.9,19.1l1.4,-1.4M17.7,6.3l1.4,-1.4"
+        android:strokeColor="?attr/colorControlNormal"
+        android:strokeLineCap="round"
+        android:strokeWidth="2" />
+</vector>

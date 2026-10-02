@@ -15,7 +15,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="8dp">
+            android:paddingHorizontal="@dimen/watube_gutter">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/resume_all"
@@ -48,13 +48,11 @@
 
         <TextView
             android:id="@+id/playlist_name"
+            style="@style/HomeCategoryTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:ellipsize="end"
-            android:paddingHorizontal="8dp"
             android:visibility="gone"
             tools:visibility="visible"
             tools:text="Downloaded Playlist Name"/>
@@ -63,6 +61,7 @@
             android:id="@+id/downloads_recView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/watube_gutter"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical" />
 
@@ -81,7 +80,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_download" />
+            android:src="@drawable/ic_download"
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +89,8 @@
             android:layout_marginHorizontal="10dp"
             android:gravity="center"
             android:text="@string/emptyList"
-            android:textSize="20sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
 

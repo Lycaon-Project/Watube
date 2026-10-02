@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/maintenance">
+
+        <Preference
+            android:icon="@drawable/ic_backup"
+            app:key="backup_restore"
+            app:summary="@string/backup_restore_summary"
+            app:title="@string/backup_restore" />
+
+        <Preference
+            android:icon="@drawable/ic_delete"
+            app:key="clear_cache"
+            app:summary="@string/clear_cache_summary"
+            app:title="@string/clear_cache" />
+
+        <!-- The manual update check lives in the About screen only, to avoid duplication. -->
+
+        <Preference
+            android:icon="@drawable/ic_info"
+            app:key="crashlog"
+            app:title="@string/crashlog" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

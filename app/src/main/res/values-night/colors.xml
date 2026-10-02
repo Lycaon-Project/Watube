@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_screen_icon_color">#ccc</color>
+    <color name="watube_nav_active">#35E08C</color>
+    <color name="watube_chip_fill">#242932</color>
+    <color name="watube_link">#35E08C</color>
 </resources>

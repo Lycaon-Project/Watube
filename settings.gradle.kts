@@ -57,7 +57,11 @@ dependencyResolutionManagement {
             }
         }
 
-        mavenLocal()
+        // opt-in only (-PenableMavenLocal): a ~/.m2 artifact can silently shadow a
+        // published dependency, which is a supply-chain risk for a release build
+        if (gradle.startParameter.projectProperties.containsKey("enableMavenLocal")) {
+            mavenLocal()
+        }
     }
 }
 

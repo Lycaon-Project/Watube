@@ -31,7 +31,6 @@
     <string name="category_sponsor_summary">Kostaðar kynningar, tilvísanir gegn greiðslu og beinar auglýsingar. Ekki fyrir kynningu á sjálfum sér eða ókeypis áköll vegna málstaða, kynningar á framleiðendum efnis, vefsvæðum og vörum</string>
     <string name="category_interaction">Áminning um gagnvirkni</string>
     <string name="material_you">Material You</string>
-    <string name="color_purple">Fagnandi fjólublátt</string>
     <string name="update_summary">Athuga með uppfærslu</string>
     <string name="player">Spilari</string>
     <string name="appearance_summary">Aðlagaðu forritið að smekk þínum</string>
@@ -143,8 +142,6 @@
         <item quantity="other">%d ný streymi</item>
     </plurals>
     <string name="show_updates">Leita sjálfkrafa að uppfærslum</string>
-    <string name="color_yellow">Galandi gult</string>
-    <string name="color_green">Grúví grænt</string>
     <string name="audio_only_mode_summary">Breyttu LibreTube í tónlistarspilara</string>
     <string name="skip_silence">Sleppa þögnum</string>
     <string name="external_download_provider">Utanaðkomandi niðurhalsveita</string>
@@ -200,8 +197,6 @@
     <string name="enabled">Virkt</string>
     <string name="disabled">Slökkt</string>
     <string name="color_accent">Áherslulitir</string>
-    <string name="color_red">Róandi rautt</string>
-    <string name="color_blue">Brakandi blátt</string>
     <string name="advanced">Ítarlegt</string>
     <string name="app_uptodate">Keyri nýjustu útgáfuna.</string>
     <string name="playback_speed">Afspilunarhraði</string>
@@ -234,7 +229,6 @@
     <string name="trending">Hvað er í umræðunni</string>
     <string name="privacy_alert">Aðvörun varðandi friðhelgi</string>
     <string name="username_email">Notkun tölvupóstfangs sem notandanafn er ekki ráðlagt. Halda samt áfram?</string>
-    <string name="color_violet">Fjölhæfur fjólublár</string>
     <string name="proceed">Halda áfram</string>
     <string name="play_latest_videos">Spila nýjustu myndskeið</string>
     <string name="rewind">Spóla til baka</string>
@@ -313,7 +307,6 @@
     <string name="bookmarks">Bókamerki</string>
     <string name="bookmark">Bókamerki</string>
     <string name="double_tap_seek_summary">Ýttu tvisvar til vinstri eða hægri til að spóla staðsetningu spilarans áfram eða afturábak</string>
-    <string name="theme_monochrome">Einfalt einlitað</string>
     <string name="import_playlists">Flytja inn spilunarlista</string>
     <string name="add_to_bookmarks">Bæta í bókamerki</string>
     <string name="fullscreen_gestures">Bendingar til að fara í/hætta í skjáfylli</string>

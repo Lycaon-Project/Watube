@@ -10,6 +10,8 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
 import androidx.activity.viewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.interfaces.PlayerGestureOptions
 import com.watube.yard.ui.models.CommonPlayerViewModel
@@ -38,11 +40,27 @@ class PlayerGestureController(activity: BaseActivity, private val listener: Play
     init {
         gestureDetector = GestureDetector(activity, GestureListener(), handler)
         scaleGestureDetector = ScaleGestureDetector(activity, ScaleGestureListener(), handler)
+    }
 
-        commonPlayerViewModel.isFullscreen.observe(activity) {
+    private var fullscreenObserver: Observer<Boolean>? = null
+
+    /**
+     * Start following the fullscreen state. Bound to [lifecycleOwner] (the player view's
+     * lifecycle) instead of the activity: this controller is created once per player view,
+     * so observing the activity-scoped view model from here leaked one view hierarchy per
+     * player sheet that was ever opened.
+     */
+    fun observeFullscreen(lifecycleOwner: LifecycleOwner) {
+        if (fullscreenObserver != null) return
+        // the view model value is applied right away: the observer itself only delivers
+        // once the lifecycle is started
+        isFullscreen = commonPlayerViewModel.isFullscreen.value ?: false
+        val observer = Observer<Boolean> {
             isFullscreen = it
             listener.onFullscreenChange(it)
         }
+        fullscreenObserver = observer
+        commonPlayerViewModel.isFullscreen.observe(lifecycleOwner, observer)
     }
 
     fun onTouchEvent(event: MotionEvent): Boolean {

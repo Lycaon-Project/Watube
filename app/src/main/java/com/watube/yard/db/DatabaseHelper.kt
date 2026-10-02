@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap
 object DatabaseHelper {
     private const val MAX_SEARCH_HISTORY_SIZE = 20
 
+    private const val MILLIS_PER_DAY = 24L * 60 * 60 * 1000
+
     // can only mark as watched if less than 60s remaining
     private const val ABSOLUTE_WATCHED_THRESHOLD = 60.0f
 
@@ -30,8 +32,35 @@ object DatabaseHelper {
 
     suspend fun addToWatchHistory(watchHistoryItem: WatchHistoryItem) =
         withContext(Dispatchers.IO) {
-            Database.watchHistoryDao().insert(watchHistoryItem)
+            if (PreferenceHelper.isTouristModeEnabled()) return@withContext
+
+            Database.watchHistoryDao().insert(
+                watchHistoryItem.copy(watchedAt = System.currentTimeMillis())
+            )
+            applyWatchHistoryRetention()
         }
+
+    /**
+     * Deletes every watch history entry older than the configured retention period.
+     * A period of 0 (the default) keeps the whole history.
+     */
+    suspend fun applyWatchHistoryRetention() {
+        val retentionDays = PreferenceHelper.getHistoryRetentionDays()
+        if (retentionDays <= 0) return
+
+        val cutoff = System.currentTimeMillis() - retentionDays * MILLIS_PER_DAY
+        Database.watchHistoryDao().deleteOlderThan(cutoff)
+    }
+
+    /**
+     * Everything a browsing session leaves on the device: watch history, search history
+     * and playback positions. Used when tourist mode gets turned on.
+     */
+    suspend fun clearBrowsingData() = withContext(Dispatchers.IO) {
+        Database.watchHistoryDao().deleteAll()
+        Database.searchHistoryDao().deleteAll()
+        clearWatchPositions()
+    }
 
     suspend fun getWatchHistoryPage(page: Int, pageSize: Int): List<WatchHistoryItem> {
         val watchHistoryDao = Database.watchHistoryDao()
@@ -49,17 +78,13 @@ object DatabaseHelper {
     }
 
     suspend fun addToSearchHistory(searchHistoryItem: SearchHistoryItem) {
+        if (PreferenceHelper.isTouristModeEnabled()) return
+
         Database.searchHistoryDao().insert(searchHistoryItem)
 
         if (PreferenceHelper.getBoolean(PreferenceKeys.UNLIMITED_SEARCH_HISTORY, false)) return
 
-        // delete the first watch history entry if the limit is reached
-        val searchHistory = Database.searchHistoryDao().getAll().toMutableList()
-
-        while (searchHistory.size > MAX_SEARCH_HISTORY_SIZE) {
-            Database.searchHistoryDao().delete(searchHistory.first())
-            searchHistory.removeAt(0)
-        }
+        Database.searchHistoryDao().deleteAllExceptLatest(MAX_SEARCH_HISTORY_SIZE)
     }
 
     suspend fun getWatchPosition(videoId: String): Long? {
@@ -88,11 +113,15 @@ object DatabaseHelper {
     }
 
     suspend fun saveWatchPosition(watchPosition: WatchPosition) {
+        if (PreferenceHelper.isTouristModeEnabled()) return
+
         Database.watchPositionDao().insert(watchPosition)
         watchPositionCache[watchPosition.videoId] = watchPosition.position
     }
 
     suspend fun saveWatchPositions(watchPositions: List<WatchPosition>) {
+        if (PreferenceHelper.isTouristModeEnabled()) return
+
         Database.watchPositionDao().insertAll(watchPositions)
         watchPositions.forEach { watchPositionCache[it.videoId] = it.position }
     }

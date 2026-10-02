@@ -32,10 +32,6 @@
     <string name="history">Historik</string>
     <string name="search_history">Sökhistorik</string>
     <string name="color_accent">Accentfärg</string>
-    <string name="color_red">Rofull röd</string>
-    <string name="color_blue">Salig blå</string>
-    <string name="color_yellow">Yster gul</string>
-    <string name="color_green">Svängig grön</string>
     <string name="material_you">Material You</string>
     <string name="app_icon">Appikon</string>
     <string name="enabled">På</string>
@@ -106,7 +102,6 @@
     <string name="category_intro_summary">Ett avsnitt utan egentligt innehåll, exempelvis en paus, en statisk bild eller en upprepad animation. Bör inte användas för informationsbärande övergångar.</string>
     <string name="category_outro">Slutkort och eftertext</string>
     <string name="category_outro_summary">Information efter videons slut. Använd inte kategorin för informationsbärande slutsatser.</string>
-    <string name="color_purple">Behaglig lila</string>
     <string name="sponsorblock_notifications">Aviseringar</string>
     <string name="appearance">Utseende</string>
     <string name="update_summary">Sök efter uppdateringar</string>
@@ -187,7 +182,6 @@
     <string name="history_empty">Ingen historik ännu.</string>
     <string name="watch_history">Visningshistorik</string>
     <string name="aspect_ratio">Videons bildförhållande</string>
-    <string name="color_violet">Mångsidig violett</string>
     <string name="copied">Kopierat</string>
     <string name="stop">Stoppa</string>
     <string name="system_caption_style">Systemets textningsstil</string>
@@ -268,7 +262,6 @@
     <string name="import_playlists_from">Importera spellistor från</string>
     <string name="added_to_playlist">Tillagd i spellistan %1$s</string>
     <string name="start_time">Starttid</string>
-    <string name="theme_monochrome">Minimalistisk monokrom</string>
     <string name="visibility_unlisted">Olistad</string>
     <string name="visibility">Synlighet</string>
     <string name="continue_watching">Fortsätt titta</string>

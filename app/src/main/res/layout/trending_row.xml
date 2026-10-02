@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/watube_card_radius"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,8 +64,8 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
-                app:cardBackgroundColor="@color/duration_background_color"
-                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="#C7000000"
+                app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toTopOf="@id/watch_progress"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -76,7 +76,9 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:textColor="@color/duration_text_color"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
                     tools:text="05:36" />
 
             </androidx.cardview.widget.CardView>
@@ -130,6 +132,7 @@
         android:maxLines="2"
         android:paddingBottom="16dp"
         android:textAlignment="viewStart"
+        android:textColor="?attr/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="@+id/textView_title"
         app:layout_constraintStart_toStartOf="@+id/textView_title"
         app:layout_constraintTop_toBottomOf="@+id/textView_title"
@@ -147,8 +150,8 @@
 
         <ImageView
             android:id="@+id/channel_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:importantForAccessibility="no"
             tools:srcCompat="@mipmap/ic_launcher" />
 

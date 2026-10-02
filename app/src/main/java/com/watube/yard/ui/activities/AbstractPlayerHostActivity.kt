@@ -3,7 +3,6 @@ package com.watube.yard.ui.activities
 import android.content.Intent
 import android.view.MenuItem
 import com.watube.yard.R
-import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.fragments.AudioPlayerFragment
 import com.watube.yard.ui.fragments.PlayerFragment
@@ -39,12 +38,6 @@ abstract class AbstractPlayerHostActivity: BaseActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> {
-                val settingsIntent = Intent(this, SettingsActivity::class.java)
-                startActivity(settingsIntent)
-                true
-            }
-
             R.id.action_about -> {
                 val aboutIntent = Intent(this, AboutActivity::class.java)
                 startActivity(aboutIntent)
@@ -54,16 +47,6 @@ abstract class AbstractPlayerHostActivity: BaseActivity() {
             R.id.action_help -> {
                 val helpIntent = Intent(this, HelpActivity::class.java)
                 startActivity(helpIntent)
-                true
-            }
-
-            R.id.action_donate -> {
-                IntentHelper.openLinkFromHref(
-                    this,
-                    supportFragmentManager,
-                    AboutActivity.DONATE_URL,
-                    forceDefaultOpen = true
-                )
                 true
             }
 

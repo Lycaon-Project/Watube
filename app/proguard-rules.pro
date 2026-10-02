@@ -147,10 +147,24 @@
 # ----------------------------------------------------------------------------
 # LOGGING (release builds)
 
-# Verbose/debug logs are stripped from release: they can leak identifiers, URLs and
-# user data through logcat. Warnings and errors are kept. R8 only removes calls whose
-# return value is unused, so existing call sites stay valid.
+# Nothing is written to logcat in release: logcat is readable by anyone holding the
+# device with USB debugging (or from a bug report), and lines in this codebase carry
+# video ids, channel ids, request URLs and exception messages. User visible errors go
+# through the in-app crash log (ExceptionHandler -> ErrorDialog) instead, and debug
+# builds are unaffected (they are not minified). R8 only removes calls whose return
+# value is unused, so existing call sites stay valid.
 -assumenosideeffects class android.util.Log {
     public static int v(...);
     public static int d(...);
+    public static int i(...);
+    public static int w(...);
+    public static int e(...);
+    public static int wtf(...);
+}
+
+# same for the plain Java stack traces (they end up in logcat under "System.err")
+-assumenosideeffects class java.lang.Throwable {
+    public void printStackTrace();
+    public void printStackTrace(java.io.PrintStream);
+    public void printStackTrace(java.io.PrintWriter);
 }

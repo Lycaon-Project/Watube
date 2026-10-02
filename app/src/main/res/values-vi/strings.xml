@@ -68,10 +68,6 @@
     <string name="category_outro_summary">Thông tin theo sau phần kết. Không phải dạng cho kết luận với thông tin</string>
     <string name="license">Giấy phép</string>
     <string name="color_accent">Nhấn màu</string>
-    <string name="color_blue">Xanh dương tươi</string>
-    <string name="color_yellow">Màu vàng yeeting</string>
-    <string name="color_green">Màu xanh lá vui vẻ</string>
-    <string name="color_red">Màu đỏ lạnh</string>
     <string name="sponsorblock_notifications">Thông báo</string>
     <string name="update_available">Đã có bản cập nhật</string>
     <string name="downloads">Tải xuống</string>
@@ -93,7 +89,6 @@
     <string name="category_selfpromo_summary">Tương tự như \"nhà tài trợ\" ngoại trừ không trả tiền hoặc tự quảng cáo. Điều này bao gồm các phần về hàng hóa, quyên góp hoặc thông tin về người mà họ đã cộng tác</string>
     <string name="category_interaction_summary">Khi có một lời nhắc ngắn là hãy thích, đăng ký hoặc theo dõi ở giữa nội dung. Nếu dài hoặc về một cái gì đó cụ thể, nó nên được xem là dạng tự quảng cáo</string>
     <string name="category_outro">Phần kết thúc và danh đề kết thúc</string>
-    <string name="color_purple">Màu tím dễ chịu</string>
     <string name="update_summary">Kiểm tra cập nhật mới</string>
     <string name="app_uptodate">Đang chạy phiên bản mới nhất.</string>
     <string name="instance_summary">Piped, đăng nhập và tài khoản</string>
@@ -294,7 +289,6 @@
     <string name="pinch_control_summary">Sử dụng cử chỉ chụm để phóng to/thu nhỏ</string>
     <string name="comments_disabled">Phần bình luận đã được tắt bởi người đăng.</string>
     <string name="no_comments_available">Đoạn phim này không có bình luận nào hết.</string>
-    <string name="theme_monochrome">Đơn sắc tối giản</string>
     <string name="captions_size">Kích thước phụ đề</string>
     <string name="double_tap_seek">Nhấn đúp để tua</string>
     <string name="double_tap_seek_summary">Nhấn hai lần vào bên trái hoặc bên phải để tua lại hoặc tua tới vị trí của trình phát</string>
@@ -345,7 +339,6 @@
     <string name="play_latest_videos">Phát đoạn phim gần đây nhất</string>
     <string name="username_email">Không khuyến khích dùng địa chỉ e-mail làm tên đăng nhập. Tiếp tục?</string>
     <string name="playlistUrl">Đường dẫn danh sách phát</string>
-    <string name="color_violet">Tím linh hoạt</string>
     <string name="mark_as_watched">Đánh dấu là đã xem</string>
     <string name="skip_silence">Bỏ qua khoảng lặng</string>
     <string name="help">Giúp đỡ</string>

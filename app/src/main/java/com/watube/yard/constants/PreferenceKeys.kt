@@ -30,6 +30,9 @@ object PreferenceKeys {
     /** Watube: Tor/Mullvad-style neutral region for trending/home requests (opt-in). */
     const val PRIVACY_NEUTRAL_REGION = "privacy_neutral_region"
 
+    /** Watube: keeps no browsing trace on the device (history, searches, positions). */
+    const val TOURIST_MODE = "tourist_mode"
+
     // Cycle stamps of the rotating identifiers (not user facing)
     /** SponsorBlock user id: "user id" half + "cycle stamp" half. */
     const val SB_USER_ID_CYCLE = "sb_user_id_cycle"
@@ -51,6 +54,9 @@ object PreferenceKeys {
     const val THEME_MODE = "theme_toggle"
     const val PURE_THEME = "pure_theme"
     const val ACCENT_COLOR = "accent_color"
+    const val APP_FONT = "app_font"
+    const val FONT_SCALE = "font_scale"
+    const val FEED_DENSITY = "feed_density"
     const val GRID_COLUMNS_PORTRAIT = "grid"
     const val GRID_COLUMNS_LANDSCAPE = "grid_landscape"
     const val APP_ICON = "icon_change"
@@ -131,6 +137,8 @@ object PreferenceKeys {
 
     // Advanced
     const val AUTOMATIC_UPDATE_CHECKS = "automatic_update_checks"
+    /** Minimum delay (in hours, as a string) between two automatic update checks; "0" = every launch. */
+    const val UPDATE_CHECK_INTERVAL = "update_check_interval"
     const val DATA_SAVER_MODE = "data_saver_mode_key"
     const val RESET_SETTINGS = "reset_settings"
     const val CLEAR_SEARCH_HISTORY = "clear_search_history"
@@ -147,6 +155,8 @@ object PreferenceKeys {
 
     // History
     const val SELECTED_HISTORY_STATUS_FILTER = "filter_history_status"
+    /** Automatic retention of the watch history in days, 0 = keep it forever. */
+    const val HISTORY_RETENTION_DAYS = "history_retention_days"
 
     // Internally saved data / not a preference
     const val ERROR_LOG = "error_log"

@@ -102,7 +102,7 @@ class LocalFeedRepository : FeedRepository {
                             channelExtractionCount.incrementAndGet()
                     }
                 } catch (e: Exception) {
-                    Log.e(channelId, e.stackTraceToString())
+                    Log.e("feed", "failed to fetch channel feed", e)
                     null
                 } finally {
                     withContext(Dispatchers.Main) {

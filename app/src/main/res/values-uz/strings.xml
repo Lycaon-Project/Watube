@@ -110,11 +110,6 @@
     <string name="category_hook_summary">Tomoshabinning e’tiborini tortish uchun ishlatiladigan hikoyaviy kirishlar uchun (ko‘pincha birinchi sahna sifatida), xuddi shu videodagi yoki turkumning keyingi qismlaridagi voqealarni ishora qilib yoki tasvirlab beradi</string>
     <string name="license">Litsenziya</string>
     <string name="color_accent">Aksentlar</string>
-    <string name="color_red">Oddiy qizil</string>
-    <string name="color_blue">Sokin ko‘k</string>
-    <string name="color_yellow">Jo‘shqin sariq</string>
-    <string name="color_green">Qiziqarli yashil</string>
-    <string name="color_purple">Yoqimli binafsha</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Bildirishnomalar</string>
     <string name="app_icon">Belgi</string>
@@ -325,7 +320,6 @@
     <string name="pinch_control_summary">Kattalashtirish/Kichiklashtirish uchun chimchilash ishorasidan foydalaning</string>
     <string name="comments_disabled">Izohlar yuklagan shaxs tomonidan o‘chirib qo‘yilgan.</string>
     <string name="no_comments_available">Bu video uchun izohlar mavjud emas.</string>
-    <string name="theme_monochrome">Minimalistik monoxrom</string>
     <string name="captions_size">Subtitr hajmi</string>
     <string name="double_tap_seek">Tez orqaga/oldinga surish uchun ikki marta teging</string>
     <string name="double_tap_seek_summary">Video pozitsiyasini orqaga yoki oldinga surish uchun chap yoki o‘ngga ikki marta teging</string>
@@ -343,7 +337,6 @@
     <string name="proceed">Davom etish</string>
     <string name="play_latest_videos">So‘nggi videolarni ijro etish</string>
     <string name="nothing_selected">Hech narsa tanlanmagan!</string>
-    <string name="color_violet">Ko‘p qirrali binafsha</string>
     <string name="hide_watched_from_feed">Allaqachon ko‘rilgan videolarni yashirish</string>
     <string name="playlistUrl">Pleylist URL manzili</string>
     <string name="shuffle">Aralashtirish</string>

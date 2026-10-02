@@ -57,11 +57,6 @@
     <string name="category_filler">হাস্যরস/কৌতুক</string>
     <string name="license">লাইসেন্স</string>
     <string name="color_accent">স্বতন্ত্র রং</string>
-    <string name="color_blue">নীল</string>
-    <string name="color_yellow">হলুদ</string>
-    <string name="color_green">সবুজ</string>
-    <string name="color_purple">বেগুনি</string>
-    <string name="color_red">লাল</string>
     <string name="category_interaction">মিথস্ক্রিয়া রিমাইন্ডার (লাইক ও সাবস্ক্রাইব)</string>
     <string name="category_outro">ইতিকথা ও কৃতিত্ব</string>
     <string name="category_outro_summary">ভিডিওর সমাপ্তিতে উল্লেখ করা হয়েছে এমন অংশ। প্রয়োজনীয় তথ্য আছে এমন উপসংহারের জন্য অপ্রযোজ্য</string>
@@ -288,7 +283,6 @@
     <string name="app_backup">অ্যাপ ব্যাক-আপ</string>
     <string name="pinch_control">পিচ কন্ট্রোল</string>
     <string name="comments_disabled">আপলোডারের দ্বারা মন্তব্য বন্ধ রাখা হয়েছে।</string>
-    <string name="theme_monochrome">মিনিমালিস্টিক মনোক্রোম</string>
     <string name="captions_size">ক্যাপশনের আকার</string>
     <string name="double_tap_seek">ডাবল ট্যাপ করে আগান/পিছান</string>
     <string name="brightness">উজ্বলতা</string>
@@ -312,7 +306,6 @@
     <string name="help">সাহায্য</string>
     <string name="all_caught_up">তুমি সবকিছু সম্পন্ন করেছ</string>
     <string name="alternative_pip_controls">অন্যান্য পিপ কন্ট্রোলগুলো</string>
-    <string name="color_violet">বহুমুখী বেগুনি</string>
     <string name="uploaderAndVideoCount">%1$s • %2$dটি ভিডিও</string>
     <string name="subscriberAndVideoCounts">%1$s জন‌ সাবস্ক্রাইবার • %2$dটি ভিডিও</string>
     <string name="normal_views">%1$s বার দেখা হয়েছে %2$s</string>

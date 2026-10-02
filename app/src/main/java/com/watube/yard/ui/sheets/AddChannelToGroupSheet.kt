@@ -34,7 +34,6 @@ class AddChannelToGroupSheet : ExpandedBottomSheet(R.layout.dialog_add_channel_t
         val binding = DialogAddChannelToGroupBinding.bind(view)
 
         binding.groupsRV.adapter = addToGroupAdapter
-        binding.groupsRV.setHasFixedSize(true)
 
         binding.cancel.setOnClickListener {
             requireDialog().dismiss()

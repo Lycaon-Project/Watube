@@ -91,11 +91,6 @@
     <string name="playOnBackground">Putar di latar belakang</string>
     <string name="license">Lisensi</string>
     <string name="color_accent">Aksen</string>
-    <string name="color_red">Merah bertetap</string>
-    <string name="color_blue">Biru membahagiakan</string>
-    <string name="color_yellow">Kuning bewarna</string>
-    <string name="color_green">Hijau halus</string>
-    <string name="color_purple">Ungu menenangkan</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Notifikasi</string>
     <string name="enabled">Nyala</string>
@@ -295,10 +290,8 @@
     <string name="backup_restore_summary">Impor dan ekspor langganan, daftar putar, …</string>
     <string name="pinch_control">Kendali cubit</string>
     <string name="pinch_control_summary">Gunakan gestur cubit untuk perbesar/perkecil</string>
-    <string name="theme_monochrome">Monokrom minimalis</string>
     <string name="play_latest_videos">Putar video terkini</string>
     <string name="nothing_selected">Tidak ada yang dipilih!</string>
-    <string name="color_violet">Ungu serbaguna</string>
     <string name="hide_watched_from_feed">Sembunyikan video yang sudah ditonton</string>
     <string name="playlistUrl">URL Daftar Putar</string>
     <string name="shuffle">Acak</string>

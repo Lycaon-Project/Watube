@@ -6,6 +6,7 @@
     <string name="share">Partager</string>
     <string name="register">S’inscrire</string>
     <string name="download">Télécharger</string>
+    <string name="already_downloaded">Vous avez déjà téléchargé cette vidéo !</string>
     <string name="save">Enregistrer</string>
     <string name="username">Nom d’utilisateur</string>
     <string name="unsubscribe">Se désabonner</string>
@@ -86,13 +87,11 @@
     <string name="category_interaction_summary">Lorsqu’il y a un bref rappel pour aimer, s’abonner ou suivre au milieu du contenu. S’il est long ou porte sur un sujet spécifique, il devrait plutôt s’agir d’autopromotion.</string>
     <string name="category_sponsor_summary">Communication commerciale, recommandations payées et publicités directes. Il ne s’agit pas d’autopromotion ou d’une véritable mise en avant gratuite de causes, de créateurs, de sites web et de produits.</string>
     <string name="category_interaction">Rappel d’interaction</string>
-    <string name="color_purple">Mauve</string>
-    <string name="color_blue">Bleu</string>
     <string name="color_accent">Thème de couleurs</string>
-    <string name="color_red">Rouge</string>
-    <string name="color_yellow">Jaune</string>
     <string name="material_you">Material You</string>
-    <string name="color_green">Vert</string>
+    <string name="app_font">Police d’écriture</string>
+    <string name="font_system">Système (par défaut)</string>
+    <string name="font_figtree">Figtree</string>
     <string name="sponsorblock_notifications">Notifications</string>
     <string name="enabled">Activé</string>
     <string name="disabled">Désactivé</string>
@@ -173,7 +172,11 @@
     <string name="always">Toujours</string>
     <string name="autoRotatePlayer">Plein écran automatique</string>
     <string name="autoRotatePlayer_summary">Le mode plein écran du lecteur est activé lorsque l’appareil est tourné</string>
-    <string name="pure_theme">Thème pur</string>
+    <string name="pure_theme">Noir profond (OLED)</string>
+    <string name="text_size">Taille du texte</string>
+    <string name="feed_density">Densité du fil</string>
+    <string name="density_cozy">Confort</string>
+    <string name="density_compact">Compact</string>
     <string name="data_saver_mode">Mode économie de données</string>
     <string name="search_history_summary">Mémoriser les recherches</string>
     <string name="watch_history_summary">Garder la trace des vidéos regardées localement</string>
@@ -185,7 +188,7 @@
     <string name="none">Aucun</string>
     <string name="data_saver_mode_summary">Ignorer les miniatures et autres images</string>
     <string name="never">Jamais</string>
-    <string name="pure_theme_summary">Thème blanc / noir</string>
+    <string name="pure_theme_summary">Économise la batterie sur OLED</string>
     <string name="general_summary">Téléchargements et économiseur de données</string>
     <string name="general">Général</string>
     <string name="playerAudioQuality">Qualité audio</string>
@@ -285,7 +288,6 @@
     <string name="double_tap_seek_summary">Appuyer deux fois à gauche ou à droite pour avancer ou reculer la position de la lecture</string>
     <string name="double_tap_seek">Appuyer deux fois pour avancer / reculer</string>
     <string name="all_caught_up_summary">Vous avez vu toutes les nouvelles vidéos</string>
-    <string name="theme_monochrome">Monochrome minimaliste</string>
     <string name="nothing_selected">Rien n’est sélectionné !</string>
     <string name="privacy_alert">Avertissement sur la protection des données</string>
     <string name="username_email">Il est déconseillé d’utiliser une adresse courriel comme nom d’utilisateur. Souhaitez-vous poursuivre ?</string>
@@ -299,7 +301,6 @@
     <string name="backup_restore_summary">Importer et exporter des abonnements, des playlists…</string>
     <string name="play_latest_videos">Lire les vidéos les plus récentes</string>
     <string name="captions_size">Taille des sous-titres</string>
-    <string name="color_violet">Violet</string>
     <string name="remove_bookmark">Retirer le marque-page</string>
     <string name="hide_watched_from_feed">Masquer les vidéos déjà regardées</string>
     <string name="playlistUrl">URL de la playlist</string>
@@ -316,6 +317,32 @@
     <string name="unknown">Inconnu</string>
     <string name="resume">Reprendre</string>
     <string name="help">Aide</string>
+    <!-- Page d'aide -->
+    <string name="help_intro">Tout ce qu\'il faut pour profiter de Watube — une façon de regarder, privée et sans compte.</string>
+    <string name="help_faq_title">Foire aux questions</string>
+    <string name="help_tips_title">Prise en main</string>
+    <string name="help_q_account">Ai-je besoin d\'un compte ?</string>
+    <string name="help_a_account">Non. Watube fonctionne entièrement sans compte ni connexion. Vos abonnements, historique et playlists restent sur votre appareil.</string>
+    <string name="help_q_local">Qu\'est-ce que le mode local complet ?</string>
+    <string name="help_a_local">En mode local complet, l\'application récupère tout directement, sans passer par un serveur tiers. C\'est la façon la plus privée d\'utiliser Watube.</string>
+    <string name="help_q_download">Comment télécharger une vidéo ?</string>
+    <string name="help_a_download">Ouvrez une vidéo, puis touchez Télécharger dans la rangée d\'actions sous le lecteur. Les téléchargements sont accessibles hors ligne depuis la Bibliothèque.</string>
+    <string name="help_q_sponsorblock">Qu\'est-ce que SponsorBlock ?</string>
+    <string name="help_a_sponsorblock">SponsorBlock saute automatiquement les segments sponsorisés, intros et autres interruptions, via une base communautaire. Configurable dans les Réglages.</string>
+    <string name="help_q_privacy">Comment Watube protège-t-il ma vie privée ?</string>
+    <string name="help_a_privacy">Watube n\'envoie aucun identifiant personnel, fait tourner des identifiants anonymes, peut demander une région neutre et durcit sa WebView embarquée. Voir Réglages → Confidentialité.</string>
+    <string name="help_q_backup">Puis-je sauvegarder mes données ?</string>
+    <string name="help_a_backup">Oui. Réglages → Données &amp; maintenance → Sauvegarde permet d\'exporter et de restaurer vos abonnements, playlists et historique.</string>
+    <string name="help_tip_search_title">Recherche</string>
+    <string name="help_tip_search">Touchez la barre de recherche sur l\'accueil. Vous pouvez aussi coller un lien YouTube pour l\'ouvrir directement.</string>
+    <string name="help_tip_player_title">Gestes du lecteur</string>
+    <string name="help_tip_player">Glissez verticalement à gauche ou à droite de la vidéo pour la luminosité et le volume, double-touchez pour avancer, pincez pour zoomer.</string>
+    <string name="help_tip_subs_title">Abonnements</string>
+    <string name="help_tip_subs">Abonnez-vous à des chaînes sans compte. Regroupez-les et soyez notifié des nouvelles vidéos via la cloche de l\'en-tête.</string>
+    <string name="help_tip_library_title">Bibliothèque</string>
+    <string name="help_tip_library">Retrouvez vos téléchargements, playlists, favoris et historique dans l\'onglet Bibliothèque.</string>
+    <string name="help_why_watube">Pourquoi Watube ?</string>
+    <string name="help_why_watube_desc">Découvrez la philosophie et les objectifs du projet.</string>
     <string name="audio_only_mode">Mode audio seulement</string>
     <string name="audio_only_mode_summary">Transforme Watube en lecteur de musique</string>
     <string name="no_subtitle">Pas de sous-titre</string>
@@ -416,6 +443,11 @@
     <string name="unknown_audio_track_type">Type de piste audio inconnu</string>
     <string name="group_name_error_empty">Veuillez saisir un nom</string>
     <string name="tooltip_edit_groups">Modifier les groupes</string>
+    <string name="tooltip_refresh">Actualiser</string>
+    <string name="tooltip_theme">Changer de thème</string>
+    <string name="tooltip_cast">Diffuser</string>
+    <string name="tooltip_more">Plus d\'options</string>
+    <string name="toast_cast_unavailable">Cast indisponible</string>
     <string name="chapters_videoHighlight">Moment fort de la vidéo</string>
     <string name="screen_orientation">Orientation de l’écran</string>
     <string name="duration_span">Durée: %1$s</string>
@@ -536,6 +568,13 @@
     <string name="sort_channel">Nom de la chaîne</string>
     <string name="sort_size">Taille</string>
     <string name="show_updates_summary">Vérifier automatiquement les mises à jour à chaque démarrage de l\'application.</string>
+    <string name="update_check_interval">Fréquence de vérification</string>
+    <string name="update_check_interval_summary">À quelle fréquence l\'application recherche une nouvelle version.</string>
+    <string name="update_interval_launch">À chaque ouverture</string>
+    <string name="update_interval_6h">Toutes les 6 heures</string>
+    <string name="update_interval_12h">Toutes les 12 heures</string>
+    <string name="update_interval_daily">Une fois par jour</string>
+    <string name="update_interval_weekly">Une fois par semaine</string>
     <string name="ungrouped_channels">Non groupé</string>
     <string name="ungrouped_channels_with_count">Non groupé (%1$d)</string>
     <string name="long_press_fast_forward">Avance rapide en appuyant longuement</string>
@@ -560,6 +599,8 @@
     <string name="current_sponsorblock_id">ID SponsorBlock actuel</string>
     <string name="sb_user_id_info">Les soumissions à SponsorBlock utilisent un identifiant aléatoire et rotatif au lieu d’un identifiant d’appareil permanent.</string>
     <string name="privacy_identifiers">Identifiants</string>
+    <string name="privacy_category_protection">Protection anti-pistage</string>
+    <string name="privacy_category_data">Données de navigation</string>
     <string name="reset_identifiers">Réinitialiser les identifiants et les données WebView</string>
     <string name="reset_identifiers_summary">Supprime l’ID SponsorBlock, les cookies WebView et le stockage de sites utilisé pour les jetons d’intégrité</string>
     <string name="reset_identifiers_dialog_message">Cette action réinitialise votre ID de soumission SponsorBlock et efface tous les cookies et le stockage WebView. Les jetons d’intégrité devront peut-être être régénérés lors de la prochaine lecture vidéo.</string>
@@ -567,6 +608,12 @@
 
     <!-- Maintenance -->
     <string name="maintenance">Maintenance</string>
+    <string name="settings_data_maintenance">Données &amp; maintenance</string>
+    <string name="home_search_pill">Rechercher sur Watube</string>
+    <string name="local_badge">LOCAL</string>
+    <string name="home_continue_watching">Reprendre la lecture</string>
+    <string name="home_for_you">Pour vous</string>
+    <string name="home_featured_tag">À LA UNE</string>
     <string name="cache_cleared">Cache vidé</string>
     <string name="checking_for_updates">Recherche de mises à jour…</string>
     <string name="last_update_check">Dernière vérification : %1$s</string>
@@ -585,4 +632,61 @@
     <string name="reset">Restaurer les paramètres par défaut</string>
     <string name="clear_cache_dialog_title">Vider le cache ?</string>
     <string name="no_release_available">Aucune version publiée pour le moment.</string>
+
+    <!-- Mode touriste -->
+    <string name="tourist_mode">Mode touriste</string>
+    <string name="tourist_mode_summary">Aucune trace conservée sur l\'appareil : historique, recherches et positions de lecture ne sont pas enregistrés.</string>
+    <string name="tourist_mode_clear_dialog">L\'activation du mode touriste supprime immédiatement et définitivement votre historique de visionnage, vos recherches récentes et vos positions de lecture. Continuer ?</string>
+
+    <!-- Conservation de l'historique de visionnage -->
+    <string name="history_retention_title">Historique : conservation automatique</string>
+    <string name="history_retention_summary">Les entrées d\'historique plus vieilles que la période choisie sont supprimées automatiquement, à chaque démarrage de l\'application et après chaque nouvelle entrée.</string>
+    <string name="history_retention_never">Jamais</string>
+    <string name="history_retention_days_1">1 jour</string>
+    <string name="history_retention_days_7">7 jours</string>
+    <string name="history_retention_days_30">30 jours</string>
+    <string name="history_retention_days_90">90 jours</string>
+
+    <!-- Tuiles raccourci de la bibliothèque (.qtile Solar) -->
+    <plurals name="watube_shortcut_history">
+        <item quantity="one">local · %1$d vidéo</item>
+        <item quantity="other">local · %1$d vidéos</item>
+    </plurals>
+    <plurals name="watube_shortcut_playlists">
+        <item quantity="one">%1$d playlist</item>
+        <item quantity="other">%1$d playlists</item>
+    </plurals>
+    <string name="watube_shortcut_downloads">hors-ligne</string>
+    <string name="watube_shortcut_privacy_title">Données privées</string>
+    <string name="watube_shortcut_privacy">jamais envoyées</string>
+    <string name="watube_shortcut_privacy_toast">Vos données restent sur cet appareil</string>
+
+    <!-- Panneau de recherche Solar (libellés .slab, état vide .noresult) -->
+    <string name="watube_search_recent">Récents</string>
+    <string name="watube_search_recent_note">· stockés sur l\'appareil</string>
+    <string name="watube_no_search_result_for">Aucun résultat pour « %1$s »</string>
+    <string name="watube_search_try_other_keywords">Essayez d\'autres mots-clés</string>
+
+    <!-- Lignes du hub Paramètres Solar (résumés .stx) -->
+    <string name="watube_settings_summary_appearance">Mode, accent, OLED, texte, densité</string>
+    <string name="watube_settings_summary_player">Qualité, vitesse, SponsorBlock, haptique</string>
+    <string name="watube_settings_summary_privacy">Mode local, Piped, DeArrow, RYD</string>
+    <string name="watube_settings_summary_data">Économiseur, Wi-Fi, cache</string>
+    <string name="watube_settings_summary_about">Watube %1$s · GPL-3.0 · crédits</string>
+
+    <!-- Feuille du lecteur Watube (maquette v27.1) -->
+    <string name="up_next">À suivre</string>
+    <string name="like">J\'aime</string>
+    <string name="dislike">Je n\'aime pas</string>
+    <string name="toast_feature_soon">Pas encore disponible</string>
+    <string name="player_chapter_chip">Chap. %1$d/%2$d</string>
+    <string name="about_code_source">Code source</string>
+    <string name="about_privacy">Politique de confidentialité</string>
+    <string name="about_report_issue">Signaler un problème</string>
+    <string name="about_mission">Pourquoi Watube</string>
+    <string name="about_header_subtitle">Fork indépendant de LibreTube · Mode local par défaut · instances Piped optionnelles</string>
+<string name="search_back">Retour</string>
+<string name="search_clear">Effacer</string>
+<string name="downloads_search_hint">Rechercher dans les téléchargements</string>
+<string name="playlist_search_hint">Rechercher dans la playlist</string>
 </resources>

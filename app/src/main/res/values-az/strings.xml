@@ -89,11 +89,6 @@
     <string name="customization">Nizamlamalar</string>
     <string name="website">Veb Sayt</string>
     <string name="color_accent">Cilalar</string>
-    <string name="color_red">Rahatladıcı qırmızı</string>
-    <string name="color_blue">Fərəhli mavi</string>
-    <string name="color_yellow">Fışqıran sarı</string>
-    <string name="color_green">Möhtəşəm yaşıl</string>
-    <string name="color_purple">Zövqlü bənövşəyi</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Bildirişlər</string>
     <string name="enabled">Aç</string>
@@ -295,10 +290,8 @@
     <string name="proceed">Davam et</string>
     <string name="pinch_control">Çimdik nəzarəti</string>
     <string name="pinch_control_summary">Böyütmək/kiçiltmək üçün çimdik jesti istifadə et</string>
-    <string name="theme_monochrome">Azaldılmış saya</string>
     <string name="play_latest_videos">Ən son videoları oynat</string>
     <string name="nothing_selected">Heç nə seçilməyib!</string>
-    <string name="color_violet">Hərtərəfli bənövşəyi</string>
     <string name="hide_watched_from_feed">Artıq baxılan videoları gizlət</string>
     <string name="playlistUrl">Oynatma Siyahısı URL\'si</string>
     <string name="shuffle">Qarışdır</string>

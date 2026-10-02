@@ -40,11 +40,16 @@ interface DownloadDao {
     @Query("DELETE FROM downloaditem WHERE id = :id")
     suspend fun deleteDownloadItemById(id: Int)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDownload(download: Download)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDownloadChapter(downloadChapter: DownloadChapter)
+
+    // downloadChapters n'a pas de clé étrangère ni d'unicité : sans ce purge explicite,
+    // un retéléchargement (insertDownload en REPLACE) empilerait les chapitres
+    @Query("DELETE FROM downloadChapters WHERE videoId = :videoId")
+    suspend fun deleteChaptersForVideo(videoId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDownloadItem(downloadItem: DownloadItem): Long
@@ -94,6 +99,6 @@ interface DownloadDao {
     @Query("SELECT * FROM downloadplaylistvideoscrossref WHERE playlistId = :playlistId")
     suspend fun getVideoIdsFromPlaylist(playlistId: String): List<DownloadPlaylistVideosCrossRef>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSponsorBlockSegments(segments: List<DownloadSponsorBlockSegment>)
 }

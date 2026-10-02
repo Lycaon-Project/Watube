@@ -1,6 +1,7 @@
 package com.watube.yard.ui.activities
 
 import android.os.Bundle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -27,13 +28,28 @@ class SettingsActivity : BaseActivity() {
             .build()
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        if (intent.extras?.getString(REDIRECT_KEY) == REDIRECT_TO_INTENT_SETTINGS) {
-            navController.navigate(R.id.action_global_instanceSettings)
+        // the hub wears the mockup .shd h1, a settings pane wears .phead h2
+        val titleAppearanceListener =
+            NavController.OnDestinationChangedListener { _, destination, _ ->
+            val titleAppearance = if (destination.id == R.id.mainSettings) {
+                R.style.WatubeScreenTitle
+            } else {
+                R.style.WatubePaneTitle
+            }
+            binding.toolbar.setTitleTextAppearance(this, titleAppearance)
+        }
+        navController.addOnDestinationChangedListener(titleAppearanceListener)
+
+        when (intent.extras?.getString(REDIRECT_KEY)) {
+            REDIRECT_TO_INTENT_SETTINGS -> navController.navigate(R.id.action_global_instanceSettings)
+            REDIRECT_TO_NOTIFICATION_SETTINGS ->
+                navController.navigate(R.id.action_global_notificationSettings)
         }
     }
 
     companion object {
         const val REDIRECT_KEY = "redirect"
         const val REDIRECT_TO_INTENT_SETTINGS = "intent_settings"
+        const val REDIRECT_TO_NOTIFICATION_SETTINGS = "notification_settings"
     }
 }

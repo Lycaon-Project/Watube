@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="SplashScreenTheme" parent="BaseTheme">
-        <item name="colorSurface">@android:color/black</item>
-        <item name="android:colorBackground">@android:color/black</item>
+        <item name="colorSurface">@color/watube_splash_background</item>
+        <item name="android:colorBackground">@color/watube_splash_background</item>
 
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_anim</item>
+        <item name="android:windowSplashScreenBackground">@color/watube_splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/watube_splash_logo</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#08140E</item>
     </style>
 </resources>

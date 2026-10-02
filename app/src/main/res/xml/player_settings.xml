@@ -76,6 +76,22 @@
             app:key="autoplay_countdown"
             app:title="@string/autoplay_countdown" />
 
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_headphones"
+            android:summary="@string/audio_only_mode_summary"
+            android:title="@string/audio_only_mode"
+            app:key="audio_only_mode" />
+
+        <ListPreference
+            android:defaultValue="@string/config_default_orientation_pref"
+            android:entries="@array/orientation"
+            android:entryValues="@array/orientation_values"
+            android:icon="@drawable/ic_screen_rotation"
+            app:key="orientation"
+            app:title="@string/screen_orientation"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/captions">
@@ -153,5 +169,6 @@
             app:title="@string/play_automatically" />
 
     </PreferenceCategory>
+
 
 </PreferenceScreen>

@@ -32,7 +32,6 @@ class CommentsMainFragment : Fragment(R.layout.fragment_comments) {
         val binding = FragmentCommentsBinding.bind(view)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.commentsRV.layoutManager = layoutManager
-        binding.commentsRV.setHasFixedSize(true)
 
         val commentsSheet = parentFragment as? CommentsSheet
         commentsSheet?.binding?.btnScrollToTop?.setOnClickListener {
@@ -88,11 +87,31 @@ class CommentsMainFragment : Fragment(R.layout.fragment_comments) {
         binding.commentsRV.adapter = commentPagingAdapter
 
         commentPagingAdapter.addLoadStateListener { loadStates ->
-            binding.progress.isVisible = loadStates.refresh is LoadState.Loading
+            val refresh = loadStates.refresh
+            binding.progress.isVisible = refresh is LoadState.Loading
 
-            if (loadStates.append is LoadState.NotLoading && loadStates.append.endOfPaginationReached && commentPagingAdapter.itemCount == 0) {
-                binding.errorTV.text = getString(R.string.no_comments_available)
-                binding.errorTV.isVisible = true
+            // A failed load used to be swallowed silently: the count (a side effect of the
+            // paging source) was already displayed while the list stayed empty with no
+            // message and no way out. Handle the error, and clear the message again once
+            // a retry delivers data.
+            val error = refresh as? LoadState.Error ?: loadStates.append as? LoadState.Error
+            when {
+                error != null -> {
+                    binding.errorTV.text = errorLabel()
+                    binding.errorTV.isVisible = true
+                    binding.errorTV.setOnClickListener { commentPagingAdapter.retry() }
+                }
+                loadStates.append is LoadState.NotLoading
+                        && loadStates.append.endOfPaginationReached
+                        && commentPagingAdapter.itemCount == 0 -> {
+                    binding.errorTV.text = getString(R.string.no_comments_available)
+                    binding.errorTV.isVisible = true
+                    binding.errorTV.setOnClickListener(null)
+                }
+                else -> {
+                    binding.errorTV.isVisible = false
+                    binding.errorTV.setOnClickListener(null)
+                }
             }
         }
 
@@ -114,6 +133,9 @@ class CommentsMainFragment : Fragment(R.layout.fragment_comments) {
             )
         }
     }
+
+    private fun errorLabel(): String =
+        "${getString(R.string.error_occurred)} – ${getString(R.string.retry)}"
 
     companion object {
         private const val POSITION_START = 0

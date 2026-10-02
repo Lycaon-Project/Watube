@@ -51,7 +51,6 @@ class EditChannelGroupSheet : ExpandedBottomSheet(R.layout.dialog_edit_channel_g
         val oldGroupName = viewModel.groupToEdit?.name.orEmpty()
 
         binding.channelsRV.layoutManager = LinearLayoutManager(context)
-        binding.channelsRV.setHasFixedSize(true)
 
         binding.groupName.addTextChangedListener {
             updateConfirmStatus()

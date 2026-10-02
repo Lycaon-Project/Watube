@@ -89,11 +89,6 @@
     <string name="category_selfpromo_summary">Похожее на «спонсора», но для бесплатной рекламы или саморекламы. Сюда входят сегменты об атрибутике, пожертвованиях и информация о коллаборации</string>
     <string name="license">Лицензия</string>
     <string name="color_accent">Акценты</string>
-    <string name="color_red">Успокаивающий красный</string>
-    <string name="color_blue">Блаженный синий</string>
-    <string name="color_yellow">Yeeting yellow</string>
-    <string name="color_green">Groovy green</string>
-    <string name="color_purple">Pleasurable purple</string>
     <string name="material_you">Material You</string>
     <string name="app_icon">Иконка</string>
     <string name="sponsorblock_notifications">Уведомления</string>
@@ -288,7 +283,6 @@
     <string name="comments_disabled">Комментарии отключены загружающим.</string>
     <string name="username_email">Не рекомендуется использовать адрес почты в качестве имени пользователя. Всё равно продолжить?</string>
     <string name="proceed">Продолжить</string>
-    <string name="theme_monochrome">Минималистичный монохромный</string>
     <string name="captions_size">Размер субтитров</string>
     <string name="all_caught_up">Всё просмотрено</string>
     <string name="all_caught_up_summary">Вы видели все новые видео</string>
@@ -297,7 +291,6 @@
     <string name="exportsuccess">Экспортировано.</string>
     <string name="privacy_alert">Предупреждение о конфиденциальности</string>
     <string name="play_latest_videos">Воспроизвести последние видео</string>
-    <string name="color_violet">Универсальный фиолетовый</string>
     <string name="nothing_selected">Ничего не выбрано!</string>
     <string name="hide_watched_from_feed">Скрыть просмотренные видео</string>
     <string name="playlistUrl">URL плейлиста</string>

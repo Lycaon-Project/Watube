@@ -32,7 +32,8 @@
         <TextView
             android:id="@+id/search_views"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
     </LinearLayout>
 
@@ -42,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/subscribe"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:shapeAppearance="@style/WatubeShape.Pill" />
 
 </LinearLayout>

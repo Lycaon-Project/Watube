@@ -93,12 +93,7 @@
     <string name="category_outro">എൻഡ്കാർഡുകൾ/ക്രെഡിറ്റുകൾ</string>
     <string name="category_outro_summary">ക്രെഡിറ്റുകൾ അല്ലെങ്കിൽ YouTube എൻഡ്കാർഡുകൾ ദൃശ്യമാകുമ്പോൾ. വിവരങ്ങളുള്ള നിഗമനങ്ങൾക്ക് വേണ്ടിയല്ല</string>
     <string name="playOnBackground">പശ്ചാത്തലത്തിൽ പ്ലേ ചെയ്യുക</string>
-    <string name="color_blue">പിക്സൽ ബ്ലൂ</string>
     <string name="color_accent">വർണ്ണ ആക്സന്റ്</string>
-    <string name="color_yellow">മഞ്ഞ</string>
-    <string name="color_red">ചുവപ്പ്</string>
-    <string name="color_green">പച്ച</string>
-    <string name="color_purple">പർപ്പിൾ</string>
     <string name="sponsorblock_notifications">അറിയിപ്പുകൾ</string>
     <string name="update_available">%1$s പതിപ്പ് ലഭ്യമാണ്</string>
     <string name="appearance">രൂപഭാവം</string>

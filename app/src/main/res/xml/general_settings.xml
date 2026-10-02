@@ -2,50 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/location">
-
-        <ListPreference
-            android:icon="@drawable/ic_translate"
-            app:defaultValue="sys"
-            app:key="language"
-            app:title="@string/changeLanguage"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/customization">
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:icon="@drawable/ic_headphones"
-            android:summary="@string/audio_only_mode_summary"
-            android:title="@string/audio_only_mode"
-            app:key="audio_only_mode" />
-
-        <ListPreference
-            android:defaultValue="@string/config_default_orientation_pref"
-            android:entries="@array/orientation"
-            android:entryValues="@array/orientation_values"
-            android:icon="@drawable/ic_screen_rotation"
-            app:key="orientation"
-            app:title="@string/screen_orientation"
-            app:useSimpleSummaryProvider="true" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:icon="@drawable/ic_suggestions"
-            app:key="search_suggestions"
-            app:title="@string/show_search_suggestions" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:icon="@drawable/ic_list"
-            app:key="related_streams_toggle"
-            app:summary="@string/related_streams_summary"
-            app:title="@string/related_streams" />
-
-    </PreferenceCategory>
-
     <PreferenceCategory app:title="@string/downloads">
 
         <EditTextPreference
@@ -59,11 +15,22 @@
     <PreferenceCategory app:title="@string/advanced">
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/ic_download_filled"
             app:key="automatic_update_checks"
             app:title="@string/show_updates"
             app:summary="@string/show_updates_summary" />
+
+        <ListPreference
+            android:defaultValue="12"
+            android:dependency="automatic_update_checks"
+            android:entries="@array/updateIntervalOptions"
+            android:entryValues="@array/updateIntervalValues"
+            android:icon="@drawable/ic_update"
+            app:key="update_check_interval"
+            app:title="@string/update_check_interval"
+            app:summary="@string/update_check_interval_summary"
+            app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             android:defaultValue="disabled"

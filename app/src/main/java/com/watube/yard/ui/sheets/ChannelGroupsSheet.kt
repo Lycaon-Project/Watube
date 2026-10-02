@@ -27,7 +27,6 @@ class ChannelGroupsSheet : ExpandedBottomSheet(R.layout.dialog_subscription_grou
 
         val binding = DialogSubscriptionGroupsBinding.bind(view)
         binding.groupsRV.layoutManager = LinearLayoutManager(context)
-        binding.groupsRV.setHasFixedSize(true)
         val groups = viewModel.groups.value.orEmpty().toMutableList()
         val adapter = SubscriptionGroupsAdapter(groups, viewModel, parentFragmentManager)
         binding.groupsRV.adapter = adapter

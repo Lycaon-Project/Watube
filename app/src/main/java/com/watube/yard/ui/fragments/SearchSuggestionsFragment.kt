@@ -1,9 +1,13 @@
 package com.watube.yard.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -11,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.watube.yard.R
-import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.FragmentSearchSuggestionsBinding
 import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.ui.activities.MainActivity
@@ -28,12 +31,29 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
     private val viewModel: SearchViewModel by activityViewModels()
     private val mainActivity get() = activity as MainActivity
 
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    private fun View.showKeyboard() {
+        requestFocus()
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
     private val suggestionsAdapter = SearchSuggestionsAdapter(
         onRootClickListener = { suggestion ->
-            mainActivity.setQuery(suggestion, true)
+            // a tap on a row runs the query, the way the old SearchView submit did
+            binding.searchInput.hideKeyboard()
+            mainActivity.openSearchResults(suggestion)
         },
         onArrowClickListener = { suggestion ->
-            mainActivity.setQuery(suggestion, false)
+            // the arrow only copies the suggestion into the input: the text watcher
+            // below turns it into a suggestion query, nothing is submitted yet
+            binding.searchInput.setText(suggestion)
+            binding.searchInput.setSelection(suggestion.length)
+            binding.searchInput.requestFocus()
         },
         onSearchHistoryItemDeleted = { historyItem ->
             lifecycleScope.launch(Dispatchers.IO) {
@@ -42,18 +62,20 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         }
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.setQuery(arguments?.getString(IntentData.query))
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSearchSuggestionsBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
         binding.suggestionsRecycler.adapter = suggestionsAdapter
+        setupSearchInput()
 
+        // Back closes the IME first (platform behaviour), then leaves the screen: the
+        // chevron of the header is the one press escape from an open keyboard.
+        binding.searchBack.setOnClickListener {
+            binding.searchInput.hideKeyboard()
+            findNavController().popBackStack()
+        }
         setOnBackPressed {
-            if (!mainActivity.clearSearchViewFocus()) findNavController().popBackStack()
+            findNavController().popBackStack()
         }
 
         lifecycleScope.launch {
@@ -66,6 +88,11 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
                         ) {
                             binding.suggestionsRecycler.scrollToPosition(0)
                         }
+                        // the .slab "Récents" header belongs to the local list only:
+                        // it disappears as soon as online suggestions take over
+                        binding.searchSectionLabel.isVisible =
+                            result.suggestionList.isNullOrEmpty() &&
+                                !result.historyList.isNullOrEmpty()
                     }
                 }
 
@@ -78,9 +105,64 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         }
     }
 
+    /**
+     * The input is the only entry point of the search: every edit is forwarded to the
+     * view model, and the trailing clear button follows the text.
+     */
+    private fun setupSearchInput() {
+        val input = binding.searchInput
+
+        // the text itself only arrives in onViewStateRestored(), which seeds again
+        syncSuggestionsToInput()
+
+        input.doAfterTextChanged { syncSuggestionsToInput() }
+
+        input.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId != EditorInfo.IME_ACTION_SEARCH) {
+                return@setOnEditorActionListener false
+            }
+            input.hideKeyboard()
+            mainActivity.openSearchResults(input.text.toString())
+            true
+        }
+
+        binding.searchClear.setOnClickListener {
+            input.text?.clear()
+            input.requestFocus()
+        }
+    }
+
+    /** The query the input currently holds, or null while it is empty. */
+    private fun inputQuery(): String? =
+        binding.searchInput.text?.toString()?.takeIf { it.isNotEmpty() }
+
+    /**
+     * Mirrors the input into the view model: the suggestions and the clear button
+     * always describe exactly what the input holds, whichever wrote the text last.
+     */
+    private fun syncSuggestionsToInput() {
+        val query = inputQuery()
+        viewModel.setQuery(query)
+        binding.searchClear.isVisible = query != null
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        // the view hierarchy state - hence the query - is applied right above this call
+        syncSuggestionsToInput()
+
+        if (inputQuery() == null) {
+            // a fresh search screen behaves like the old expanded action view: it takes
+            // focus and raises the IME. Coming back from a result keeps the keyboard down.
+            val input = binding.searchInput
+            input.requestFocus()
+            input.post { input.showKeyboard() }
+        }
+    }
+
     private fun toggleEmptyHistoryMessageVisibility(show: Boolean) {
+        binding.searchSuggestionsContent.isGone = show
         binding.historyEmpty.isVisible = show
-        binding.suggestionsRecycler.isGone = show
     }
 
     override fun onDestroy() {

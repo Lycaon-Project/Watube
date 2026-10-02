@@ -72,11 +72,6 @@
     <string name="category_outro_summary">Amaieraren ondorengo informazioa</string>
     <string name="license">Lizentzia</string>
     <string name="color_accent">Kolore azentuak</string>
-    <string name="color_red">Gorria</string>
-    <string name="color_blue">Urdina</string>
-    <string name="color_yellow">Horia</string>
-    <string name="color_green">Berdea</string>
-    <string name="color_purple">Morea</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Jakinarazpenak</string>
     <string name="app_icon">Ikonoa</string>

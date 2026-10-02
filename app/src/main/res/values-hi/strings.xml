@@ -95,8 +95,6 @@
     <string name="sponsorblock_summary">https://sponsor.ajay.app API का उपयोग करता है</string>
     <string name="category_outro">अंत कार्ड और क्रेडिट</string>
     <string name="color_accent">लहजे</string>
-    <string name="color_red">आराम लाल</string>
-    <string name="color_yellow">पीला समारोह</string>
     <string name="app_uptodate">नवीनतम संस्करण चला रहा है।</string>
     <string name="flameIcon">उड़ती हुई लौ</string>
     <string name="shapedIcon">सिली आकार की</string>
@@ -150,9 +148,6 @@
     <string name="category_music_offtopic">संगीत: गैर-संगीत अनुभाग</string>
     <string name="category_preview">पूर्वावलोकन/रिकैप</string>
     <string name="license">लाइसेंस</string>
-    <string name="color_blue">आनंदमय नीला</string>
-    <string name="color_green">ग्रूवी हरा</string>
-    <string name="color_purple">सुखद बैंगनी</string>
     <string name="material_you">मैटेरियल यू</string>
     <string name="sponsorblock_notifications">सूचनाएं</string>
     <string name="app_icon">आइकन</string>
@@ -295,9 +290,7 @@
     <string name="comments_disabled">अपलोडर द्वारा टिप्पणियां अक्षम कर दी गई हैं।</string>
     <string name="pinch_control">पिंच नियंत्रण</string>
     <string name="pinch_control_summary">ज़ूम इन/आउट करने के लिए पिंच जेस्चर का उपयोग करें</string>
-    <string name="theme_monochrome">सरल एकरंगी</string>
     <string name="play_latest_videos">नवीनतम वीडियो चलाएँ</string>
-    <string name="color_violet">बहुमुखी बैंगनी</string>
     <string name="nothing_selected">कुछ चुना नहीं!</string>
     <string name="hide_watched_from_feed">पहले से देखे गए वीडियो छिपाएं</string>
     <string name="playlistUrl">प्लेलिस्ट URL</string>

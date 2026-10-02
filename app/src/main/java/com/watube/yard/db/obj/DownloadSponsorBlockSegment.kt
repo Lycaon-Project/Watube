@@ -2,11 +2,13 @@ package com.watube.yard.db.obj
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.watube.yard.api.obj.Segment
 
 @Entity(
     tableName = "downloadSponsorBlockSegment",
+    indices = [Index(value = ["videoId"], name = "index_downloadSponsorBlockSegment_videoId")],
     foreignKeys = [
         ForeignKey(
             entity = Download::class,

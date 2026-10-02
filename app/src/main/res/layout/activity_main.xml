@@ -18,12 +18,80 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <!-- Watube home header: brand (mark + word) pushed left, action buttons on the
+             right (theme / bell / overflow) with a .4rem (5.4dp) gap between them. This
+             single sticky row is the only chrome: the overflow button hosts the
+             settings/help/about menu, so there is no separate toolbar below it. -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/action_bar"
-            app:title="@string/app_name" />
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/watube_gutter"
+            android:paddingEnd="@dimen/watube_gutter"
+            android:paddingTop="4.7dp">
+
+            <ImageView
+                android:layout_width="27.7dp"
+                android:layout_height="27.7dp"
+                android:background="@drawable/watube_mark_bg"
+                android:importantForAccessibility="no"
+                android:padding="4.75dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/watube_logo" />
+
+            <TextView
+                android:id="@+id/brandWord"
+                style="@style/WatubeBrandWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7.4dp"
+                android:text="@string/app_name" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/themeToggle"
+                android:layout_width="@dimen/watube_ib_size"
+                android:layout_height="@dimen/watube_ib_size"
+                android:layout_marginStart="5.4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/tooltip_theme"
+                android:padding="8dp"
+                android:src="@drawable/watube_moon"
+                android:tooltipText="@string/tooltip_theme"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <ImageButton
+                android:id="@+id/bellBtn"
+                android:layout_width="@dimen/watube_ib_size"
+                android:layout_height="@dimen/watube_ib_size"
+                android:layout_marginStart="5.4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/notifications"
+                android:padding="8dp"
+                android:src="@drawable/watube_bell"
+                android:tooltipText="@string/notifications"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <!-- The app has no user account, so the former profile avatar is replaced by
+                 the overflow button that hosts Settings / Help / About (previously the
+                 now-removed toolbar's menu). -->
+            <ImageButton
+                android:id="@+id/overflowBtn"
+                android:layout_width="@dimen/watube_ib_size"
+                android:layout_height="@dimen/watube_ib_size"
+                android:layout_marginStart="5.4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/tooltip_more"
+                android:padding="8dp"
+                android:src="@drawable/ic_three_dots"
+                android:tooltipText="@string/tooltip_more"
+                app:tint="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,12 +115,24 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:layout_marginStart="@dimen/watube_nav_inset"
+        android:layout_marginEnd="@dimen/watube_nav_inset"
         android:background="@drawable/watube_bottom_nav_background"
+        android:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:itemActiveIndicatorStyle="@style/WatubeBottomNavActiveIndicator"
+        app:itemIconSize="17.3dp"
         app:itemIconTint="@color/watube_bottom_nav_item_tint"
+        app:itemPaddingBottom="9.4dp"
+        app:itemPaddingTop="9.4dp"
+        app:itemTextAppearanceActive="@style/WatubeBottomNavLabel"
+        app:itemTextAppearanceInactive="@style/WatubeBottomNavLabel"
         app:itemTextColor="@color/watube_bottom_nav_item_tint"
+        app:activeIndicatorLabelPadding="6.5dp"
+        app:labelMaxLines="1"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_menu" />
 

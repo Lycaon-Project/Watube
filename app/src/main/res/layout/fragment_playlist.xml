@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/watube_gutter"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -49,7 +50,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
+                        app:cardCornerRadius="12dp"
                         app:layout_constraintDimensionRatio="16:9"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -70,8 +71,8 @@
                             android:layout_gravity="bottom|end"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="6dp"
-                            app:cardBackgroundColor="@color/duration_background_color"
-                            app:cardCornerRadius="8dp"
+                            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                            app:cardCornerRadius="6dp"
                             app:cardElevation="0dp">
 
                             <TextView
@@ -80,7 +81,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="2dp"
-                                android:textColor="@color/duration_text_color"
+                                android:textColor="?attr/colorOnPrimaryContainer"
                                 android:textSize="12sp"
                                 tools:text="05:36" />
 
@@ -203,14 +204,16 @@
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_list" />
+                        android:src="@drawable/ic_list"
+                        app:tint="?attr/colorOnSurfaceVariant" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/emptyList"
-                        android:textSize="20sp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -220,6 +223,61 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <LinearLayout
+            android:id="@+id/search_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <ImageButton
+                android:id="@+id/search_back"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/search_back"
+                android:padding="6dp"
+                android:src="@drawable/watube_chevron_left"
+                android:tint="?attr/colorOnSurface" />
+
+            <EditText
+                android:id="@+id/search_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/watube_search_field"
+                android:hint="@string/playlist_search_hint"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingTop="11dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="11dp"
+                android:singleLine="true"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp"
+                tools:text="mix été" />
+
+            <ImageButton
+                android:id="@+id/search_clear"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/search_clear"
+                android:padding="6dp"
+                android:src="@drawable/ic_close"
+                android:tint="?attr/colorOnSurface"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

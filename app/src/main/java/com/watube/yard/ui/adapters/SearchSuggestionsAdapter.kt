@@ -72,7 +72,7 @@ class SearchSuggestionsAdapter(
                         onSearchHistoryItemDeleted(SearchHistoryItem(suggestion))
                     }
                     suggestionText.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        R.drawable.ic_history, 0, 0, 0
+                        R.drawable.ic_time_outlined, 0, 0, 0
                     )
                 }
 

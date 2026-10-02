@@ -38,8 +38,16 @@ class SubscriptionsViewModel : ViewModel() {
             } catch (e: Exception) {
                 context.toastFromMainDispatcher(R.string.server_error)
                 Log.e(TAG(), e.toString())
+                // Leave the loading state instead of returning silently: without this the
+                // fragment keeps its spinner (and the feed progress bar) visible forever,
+                // e.g. when a backup restore races a feed refresh.
+                this@SubscriptionsViewModel.feedProgress.postValue(null)
+                this@SubscriptionsViewModel.videoFeed.postValue(emptyList())
                 return@launch
             }
+            // close the progress bar even when the repository short-circuited (cached feed,
+            // no subscriptions) and never reported a final "n/n" update
+            this@SubscriptionsViewModel.feedProgress.postValue(null)
             this@SubscriptionsViewModel.videoFeed.postValue(videoFeed)
             videoFeed.firstOrNull { !it.isUpcoming }?.uploaded?.let {
                 PreferenceHelper.updateLastFeedWatchedTime(it, false)

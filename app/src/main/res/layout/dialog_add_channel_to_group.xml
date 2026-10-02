@@ -31,12 +31,12 @@
                 android:paddingBottom="12dp">
 
                 <TextView
+                    style="@style/WatubeSheetTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/add_to_group"
-                    android:textSize="27sp" />
+                    android:layout_marginHorizontal="@dimen/watube_gutter"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/add_to_group" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"

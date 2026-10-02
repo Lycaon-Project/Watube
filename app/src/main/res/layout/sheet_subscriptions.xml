@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="16dp"
+                    android:paddingHorizontal="@dimen/watube_gutter"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
@@ -93,7 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:layout_marginHorizontal="12dp">
+                    android:layout_marginHorizontal="@dimen/watube_gutter">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/subscriptions_search_input"

@@ -30,6 +30,7 @@ import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.models.TrendsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
@@ -51,6 +52,26 @@ class TrendsFragment : Fragment(R.layout.fragment_trends) {
             tab.text = getString(category.titleRes)
         }.attach()
 
+        // reopen trends on the category the user looked at last time (upstream e3d0970)
+        val storedCategory = runCatching {
+            TrendingCategory.valueOf(
+                PreferenceHelper.getString(PreferenceKeys.TRENDING_CATEGORY, "")
+            )
+        }.getOrNull()
+        val initialTabIndex = storedCategory?.let { categories.indexOf(it) } ?: -1
+        if (initialTabIndex > 0) binding.pager.setCurrentItem(initialTabIndex, false)
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                categories.getOrNull(tab.position)?.let {
+                    PreferenceHelper.putString(PreferenceKeys.TRENDING_CATEGORY, it.name)
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
         binding.trendingRegion.setOnClickListener {
             showChangeRegionDialog(requireContext()) {
                 adapter.getFragmentAt(binding.pager.currentItem)?.also {
@@ -58,6 +79,11 @@ class TrendsFragment : Fragment(R.layout.fragment_trends) {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -130,7 +156,6 @@ class TrendsContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_tre
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.recview?.layoutManager = GridLayoutManager(context, gridItems)
-        _binding?.recview?.setHasFixedSize(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -89,11 +89,6 @@
     <string name="category_intro_summary">Ein Videoabschnitt ohne eigentlichen Inhalt. Kann eine Pause, ein statisches Bild oder eine sich wiederholende Animation sein. Sollte nicht für Übergänge mit Informationen verwendet werden</string>
     <string name="license">Lizenz</string>
     <string name="color_accent">Akzente</string>
-    <string name="color_red">Ruhendes Rot</string>
-    <string name="color_blue">Beflügelndes Blau</string>
-    <string name="color_yellow">Gleißendes Gelb</string>
-    <string name="color_green">Gute-Laune Grün</string>
-    <string name="color_purple">Liebreizendes Lila</string>
     <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Benachrichtigungen</string>
     <string name="enabled">Ein</string>
@@ -295,9 +290,7 @@
     <string name="exportsuccess">Exportiert.</string>
     <string name="pinch_control">Zwei-Finger-Gestensteuerung</string>
     <string name="pinch_control_summary">Verwende eine Zwei-Finger-Geste, um den Zoom anzupassen</string>
-    <string name="theme_monochrome">Minimalistisch Monochrom</string>
     <string name="play_latest_videos">Neueste Videos abspielen</string>
-    <string name="color_violet">Vielseitiges Violett</string>
     <string name="nothing_selected">Nichts ausgewählt!</string>
     <string name="hide_watched_from_feed">Angesehene Videos ausblenden</string>
     <string name="playlistUrl">Playlist-URL</string>
