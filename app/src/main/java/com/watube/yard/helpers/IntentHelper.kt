@@ -7,7 +7,7 @@ import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.fragment.app.FragmentManager
 import com.watube.yard.R
 import com.watube.yard.constants.IntentData

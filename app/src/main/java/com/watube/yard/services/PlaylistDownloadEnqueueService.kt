@@ -146,7 +146,7 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
 
         while (nextPage != null) {
             val playlistPage = runCatching {
-                MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage!!)
+                MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage)
             }.getOrNull()
 
             if (playlistPage == null && alreadyRetriedOnce) {

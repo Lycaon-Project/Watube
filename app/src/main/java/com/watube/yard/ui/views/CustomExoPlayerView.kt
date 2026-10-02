@@ -19,7 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.os.postDelayed
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
@@ -444,7 +444,10 @@ class CustomExoPlayerView(
         setQueueButtonState(binding.skipPrev, !PlayingQueue.hasPrev() || isPlayerLocked)
         setQueueButtonState(binding.skipNext, !PlayingQueue.hasNext() || isPlayerLocked)
 
-        handler.postDelayed(this::syncQueueButtons, 100)
+        // battery: la visibilité des boutons précédent/suivant n'est pas critique en
+        // temps réel — 250 ms au lieu de 100 ms divise par ~2,5 les réveils de cette
+        // boucle qui tourne en continu tant qu'un lecteur est attaché
+        handler.postDelayed(this::syncQueueButtons, 250)
     }
 
     private fun setQueueButtonState(button: View, isInvisible: Boolean) {

@@ -34,9 +34,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:gravity="end"
+            android:gravity="end|center_vertical"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
@@ -80,8 +80,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:gravity="end|center_vertical"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton

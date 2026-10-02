@@ -2,7 +2,7 @@ package com.watube.yard.json
 
 import android.util.Log
 import com.watube.yard.extensions.TAG
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn

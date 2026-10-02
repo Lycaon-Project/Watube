@@ -39,6 +39,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.core.os.postDelayed
 import androidx.core.view.WindowCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -195,6 +196,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     /** limite les tentatives de reprise après une erreur source (évite la boucle infinie) */
     private var playbackErrorRetries = 0
 
+    /**
+     * Après une longue veille, les URLs de flux YouTube expirent : la reprise en place
+     * échoue alors en boucle (HTTP 403/410). Ce drapeau garantit qu'on ne relance
+     * l'extraction complète du flux qu'une seule fois par vidéo, remis à zéro dès que
+     * la lecture repart (STATE_READY).
+     */
+    private var hasReExtractedOnError = false
+
     private val baseActivity get() = activity as AbstractPlayerHostActivity
     private val windowInsetsControllerCompat
         get() = WindowCompat
@@ -282,7 +291,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
-            if (playbackState == Player.STATE_READY) playbackErrorRetries = 0
+            if (playbackState == Player.STATE_READY) {
+                playbackErrorRetries = 0
+                hasReExtractedOnError = false
+            }
 
             if (!::playerController.isInitialized) return
 
@@ -361,21 +373,37 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
-            // Seules les erreurs réellement récupérables sont retentées : sans ce
-            // plafond, un live dont la source est morte déclenche une boucle
-            // prepare()/play() infinie (toast "erreur source" à répétition).
-            val recoverable = error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW ||
+            // Erreurs transitoires (coupure réseau brève, fenêtre live dépassée) : on
+            // retente la même source en place. Plafonné, sinon un live dont la source
+            // est morte déclenche une boucle prepare()/play() infinie.
+            val transient = error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW ||
                 error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED ||
                 error.errorCode == PlaybackException.ERROR_CODE_IO_INVALID_HTTP_CONTENT_TYPE ||
                 error.errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED ||
                 error.errorCode == PlaybackException.ERROR_CODE_DECODER_INIT_FAILED
+            // Source périmée : après une longue veille, l'URL de flux a expiré
+            // (HTTP 403/410, 416, fichier introuvable). Retenter la même URL est
+            // inutile — il faut ré-extraire le flux pour obtenir des URLs fraîches.
+            val staleSource = error.errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE
             try {
-                if (::playerController.isInitialized && recoverable && playbackErrorRetries < 3) {
-                    playbackErrorRetries++
-                    playerController.seekToDefaultPosition()
-                    // togglePlayPauseState prepares an errored player again before playing,
-                    // a plain play() left it stuck
-                    playerController.togglePlayPauseState()
+                when {
+                    ::playerController.isInitialized && transient && playbackErrorRetries < 3 -> {
+                        playbackErrorRetries++
+                        playerController.seekToDefaultPosition()
+                        // togglePlayPauseState prepares an errored player again before playing,
+                        // a plain play() left it stuck
+                        playerController.togglePlayPauseState()
+                    }
+                    // Source périmée, ou reprise en place épuisée : on relance une
+                    // extraction complète de la vidéo courante (une seule fois), ce qui
+                    // réarme aussi la SeekBar restée inactive sur un lecteur en erreur.
+                    ::playerController.isInitialized && ::videoId.isInitialized &&
+                        !hasReExtractedOnError && (staleSource || playbackErrorRetries >= 3) -> {
+                        hasReExtractedOnError = true
+                        playVideo(videoId)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -677,8 +705,17 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 }
             }
 
+        // Le lecteur s'ouvre en glissant du mini (progress 1) vers le plein écran
+        // (progress 0). Lancer transitionToStart() ici, avant la première passe de
+        // layout du MotionLayout, est non déterministe : ~1 fois sur 3 la transition
+        // était ignorée et le lecteur restait en mini (petit carré à gauche, le son
+        // tournant). On fixe l'état mini tout de suite, puis on anime une fois le
+        // layout effectué (doOnLayout s'exécute aussitôt si la vue est déjà mesurée).
         binding.playerMotionLayout.progress = 1F
-        binding.playerMotionLayout.transitionToStart()
+        binding.playerMotionLayout.doOnLayout {
+            if (_binding == null) return@doOnLayout
+            binding.playerMotionLayout.transitionToStart()
+        }
 
         val activity = requireActivity()
         PictureInPictureCompat.setPictureInPictureParams(activity, pipParams)
@@ -872,8 +909,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         // Connecte deja a un recepteur : controle ; sinon : choix de la route.
+        // getInstance().selectedRoute ne renvoie jamais null (au minimum la route par
+        // défaut), d'où le contrôle direct sans vérification de nullité redondante.
         val selectedRoute = MediaRouter.getInstance(ctx).selectedRoute
-        val connected = selectedRoute != null && selectedRoute.matchesSelector(selector)
+        val connected = selectedRoute.matchesSelector(selector)
         val dialog = if (connected) {
             MediaRouteControllerDialogFragment()
         } else {
@@ -1051,6 +1090,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     override fun onPause() {
         super.onPause()
 
+        // battery: le tick du mini-lecteur ne sert à rien hors de l'avant-plan
+        // (écran éteint ou app en arrière-plan) — on l'arrête, il repart dans onResume
+        handler.removeCallbacks(miniProgressUpdater)
+
         if (!::playerController.isInitialized) return
 
         val isInteractive = requireContext().getSystemService<PowerManager>()?.isInteractive ?: true
@@ -1078,6 +1121,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         setAutoPlayCountdownEnabled(PlayerHelper.autoPlayCountdown)
         setVideoTrackTypeDisabled(false)
+
+        // battery: relancer le tick du mini-lecteur seulement s'il est réellement affiché
+        if (commonPlayerViewModel.isMiniPlayerVisible.value == true) {
+            handler.removeCallbacks(miniProgressUpdater)
+            handler.post(miniProgressUpdater)
+        }
     }
 
     private fun setAutoPlayCountdownEnabled(enabled: Boolean) {
@@ -1177,7 +1226,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private fun checkForSegments() {
         if (!::playerController.isInitialized || !playerController.isPlaying || !PlayerHelper.sponsorBlockEnabled) return
 
-        handler.postDelayed(this::checkForSegments, 100)
+        // battery: 200 ms au lieu de 100 ms — latence de saut imperceptible, mais
+        // deux fois moins de réveils du thread principal pendant toute la lecture
+        handler.postDelayed(this::checkForSegments, 200)
         if (viewModel.segments.value.isNullOrEmpty()) return
 
         val segmentData = playerController.getCurrentSegment(

@@ -15,7 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -73,7 +73,7 @@ enum class DownloadTab {
     PLAYLIST
 }
 
-enum class DownloadSortingOrder(@StringRes val stringId: Int) {
+enum class DownloadSortingOrder(@param:StringRes val stringId: Int) {
     OLDEST(R.string.least_recent),
     NEWEST(R.string.most_recent),
     ALPHABETIC(R.string.alphabetic),

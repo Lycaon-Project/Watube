@@ -97,7 +97,7 @@ class LocalPlaylistsRepository: PlaylistRepository {
         var nextPage = playlist.nextpage
         while (nextPage != null) {
             nextPage = runCatching {
-                MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage!!).apply {
+                MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage).apply {
                     PlaylistsHelper.addToPlaylist(newPlaylist, *relatedStreams.toTypedArray())
                 }.nextpage
             }.getOrNull()

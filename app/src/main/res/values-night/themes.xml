@@ -86,6 +86,10 @@
         <item name="colorSurfaceDim">#000000</item>
         <item name="colorSurfaceBright">#000000</item>
         <item name="colorSurfaceVariant">#0A0A0A</item>
+        <!-- Le outlineVariant hérité est du blanc à 8% : invisible sur du noir pur, ce qui
+             faisait "disparaître" la barre de recherche et les séparateurs en mode OLED.
+             On le remplace par un gris sombre bien visible sur fond noir. -->
+        <item name="colorOutlineVariant">#2A2A2A</item>
         <item name="popupMenuBackground">@drawable/pure_theme_popup_menu_background</item>
 
     </style>

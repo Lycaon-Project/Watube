@@ -90,7 +90,7 @@ class AddToPlaylistViewModel(
     ) : Parcelable {
         @Parcelize
         data class Message(
-            @StringRes val resId: Int,
+            @param:StringRes val resId: Int,
             val formatArgs: List<@RawValue Any>? = null,
         ) : Parcelable
     }

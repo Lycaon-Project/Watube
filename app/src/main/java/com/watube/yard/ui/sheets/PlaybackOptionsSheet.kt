@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.session.MediaController
@@ -157,7 +157,7 @@ class PlaybackOptionsSheet(
     //
     // And the defaultPlaybackPitch value is 1.0f, so we can omit that
     private fun semitoneToPlaybackPitch(semitone: Float): Float {
-        return SEMITONE_RATIO.pow(semitone).toFloat()
+        return SEMITONE_RATIO.pow(semitone)
     }
 
     // Get the exponent(or in this case semitone) value from a known base (the semitone's ratio)

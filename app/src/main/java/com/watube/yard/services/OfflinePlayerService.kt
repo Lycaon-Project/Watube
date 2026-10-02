@@ -181,7 +181,7 @@ open class OfflinePlayerService : AbstractPlayerService() {
         var mediaSource: MediaSource? = null
         listOfNotNull(videoSource, audioSource, subtitleSource).forEach { source ->
             mediaSource =
-                if (mediaSource == null) source else MergingMediaSource(mediaSource!!, source)
+                if (mediaSource == null) source else MergingMediaSource(mediaSource, source)
         }
 
         if (mediaSource == null || isAudioOnlyPlayer && audioSource == null) {
@@ -189,7 +189,7 @@ open class OfflinePlayerService : AbstractPlayerService() {
             return
         }
 
-        exoPlayer?.setMediaSource(mediaSource!!)
+        exoPlayer?.setMediaSource(mediaSource)
 
         trackSelector?.updateParameters {
             setPreferredTextRoleFlags(C.ROLE_FLAG_CAPTION)

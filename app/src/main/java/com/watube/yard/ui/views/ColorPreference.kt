@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.watube.yard.R

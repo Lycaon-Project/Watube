@@ -70,7 +70,7 @@ object PlayingQueue {
         }
     }
 
-    fun addAsNext(streamItem: StreamItem) = synchronized(queue) {
+    fun addAsNext(streamItem: StreamItem): Unit = synchronized(queue) {
         if (currentStream == streamItem) return
         if (queue.contains(streamItem)) queue.remove(streamItem)
         queue.add(currentIndex() + 1, streamItem)
@@ -150,7 +150,7 @@ object PlayingQueue {
      */
     private fun addToQueueAsync(
         streams: List<StreamItem>, currentStreamItem: StreamItem? = null, isMainList: Boolean = true
-    ) = synchronized(queue) {
+    ): Unit = synchronized(queue) {
         if (!isMainList) {
             add(*streams.toTypedArray())
             return

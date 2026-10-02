@@ -44,7 +44,7 @@ object TextUtils {
         return date.toJavaLocalDate().format(MEDIUM_DATE_FORMATTER)
     }
 
-    fun localizeInstant(instant: kotlinx.datetime.Instant): String {
+    fun localizeInstant(instant: kotlin.time.Instant): String {
         return localizeDate(instant.toLocalDate())
     }
 
