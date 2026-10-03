@@ -311,6 +311,8 @@
     <string name="rewind">Rembobiner</string>
     <string name="forward">Avancer</string>
     <string name="pause">Pause</string>
+    <string name="auto_pip">Image dans l’image automatique</string>
+    <string name="auto_pip_summary">Continuer la vidéo dans une petite fenêtre en quittant l’application</string>
     <string name="alternative_pip_controls">Commandes d’image dans l’image alternatives</string>
     <string name="alternative_pip_controls_summary">Afficher uniquement l’audio et les commandes de saut dans le mode « Image dans l’image » au lieu de l’avance et du retour en arrière</string>
     <string name="faq">FAQ</string>

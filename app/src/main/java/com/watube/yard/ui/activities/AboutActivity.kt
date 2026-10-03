@@ -15,6 +15,7 @@ import androidx.core.text.parseAsHtml
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.databinding.ActivityAboutBinding
@@ -38,6 +39,7 @@ class AboutActivity : BaseActivity() {
 
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.root.padBottomForSystemBars()
 
         binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()

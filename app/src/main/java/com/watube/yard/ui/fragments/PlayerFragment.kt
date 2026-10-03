@@ -20,6 +20,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.view.KeyEvent
 import android.view.PixelCopy
+import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
@@ -508,7 +509,18 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         )
         initializeOnClickActions()
 
-        if (PlayerHelper.autoFullscreenEnabled && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        // isFullscreen lives in the activity scoped view model: after a recreation that
+        // happened in fullscreen (density, navigation mode, theme...) it is still true, but the
+        // fullscreen dialog died with the previous instance. Left as is, the portrait layout
+        // stayed stuck in a landscape window (restartActivityIfNeeded() skips while
+        // "fullscreen") and the screen could not be used anymore: reopen it for real instead.
+        // A brand new player never inherits a stale value.
+        val restoreFullscreen = savedInstanceState != null &&
+            commonPlayerViewModel.isFullscreen.value == true
+        if (savedInstanceState == null) commonPlayerViewModel.isFullscreen.value = false
+        if (restoreFullscreen || (PlayerHelper.autoFullscreenEnabled &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        ) {
             setFullscreen()
         }
 
@@ -1066,10 +1078,27 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         // restored orientation request has been applied; it is a no-op when a rotation back to
         // the layout orientation happens (or already triggered the check) in the meantime.
         handler.postDelayed(ORIENTATION_SETTLE_DELAY_MS) {
-            if (_binding != null &&
-                !PictureInPictureCompat.isInPictureInPictureMode(requireActivity())
-            ) restartActivityIfNeeded()
+            if (_binding == null ||
+                PictureInPictureCompat.isInPictureInPictureMode(requireActivity()) ||
+                // the screen is already rotated but the activity did not get the matching
+                // configuration yet: onConfigurationChanged() will take care of it
+                displayOrientation() != resources.configuration.orientation
+            ) return@postDelayed
+            restartActivityIfNeeded()
         }
+    }
+
+    /**
+     * Orientation the display is physically rotated to right now, which the system applies
+     * before it delivers the matching configuration to the activity.
+     */
+    private fun displayOrientation(): Int {
+        val display = ContextCompat.getDisplayOrDefault(requireActivity())
+        val naturalLandscape = display.mode.physicalWidth > display.mode.physicalHeight
+        val quarterTurn = display.rotation == Surface.ROTATION_90 ||
+            display.rotation == Surface.ROTATION_270
+        return if (naturalLandscape != quarterTurn) Configuration.ORIENTATION_LANDSCAPE
+        else Configuration.ORIENTATION_PORTRAIT
     }
 
     override fun toggleFullscreen() {
@@ -1687,7 +1716,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                         isPlaying
                     )
                 )
-                .setAutoEnterEnabled(isPlaying)
+                .setAutoEnterEnabled(isPlaying && PlayerHelper.autoPipEnabled)
                 .apply {
                     // On ne retire JAMAIS l'aspect ratio : sans lui le système
                     // re-border la fenêtre PiP avec le ratio par défaut (écran),
@@ -1702,7 +1731,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 && PictureInPictureCompat.isPictureInPictureEnabled(requireContext())
 
     private fun shouldStartPiP(): Boolean {
-        return isPipAvailable() && ::playerController.isInitialized && playerController.isPlaying
+        return PlayerHelper.autoPipEnabled && isPipAvailable() && ::playerController.isInitialized && playerController.isPlaying
     }
 
     private fun restartActivityIfNeeded() {

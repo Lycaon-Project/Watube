@@ -12,6 +12,7 @@ import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.databinding.FragmentMainSettingsBinding
 import com.watube.yard.databinding.SettingsCategoryRowBinding
+import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.ui.activities.AboutActivity
 
 /**
@@ -36,6 +37,7 @@ class MainSettings : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        view.padBottomForSystemBars()
         setupRow(
             binding.rowAppearance,
             R.drawable.watube_spark,

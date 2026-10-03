@@ -8,6 +8,7 @@ import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
@@ -66,7 +67,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
-/** Material "expanded" breakpoint: wider screens switch to a navigation rail */
+/** Tablets (smallest width >= 600dp) use a navigation rail; phones keep the bottom bar in landscape */
 private const val EXPANDED_WIDTH_DP = 600
 
 /** Mirrors the 80dp width of the nav rail declared in res/layout/activity_main.xml */
@@ -86,6 +87,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
+
+    /** Night state the views were inflated with, see [onConfigurationChanged] */
+    private var inflatedNightUiMode = false
 
     /** Resolved bottom gap for the floating nav bar (max of system inset and the design inset). */
     private var navBarBottomInset = 0
@@ -138,6 +142,7 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        inflatedNightUiMode = isNightUiMode()
 
         // manually apply additional padding for edge-to-edge compatibility
         // see https://developer.android.com/develop/ui/views/layout/edge-to-edge
@@ -171,12 +176,10 @@ class MainActivity : AbstractPlayerHostActivity() {
                         applyPlayerContainerProgress()
                     }
                     with(binding.navRail) {
-                        setPadding(
-                            paddingLeft,
-                            systemBarInsets.top,
-                            paddingRight,
-                            systemBarInsets.bottom
-                        )
+                        // the rail starts below the app bar, which already clears the status
+                        // bar: a top inset here pushed the last tab (settings) off a landscape
+                        // phone screen
+                        setPadding(paddingLeft, 0, paddingRight, systemBarInsets.bottom)
                     }
                     binding.root.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
@@ -258,15 +261,7 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         // Prevent duplicate entries into backstack, if selected item and current
         // visible fragment is different, then navigate to selected item.
-        binding.bottomNav.setOnItemReselectedListener {
-            if (it.itemId != navController.currentDestination?.id) {
-                navigateToBottomSelectedItem(it)
-            } else {
-                // get the current fragment
-                val fragment = navHostFragment.childFragmentManager.fragments.firstOrNull()
-                tryScrollToTop(fragment?.requireView())
-            }
-        }
+        binding.bottomNav.setOnItemReselectedListener(::onBottomItemReselected)
 
         binding.bottomNav.setOnItemSelectedListener {
             navigateToBottomSelectedItem(it)
@@ -292,7 +287,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         setupSubscriptionsBadge()
 
-        loadIntentData()
+        // a recreation (rotation with the mini player, theme change...) keeps the launch intent:
+        // handling it again reopened its video maximized or re-navigated to its channel
+        if (savedInstanceState == null) loadIntentData()
 
         showUserInfoDialogIfNeeded()
     }
@@ -325,7 +322,7 @@ class MainActivity : AbstractPlayerHostActivity() {
      * declares `orientation` in its configChanges, so rotating never recreates it.
      */
     private fun setupExpandedLayout() {
-        val expanded = resources.configuration.screenWidthDp >= EXPANDED_WIDTH_DP
+        val expanded = resources.configuration.smallestScreenWidthDp >= EXPANDED_WIDTH_DP
 
         binding.navRail.isVisible = false
         setContentMarginStart(0f)
@@ -364,17 +361,7 @@ class MainActivity : AbstractPlayerHostActivity() {
         if (!railNavWired) {
             railNavWired = true
             binding.navRail.setupWithNavController(navController)
-            binding.navRail.setOnItemReselectedListener {
-                if (it.itemId != navController.currentDestination?.id) {
-                    navigateToBottomSelectedItem(it)
-                } else {
-                    tryScrollToTop(
-                        (supportFragmentManager.fragments.filterIsInstance<NavHostFragment>()
-                            .firstOrNull()
-                            ?.childFragmentManager?.fragments)?.firstOrNull()?.requireView()
-                    )
-                }
-            }
+            binding.navRail.setOnItemReselectedListener(::onBottomItemReselected)
             binding.navRail.setOnItemSelectedListener {
                 navigateToBottomSelectedItem(it)
             }
@@ -416,6 +403,16 @@ class MainActivity : AbstractPlayerHostActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (!::binding.isInitialized) return
+        // uiMode is handled here (no automatic recreation), so with the "System" theme a
+        // dark/light switch of Android only reached the bar and the header: every inflated
+        // view kept the previous colours. Recreate to repaint everything; the player
+        // fragment restores its own state. A PiP window waits for its config change on exit.
+        if (isNightUiMode() != inflatedNightUiMode &&
+            !PictureInPictureCompat.isInPictureInPictureMode(this)
+        ) {
+            recreate()
+            return
+        }
         setupExpandedLayout()
         // setupExpandedLayout() rebuilt the visible bar's menu, which can re-check the
         // wrong item: no destination change follows on a config change, so re-sync now
@@ -757,6 +754,19 @@ class MainActivity : AbstractPlayerHostActivity() {
         )
     }
 
+    /**
+     * Reselecting the lit tab: on its root, scroll to the top; deeper in its stack
+     * (channel, playlist... opened from it), go back to its root like YouTube does.
+     */
+    private fun onBottomItemReselected(item: MenuItem) {
+        if (item.itemId == navController.currentDestination?.id) {
+            tryScrollToTop(binding.fragment.getFragment<NavHostFragment>()
+                .childFragmentManager.fragments.firstOrNull()?.view)
+        } else if (!navController.popBackStack(item.itemId, false)) {
+            navigateToBottomSelectedItem(item)
+        }
+    }
+
     private fun navigateToBottomSelectedItem(item: MenuItem): Boolean {
         if (item.itemId == R.id.subscriptionsFragment) {
             binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
@@ -769,23 +779,31 @@ class MainActivity : AbstractPlayerHostActivity() {
             return true
         }
 
-        return item.onNavDestinationSelected(navController)
+        // NavigationUI reports false when the restored tab stack ends on a destination
+        // outside the menu (home -> channel), which made the bar keep the previous tab
+        return item.onNavDestinationSelected(navController) ||
+            currentTab(binding.bottomNav.menu)?.itemId == item.itemId
     }
+
+    /** The tab owning the current back stack: the closest destination below it in [menu] */
+    private fun currentTab(menu: Menu): MenuItem? = navController.currentBackStack.value
+        .asReversed().firstNotNullOfOrNull { menu.findItem(it.destination.id) }
 
     /**
      * The settings tab opens a separate activity, so the checked item no longer matches
      * the current destination when coming back. Re-sync both bars, without triggering
      * [setOnItemSelectedListener] (a plain [MenuItem.isChecked] never does).
      *
-     * Destinations missing from the menu (search, channel, playlist...) keep the
-     * highlight of the tab they were opened from, exactly like NavigationUI does.
+     * Destinations missing from the menu (search, channel, playlist...) light the tab
+     * owning their back stack, i.e. the closest tab below them: restoring a saved tab
+     * stack (home -> channel) otherwise kept the previously selected tab lit.
      * Hidden destinations (trends, downloads) leave no visible tab lit.
      */
     private fun syncBottomBarSelection() {
         if (!::binding.isInitialized || !this::navController.isInitialized) return
-        val destinationId = navController.currentDestination?.id ?: return
         listOf(binding.bottomNav, binding.navRail).forEach { bar ->
-            val item = bar.menu.findItem(destinationId) ?: return@forEach
+            val item = currentTab(bar.menu) ?: return@forEach
+            val destinationId = item.itemId
             if (!item.isVisible) {
                 if (bar.menu.children.any { it.isChecked }) forceExclusiveCheck(bar, null)
                 return@forEach
@@ -833,6 +851,7 @@ class MainActivity : AbstractPlayerHostActivity() {
         pipRelaunchPending = false
         syncBottomBarSelection()
     }
+
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         // onCreate() peut avoir quitté avant d'initialiser binding (pas de réseau)

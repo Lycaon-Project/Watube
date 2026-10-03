@@ -9,6 +9,9 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.LocaleHelper
@@ -64,6 +67,25 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
+
+        if (!isDialogActivity) keepContentClearOfSideInsets()
+    }
+
+    /**
+     * Edge to edge: every screen handles the top and bottom system bars itself, but none
+     * handled the sides. With 3-button navigation the bar sits on a side in landscape (and the
+     * camera cutout on the other), so content and buttons went underneath them. The side
+     * insets are applied once here, on the content root, and passed on untouched so each
+     * screen keeps its own top / bottom handling.
+     */
+    private fun keepContentClearOfSideInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
+            val sides = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.updatePadding(left = sides.left, right = sides.right)
+            insets
+        }
     }
 
     /**

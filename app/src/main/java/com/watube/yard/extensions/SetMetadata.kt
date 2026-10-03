@@ -28,7 +28,9 @@ fun MediaItem.Builder.setMetadata(streams: Streams, videoId: String) = apply {
         MediaMetadata.Builder()
             .setTitle(streams.title)
             .setArtist(streams.uploader)
-            .setDurationMs(streams.duration.times(1000))
+            // live streams have no duration (0 or less): no length must reach the session,
+            // otherwise the system media controls draw a seek bar of a bogus length
+            .setDurationMs(streams.duration.takeIf { it > 0 }?.times(1000))
             .setArtworkUri(streams.thumbnailUrl.toUri())
             .setComposer(streams.uploaderUrl.orEmpty().toID())
             .setExtras(extras)
@@ -55,7 +57,7 @@ fun MediaItem.Builder.setMetadata(downloadWithItems: DownloadWithItems) = apply 
         MediaMetadata.Builder()
             .setTitle(download.title)
             .setArtist(download.uploader)
-            .setDurationMs(download.duration?.times(1000))
+            .setDurationMs(download.duration?.takeIf { it > 0 }?.times(1000))
             .setArtworkUri(download.thumbnailPath?.toAndroidUri())
             .setExtras(extras)
             // send a unique timestamp to notify that the metadata changed, even if playing the same video twice
