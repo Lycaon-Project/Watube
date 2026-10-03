@@ -385,6 +385,12 @@
     <string name="forward">Forward</string>
     <string name="auto_pip">Automatic picture-in-picture</string>
     <string name="auto_pip_summary">Keep playing the video in a small window when leaving the app</string>
+    <string name="sleep_timer_all_videos">Apply to all videos</string>
+    <string name="sleep_timer_all_videos_summary">Starts the sleep timer (%1$s) whenever a new video plays</string>
+    <string name="show_stats_for_nerds">Show stats for nerds</string>
+    <string name="stats_for_nerds_summary">Adds the technical playback details to the player options</string>
+    <string name="persistent_search_bar">Persistent search bar</string>
+    <string name="persistent_search_bar_summary">Keeps the search bar and the filters at the top of the home screen while scrolling</string>
     <string name="alternative_pip_controls">Alternative PiP controls</string>
     <string name="alternative_pip_controls_summary">Show audio only and skip controls in PiP instead of forward and rewind</string>
     <string name="audio_only_mode">Audio only mode</string>

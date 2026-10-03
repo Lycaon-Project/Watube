@@ -60,6 +60,7 @@ import com.watube.yard.ui.sheets.PlaybackOptionsSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
 import com.watube.yard.ui.sheets.SleepTimerSheet
 import com.watube.yard.ui.sheets.VideoOptionsBottomSheet
+import com.watube.yard.ui.tools.SleepTimer
 import com.watube.yard.util.DataSaverMode
 import com.watube.yard.util.PlayingQueue
 import kotlinx.coroutines.launch
@@ -507,6 +508,9 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
                 updatePlayPauseButton()
                 isPaused = !isPlaying
+                if (isPlaying) {
+                    SleepTimer.startForVideo(requireContext(), PlayingQueue.getCurrent()?.url?.toID())
+                }
 
                 // the polling runs less frequently while paused, refresh right away instead
                 updateSeekBar()

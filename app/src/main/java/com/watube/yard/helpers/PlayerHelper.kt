@@ -317,6 +317,20 @@ object PlayerHelper {
     val autoPipEnabled: Boolean
         get() = PreferenceHelper.getBoolean(PreferenceKeys.AUTO_PIP, true)
 
+    val sleepTimerForAllVideos: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.SLEEP_TIMER_ALL_VIDEOS, false)
+
+    /** Duration of the last sleep timer started by the user, reused for every video. */
+    var sleepTimerMinutes: Long
+        get() = PreferenceHelper.getLong(PreferenceKeys.SLEEP_TIMER_MINUTES, 30L)
+        set(value) = PreferenceHelper.putLong(PreferenceKeys.SLEEP_TIMER_MINUTES, value)
+
+    val statsForNerdsEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.STATS_FOR_NERDS, false)
+
+    val persistentSearchBar: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.PERSISTENT_SEARCH_BAR, true)
+
     private val alternativePiPControls: Boolean
         get() = PreferenceHelper.getBoolean(
             PreferenceKeys.ALTERNATIVE_PIP_CONTROLS,

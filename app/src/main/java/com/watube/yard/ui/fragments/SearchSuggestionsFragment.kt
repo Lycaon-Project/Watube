@@ -2,6 +2,7 @@ package com.watube.yard.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -39,7 +40,8 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
     private fun View.showKeyboard() {
         requestFocus()
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        // no SHOW_IMPLICIT: deprecated, and ignored since Android 16
+        imm.showSoftInput(this, 0)
     }
 
     private val suggestionsAdapter = SearchSuggestionsAdapter(
@@ -117,12 +119,18 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
 
         input.doAfterTextChanged { syncSuggestionsToInput() }
 
-        input.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId != EditorInfo.IME_ACTION_SEARCH) {
+        input.setOnEditorActionListener { _, actionId, event ->
+            // a hardware keyboard (or a keyboard sending key events) reports ENTER instead of
+            // the IME action: it moved the focus away and never ran the search
+            val isEnterKey = event?.keyCode == KeyEvent.KEYCODE_ENTER
+            if (actionId != EditorInfo.IME_ACTION_SEARCH && !isEnterKey) {
                 return@setOnEditorActionListener false
             }
-            input.hideKeyboard()
-            mainActivity.openSearchResults(input.text.toString())
+            // ENTER comes as a down and an up event: search once, consume both
+            if (event == null || event.action == KeyEvent.ACTION_DOWN) {
+                input.hideKeyboard()
+                mainActivity.openSearchResults(input.text.toString())
+            }
             true
         }
 

@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.text.format.DateUtils
 import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -11,9 +12,13 @@ import androidx.preference.Preference
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.LocaleHelper
+import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.base.BasePreferenceFragment
 import com.watube.yard.ui.dialogs.RequireRestartDialog
+import com.watube.yard.ui.sheets.SleepTimerSheet
+import com.watube.yard.ui.tools.SleepTimer
+import kotlin.math.ceil
 
 class PlayerSettings : BasePreferenceFragment() {
 
@@ -39,6 +44,16 @@ class PlayerSettings : BasePreferenceFragment() {
             true
         }
 
+        // the sleep timer lives here instead of the player options: started now from the sheet,
+        // or for every video with the last chosen duration
+        findPreference<Preference>(PreferenceKeys.SLEEP_TIMER)?.setOnPreferenceClickListener {
+            SleepTimerSheet().show(childFragmentManager)
+            true
+        }
+        childFragmentManager.setFragmentResultListener(SleepTimerSheet.SLEEP_TIMER_REQUEST_KEY, this) { _, _ ->
+            updateSleepTimerSummaries()
+        }
+
         findPreference<ListPreference>(PreferenceKeys.ORIENTATION)
             ?.setOnPreferenceChangeListener { _, _ ->
                 RequireRestartDialog().show(childFragmentManager, RequireRestartDialog::class.java.name)
@@ -55,6 +70,24 @@ class PlayerSettings : BasePreferenceFragment() {
                 PrivacyHelper.storeSponsorBlockUserId(newValue?.toString().orEmpty())
                 true
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateSleepTimerSummaries()
+    }
+
+    private fun updateSleepTimerSummaries() {
+        val minutesLeft = ceil(SleepTimer.timeLeftMillis.toDouble() / DateUtils.MINUTE_IN_MILLIS).toInt()
+        findPreference<Preference>(PreferenceKeys.SLEEP_TIMER)?.summary =
+            if (minutesLeft > 0) resources.getQuantityString(R.plurals.minutes_left, minutesLeft, minutesLeft)
+            else getString(R.string.disabled)
+
+        val minutes = PlayerHelper.sleepTimerMinutes.toInt()
+        findPreference<Preference>(PreferenceKeys.SLEEP_TIMER_ALL_VIDEOS)?.summary = getString(
+            R.string.sleep_timer_all_videos_summary,
+            resources.getQuantityString(R.plurals.sleep_timer_chip_minutes, minutes, minutes)
+        )
     }
 
     private fun setupSubtitlePref(preference: ListPreference) {

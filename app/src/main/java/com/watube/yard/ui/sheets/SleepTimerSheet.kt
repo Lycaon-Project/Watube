@@ -1,5 +1,6 @@
 package com.watube.yard.ui.sheets
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.core.os.postDelayed
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
 import com.watube.yard.R
 import com.watube.yard.databinding.SleepTimerSheetBinding
 import com.watube.yard.ui.tools.SleepTimer
@@ -100,9 +102,19 @@ class SleepTimerSheet : ExpandedBottomSheet(R.layout.sleep_timer_sheet) {
         }, 1000)
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        // lets the settings screen refresh what it shows about the timer
+        setFragmentResult(SLEEP_TIMER_REQUEST_KEY, Bundle.EMPTY)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null)
         _binding = null
+    }
+
+    companion object {
+        const val SLEEP_TIMER_REQUEST_KEY = "sleep_timer_request_key"
     }
 }

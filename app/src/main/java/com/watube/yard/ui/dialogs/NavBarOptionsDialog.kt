@@ -34,7 +34,9 @@ class NavBarOptionsDialog : DialogFragment() {
 
         binding.optionsRecycler.layoutManager = LinearLayoutManager(context)
         binding.optionsRecycler.adapter = adapter
-        binding.optionsRecycler.setOnDraggedListener { from, to ->
+        binding.optionsRecycler.setOnDraggedListener(
+            isMovable = { adapter.items.getOrNull(it)?.let { item -> !NavBarHelper.isPinned(item.itemId) } == true }
+        ) { from, to ->
             val itemToMove = adapter.items[from]
             adapter.items.remove(itemToMove)
             adapter.items.add(to, itemToMove)

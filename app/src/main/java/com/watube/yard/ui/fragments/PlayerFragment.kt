@@ -117,6 +117,7 @@ import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.PlayerViewModel
 import com.watube.yard.ui.sheets.CommentsSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
+import com.watube.yard.ui.tools.SleepTimer
 import com.watube.yard.util.OfflineTimeFrameReceiver
 import com.watube.yard.util.OnlineTimeFrameReceiver
 import com.watube.yard.util.PlayingQueue
@@ -265,6 +266,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             PictureInPictureCompat.setPictureInPictureParams(requireActivity(), pipParams)
+            if (isPlaying && ::videoId.isInitialized) SleepTimer.startForVideo(requireActivity(), videoId)
 
             if (isPlaying && PlayerHelper.sponsorBlockEnabled) {
                 handler.removeCallbacks(segmentsChecker)

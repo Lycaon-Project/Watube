@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.PopupMenu
 import androidx.core.view.get
-import androidx.core.view.isGone
 import androidx.core.view.iterator
 import androidx.core.view.size
 import com.watube.yard.R
@@ -33,22 +32,19 @@ object NavBarHelper {
         val isVisible: Boolean
     )
 
-    fun hasTabs(): Boolean {
-        val prefsItems = try {
-            getNavBarPrefs()
-        } catch (e: Exception) {
-            Log.e(TAG, "fail to parse nav items", e)
-            return true
-        }
+    /**
+     * The settings tab can be neither hidden nor moved: once hidden, nothing led to the settings
+     * anymore. It always comes last and visible, which also repairs older preferences.
+     */
+    fun isPinned(itemId: Int) = itemId == R.id.settingsFragment
 
-        val tabsUnchanged = prefsItems.isEmpty()
-        val allTabsHidden = prefsItems.isNotEmpty() && prefsItems.all { it.contains("-") }
-
-        return tabsUnchanged || !allTabsHidden
+    fun getNavBarItemPreference(context: Context): List<Pair<Int, Boolean>> {
+        val (pinned, items) = readNavBarItemPreference(context).partition { (itemId, _) -> isPinned(itemId) }
+        return items + pinned.map { (itemId, _) -> itemId to true }
     }
 
     // contains "-" -> invisible menu item, else -> visible menu item
-    fun getNavBarItemPreference(context: Context): List<Pair<Int, Boolean>> {
+    private fun readNavBarItemPreference(context: Context): List<Pair<Int, Boolean>> {
         val prefItems = try {
             getNavBarPrefs()
         } catch (e: Exception) {
@@ -150,7 +146,6 @@ object NavBarHelper {
                 isVisible = snapshot.isVisible
             }
         }
-        if (snapshots.none { it.isVisible }) bottomNav.isGone = true
 
         // the new items lost the exclusive checkable flag of the previous generation, and
         // without it a check (NavigationUI only ever checks its new destination item)
