@@ -3,11 +3,10 @@ package com.watube.yard.ui.dialogs
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.InputFilter
 import android.text.format.Formatter
 import android.util.Log
 import android.widget.Toast
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -23,7 +22,6 @@ import com.watube.yard.databinding.DialogDownloadBinding
 import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.getWhileDigit
-import com.watube.yard.extensions.sha256Sum
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.PlayerHelper

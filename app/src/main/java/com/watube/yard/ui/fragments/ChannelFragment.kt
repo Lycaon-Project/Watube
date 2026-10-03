@@ -3,7 +3,7 @@ package com.watube.yard.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,7 +16,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.obj.ChannelTab
-import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.FragmentChannelBinding
 import com.watube.yard.extensions.TAG

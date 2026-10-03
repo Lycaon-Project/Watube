@@ -2,7 +2,6 @@ package com.watube.yard.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.net.toUri
 import com.watube.yard.constants.IntentData
 import com.watube.yard.enums.PlaylistType
 import com.watube.yard.helpers.IntentHelper
@@ -17,7 +16,7 @@ class DownloadActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val intentData = intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-            IntentHelper.resolveType(it.toUri())
+            IntentHelper.resolveType(IntentHelper.sharedTextToUri(it))
         }
 
         val videoId = intentData?.getStringExtra(IntentData.videoId)

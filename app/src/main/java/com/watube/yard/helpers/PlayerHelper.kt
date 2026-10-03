@@ -314,6 +314,9 @@ object PlayerHelper {
             false
         )
 
+    val autoPipEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.AUTO_PIP, true)
+
     private val alternativePiPControls: Boolean
         get() = PreferenceHelper.getBoolean(
             PreferenceKeys.ALTERNATIVE_PIP_CONTROLS,

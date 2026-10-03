@@ -6,8 +6,8 @@ import com.watube.yard.R
 
 enum class TopLevelDestination(
     val route: String,
-    @StringRes val label: Int,
-    @DrawableRes val icon: Int
+    @param:StringRes val label: Int,
+    @param:DrawableRes val icon: Int
 ) {
     Home("home", R.string.startpage, R.drawable.ic_home),
     Trends("trends", R.string.trends, R.drawable.ic_trending),

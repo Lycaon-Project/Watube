@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- On tablets (smallest width >= 600dp) MainActivity swaps the bottom bar for the 80dp navigation
+         rail: the mini player starts after the rail instead of covering it. -->
+    <dimen name="watube_mini_player_margin_start">90dp</dimen>
+</resources>

@@ -249,6 +249,8 @@
         android:id="@+id/miniplayer_progress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/watube_card_radius"
+        android:layout_marginBottom="1dp"
         android:max="1000"
         android:visibility="gone"
         app:indicatorColor="?attr/colorPrimary"
@@ -257,6 +259,7 @@
         app:layout_constraintStart_toStartOf="@id/main_container"
         app:trackColor="@android:color/transparent"
         app:trackCornerRadius="2dp"
+        app:trackStopIndicatorSize="0dp"
         app:trackThickness="3dp" />
 
     <ImageView

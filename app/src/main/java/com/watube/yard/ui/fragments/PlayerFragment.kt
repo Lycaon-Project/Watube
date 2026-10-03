@@ -20,6 +20,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.view.KeyEvent
 import android.view.PixelCopy
+import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.core.os.postDelayed
 import androidx.core.view.WindowCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -90,6 +92,7 @@ import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.helpers.WindowHelper
 import com.watube.yard.obj.ShareData
+import com.watube.yard.obj.VideoResolution
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.services.AbstractPlayerService
 import com.watube.yard.services.OfflinePlayerService
@@ -135,6 +138,9 @@ import kotlin.io.path.exists
 import kotlin.math.absoluteValue
 
 private const val CAST_ROUTE_DIALOG_TAG = "cast_route_dialog"
+
+/** Time given to a restored orientation request to rotate the activity before re-checking */
+private const val ORIENTATION_SETTLE_DELAY_MS = 1000L
 
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
@@ -195,6 +201,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     /** limite les tentatives de reprise après une erreur source (évite la boucle infinie) */
     private var playbackErrorRetries = 0
 
+    /**
+     * Après une longue veille, les URLs de flux YouTube expirent : la reprise en place
+     * échoue alors en boucle (HTTP 403/410). Ce drapeau garantit qu'on ne relance
+     * l'extraction complète du flux qu'une seule fois par vidéo, remis à zéro dès que
+     * la lecture repart (STATE_READY).
+     */
+    private var hasReExtractedOnError = false
+
     private val baseActivity get() = activity as AbstractPlayerHostActivity
     private val windowInsetsControllerCompat
         get() = WindowCompat
@@ -253,10 +267,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             PictureInPictureCompat.setPictureInPictureParams(requireActivity(), pipParams)
 
             if (isPlaying && PlayerHelper.sponsorBlockEnabled) {
-                handler.postDelayed(
-                    this@PlayerFragment::checkForSegments,
-                    100
-                )
+                handler.removeCallbacks(segmentsChecker)
+                handler.postDelayed(segmentsChecker, 100)
             }
         }
 
@@ -282,7 +294,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
-            if (playbackState == Player.STATE_READY) playbackErrorRetries = 0
+            if (playbackState == Player.STATE_READY) {
+                // On réarme seulement les tentatives « en place ». hasReExtractedOnError n'est
+                // volontairement PAS réarmé ici : sinon une erreur qui revient toujours au même
+                // point relancerait une ré-extraction → redémarrage → même erreur, en boucle.
+                playbackErrorRetries = 0
+            }
 
             if (!::playerController.isInitialized) return
 
@@ -361,21 +378,37 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
-            // Seules les erreurs réellement récupérables sont retentées : sans ce
-            // plafond, un live dont la source est morte déclenche une boucle
-            // prepare()/play() infinie (toast "erreur source" à répétition).
-            val recoverable = error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW ||
+            // Erreurs transitoires (coupure réseau brève, fenêtre live dépassée) : on
+            // retente la même source en place. Plafonné, sinon un live dont la source
+            // est morte déclenche une boucle prepare()/play() infinie.
+            val transient = error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW ||
                 error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED ||
                 error.errorCode == PlaybackException.ERROR_CODE_IO_INVALID_HTTP_CONTENT_TYPE ||
                 error.errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED ||
                 error.errorCode == PlaybackException.ERROR_CODE_DECODER_INIT_FAILED
+            // Source périmée : après une longue veille, l'URL de flux a expiré
+            // (HTTP 403/410, 416, fichier introuvable). Retenter la même URL est
+            // inutile — il faut ré-extraire le flux pour obtenir des URLs fraîches.
+            val staleSource = error.errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND ||
+                error.errorCode == PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE
             try {
-                if (::playerController.isInitialized && recoverable && playbackErrorRetries < 3) {
-                    playbackErrorRetries++
-                    playerController.seekToDefaultPosition()
-                    // togglePlayPauseState prepares an errored player again before playing,
-                    // a plain play() left it stuck
-                    playerController.togglePlayPauseState()
+                when {
+                    ::playerController.isInitialized && transient && playbackErrorRetries < 3 -> {
+                        playbackErrorRetries++
+                        playerController.seekToDefaultPosition()
+                        // togglePlayPauseState prepares an errored player again before playing,
+                        // a plain play() left it stuck
+                        playerController.togglePlayPauseState()
+                    }
+                    // Source périmée, ou reprise en place épuisée : on relance une
+                    // extraction complète de la vidéo courante (une seule fois), ce qui
+                    // réarme aussi la SeekBar restée inactive sur un lecteur en erreur.
+                    ::playerController.isInitialized && ::videoId.isInitialized &&
+                        !hasReExtractedOnError && (staleSource || playbackErrorRetries >= 3) -> {
+                        hasReExtractedOnError = true
+                        playVideo(videoId)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -470,10 +503,24 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         playerLayoutOrientation = resources.configuration.orientation
 
-        initializeTransitionLayout()
+        initializeTransitionLayout(
+            restoreMiniPlayer = savedInstanceState != null &&
+                commonPlayerViewModel.isMiniPlayerVisible.value == true
+        )
         initializeOnClickActions()
 
-        if (PlayerHelper.autoFullscreenEnabled && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        // isFullscreen lives in the activity scoped view model: after a recreation that
+        // happened in fullscreen (density, navigation mode, theme...) it is still true, but the
+        // fullscreen dialog died with the previous instance. Left as is, the portrait layout
+        // stayed stuck in a landscape window (restartActivityIfNeeded() skips while
+        // "fullscreen") and the screen could not be used anymore: reopen it for real instead.
+        // A brand new player never inherits a stale value.
+        val restoreFullscreen = savedInstanceState != null &&
+            commonPlayerViewModel.isFullscreen.value == true
+        if (savedInstanceState == null) commonPlayerViewModel.isFullscreen.value = false
+        if (restoreFullscreen || (PlayerHelper.autoFullscreenEnabled &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        ) {
             setFullscreen()
         }
 
@@ -622,11 +669,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun initializeTransitionLayout() {
+    private fun initializeTransitionLayout(restoreMiniPlayer: Boolean) {
         baseActivity.setPlayerContainerProgress(0f)
-
-        var transitionStartId = 0
-        var transitionEndId = 0
 
         binding.playerMotionLayout.addTransitionListener(object : TransitionAdapter() {
             override fun onTransitionChange(
@@ -640,33 +684,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 baseActivity.setPlayerContainerProgress(progress.absoluteValue)
                 disableController()
                 commonPlayerViewModel.setSheetExpand(false)
-                transitionEndId = endId
-                transitionStartId = startId
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
                 if (_binding == null) return
 
-                if (currentId == transitionStartId) {
-                    commonPlayerViewModel.isMiniPlayerVisible.value = false
-                    binding.player.updateCurrentSubtitle(viewModel.currentCaptionId)
-                    binding.player.useController = true
-                    commonPlayerViewModel.setSheetExpand(true)
-                    baseActivity.setPlayerContainerProgress(0f)
-                    changeOrientationMode()
-                    baseActivity.clearSearchViewFocus()
-                } else if (currentId == transitionEndId) {
-                    commonPlayerViewModel.isMiniPlayerVisible.value = true
-                    binding.player.updateCurrentSubtitle(null)
-                    disableController()
-                    commonPlayerViewModel.setSheetExpand(null)
-                    playerBackgroundBinding.sbSkipBtn.isGone = true
-
-                    baseActivity.setPlayerContainerProgress(1f)
-                    baseActivity.requestOrientationChange()
+                when (currentId) {
+                    R.id.start -> onPlayerMaximized()
+                    R.id.end -> onPlayerMinimized()
                 }
-
-                updateMaxSheetHeight()
             }
         })
 
@@ -677,11 +703,46 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 }
             }
 
+        // Le lecteur s'ouvre en glissant du mini (progress 1) vers le plein écran
+        // (progress 0). Lancer transitionToStart() ici, avant la première passe de
+        // layout du MotionLayout, est non déterministe : ~1 fois sur 3 la transition
+        // était ignorée et le lecteur restait en mini (petit carré à gauche, le son
+        // tournant). On fixe l'état mini tout de suite, puis on anime une fois le
+        // layout effectué (doOnLayout s'exécute aussitôt si la vue est déjà mesurée).
+        // A player that was collapsed when the activity got recreated (rotation) stays the
+        // mini player instead of popping back open over the content.
         binding.playerMotionLayout.progress = 1F
-        binding.playerMotionLayout.transitionToStart()
+        binding.playerMotionLayout.doOnLayout {
+            if (_binding == null) return@doOnLayout
+            if (restoreMiniPlayer) onPlayerMinimized()
+            else binding.playerMotionLayout.transitionToStart()
+        }
 
         val activity = requireActivity()
         PictureInPictureCompat.setPictureInPictureParams(activity, pipParams)
+    }
+
+    private fun onPlayerMaximized() {
+        commonPlayerViewModel.isMiniPlayerVisible.value = false
+        binding.player.updateCurrentSubtitle(viewModel.currentCaptionId)
+        binding.player.useController = true
+        commonPlayerViewModel.setSheetExpand(true)
+        baseActivity.setPlayerContainerProgress(0f)
+        changeOrientationMode()
+        baseActivity.clearSearchViewFocus()
+        updateMaxSheetHeight()
+    }
+
+    private fun onPlayerMinimized() {
+        commonPlayerViewModel.isMiniPlayerVisible.value = true
+        binding.player.updateCurrentSubtitle(null)
+        disableController()
+        commonPlayerViewModel.setSheetExpand(null)
+        playerBackgroundBinding.sbSkipBtn.isGone = true
+
+        baseActivity.setPlayerContainerProgress(1f)
+        baseActivity.requestOrientationChange()
+        updateMaxSheetHeight()
     }
 
     private fun closeMiniPlayer() {
@@ -872,8 +933,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         // Connecte deja a un recepteur : controle ; sinon : choix de la route.
+        // getInstance().selectedRoute ne renvoie jamais null (au minimum la route par
+        // défaut), d'où le contrôle direct sans vérification de nullité redondante.
         val selectedRoute = MediaRouter.getInstance(ctx).selectedRoute
-        val connected = selectedRoute != null && selectedRoute.matchesSelector(selector)
+        val connected = selectedRoute.matchesSelector(selector)
         val dialog = if (connected) {
             MediaRouteControllerDialogFragment()
         } else {
@@ -1008,6 +1071,34 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         windowInsetsControllerCompat.isAppearanceLightStatusBars =
             !ThemeHelper.isDarkMode(requireContext())
+
+        // Leaving fullscreen while the device is still held in landscape causes no
+        // configuration change (the activity already is in landscape), so the player kept its
+        // portrait layout: a cropped video overflowing the screen. Check again once the
+        // restored orientation request has been applied; it is a no-op when a rotation back to
+        // the layout orientation happens (or already triggered the check) in the meantime.
+        handler.postDelayed(ORIENTATION_SETTLE_DELAY_MS) {
+            if (_binding == null ||
+                PictureInPictureCompat.isInPictureInPictureMode(requireActivity()) ||
+                // the screen is already rotated but the activity did not get the matching
+                // configuration yet: onConfigurationChanged() will take care of it
+                displayOrientation() != resources.configuration.orientation
+            ) return@postDelayed
+            restartActivityIfNeeded()
+        }
+    }
+
+    /**
+     * Orientation the display is physically rotated to right now, which the system applies
+     * before it delivers the matching configuration to the activity.
+     */
+    private fun displayOrientation(): Int {
+        val display = ContextCompat.getDisplayOrDefault(requireActivity())
+        val naturalLandscape = display.mode.physicalWidth > display.mode.physicalHeight
+        val quarterTurn = display.rotation == Surface.ROTATION_90 ||
+            display.rotation == Surface.ROTATION_270
+        return if (naturalLandscape != quarterTurn) Configuration.ORIENTATION_LANDSCAPE
+        else Configuration.ORIENTATION_PORTRAIT
     }
 
     override fun toggleFullscreen() {
@@ -1051,6 +1142,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     override fun onPause() {
         super.onPause()
 
+        // battery: le tick du mini-lecteur ne sert à rien hors de l'avant-plan
+        // (écran éteint ou app en arrière-plan) — on l'arrête, il repart dans onResume
+        handler.removeCallbacks(miniProgressUpdater)
+
         if (!::playerController.isInitialized) return
 
         val isInteractive = requireContext().getSystemService<PowerManager>()?.isInteractive ?: true
@@ -1078,6 +1173,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         setAutoPlayCountdownEnabled(PlayerHelper.autoPlayCountdown)
         setVideoTrackTypeDisabled(false)
+
+        // battery: relancer le tick du mini-lecteur seulement s'il est réellement affiché
+        if (commonPlayerViewModel.isMiniPlayerVisible.value == true) {
+            handler.removeCallbacks(miniProgressUpdater)
+            handler.post(miniProgressUpdater)
+        }
     }
 
     private fun setAutoPlayCountdownEnabled(enabled: Boolean) {
@@ -1151,6 +1252,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     }
 
     private fun killPlayerFragment() {
+        // a second close request (double tap on X, end of the swipe-out animation) may come
+        // in once the view is already gone
+        val binding = _binding ?: return
         binding.playerMotionLayout.transitionToEnd()
 
         commonPlayerViewModel.isMiniPlayerVisible.value = false
@@ -1174,10 +1278,16 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
     }
 
+    private val segmentsChecker = Runnable { checkForSegments() }
+
     private fun checkForSegments() {
+        // a single loop: play / pause / play within one tick used to leave two of them running
+        handler.removeCallbacks(segmentsChecker)
         if (!::playerController.isInitialized || !playerController.isPlaying || !PlayerHelper.sponsorBlockEnabled) return
 
-        handler.postDelayed(this::checkForSegments, 100)
+        // battery: 200 ms au lieu de 100 ms — latence de saut imperceptible, mais
+        // deux fois moins de réveils du thread principal pendant toute la lecture
+        handler.postDelayed(segmentsChecker, 200)
         if (viewModel.segments.value.isNullOrEmpty()) return
 
         val segmentData = playerController.getCurrentSegment(
@@ -1239,6 +1349,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
     fun playVideo(videoId: String) {
         if (!::playerController.isInitialized) return
+
+        // Nouvelle vidéo (navigation, file d'attente) : on réarme les garde-fous de
+        // récupération d'erreur. Une ré-extraction de la vidéo courante (même id, déclenchée
+        // depuis onPlayerError) les laisse inchangés, garantissant une seule ré-extraction par
+        // vidéo et évitant la boucle « erreur → redémarrage » signalée par les utilisateurs.
+        if (!this::videoId.isInitialized || this.videoId != videoId) {
+            playbackErrorRetries = 0
+            hasReExtractedOnError = false
+        }
 
         playerController.sendCustomCommand(
             AbstractPlayerService.runPlayerActionCommand,
@@ -1302,6 +1421,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
 
         viewModel.isOrientationChangeInProgress = false
+        // a rotation that arrived while the previous recreation was still in progress was
+        // skipped by restartActivityIfNeeded(): catch up now, or the layout of the wrong
+        // orientation would stay on screen (never from picture-in-picture, whose window has
+        // its own orientation)
+        if (!PictureInPictureCompat.isInPictureInPictureMode(requireActivity())) {
+            restartActivityIfNeeded()
+        }
 
         binding.descriptionLayout.setStreams(streams)
 
@@ -1395,7 +1521,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         controls.watubeQualityChip.isVisible = videoHeight > 0
         if (videoHeight > 0) {
             controls.watubeQualityChip.text =
-                getString(R.string.player_quality_chip, videoHeight)
+                getString(
+                    R.string.player_quality_chip,
+                    VideoResolution.snapToStandardHeight(videoHeight)
+                )
         }
     }
 
@@ -1460,7 +1589,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             onUserLeaveHint()
             try {
                 startActivity(intent)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ctx.toastFromMainThread(R.string.error)
             }
 
@@ -1587,7 +1716,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                         isPlaying
                     )
                 )
-                .setAutoEnterEnabled(isPlaying)
+                .setAutoEnterEnabled(isPlaying && PlayerHelper.autoPipEnabled)
                 .apply {
                     // On ne retire JAMAIS l'aspect ratio : sans lui le système
                     // re-border la fenêtre PiP avec le ratio par défaut (écran),
@@ -1602,7 +1731,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 && PictureInPictureCompat.isPictureInPictureEnabled(requireContext())
 
     private fun shouldStartPiP(): Boolean {
-        return isPipAvailable() && ::playerController.isInitialized && playerController.isPlaying
+        return PlayerHelper.autoPipEnabled && isPipAvailable() && ::playerController.isInitialized && playerController.isPlaying
     }
 
     private fun restartActivityIfNeeded() {
@@ -1657,7 +1786,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             if (::playerController.isInitialized) {
                 val duration = playerController.duration
                 if (duration > 0) {
-                    binding.miniplayerProgress?.progress =
+                    binding.miniplayerProgress.progress =
                         (playerController.currentPosition * 1000 / duration).toInt()
                 }
             }
@@ -1679,7 +1808,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 override fun getOutline(view: View, outline: Outline) {
                     outline.setRoundRect(
                         0, 0, view.width, view.height,
-                        resources.getDimension(R.dimen.watube_card_radius)
+                        resources.getDimension(R.dimen.watube_mini_player_video_radius)
                     )
                 }
             }
@@ -1687,7 +1816,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             ViewOutlineProvider.BACKGROUND
         }
 
-        binding.miniplayerProgress?.isVisible = mini
+        binding.miniplayerProgress.isVisible = mini
         handler.removeCallbacks(miniProgressUpdater)
         if (mini) handler.post(miniProgressUpdater)
     }

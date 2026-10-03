@@ -1,7 +1,7 @@
 package com.watube.yard.ui.sheets
 
 import android.os.Bundle
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.PlaylistsHelper
@@ -177,7 +177,7 @@ class PlaylistOptionsBottomSheet : BaseBottomSheet() {
                         } else {
                             val bookmark = try {
                                 MediaServiceRepository.instance.getPlaylist(playlistId)
-                            } catch (e: Exception) {
+                            } catch (_: Exception) {
                                 return@withContext
                             }.toPlaylistBookmark(playlistId)
                             DatabaseHolder.Database.playlistBookmarkDao().insert(bookmark)

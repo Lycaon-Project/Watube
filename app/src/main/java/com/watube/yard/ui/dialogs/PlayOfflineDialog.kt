@@ -3,7 +3,7 @@ package com.watube.yard.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.watube.yard.R
@@ -16,7 +16,6 @@ class PlayOfflineDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogPlayOfflineBinding.inflate(layoutInflater)
-        val videoId = requireArguments().getString(IntentData.videoId)
         binding.videoTitle.text = requireArguments().getString(IntentData.videoTitle)
 
         val downloadInfo = requireArguments().getStringArray(IntentData.downloadInfo)

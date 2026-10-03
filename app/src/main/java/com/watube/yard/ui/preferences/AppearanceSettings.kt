@@ -111,9 +111,12 @@ class AppearanceSettings : BasePreferenceFragment() {
 
             // set displayed current settings value (i.e. current app language)
             val currentLocale = Locale.getDefault()
+            // Préférence de LANGUE : utiliser le code de langue (jamais le code pays isO3Country,
+            // sémantiquement faux et susceptible de lever MissingResourceException). `language`
+            // (ISO 639) ne lève jamais d'exception.
             language?.entries = arrayOf(currentLocale.displayLanguage)
-            language?.entryValues = arrayOf(currentLocale.isO3Country)
-            language?.value = currentLocale.isO3Country
+            language?.entryValues = arrayOf(currentLocale.language)
+            language?.value = currentLocale.language
 
             // open Android settings for per-app language preference for the app
             language?.setOnPreferenceClickListener { _ ->

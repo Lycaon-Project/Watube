@@ -76,7 +76,7 @@ class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_ch
                 lifecycleScope.launch(Dispatchers.IO) {
                     val resp = try {
                        MediaServiceRepository.instance.getChannelNextPage(channelId, nextPage!!)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         return@launch
                     } finally {
                         isLoading = false
@@ -94,7 +94,7 @@ class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_ch
 
             val pagingFlow = Pager(
                 PagingConfig(pageSize = 20, enablePlaceholders = false),
-                pagingSourceFactory = { ChannelTabPagingSource(tabData!!) }
+                pagingSourceFactory = { ChannelTabPagingSource(tabData) }
             ).flow
 
             viewLifecycleOwner.lifecycleScope.launch {

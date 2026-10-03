@@ -6,6 +6,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.addCallback
+import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.databinding.ActivityMissionBinding
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.PrivacyHelper
@@ -28,6 +29,7 @@ class MissionActivity : BaseActivity() {
 
         binding = ActivityMissionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.root.padBottomForSystemBars()
 
         binding.toolbar.title = TITLE
         binding.toolbar.setNavigationOnClickListener {

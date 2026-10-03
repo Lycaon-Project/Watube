@@ -13,7 +13,6 @@ import androidx.media3.datasource.FileDataSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.exoplayer.source.SingleSampleMediaSource
 import com.watube.yard.constants.IntentData
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.DatabaseHolder.Database
@@ -168,20 +167,24 @@ open class OfflinePlayerService : AbstractPlayerService() {
                 .createMediaSource(audioItem)
         }
 
+        // SingleSampleMediaSource est déprécié dans Media3, mais migrer vers les
+        // SubtitleConfiguration du MediaItem toucherait la lecture des sous-titres hors-ligne :
+        // on le conserve ici, en limitant la suppression du warning à cette déclaration.
+        @Suppress("DEPRECATION")
         val subtitleSource = subtitleInfo?.let { subtitleInfo ->
             val subtitle = SubtitleConfiguration.Builder(subtitleInfo.path.toAndroidUri())
                 .setMimeType(MimeTypes.APPLICATION_TTML)
                 .setLanguage(subtitleInfo.language ?: "en")
                 .build()
 
-            SingleSampleMediaSource.Factory(FileDataSource.Factory())
+            androidx.media3.exoplayer.source.SingleSampleMediaSource.Factory(FileDataSource.Factory())
                 .createMediaSource(subtitle, C.TIME_UNSET)
         }
 
         var mediaSource: MediaSource? = null
         listOfNotNull(videoSource, audioSource, subtitleSource).forEach { source ->
             mediaSource =
-                if (mediaSource == null) source else MergingMediaSource(mediaSource!!, source)
+                if (mediaSource == null) source else MergingMediaSource(mediaSource, source)
         }
 
         if (mediaSource == null || isAudioOnlyPlayer && audioSource == null) {
@@ -189,7 +192,7 @@ open class OfflinePlayerService : AbstractPlayerService() {
             return
         }
 
-        exoPlayer?.setMediaSource(mediaSource!!)
+        exoPlayer?.setMediaSource(mediaSource)
 
         trackSelector?.updateParameters {
             setPreferredTextRoleFlags(C.ROLE_FLAG_CAPTION)

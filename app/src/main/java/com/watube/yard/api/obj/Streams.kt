@@ -6,7 +6,7 @@ import com.watube.yard.enums.FileType
 import com.watube.yard.extensions.toLocalDate
 import com.watube.yard.json.SafeInstantSerializer
 import com.watube.yard.parcelable.DownloadData
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName

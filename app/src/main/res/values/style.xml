@@ -16,6 +16,11 @@
 
     <style name="WatubeShape.Pill" parent="ShapeAppearance.Material3.Corner.Full" />
 
+    <!-- Mini player video thumbnail: card radius minus its inset (concentric corners) -->
+    <style name="WatubeShape.MiniPlayerVideo" parent="ShapeAppearance.Material3.Corner.Small">
+        <item name="cornerSize">@dimen/watube_mini_player_video_radius</item>
+    </style>
+
     <!-- Solar bottom navigation: accent-soft pill behind the selected item -->
     <style name="WatubeNavActiveIndicator"
         parent="Widget.Material3Expressive.BottomNavigationView.ActiveIndicator">

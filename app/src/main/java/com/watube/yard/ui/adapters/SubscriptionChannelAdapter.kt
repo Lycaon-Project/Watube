@@ -2,7 +2,7 @@ package com.watube.yard.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.recyclerview.widget.ListAdapter
 import com.watube.yard.api.obj.Subscription
 import com.watube.yard.constants.IntentData

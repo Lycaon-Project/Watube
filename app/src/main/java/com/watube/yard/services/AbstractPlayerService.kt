@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import androidx.annotation.CallSuper
 import androidx.annotation.OptIn
 import androidx.core.app.ServiceCompat
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.os.postDelayed
 import androidx.media3.common.C
 import androidx.media3.common.ForwardingPlayer
@@ -115,6 +115,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
                 Player.STATE_READY -> {
                     isTransitioning = false
                 }
+
+                else -> Unit
             }
         }
     }
@@ -263,6 +265,18 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
     @CallSuper
     open fun navigateVideo(videoId: String) {
         sponsorBlockSegments = emptyList()
+
+        // Couper net l'audio de la vidéo courante avant d'extraire la suivante.
+        // clearMediaItems() seul laissait filtrer un court résidu audio de la vidéo précédente
+        // pendant l'extraction asynchrone de la nouvelle (chevauchement signalé). On sauvegarde
+        // d'abord la position (sinon stop() la ferait perdre), puis on arrête et on vide.
+        saveWatchPosition()
+        // On marque la transition AVANT stop() : stop() fait passer le player en STATE_IDLE
+        // sans erreur, ce que OnlinePlayerService interprète sinon comme « plus rien à jouer »
+        // et détruit le service en pleine navigation (nouvelle vidéo qui ne charge jamais,
+        // chargement en boucle quand on enchaîne une autre vidéo depuis le mini-lecteur).
+        isTransitioning = true
+        exoPlayer?.stop()
         exoPlayer?.clearMediaItems()
 
         this.videoId = videoId
@@ -289,7 +303,11 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
      * Check for SponsorBlock segments. This method automatically schedules itself to repeat every
      * 100ms using [handler], so it's not needed to schedule it manually.
      */
+    private val segmentsChecker = Runnable { checkForSegments() }
+
     private fun checkForSegments() {
+        // a single loop: this is (re)started on every play and every segments update
+        handler.removeCallbacks(segmentsChecker)
         val player = exoPlayer
         // The loop must only run while it can actually do something: no player, paused,
         // no segments or SponsorBlock disabled would otherwise keep 10 wake-ups/second
@@ -303,7 +321,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             return
         }
 
-        handler.postDelayed(this::checkForSegments, 100)
+        handler.postDelayed(segmentsChecker, 100)
 
         val (currentSegment, sbSkipOption) = player.getCurrentSegment(
             sponsorBlockSegments,

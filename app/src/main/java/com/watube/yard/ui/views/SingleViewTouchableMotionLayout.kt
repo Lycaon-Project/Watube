@@ -73,6 +73,9 @@ class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeS
             }
 
             if (isStrictlyDownSwipe && distanceY < -15F) {
+                // once per gesture: every further scroll event restarted the close animation,
+                // so the mini player stuttered instead of sliding out
+                isStrictlyDownSwipe = false
                 swipeDownListener.forEach { it.invoke() }
                 return true
             }

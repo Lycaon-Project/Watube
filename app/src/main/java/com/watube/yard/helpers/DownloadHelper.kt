@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.fragment.app.FragmentManager
 import com.watube.yard.R
 import com.watube.yard.api.PlaylistsHelper
@@ -46,7 +46,7 @@ object DownloadHelper {
         val storageDir =
             try {
                 context.getExternalFilesDir(null)!!
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 context.filesDir
             }
         val base = storageDir.toPath().normalize()
@@ -136,7 +136,7 @@ object DownloadHelper {
             CoroutineScope(Dispatchers.IO).launch {
                 val playlistVideoIds = try {
                     PlaylistsHelper.getPlaylist(playlistId)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     context.toastFromMainDispatcher(R.string.unknown_error)
                     return@launch
                 }.relatedStreams.mapNotNull { it.url?.toID() }.joinToString(",")

@@ -16,7 +16,7 @@ import okio.BufferedSink
 
 data class SabrDownloaderHandle(
     val sabrClient: SabrClient,
-    @SuppressLint("UnsafeOptInUsageError")
+    @param:SuppressLint("UnsafeOptInUsageError")
     val streamRepresentation: Representation,
     var initSegment: Segment? = null,
     var nextSegmentNumber: Long = 0L

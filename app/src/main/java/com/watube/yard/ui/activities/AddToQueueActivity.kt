@@ -2,7 +2,6 @@ package com.watube.yard.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.net.toUri
 import com.watube.yard.constants.IntentData
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.ui.base.BaseActivity
@@ -17,17 +16,20 @@ class AddToQueueActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val videoId = intent.getStringExtra(Intent.EXTRA_TEXT)
-            ?.let { IntentHelper.resolveType(it.toUri()) }
+            ?.let { IntentHelper.resolveType(IntentHelper.sharedTextToUri(it)) }
             ?.getStringExtra(IntentData.videoId)
 
         if (videoId != null) {
+            // the launcher entry is an activity-alias swapped by the icon picker: never null here
             val newIntent = packageManager.getLaunchIntentForPackage(packageName)
+                ?: Intent(this, MainActivity::class.java)
+                ?: Intent(this, MainActivity::class.java)
 
             // if playing a video currently, the video will be added to the queue
             if (PlayingQueue.isNotEmpty()) {
                 PlayingQueue.insertByVideoId(videoId)
             } else {
-                newIntent?.putExtra(IntentData.videoId, videoId)
+                newIntent.putExtra(IntentData.videoId, videoId)
             }
 
             startActivity(newIntent)

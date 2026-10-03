@@ -2,12 +2,10 @@ package com.watube.yard.json
 
 import android.util.Log
 import com.watube.yard.extensions.TAG
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor

@@ -15,7 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
+import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -73,7 +73,7 @@ enum class DownloadTab {
     PLAYLIST
 }
 
-enum class DownloadSortingOrder(@StringRes val stringId: Int) {
+enum class DownloadSortingOrder(@param:StringRes val stringId: Int) {
     OLDEST(R.string.least_recent),
     NEWEST(R.string.most_recent),
     ALPHABETIC(R.string.alphabetic),
@@ -252,7 +252,8 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
         val filterOptions = DownloadSortingOrder.entries.map { getString(it.stringId) }
         binding.sortType.text = filterOptions[selectedSortType]
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        // view scoped: the database answer can arrive after the user left this tab
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val playlistItems = downloadPlaylistId?.let { playlistId ->
                 val playlist = withContext(Dispatchers.IO) {
                     Database.downloadDao().getDownloadPlaylistById(playlistId)
@@ -594,7 +595,8 @@ class PlaylistDownloadsFragmentPage : Fragment(R.layout.fragment_download_conten
         val filterOptions = DownloadSortingOrder.entries.map { getString(it.stringId) }
         binding.sortType.text = filterOptions[selectedSortType]
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        // view scoped: the database answer can arrive after the user left this tab
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val downloadPlaylists = withContext(Dispatchers.IO) {
                 Database.downloadDao().getDownloadPlaylists()
             }

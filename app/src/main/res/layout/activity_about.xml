@@ -154,17 +154,6 @@
                     android:background="?attr/colorOutlineVariant" />
 
                 <include
-                    android:id="@+id/row_website"
-                    layout="@layout/settings_category_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <include
                     android:id="@+id/row_piped"
                     layout="@layout/settings_category_row"
                     android:layout_width="match_parent"

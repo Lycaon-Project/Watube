@@ -26,8 +26,8 @@ android {
         minSdk = 28
         targetSdk = 37
 
-        versionCode = 6115
-        versionName = "26.10.1"
+        versionCode = 1407
+        versionName = "26.10.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -85,6 +85,15 @@ android {
         dex {
             useLegacyPackaging = true
         }
+        // The protobuf lite runtime never reads .proto sources nor descriptor sets (they only
+        // serve the full runtime / protoc), and DebugProbesKt.bin is only loaded by the
+        // kotlinx-coroutines debug agent: none of them is used at runtime.
+        resources.excludes += listOf(
+            "google/protobuf/*.proto",
+            "src/google/protobuf/*.proto",
+            "**/java_features_proto-descriptor-set.proto.bin",
+            "DebugProbesKt.bin"
+        )
     }
 
     lint {
@@ -100,6 +109,17 @@ android {
     @Suppress("UnstableApiUsage")
     androidResources {
         generateLocaleConfig = true
+        // Ship only the languages Watube itself is translated into: the libraries bundle
+        // translations for ~30 more locales the app UI never uses (they only grew
+        // resources.arsc). https://developer.android.com/build/shrink-code#unused-alt-resources
+        localeFilters += listOf(
+            "en", "af", "ar", "as", "ast", "az", "azb", "b+en+Shaw", "b+es+419", "be", "bg",
+            "bn", "ca", "ckb", "cs", "da", "de", "el", "eo", "es", "et", "eu", "fa", "fi", "fil",
+            "fr", "gu", "haw", "hi", "hr", "hu", "hy", "ia", "in", "is", "it", "iw", "ja", "km",
+            "ko", "lt", "lv", "ml", "mr", "ms", "nb-rNO", "ne", "nl", "or", "pa", "pl", "pt-rBR",
+            "pt", "ro", "ru", "si", "sk", "so", "sr", "sv", "ta", "th", "ti", "tk", "tr", "ug",
+            "uk", "ur", "uz", "vi", "yue", "zh-rCN", "zh-rTW"
+        )
     }
 }
 

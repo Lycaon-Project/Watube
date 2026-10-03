@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.R
 import com.watube.yard.databinding.ActivityHelpBinding
 import com.watube.yard.ui.base.BaseActivity
@@ -24,6 +25,7 @@ class HelpActivity : BaseActivity() {
 
         val binding = ActivityHelpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.root.padBottomForSystemBars()
 
         binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()

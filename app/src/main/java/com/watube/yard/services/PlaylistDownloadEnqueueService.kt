@@ -33,7 +33,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.nio.file.Path
-import kotlin.io.path.div
 
 class PlaylistDownloadEnqueueService : LifecycleService() {
     private lateinit var nManager: NotificationManager
@@ -146,7 +145,7 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
 
         while (nextPage != null) {
             val playlistPage = runCatching {
-                MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage!!)
+                MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage)
             }.getOrNull()
 
             if (playlistPage == null && alreadyRetriedOnce) {

@@ -42,6 +42,7 @@ import video_streaming.StreamerContextOuterClass.StreamerContext.SabrContext
 import video_streaming.UmpPartId.UMPPartId
 import video_streaming.VideoPlaybackAbrRequestOuterClass.VideoPlaybackAbrRequest
 import java.time.Instant
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 class PlaybackRequest(
@@ -62,7 +63,10 @@ class PlaybackRequest(
         fun initRequest(
             format: FormatId, playerPosition: Long, playbackSpeed: Float,
         ): PlaybackRequest = PlaybackRequest(
-            format, playerPosition, playbackSpeed, 0, 0, emptyList()
+            // the player time sent to the server is the segment start time: announcing 0
+            // while resuming at e.g. 54 s downloaded the first seconds of the video for
+            // nothing, then made the next request jump far away from them
+            format, playerPosition, playbackSpeed, 0, playerPosition, emptyList()
         )
     }
 }
@@ -87,6 +91,18 @@ data class Segment(
      * Length of the media data.
      */
     fun length(): Int = data.sumOf { it.size }
+
+    /**
+     * Start of the segment in milliseconds. The server fills `time_range` and leaves
+     * `start_ms` unset, so reading `start_ms` alone advertised every buffered range at 0 ms.
+     */
+    val startMs: Long
+        get() = when {
+            header.hasStartMs() -> header.startMs
+            header.timeRange.timescale > 0 ->
+                header.timeRange.startTicks * 1000 / header.timeRange.timescale
+            else -> 0
+        }
 }
 
 /**
@@ -132,7 +148,7 @@ private data class InitializedFormat(
         }.map { partition ->
             val duration = partition.sumOf { it.second.duration }
             val (firstId, firstSegment) = partition.first()
-            BufferedRange.newBuilder().setFormatId(id).setStartTimeMs(firstSegment.header.startMs)
+            BufferedRange.newBuilder().setFormatId(id).setStartTimeMs(firstSegment.startMs)
                 .setDurationMs(duration).setStartSegmentIndex(firstId.toInt())
                 .setEndSegmentIndex(partition.last().first.toInt()).build()
         }
@@ -214,6 +230,9 @@ class SabrClient private constructor(
                 .build()
             chain.proceed(request)
         }
+        // the server may hold a response for more than 10 s (OkHttp default): timing out
+        // dropped the data and the retry started a new wait, so playback never resumed
+        .readTimeout(SABR_READ_TIMEOUT_S, TimeUnit.SECONDS)
         .build()
 
     /** Sequence number of the request. */
@@ -316,6 +335,14 @@ class SabrClient private constructor(
                     // remove segments that where downloaded, but never requested by the player
                     // (e.g. due to seeking), to avoid keeping them around forever and thus leaking memory
                     format?.downloadedSegments?.clear()
+                    // same for the other formats: after a seek (e.g. resuming a watch position)
+                    // the segments left behind the playhead were kept in memory and still
+                    // advertised to the server as buffered
+                    initializedFormats.values.forEach { other ->
+                        other.downloadedSegments.values.removeAll {
+                            it.startMs + it.duration <= playbackRequest.playerPosition
+                        }
+                    }
 
                     // fetch new data
                     media(playbackRequest)
@@ -655,6 +682,7 @@ class SabrClient private constructor(
 
     companion object {
         private const val TAG = "SabrStream"
+        private const val SABR_READ_TIMEOUT_S = 30L
         private const val CONTENT_TYPE = "application/x-protobuf"
         private const val ENCODING = "identity"
         private const val ACCEPT = "application/vnd.yt-ump"

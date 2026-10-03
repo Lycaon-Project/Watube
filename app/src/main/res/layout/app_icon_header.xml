@@ -12,8 +12,7 @@
         android:layout_height="110dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:src="@drawable/ic_launcher_lockscreen"
-        app:tint="?attr/colorSecondary"
+        android:src="@mipmap/ic_launcher"
         tools:ignore="ContentDescription" />
 
     <RelativeLayout

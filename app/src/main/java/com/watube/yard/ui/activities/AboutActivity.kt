@@ -15,6 +15,7 @@ import androidx.core.text.parseAsHtml
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.databinding.ActivityAboutBinding
@@ -38,6 +39,7 @@ class AboutActivity : BaseActivity() {
 
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.root.padBottomForSystemBars()
 
         binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -94,14 +96,6 @@ class AboutActivity : BaseActivity() {
         ) { startActivity(Intent(this, MissionActivity::class.java)) }
 
         // --- Legacy entries, same behaviour as before ------------------------
-        setupRow(
-            binding.rowWebsite,
-            R.drawable.ic_region,
-            title = R.string.website,
-            external = true,
-            copyHref = WEBSITE_URL
-        ) { openLink(WEBSITE_URL) }
-
         setupRow(
             binding.rowPiped,
             R.drawable.ic_piped,
@@ -329,7 +323,6 @@ class AboutActivity : BaseActivity() {
     }
 
     companion object {
-        private const val WEBSITE_URL = "https://github.com/Lycaon-Project/Watube"
         const val GITHUB_URL = "https://github.com/Lycaon-Project/Watube"
         private const val PIPED_GITHUB_URL = "https://github.com/TeamPiped/Piped"
         private const val WEBLATE_URL = "https://hosted.weblate.org/projects/libretube/libretube/"
