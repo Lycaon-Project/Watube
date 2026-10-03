@@ -11,7 +11,7 @@ import com.watube.yard.R
 import kotlin.math.ceil
 
 /**
- * Draws its text as a small rounded pill (e.g. the HD / 2K / 4K quality marker), vertically
+ * Draws its text as a small rounded pill (e.g. the HD / FHD / 2K / 4K quality marker), vertically
  * centred on the surrounding line.
  */
 class BadgeSpan(context: Context) : ReplacementSpan() {

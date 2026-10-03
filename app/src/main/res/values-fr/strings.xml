@@ -313,6 +313,12 @@
     <string name="pause">Pause</string>
     <string name="auto_pip">Image dans l’image automatique</string>
     <string name="auto_pip_summary">Continuer la vidéo dans une petite fenêtre en quittant l’application</string>
+    <string name="sleep_timer_all_videos">Appliquer à toutes les vidéos</string>
+    <string name="sleep_timer_all_videos_summary">Lance la minuterie (%1$s) à chaque nouvelle vidéo</string>
+    <string name="show_stats_for_nerds">Afficher les statistiques pour les nerds</string>
+    <string name="stats_for_nerds_summary">Ajoute les détails techniques de la lecture aux options du lecteur</string>
+    <string name="persistent_search_bar">Barre de recherche persistante</string>
+    <string name="persistent_search_bar_summary">Garde la barre de recherche et les filtres en haut de l’accueil pendant le défilement</string>
     <string name="alternative_pip_controls">Commandes d’image dans l’image alternatives</string>
     <string name="alternative_pip_controls_summary">Afficher uniquement l’audio et les commandes de saut dans le mode « Image dans l’image » au lieu de l’avance et du retour en arrière</string>
     <string name="faq">FAQ</string>

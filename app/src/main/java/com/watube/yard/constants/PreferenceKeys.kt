@@ -64,6 +64,7 @@ object PreferenceKeys {
     const val PLAYLISTS_ORDER = "playlists_order"
     const val PLAYLIST_SORT_ORDER = "playlist_sort_order"
     const val HOME_TAB_CONTENT = "home_tab_content"
+    const val PERSISTENT_SEARCH_BAR = "persistent_search_bar"
     const val SEARCH_SUGGESTIONS = "search_suggestions"
 
     // Instance
@@ -102,6 +103,10 @@ object PreferenceKeys {
     const val DOUBLE_TAP_TO_SEEK = "double_tap_seek"
     const val LONG_PRESS_FAST_FORWARD = "long_press_fast_forward"
     const val AUTO_PIP = "auto_pip"
+    const val SLEEP_TIMER = "sleep_timer"
+    const val SLEEP_TIMER_ALL_VIDEOS = "sleep_timer_all_videos"
+    const val SLEEP_TIMER_MINUTES = "sleep_timer_minutes"
+    const val STATS_FOR_NERDS = "stats_for_nerds"
     const val ALTERNATIVE_PIP_CONTROLS = "alternative_pip_controls"
     const val SKIP_SILENCE = "skip_silence"
     const val AUTOPLAY_COUNTDOWN = "autoplay_countdown"

@@ -8,6 +8,7 @@ import android.text.format.DateUtils
 import com.watube.yard.R
 import com.watube.yard.helpers.BackgroundHelper
 import com.watube.yard.helpers.ContextHelper
+import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.ui.base.BaseActivity
 import com.google.android.material.snackbar.Snackbar
 import java.util.Timer
@@ -27,6 +28,19 @@ object SleepTimer {
     private var snackBar: Snackbar? = null
     private val handler = Handler(Looper.getMainLooper())
 
+    /** Video the automatic timer last started for: once per video, a cancel holds until the next. */
+    private var autoStartedFor: String? = null
+
+    /**
+     * Starts the timer with the last chosen duration when the user applies it to all videos,
+     * unless one is already counting down (autoplay must not push the deadline back).
+     */
+    fun startForVideo(context: Context, videoId: String?) {
+        if (!PlayerHelper.sleepTimerForAllVideos || timeLeftMillis > 0 || videoId == autoStartedFor) return
+        autoStartedFor = videoId
+        start(context, PlayerHelper.sleepTimerMinutes)
+    }
+
 
     /**
      * Start the sleep timer that will close the app after the specified delay
@@ -40,6 +54,7 @@ object SleepTimer {
         // Stop any existing timer first
         stop(context)
 
+        PlayerHelper.sleepTimerMinutes = delayInMinutes
         timeLeftMillis = delayInMinutes * DateUtils.MINUTE_IN_MILLIS
 
         timer = Timer()

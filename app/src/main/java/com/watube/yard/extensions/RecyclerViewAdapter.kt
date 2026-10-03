@@ -18,9 +18,14 @@ fun RecyclerView.setOnDismissListener(onDismissedListener: (position: Int) -> Un
     )
 }
 
-fun RecyclerView.setOnDraggedListener(onDragListener: (from: Int, to: Int) -> Unit) {
+/** @param isMovable whether the item at a position can be dragged, or have another one dropped on it */
+fun RecyclerView.setOnDraggedListener(
+    isMovable: (position: Int) -> Boolean = { true },
+    onDragListener: (from: Int, to: Int) -> Unit
+) {
     setActionListener(
         allowDrag = true,
+        isMovable = isMovable,
         onDragListener = onDragListener
     )
 }
@@ -28,6 +33,7 @@ fun RecyclerView.setOnDraggedListener(onDragListener: (from: Int, to: Int) -> Un
 fun RecyclerView.setActionListener(
     allowSwipe: Boolean = false,
     allowDrag: Boolean = false,
+    isMovable: (position: Int) -> Boolean = { true },
     onDragListener: (from: Int, to: Int) -> Unit = { _, _ -> },
     onDismissedListener: (position: Int) -> Unit = {}
 ) {
@@ -36,6 +42,15 @@ fun RecyclerView.setActionListener(
             if (allowDrag) ItemTouchHelper.UP or ItemTouchHelper.DOWN else 0,
             if (allowSwipe) ItemTouchHelper.LEFT else 0
         ) {
+            override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) =
+                if (isMovable(viewHolder.absoluteAdapterPosition)) super.getDragDirs(recyclerView, viewHolder) else 0
+
+            override fun canDropOver(
+                recyclerView: RecyclerView,
+                current: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ) = isMovable(target.absoluteAdapterPosition)
+
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,

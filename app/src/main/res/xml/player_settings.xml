@@ -83,6 +83,17 @@
             app:key="auto_pip"
             app:title="@string/auto_pip" />
 
+        <Preference
+            android:icon="@drawable/ic_sleep"
+            app:key="sleep_timer"
+            app:title="@string/sleep_timer" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_sleep"
+            app:key="sleep_timer_all_videos"
+            app:title="@string/sleep_timer_all_videos" />
+
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_headphones"
@@ -174,6 +185,13 @@
             android:summary="@string/play_automatically_summary"
             app:key="play_automatically"
             app:title="@string/play_automatically" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_info"
+            android:summary="@string/stats_for_nerds_summary"
+            app:key="stats_for_nerds"
+            app:title="@string/show_stats_for_nerds" />
 
     </PreferenceCategory>
 

@@ -317,8 +317,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    /**
+     * The search pill and the filter chips stay pinned above the feed, unless the persistent
+     * search bar is turned off: they then scroll away with the feed, as they used to.
+     */
+    private fun placeHeader() {
+        val header = binding.homeHeader
+        val parent = if (PlayerHelper.persistentSearchBar) binding.homeLayout else binding.homeContent
+        if (header.parent === parent) return
+        (header.parent as ViewGroup).removeView(header)
+        parent.addView(header, 0)
+    }
+
     override fun onResume() {
         super.onResume()
+        // on resume: the setting may have changed while this screen stayed alive
+        placeHeader()
         applyFeedDensity()
 
         // Avoid re-fetching when re-entering the screen if it was loaded successfully, except when

@@ -919,8 +919,6 @@ class MainActivity : AbstractPlayerHostActivity() {
     override fun maximizePlayerContainerLayout() = applyPlayerContainerProgress(0f)
 
     override fun setPlayerContainerProgress(progress: Float) {
-        if (!NavBarHelper.hasTabs()) return
-
         applyPlayerContainerProgress(progress.coerceIn(0f, 1f))
         // 1f is only reported once the player container finished closing, which is the
         // one signal fired on that path (PlayerFragment reports it on transition end)

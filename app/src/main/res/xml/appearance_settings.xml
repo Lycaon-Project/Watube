@@ -68,6 +68,12 @@
             android:key="home_tab_content"
             android:title="@string/home_tab_content"
             app:defaultValue="@array/homeTabItemsValues" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:icon="@drawable/ic_search"
+            android:summary="@string/persistent_search_bar_summary"
+            app:key="persistent_search_bar"
+            app:title="@string/persistent_search_bar" />
 
         <ListPreference
             android:icon="@drawable/ic_grid"

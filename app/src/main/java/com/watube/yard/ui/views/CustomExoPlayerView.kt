@@ -12,6 +12,7 @@ import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.SurfaceView
 import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
@@ -32,6 +33,7 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.media3.common.C
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.VideoSize
 import androidx.media3.common.text.Cue
 import androidx.media3.session.MediaController
 import androidx.media3.ui.AspectRatioFrameLayout
@@ -79,9 +81,7 @@ import com.watube.yard.ui.sheets.BaseBottomSheet
 import com.watube.yard.ui.sheets.ChaptersBottomSheet
 import com.watube.yard.ui.sheets.PlaybackOptionsSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
-import com.watube.yard.ui.sheets.SleepTimerSheet
 import com.watube.yard.ui.sheets.StatsSheet
-import com.watube.yard.ui.tools.SleepTimer
 import com.watube.yard.util.PlayingQueue
 import java.util.Locale
 import kotlin.math.ceil
@@ -195,6 +195,20 @@ class CustomExoPlayerView(
                 if (isFullscreen()) playerCallback.toggleFullscreen()
             }
         )
+        // a placeholder until the first video size: the opening transition must not resize it
+        fixSurfaceSize(DEFAULT_SURFACE_WIDTH, DEFAULT_SURFACE_HEIGHT)
+    }
+
+    /**
+     * Gives the video SurfaceView a fixed buffer size instead of the layout size. Every resize
+     * of the view otherwise re-sends the buffer geometry, and Android 15 can apply the geometry
+     * of a resize made during a draw pass before the previous one (MotionLayout lays the player
+     * out while drawing; the 10 ms mini -> full player transition on a 120/144 Hz screen): the
+     * video then stayed shrunk in the top left corner of the player. A fixed size is only
+     * scaled, frame by frame, in sync with the view.
+     */
+    private fun fixSurfaceSize(width: Int, height: Int) {
+        if (width > 0 && height > 0) (videoSurfaceView as? SurfaceView)?.holder?.setFixedSize(width, height)
     }
 
     fun initialize(
@@ -211,6 +225,7 @@ class CustomExoPlayerView(
         this.viewLifecycleOwner = viewLifecycleOwner
         this.playerCallback = playerCallback
         super.player = player
+        fixSurfaceSize(player.videoSize.width, player.videoSize.height)
 
         playerGestureController.observeFullscreen(viewLifecycleOwner)
 
@@ -372,6 +387,9 @@ class CustomExoPlayerView(
                 super.onEvents(player, events)
                 this@CustomExoPlayerView.onPlaybackEvents(player, events)
             }
+
+            override fun onVideoSizeChanged(videoSize: VideoSize) =
+                fixSurfaceSize(videoSize.width, videoSize.height)
 
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
@@ -620,7 +638,7 @@ class CustomExoPlayerView(
         }
     }
 
-    fun getOptionsMenuItems(): List<BottomSheetItem> = listOf(
+    fun getOptionsMenuItems(): List<BottomSheetItem> = listOfNotNull(
         BottomSheetItem(
             context.getString(R.string.repeat_mode),
             R.drawable.ic_repeat,
@@ -656,25 +674,6 @@ class CustomExoPlayerView(
             onPlaybackSpeedClicked()
         },
         BottomSheetItem(
-            context.getString(R.string.sleep_timer),
-            R.drawable.ic_sleep,
-            {
-                if (SleepTimer.timeLeftMillis > 0) {
-                    val minutesLeft =
-                        ceil(SleepTimer.timeLeftMillis.toDouble() / DateUtils.MINUTE_IN_MILLIS).toInt()
-                    context.resources.getQuantityString(
-                        R.plurals.minutes_left,
-                        minutesLeft,
-                        minutesLeft
-                    )
-                } else {
-                    context.getString(R.string.disabled)
-                }
-            }
-        ) {
-            onSleepTimerClicked()
-        },
-        BottomSheetItem(
             context.getString(R.string.quality),
             R.drawable.ic_hd,
             this::getCurrentResolutionSummary
@@ -698,12 +697,13 @@ class CustomExoPlayerView(
         ) {
             onCaptionsClicked()
         },
+        // hidden unless enabled in the player settings
         BottomSheetItem(
             context.getString(R.string.stats_for_nerds),
             R.drawable.ic_info
         ) {
             onStatsClicked()
-        }
+        }.takeIf { PlayerHelper.statsForNerdsEnabled }
     )
 
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
@@ -976,10 +976,6 @@ class CustomExoPlayerView(
                 PlayingQueue.repeatMode = PlayerHelper.repeatModes[index].first
             }
             .show(supportFragmentManager)
-    }
-
-    override fun onSleepTimerClicked() {
-        SleepTimerSheet().show(supportFragmentManager)
     }
 
     override fun onCaptionsClicked() {
@@ -1538,6 +1534,8 @@ class CustomExoPlayerView(
         private const val SUBTITLE_BOTTOM_PADDING_FRACTION = 0.158f
         private const val ANIMATION_DURATION = 100L
         private const val AUTO_HIDE_CONTROLLER_DELAY = 2000L
+        private const val DEFAULT_SURFACE_WIDTH = 1920
+        private const val DEFAULT_SURFACE_HEIGHT = 1080
         private val LANDSCAPE_MARGIN_HORIZONTAL = 20f.dpToPx()
         private val LANDSCAPE_MARGIN_HORIZONTAL_NONE = 0f.dpToPx()
     }
