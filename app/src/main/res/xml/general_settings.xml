@@ -42,6 +42,7 @@
             app:title="@string/data_saver_mode" />
 
         <SwitchPreferenceCompat
+            android:defaultValue="true"
             android:icon="@drawable/ic_badge"
             android:summary="@string/new_videos_badge_summary"
             app:key="new_videos_badge"

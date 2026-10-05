@@ -15,12 +15,9 @@
     <string name="success">完了。</string>
     <string name="fail">失敗 :(</string>
     <string name="systemLanguage">システム</string>
-    <string name="customization">カスタマイズ</string>
-    <string name="website">公式サイト</string>
     <string name="okay">OK</string>
     <string name="clear_history">履歴を削除</string>
     <string name="music_songs">YT Musicの曲</string>
-    <string name="sponsorblock_summary">このAPIを使用 https://sponsor.ajay.app/</string>
     <string name="category_selfpromo">無償/自己宣伝</string>
     <string name="category_interaction">操作のお願い</string>
     <string name="category_intro">合間/導入アニメ</string>
@@ -88,8 +85,6 @@
     <string name="category_intro_summary">中身のあるコンテンツのない合間のシーン。一時停止、静止画、アニメの繰り返しなどです。情報を含む遷移シーンではありません</string>
     <string name="category_outro_summary">エンディング後の情報。情報を含む結論ではありません</string>
     <string name="license">ライセンス</string>
-    <string name="color_accent">アクセントカラー</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">通知</string>
     <string name="require_restart">アプリの再起動が必要です</string>
     <string name="update_summary">タップして更新確認</string>
@@ -111,10 +106,8 @@
     <string name="defaultIcon">標準</string>
     <string name="app_icon">アイコン</string>
     <string name="disabled">オフ</string>
-    <string name="instance_summary">Piped、ログイン、アカウント</string>
     <string name="customInstance_summary">追加…</string>
     <string name="invalid_url">有効な URL を入力してください</string>
-    <string name="version">バージョン %1$s</string>
     <string name="related_streams">関連動画</string>
     <string name="related_streams_summary">視聴している動画に関連する動画を表示します</string>
     <string name="category_filler">無関係の談話/冗談</string>
@@ -139,7 +132,6 @@
     <string name="auth_instance">認証用インスタンス</string>
     <string name="auth_instance_summary">認証に別のインスタンスを使用します</string>
     <string name="auth_instances">認証用インスタンスを選択</string>
-    <string name="github">GitHub</string>
     <string name="buffering_goal_summary">動画をバッファする最大秒数</string>
     <string name="category_filler_summary">動画の主な内容を理解するのに必要ない穴埋めや、ユーモアのためだけに追加された余分なシーン</string>
     <string name="category_music_offtopic_summary">ミュージックビデオ専用です。公式の音楽には含まれないシーン。ここがないと、その動画はSpotifyやその他のリミックス版になるべく近くなったり、話し声など邪魔なものが減ります</string>
@@ -171,18 +163,15 @@
     <string name="data_saver_mode">データ節約モード</string>
     <string name="search_history_summary">検索履歴を保存</string>
     <string name="watch_history_summary">視聴した動画の履歴を端末に保持</string>
-    <string name="history_summary">再生と検索の履歴</string>
     <string name="watch_positions_title">再生位置を記憶</string>
     <string name="reset_watch_positions">リセット</string>
     <string name="system_caption_style">システムの字幕 (キャプション) のスタイル</string>
     <string name="captions">字幕</string>
     <string name="none">なし</string>
     <string name="general">一般</string>
-    <string name="general_summary">ダウンロードとデータ量節約</string>
     <string name="instance_frontend_url">インスタンスのフロントエンドのURL (任意)</string>
     <string name="quality">画質</string>
     <string name="behavior">動作</string>
-    <string name="player_summary">標準設定と動作</string>
     <string name="seek_increment">進む</string>
     <string name="pauseOnScreenOff">自動で一時停止</string>
     <string name="clonePlaylist">再生リストを複製</string>
@@ -241,7 +230,6 @@
     <string name="history_empty">まだ履歴がありません。</string>
     <string name="most_recent">最新</string>
     <string name="least_recent">最古</string>
-    <string name="no_search_result">結果がありません。</string>
     <string name="added_to_playlist">再生リスト %1$s に追加しました</string>
     <string name="livestreams">ライブ</string>
     <string name="download_channel_name">ダウンロードサービス</string>
@@ -255,7 +243,6 @@
     <string name="copied_to_clipboard">クリップボードにコピーしました</string>
     <string name="open_copied">開く</string>
     <string name="repeat_mode_current">現在の動画</string>
-    <string name="audio_video_summary">画質と形式</string>
     <string name="time_code">時間指定用のタイムコード (秒)</string>
     <string name="download_channel_description">メディアのダウンロード中に通知を表示します。</string>
     <string name="layout">配置</string>
@@ -305,7 +292,6 @@
     <string name="video_id">動画 ID</string>
     <string name="skip_silence">無音をスキップ</string>
     <string name="help">ヘルプ</string>
-    <string name="faq">よくある質問</string>
     <string name="rewind">戻る</string>
     <string name="forward">進む</string>
     <string name="alternative_pip_controls">PiP 制御方法を変更</string>
@@ -416,7 +402,6 @@
     <string name="sb_invalid_segment">シーンの開始または終了が無効です</string>
     <string name="sponsorblock_user_id">SponsorBlock ユーザー名</string>
     <string name="contribute_to_sponsorblock">SponsorBlock に貢献</string>
-    <string name="donate">寄付</string>
     <string name="music_artists">YT Musicアーティスト</string>
     <string name="same_as_fullscreen">全画面用 (上記) と同じ</string>
     <string name="no_fullscreen_resolution">全画面表示でない時の解像度</string>
@@ -517,11 +502,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

@@ -21,7 +21,6 @@ import com.watube.yard.api.obj.StreamItem.Companion.TYPE_PLAYLIST
 import com.watube.yard.api.obj.StreamItem.Companion.TYPE_STREAM
 import com.watube.yard.api.obj.Streams
 import com.watube.yard.api.obj.Subtitle
-import com.watube.yard.api.poToken.PoTokenGenerator
 import com.watube.yard.extensions.sha256Sum
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.NewPipeExtractorInstance
@@ -32,6 +31,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import org.schabi.newpipe.extractor.InfoItem
+import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
@@ -45,7 +45,8 @@ import org.schabi.newpipe.extractor.localization.ContentCountry
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.search.SearchInfo
-import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor
+import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper
+import org.schabi.newpipe.extractor.services.youtube.YoutubeStreamHelper
 import org.schabi.newpipe.extractor.stream.AudioStream
 import org.schabi.newpipe.extractor.stream.ContentAvailability
 import org.schabi.newpipe.extractor.stream.StreamInfo
@@ -255,10 +256,6 @@ fun String.toListLinkHandler() = with(JsonHelper.json.decodeFromString<TabData>(
 }
 
 class NewPipeMediaServiceRepository : MediaServiceRepository {
-    init {
-        YoutubeStreamExtractor.setPoTokenProvider(PoTokenGenerator())
-    }
-
     // see https://github.com/TeamNewPipe/NewPipeExtractor/tree/dev/extractor/src/main/java/org/schabi/newpipe/extractor/services/youtube/extractors/kiosk
     private val trendingCategories = TrendingCategory.entries.associate {
         when (it) {
@@ -374,6 +371,26 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             videoPlaybackUstreamerConfig = resp.ustreamerConfig,
         )
     }
+
+    /**
+     * Two requests to YouTube only: a fresh visitor id, then the visionOS player the stream comes
+     * from. A full extraction also loaded the watch page data again and asked Return YouTube
+     * Dislike and DeArrow once more, for nothing new. The new session shares no identifier with
+     * the previous one, and no token or script of Google's runs on the device.
+     */
+    override suspend fun renewStreamingSession(videoId: String, streams: Streams): Streams? =
+        withContext(Dispatchers.IO) {
+            val cpn = YoutubeParsingHelper.generateContentPlaybackNonce()
+            val response = YoutubeStreamHelper.getVisionOsPlayerResponse(
+                NewPipe.getPreferredContentCountry(), NewPipe.getPreferredLocalization(), videoId, cpn
+            )
+            // same fields as the extractor's getServerAbrStreamingUrl() / getUstreamerConfig()
+            val url = response.getObject("streamingData").getString("serverAbrStreamingUrl")
+            val config = response.getObject("playerConfig").getObject("mediaCommonConfig")
+                .getObject("mediaUstreamerRequestConfig").getString("videoPlaybackUstreamerConfig")
+            if (url == null || config == null) return@withContext null
+            streams.copy(serverAbrStreamingUrl = "$url&cpn=$cpn", videoPlaybackUstreamerConfig = config)
+        }
 
     override suspend fun getSegments(
         videoId: String, category: List<String>, actionType: List<String>?

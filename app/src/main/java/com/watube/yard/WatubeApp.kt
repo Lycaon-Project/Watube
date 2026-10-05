@@ -14,6 +14,7 @@ import com.watube.yard.helpers.NotificationHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ProxyHelper
 import com.watube.yard.helpers.ShortcutHelper
+import com.watube.yard.ui.tools.RestMode
 import com.watube.yard.util.ExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -42,12 +43,16 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
         // ✅ PHASE 1 : Initialisations synchrones ULTRA-RAPIDES (<10ms)
         // Ces opérations sont nécessaires immédiatement et très rapides
         PreferenceHelper.initialize(applicationContext)
+        RestMode.schedule()
         setupExceptionHandler()
         initializeNotificationChannels()
 
         // ✅ PHASE 2 : Initialisations asynchrones non-bloquantes
         // Ne bloquent PAS le premier frame rendu (critique pour le 120 Hz)
         appScope.launch {
+            // analytics the Cast library stored on the device before its telemetry was removed
+            deleteDatabase("com.google.android.datatransport.events")
+            deleteSharedPreferences("$packageName.client_cast_analytics_data")
             PreferenceHelper.migrate()
             // tourist mode promises an empty device, so anything written while it was off
             // (a restored backup for instance) is dropped, then the retention is applied

@@ -105,7 +105,7 @@ class MaintenanceSettings : BasePreferenceFragment() {
                     val appContext = requireContext().applicationContext
                     lifecycleScope.launch {
                         ImageHelper.clearCache(appContext)
-                        // Watube: also drop cookies/web storage persisted by the PoToken WebView
+                        // Watube: also drop cookies / web storage a WebView may have persisted
                         PrivacyHelper.clearWebViewData()
                         refreshCacheSummary(clearCache)
                         appContext.toastFromMainDispatcher(R.string.cache_cleared)

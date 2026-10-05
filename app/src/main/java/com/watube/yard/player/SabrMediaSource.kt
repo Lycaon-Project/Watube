@@ -3,10 +3,8 @@ package com.watube.yard.player
 import android.os.Looper
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaItem.LocalConfiguration
 import androidx.media3.common.MediaLibraryInfo
 import androidx.media3.common.Timeline
-import androidx.media3.common.util.Assertions
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.TransferListener
@@ -48,12 +46,11 @@ class SabrMediaSource(
         private var cmcdConfigurationFactory: CmcdConfiguration.Factory? = null
         private var drmSessionManagerProvider: DrmSessionManagerProvider = DefaultDrmSessionManagerProvider()
         private val compositeSequenceableLoaderFactory= DefaultCompositeSequenceableLoaderFactory()
-        private var loadErrorHandlingPolicy: LoadErrorHandlingPolicy = DefaultLoadErrorHandlingPolicy()
+        private var loadErrorHandlingPolicy: LoadErrorHandlingPolicy = SabrLoadErrorHandlingPolicy()
 
         override fun setCmcdConfigurationFactory(cmcdConfigurationFactory: CmcdConfiguration.Factory): Factory =
             this.apply {
-                this.cmcdConfigurationFactory =
-                    Assertions.checkNotNull<CmcdConfiguration.Factory?>(cmcdConfigurationFactory)
+                this.cmcdConfigurationFactory = cmcdConfigurationFactory
             }
 
         override fun setDrmSessionManagerProvider(
@@ -71,7 +68,7 @@ class SabrMediaSource(
          * @throws NullPointerException if [MediaItem.localConfiguration] is `null`.
          */
         override fun createMediaSource(mediaItem: MediaItem): SabrMediaSource {
-            Assertions.checkNotNull<LocalConfiguration>(mediaItem.localConfiguration)
+            checkNotNull(mediaItem.localConfiguration)
             val cmcdConfiguration = cmcdConfigurationFactory?.createCmcdConfiguration(mediaItem)
             val sabrClient = SabrClient(manifest)
 
@@ -102,7 +99,7 @@ class SabrMediaSource(
     override fun canUpdateMediaItem(mediaItem: MediaItem): Boolean {
         val existingMediaItem = getMediaItem()
         val existingConfiguration =
-            Assertions.checkNotNull<LocalConfiguration>(existingMediaItem.localConfiguration)
+            checkNotNull(existingMediaItem.localConfiguration)
         val newConfiguration = mediaItem.localConfiguration
         return newConfiguration != null && newConfiguration.uri == existingConfiguration.uri
                 && newConfiguration.streamKeys == existingConfiguration.streamKeys
@@ -190,7 +187,7 @@ class SabrMediaSource(
         override fun getPeriodCount(): Int = 1
 
         override fun getPeriod(periodIndex: Int, period: Period, setIds: Boolean): Period {
-            Assertions.checkIndex(periodIndex, 0, periodCount)
+            require(periodIndex in 0 until periodCount)
             val uid: Any? = if (setIds) (0 + periodIndex) else null
             return period.set(
                 null,
@@ -208,7 +205,7 @@ class SabrMediaSource(
             window: Window,
             defaultPositionProjectionUs: Long,
         ): Window {
-            Assertions.checkIndex(windowIndex, 0, 1)
+            require(windowIndex == 0)
             val windowDefaultStartPositionUs = getAdjustedWindowDefaultStartPositionUs()
             return window.set(
                 Window.SINGLE_WINDOW_UID,
@@ -235,8 +232,19 @@ class SabrMediaSource(
             this.windowDefaultStartPositionUs
 
         override fun getUidOfPeriod(periodIndex: Int): Any {
-            Assertions.checkIndex(periodIndex, 0, periodCount)
+            require(periodIndex in 0 until periodCount)
             return 0 + periodIndex
         }
     }
+}
+
+/**
+ * Retrying a session flagged for attestation fails the same way, with growing delays (the player
+ * sat buffering for ~40 s before the error): it is fatal at once, so that the service replaces the
+ * session right away (see [SabrSessionRenewals]).
+ */
+private class SabrLoadErrorHandlingPolicy : DefaultLoadErrorHandlingPolicy() {
+    override fun getRetryDelayMsFor(loadErrorInfo: LoadErrorHandlingPolicy.LoadErrorInfo): Long =
+        if (loadErrorInfo.exception is SabrAttestationException) C.TIME_UNSET
+        else super.getRetryDelayMsFor(loadErrorInfo)
 }

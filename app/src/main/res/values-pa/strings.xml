@@ -60,8 +60,6 @@
     <string name="settings">ਸੈਟਿੰਗਾਂ</string>
     <string name="location">ਲੋਕੇਸ਼ਨ</string>
     <string name="instance">ਇੰਸਟੈਂਸ</string>
-    <string name="website">ਵੈੱਬਸਾਈਟ</string>
-    <string name="customization">ਤਬਦੀਲੀਆਂ</string>
     <string name="videoCount">%1$d ਵੀਡੀਓ</string>
     <string name="noInternet">ਪਹਿਲਾਂ ਇੰਟਰਨੈੱਟ ਨਾਲ ਜੁੜੋ।</string>
     <string name="retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
@@ -78,7 +76,6 @@
     <string name="music_albums">YT ਸੰਗੀਤ ਐਲਬਮਾਂ</string>
     <string name="music_playlists">YT ਸੰਗੀਤ ਪਲੇਲਿਸਟਸ</string>
     <string name="sponsorblock">ਸਪਾਂਸਰਬਲਾਕ</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ</string>
     <string name="segment_skipped">ਛੱਡਿਆ ਖੰਡ</string>
     <string name="category_segments">ਸੈਗਮਿੰਟ</string>
     <string name="category_sponsor">ਸਪਾਂਸਰ</string>
@@ -94,8 +91,6 @@
     <string name="category_preview">ਪ੍ਰੀਵਿਊ/ਰੀਕੈਪ</string>
     <string name="category_preview_summary">ਬਿਨਾਂ ਵਾਧੂ ਜਾਣਕਾਰੀ ਦੇ ਭਵਿੱਖ ਦੀ ਸਮੱਗਰੀ ਦਾ ਵੇਰਵਾ ਦੇਣ ਵਾਲੇ ਹਿੱਸਿਆਂ ਲਈ। ਜੇਕਰ ਇਸ ਵਿੱਚ ਕਲਿੱਪ ਸ਼ਾਮਲ ਹਨ ਜੋ ਸਿਰਫ਼ ਇੱਥੇ ਦਿਖਾਈ ਦਿੰਦੀਆਂ ਹਨ, ਤਾਂ ਇਹ ਗਲਤ ਸ਼੍ਰੇਣੀ ਹੈ</string>
     <string name="license">ਲਾਈਸੈਂਸ</string>
-    <string name="color_accent">ਲਹਿਜ਼ੇ</string>
-    <string name="material_you">ਮਟੀਰੀਅਲ ਯੂ</string>
     <string name="sponsorblock_notifications">ਨੋਟੀਫਿਕੇਸ਼ਨ</string>
     <string name="app_icon">ਆਈਕੌਨ</string>
     <string name="enabled">ਚਾਲੂ</string>
@@ -123,14 +118,12 @@
     <string name="fireIcon">ਫੈਸ਼ਨੇਬਲ ਅੱਗ-ਰੰਗਾ</string>
     <string name="torchIcon">ਟਰੈਡੀ ਟਾਰਚ</string>
     <string name="birdIcon">ਬੂਸਟਡ ਪੰਛੀ</string>
-    <string name="instance_summary">ਪਾਈਪਡ, ਲਾਗ-ਇਨ, ਅਤੇ ਖਾਤਾ</string>
     <string name="customInstance_summary">ਸ਼ਾਮਲ ਕਰੋ…</string>
     <string name="instance_name">ਇੰਸਟੈਂਸ ਨਾਮ</string>
     <string name="instance_api_url">URL ਤੋਂ ਇੰਸਟੈਂਸ API</string>
     <string name="addInstance">ਇੰਸਟੈਂਸ ਜੋੜੋ</string>
     <string name="empty_instance">ਨਾਮ ਅਤੇ API URL ਭਰੋ।</string>
     <string name="invalid_url">ਕਿਰਪਾ ਕਰਕੇ ਕੰਮ ਕਰਨ ਵਾਲਾ URL ਦਾਖਲ ਕਰੋ</string>
-    <string name="version">ਸੰਸਕਰਣ %1$s</string>
     <string name="related_streams">ਸੰਬੰਧਿਤ ਸਮੱਗਰੀ</string>
     <string name="related_streams_summary">ਤੁਸੀਂ ਜੋ ਦੇਖਦੇ ਹੋ ਉਸਦੇ ਨਾਲ ਮਿਲਦੀਆਂ-ਜੁਲਦੀਆਂ ਸਟ੍ਰੀਮਾਂ ਦਿਖਾਓ</string>
     <string name="buffering_goal">ਪ੍ਰੀਲੋਡਿੰਗ</string>
@@ -144,7 +137,6 @@
     <string name="instance_frontend_url">URL ਤੋਂ ਇੰਸਟੈਂਸ ਫਰੰਟਐਂਡ (ਵਿਕਲਪਿਕ)</string>
     <string name="quality">ਕੁਆਲਿਟੀ</string>
     <string name="behavior">ਵਿਵਹਾਰ</string>
-    <string name="player_summary">ਡਿਫਾਲਟ ਅਤੇ ਵਿਵਹਾਰ</string>
     <string name="seek_increment">ਸੀਕ ਵਾਧਾ</string>
     <string name="pauseOnScreenOff">ਸਵੈ-ਵਿਰਾਮ</string>
     <string name="clonePlaylist">ਪਲੇਲਿਸਟ ਦੀ ਇੰਨ-ਬਿੰਨ ਕਾਪੀ ਤਿਆਰ ਕਰੋ</string>
@@ -157,7 +149,6 @@
     <string name="auth_instance">ਪ੍ਰਮਾਣਿਕਤਾ ਇੰਸਟੈਂਸ</string>
     <string name="auth_instance_summary">ਪ੍ਰਮਾਣਿਤ ਕਾਲਾਂ ਲਈ ਇੱਕ ਵੱਖਰਾ ਇੰਸਟੈਂਸ ਵਰਤੋ</string>
     <string name="auth_instances">ਇੱਕ ਪ੍ਰਮਾਣਿਕਤਾ ਇੰਸਟੈਂਸ ਚੁਣੋ</string>
-    <string name="github">ਗਿਟਹੱਬ</string>
     <string name="audio_video">ਆਡੀਓ ਅਤੇ ਵੀਡੀਓ</string>
     <string name="fullscreen_orientation">ਫੁੱਲ ਸਕਰੀਨ ਸਥਿਤੀ</string>
     <string name="aspect_ratio">ਵੀਡੀਓ ਆਕਾਰ ਅਨੁਪਾਤ</string>
@@ -179,14 +170,12 @@
     <string name="data_saver_mode_summary">ਥੰਮਨੇਲ ਅਤੇ ਹੋਰ ਚਿੱਤਰ ਸਕਿਪ ਕਰੋ</string>
     <string name="search_history_summary">ਖੋਜਾਂ ਯਾਦ ਰੱਖੋ</string>
     <string name="watch_history_summary">ਵੇਖੇ ਗਏ ਵੀਡੀਓ ਦਾ ਸਥਾਨਕ ਤੌਰ \'ਤੇ ਟਰੈਕ ਰੱਖੋ</string>
-    <string name="history_summary">ਵੇਖਿਆ \'ਤੇ ਖੋਜਿਆ ਇਤਿਹਾਸ</string>
     <string name="reset_watch_positions">ਰੀਸੈਟ ਕਰੋ</string>
     <string name="watch_positions_title">ਯਾਦ ਰੱਖੀਆਂ ਪਲੇਬੈਕ ਸਥਿਤੀਆਂ</string>
     <string name="system_caption_style">ਸਿਸਟਮ ਕੈਪਸ਼ਨ ਸ਼ੈਲੀ</string>
     <string name="captions">ਕੈਪਸ਼ਨਾਂ</string>
     <string name="none">ਕੋਈ ਨਹੀਂ</string>
     <string name="general">ਜਨਰਲ</string>
-    <string name="general_summary">ਡਾਊਨਲੋਡਸ ਅਤੇ ਡਾਟਾ-ਸੇਵਰ</string>
     <string name="caption_settings">ਕੈਪਸ਼ਨਾਂ</string>
     <string name="playerAudioQuality">ਆਡੀਓ ਕੁਆਲਿਟੀ</string>
     <string name="worst_quality">ਘਟੀਆ</string>
@@ -205,7 +194,6 @@
     <string name="network_metered">ਮੀਟਰਡ</string>
     <string name="network_wifi">ਸਿਰਫ਼ ਵਾਈ-ਫਾਈ \'ਤੇ</string>
     <string name="translate">ਅਨੁਵਾਦ</string>
-    <string name="no_search_result">ਕੋਈ ਨਤੀਜੇ ਨਹੀਂ।</string>
     <string name="error_occurred">ਤਰੁੱਟੀ</string>
     <string name="copied">ਕਾਪੀ ਕੀਤਾ</string>
     <string name="share_with_time">ਟਾਈਮ ਕੋਡ ਨਾਲ ਸਾਂਝਾ ਕਰੋ</string>
@@ -270,7 +258,6 @@
     <string name="push_channel_name">ਸੂਚਨਾ ਵਰਕਰ</string>
     <string name="push_channel_description">ਨਵੀਆਂ ਸਟ੍ਰੀਮਾਂ ਉਪਲਬਧ ਹੋਣ \'ਤੇ ਇੱਕ ਸੂਚਨਾ ਦਿਖਾਉਂਦਾ ਹੈ।</string>
     <string name="irreversible">ਯਕੀਨਨ ਤੁਸੀਂ ਇਹ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ\? ਇਸਨੂੰ ਅਣਕੀਤਾ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!</string>
-    <string name="audio_video_summary">ਕੁਆਲਿਟੀ ਅਤੇ ਫਾਰਮੈਟ</string>
     <string name="play_next">ਅਗਲਾ ਚਲਾਓ</string>
     <string name="livestreams">ਲਾਈਵ ਸਟ੍ਰੀਮਾਂ</string>
     <string name="defaultIconLight">ਡਿਫ਼ਾਲਟ ਸਫ਼ੈਦ</string>
@@ -312,7 +299,6 @@
     <string name="concurrent_downloads_limit_reached">ਅਧਿਕਤਮ ਸਮਕਾਲੀ ਡਾਊਨਲੋਡ ਸੀਮਾ ਪੂਰੀ ਹੋ ਗਈ ਹੈ।</string>
     <string name="skip_silence">ਚੁੱਪ ਤੇ ਸਕਿੱਪ ਕਰੋ</string>
     <string name="help">ਸਹਾਇਤਾ</string>
-    <string name="faq">ਆਮ ਸਵਾਲ</string>
     <string name="sleep_timer">ਸਲੀਪ ਟਾਈਮਰ</string>
     <string name="replies">ਜਵਾਬ</string>
     <string name="unsupported_file_format">ਅਸਮਰਥਿਤ ਫ਼ਾਈਲ ਫਾਰਮੈਟ: %1$s</string>
@@ -417,7 +403,6 @@
     <string name="sb_invalid_segment">ਸੈਗਮੈਂਟ ਦਾ ਅਵੈਧ ਮੁੱਢ ਜਾਂ ਅੰਤ</string>
     <string name="sponsorblock_user_id">ਸਪਾਂਸਰਬਲਾਕ ਯੂਜ਼ਰ ਆਈਡੀ</string>
     <string name="contribute_to_sponsorblock">ਸਪਾਂਸਰਬਲਾਕ ਵਿੱਚ ਯੋਗਦਾਨ ਪਾਓ</string>
-    <string name="donate">ਦਾਨ ਕਰੋ</string>
     <string name="music_artists">YT ਮਿਊਜ਼ਿਕ ਕਲਾਕਾਰ</string>
     <string name="no_fullscreen_resolution">ਬਗੈਰ-ਫੁਲਸਕ੍ਰੀਨ ਰੈਜ਼ੋਲਿਊਸ਼ਨ</string>
     <string name="same_as_fullscreen">ਪੂਰੀ ਸਕਰੀਨ ਦੇ ਵਾਂਗ ਹੀ</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

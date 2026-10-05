@@ -1,7 +1,6 @@
 package com.watube.yard.helpers
 
 import android.content.Context
-import android.os.Build
 import android.provider.Settings
 import android.view.View
 import android.view.Window
@@ -14,31 +13,17 @@ import com.watube.yard.ui.extensions.toggleSystemBars
 object WindowHelper {
     private const val NAVIGATION_MODE = "navigation_mode"
 
-    fun toggleFullscreen(window: Window, isFullscreen: Boolean) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.attributes.layoutInDisplayCutoutMode = if (isFullscreen) {
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            } else {
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
-            }
-        }
-
-        WindowCompat.setDecorFitsSystemWindows(window, !isFullscreen)
-
-        val layoutNoLimitsFlag = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        if (isFullscreen) {
-            window.setFlags(layoutNoLimitsFlag, layoutNoLimitsFlag)
-        } else {
-            window.clearFlags(layoutNoLimitsFlag)
-        }
-
-        // Show the system bars when it is not fullscreen and hide them when it is fullscreen
-        // System bars means status bar and the navigation bar
+    /**
+     * Lays [window] out over the whole screen, display cutout included, with the status and
+     * navigation bars hidden (they come back transiently on a swipe from the edge).
+     */
+    fun applyFullscreen(window: Window) {
+        window.attributes.layoutInDisplayCutoutMode =
+            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         // See: https://developer.android.com/training/system-ui/immersive#kotlin
-        window.toggleSystemBars(
-            types = WindowInsetsCompat.Type.systemBars(),
-            showBars = !isFullscreen
-        )
+        window.toggleSystemBars(types = WindowInsetsCompat.Type.systemBars(), showBars = false)
     }
 
     /**

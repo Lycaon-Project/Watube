@@ -33,13 +33,14 @@
 
         <EditText
             android:id="@+id/search_input"
+            android:transitionName="search_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
             android:background="@drawable/watube_search_field"
             android:hint="@string/home_search_pill"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionSearch|flagNoPersonalizedLearning"
             android:importantForAutofill="no"
             android:inputType="text"
             android:paddingStart="16dp"

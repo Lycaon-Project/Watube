@@ -36,8 +36,6 @@
     <string name="subscribers">%1$s абонати</string>
     <string name="settings">Настройки</string>
     <string name="instance">Инстанция</string>
-    <string name="customization">Корекции</string>
-    <string name="website">Уебсайт</string>
     <string name="videoCount">%1$d видеоклипове</string>
     <string name="retry">Опитайте отново</string>
     <string name="comments">Коментари</string>
@@ -50,7 +48,6 @@
     <string name="music_playlists">YT Музикални Плейлисти</string>
     <string name="sponsorblock">SponsorBlock</string>
     <string name="category_sponsor">Спонсор</string>
-    <string name="color_accent">Акценти</string>
     <string name="app_icon">Икона</string>
     <string name="disabled">Изключено</string>
     <string name="update_available">Налична актуализация</string>
@@ -64,7 +61,6 @@
     <string name="quality">Качество</string>
     <string name="reset">Възстанови настройките по подразбиране</string>
     <string name="restore">Възстановяване</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Звук и видео</string>
     <string name="portrait">Портрет</string>
     <string name="never">Никога</string>
@@ -88,7 +84,6 @@
     <string name="sponsorblock_notifications">Известия</string>
     <string name="live">На живо</string>
     <string name="defaultIcon">По подразбиране</string>
-    <string name="version">Версия %1$s</string>
     <string name="no_audio">Няма звук</string>
     <string name="no_video">Няма видео</string>
     <string name="landscape">Пейзаж</string>
@@ -98,10 +93,8 @@
     <string name="require_restart">Изисква се рестартиране на приложението</string>
     <string name="open">Отваряне…</string>
     <string name="turnInternetOn">Моля, включете Wi-Fi или мобилни данни, за да се свържете с интернет.</string>
-    <string name="general_summary">Изтегляния и пестене на данни</string>
     <string name="copied">Копирано</string>
     <string name="error_occurred">Грешка</string>
-    <string name="no_search_result">Няма резултати.</string>
     <string name="translate">Превод</string>
     <string name="network_wifi">Само при Wi-Fi</string>
     <string name="network_all">Всичко</string>
@@ -126,7 +119,6 @@
     <string name="wifi">Wi-Fi</string>
     <string name="renamePlaylist">Преименувай плейлист</string>
     <string name="delete">Изтрий от изтеглени</string>
-    <string name="audio_video_summary">Качество и формат</string>
     <string name="added_to_playlist">Добавено към плейлиста %1$s</string>
     <string name="queue">Опашка</string>
     <string name="time">Време</string>
@@ -194,7 +186,6 @@
     <string name="playback_pitch">Стъпка</string>
     <string name="channel_groups">Групи канали</string>
     <string name="playing_next">Изпълни следващ в %1$s</string>
-    <string name="history_summary">История на гледане и търсене</string>
     <string name="app_backup">Архивиране на приложението</string>
     <string name="category_filler">Филтър Допирателна/Вицове</string>
     <string name="category_preview_summary">За сегменти, описващи подробно бъдещо съдържание без допълнителна информация. Ако включва клипове, които се показват само тук, това много вероятно е грешната категория</string>
@@ -234,7 +225,6 @@
     <string name="home_tab_content">Съдържание на началния раздел</string>
     <string name="alternative_pip_controls_summary">Покажи само аудио и контролите за прескачане в PiP вместо напред и назад</string>
     <string name="category_outro_summary">Информация след края. Не за изводи с инфо</string>
-    <string name="material_you">Материален</string>
     <string name="resume">Продължи</string>
     <string name="server_error">Изглежда има проблем с избрания сървър. Опитайте друга инстанция.</string>
     <string name="category_highlight_summary">Може да бъде или рекламираното заглавие, миниизображението или най-интересната част от видеоклипа. Можете да преминете към него, като го докоснете в секцията с глави</string>
@@ -273,7 +263,6 @@
     <string name="stop">Спри</string>
     <string name="autoplay_countdown_summary">Покажи обратно броене от 5 секунди преди автоматичното изпълнение на следващо видео</string>
     <string name="related_streams">Свързано съдържание</string>
-    <string name="faq">ЧЗВ</string>
     <string name="sort_by">Сортирай по</string>
     <string name="playback_speed">Скорост на възпроизвеждане</string>
     <string name="player_channel_description">Покажи известие при изпълнение</string>
@@ -344,7 +333,6 @@
     <string name="sb_custom_colors">Персонализирани цветове на сегмента</string>
     <string name="fullscreen_gestures">Влизане/излизане от жестове на цял екран</string>
     <string name="repeat_mode_none">Нито един</string>
-    <string name="player_summary">По подразбиране и поведение</string>
     <string name="already_logged_in">Вече сте влезли. Можете да излезете от профила си.</string>
     <string name="proceed">Продължете</string>
     <string name="creation_date">Дата на създаване</string>
@@ -356,18 +344,15 @@
     <string name="gradientIcon">Плъзгав наклон</string>
     <string name="resize_mode_fill">Пълен</string>
     <string name="error">Нещо се обърка.</string>
-    <string name="sponsorblock_summary">Използва https://sponsor.ajay.app API</string>
     <string name="replies">Отговори</string>
     <string name="grid">Решетъчни колони (портрет)</string>
     <string name="new_group">Нова</string>
     <string name="autoplay_countdown">Автоматично отброяване</string>
     <string name="take_a_break">Време е за почивка</string>
     <string name="notification_time">Ограничи времето за известия</string>
-    <string name="instance_summary">Piped, вход, и профил</string>
     <string name="autoRotatePlayer_summary">Възпроизвеждане на цял екран при завъртане на устройството</string>
     <string name="double_tap_seek_summary">Докосни два пъти отляво или отдясно, за да превъртите назад или напред позицията на плейъра</string>
     <string name="group_name_error_empty">Моля, въведете име</string>
-    <string name="donate">Дарение</string>
     <string name="music_artists">YT Музикални Изпълнители</string>
     <string name="tooltip_edit_groups">Редактирай групи</string>
     <string name="data_saver_mode_summary">Пропусни миниатюри и други изображения</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

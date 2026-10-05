@@ -20,6 +20,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -50,6 +51,7 @@ import com.watube.yard.services.OfflinePlayerService
 import com.watube.yard.services.OnlinePlayerService
 import com.watube.yard.ui.activities.AbstractPlayerHostActivity
 import com.watube.yard.ui.extensions.getSystemInsets
+import com.watube.yard.ui.extensions.preferLowFrameRate
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.interfaces.AudioPlayerOptions
 import com.watube.yard.ui.listeners.AudioPlayerThumbnailListener
@@ -418,6 +420,7 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     }
 
     private fun initializeSeekBar() {
+        listOf(binding.timeBar, binding.currentPosition, binding.duration).forEach { it.preferLowFrameRate() }
         binding.timeBar.addOnChangeListener { _, value, fromUser ->
             if (fromUser) playerController?.seekTo(value.toLong() * 1000)
         }
@@ -425,11 +428,25 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     }
 
     /**
+     * Battery: the labels are only polled while the screen shows them. In the background (the
+     * usual case for audio, screen off) the loops used to run for the whole listening session.
+     */
+    private val isPolling get() = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+
+    override fun onResume() {
+        super.onResume()
+        // the loops stopped while hidden: catch up and start them again (the fragment only
+        // counts as started once onStart() returned, hence here)
+        updateSeekBar()
+        updateChapterIndex()
+    }
+
+    /**
      * Only ever keeps one seek bar update pending, so that repeated initializations
      * don't stack multiple polling loops on top of each other.
      */
     private fun scheduleSeekBarUpdate(delayMs: Long) {
-        if (seekBarUpdateScheduled) return
+        if (seekBarUpdateScheduled || !isPolling) return
         seekBarUpdateScheduled = true
         handler.postDelayed({
             seekBarUpdateScheduled = false
@@ -438,7 +455,7 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     }
 
     private fun scheduleChapterIndexUpdate(delayMs: Long) {
-        if (chapterIndexUpdateScheduled) return
+        if (chapterIndexUpdateScheduled || !isPolling) return
         chapterIndexUpdateScheduled = true
         handler.postDelayed({
             chapterIndexUpdateScheduled = false

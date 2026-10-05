@@ -60,8 +60,6 @@
     <string name="settings">Настройки</string>
     <string name="location">Местоположение</string>
     <string name="instance">Сервер</string>
-    <string name="customization">Конфигурация</string>
-    <string name="website">Веб-сайт</string>
     <string name="channels">Каналы</string>
     <string name="all">Все</string>
     <string name="clear_history">Очистить историю</string>
@@ -70,7 +68,6 @@
     <string name="history">История</string>
     <string name="search_history">История поиска</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Используется API https://sponsor.ajay.app/</string>
     <string name="segment_skipped">Пропущенный сегмент</string>
     <string name="category_interaction">Напоминание о взаимодействии</string>
     <string name="category_interaction_summary">Короткие просьбы поставить лайк, подписаться, включить уведомления посреди видео. Если сегмент длинный или о чём-то конкретном, он должен быть указан как самореклама</string>
@@ -88,8 +85,6 @@
     <string name="category_selfpromo">Неоплачиваемая/самореклама</string>
     <string name="category_selfpromo_summary">Похожее на «спонсора», но для бесплатной рекламы или саморекламы. Сюда входят сегменты об атрибутике, пожертвованиях и информация о коллаборации</string>
     <string name="license">Лицензия</string>
-    <string name="color_accent">Акценты</string>
-    <string name="material_you">Material You</string>
     <string name="app_icon">Иконка</string>
     <string name="sponsorblock_notifications">Уведомления</string>
     <string name="enabled">Вкл.</string>
@@ -105,8 +100,6 @@
     <string name="fireIcon">Огненный огонь</string>
     <string name="torchIcon">Модный факел</string>
     <string name="flameIcon">Порхающее пламя</string>
-    <string name="instance_summary">Piped, вход и аккаунт</string>
-    <string name="version">Версия %1$s</string>
     <string name="category_filler">Заполнители/шутки</string>
     <string name="category_music_offtopic">Музыка: Немузыкальный раздел</string>
     <string name="category_preview">Пред осмотр/Краткий обзор</string>
@@ -143,7 +136,6 @@
     <string name="instance_frontend_url">Ссылка на сервер (необязательно)</string>
     <string name="quality">Качество</string>
     <string name="behavior">Поведение</string>
-    <string name="player_summary">Значения по умолчанию и поведение</string>
     <string name="seek_increment">Шаг перемотки</string>
     <string name="pauseOnScreenOff">Автопауза</string>
     <string name="pauseOnScreenOff_summary">Пауза воспроизведения при выключении экрана</string>
@@ -155,7 +147,6 @@
     <string name="watch_positions">Запоминание позиции</string>
     <string name="auth_instance">Сервер аутентификации</string>
     <string name="auth_instance_summary">Использовать другой сервер для аутентификации</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Аудио и видео</string>
     <string name="fullscreen_orientation">Полноэкранный режим</string>
     <string name="aspect_ratio">Соотношение сторон видео</string>
@@ -180,11 +171,9 @@
     <string name="autoRotatePlayer_summary">Полноэкранное воспроизведение при включении устройства</string>
     <string name="always">Всегда</string>
     <string name="data_saver_mode_summary">Пропускать скачивание миниатюр и других изображений</string>
-    <string name="history_summary">История просмотра и поиска</string>
     <string name="reset_watch_positions">Сбросить позиции</string>
     <string name="captions">Субтитры</string>
     <string name="general">Общие</string>
-    <string name="general_summary">Скачивания и экономия данных</string>
     <string name="watch_history_summary">Сохранять историю просмотра локально</string>
     <string name="caption_settings">Субтитры</string>
     <string name="playerAudioQuality">Качество звука</string>
@@ -195,7 +184,6 @@
     <string name="most_views">Больше просмотров</string>
     <string name="least_views">Меньше просмотров</string>
     <string name="network_metered">Лимитное</string>
-    <string name="no_search_result">Нет результатов.</string>
     <string name="error_occurred">Ошибка</string>
     <string name="copied">Скопировано</string>
     <string name="default_subtitle_language">Язык субтитров</string>
@@ -234,7 +222,6 @@
     <string name="skip_segment">Пропустить отрывок</string>
     <string name="download_channel_description">Показывать уведомление при загрузке медиа.</string>
     <string name="push_channel_name">Агент уведомлений</string>
-    <string name="audio_video_summary">Качество и формат</string>
     <string name="delete">Удалить из загрузок</string>
     <string name="renamePlaylist">Переименовать плейлист</string>
     <string name="wifi">Wi-Fi</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Таймер сна</string>
     <string name="skip_silence">Пропускать тишину</string>
     <string name="help">Справка</string>
-    <string name="faq">FAQ</string>
     <string name="replies">Ответы</string>
     <string name="mark_as_watched">Пометить как просмотренное</string>
     <string name="unsupported_file_format">Неподдерживаемый формат файла: %1$s</string>
@@ -419,7 +405,6 @@
     <string name="sb_invalid_segment">Некорректные начало или конец сегмента</string>
     <string name="sponsorblock_user_id">ID пользователя в SponsorBlock</string>
     <string name="contribute_to_sponsorblock">Внести свой вклад в SponsorBlock</string>
-    <string name="donate">Поддержать</string>
     <string name="music_artists">Исполнители YT Music</string>
     <string name="no_fullscreen_resolution">Разрешение неполноэкранного режима</string>
     <string name="same_as_fullscreen">Как в полноэкранном</string>
@@ -542,11 +527,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

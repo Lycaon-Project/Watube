@@ -52,9 +52,6 @@
     <string name="settings">Seadistused</string>
     <string name="location">Asukoht</string>
     <string name="instance">Vaheserver</string>
-    <string name="customization">Kohandused</string>
-    <string name="website">Veebisait</string>
-    <string name="donate">Toeta arendajat</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d videot</string>
     <string name="subscriberAndVideoCounts">%1$s tellijat • %2$d videot</string>
     <string name="okay">Sobib</string>
@@ -77,7 +74,6 @@
     <string name="clear_history">Tühjenda ajalugu</string>
     <string name="playlistCreated">Esitusloend on loodud.</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Kasutusel on https://sponsor.ajay.app API</string>
     <string name="music_songs">YT Music - Laulud</string>
     <string name="music_videos">YT Music - Videod</string>
     <string name="music_albums">YT Music - Albumid</string>
@@ -97,8 +93,6 @@
     <string name="category_sponsor_summary">Tasutud turundus, tasuline viitamine või otsene reklaam. Ei käi enesereklaami kohta ega tasuta tõeliste toetusavalduste kohta, mis tutvustavad üritusi, loojaid, saite või tooteid</string>
     <string name="category_selfpromo">Tasuta reklaam või enesereklaam</string>
     <string name="category_selfpromo_summary">Sarnane „sponsorile“, kuid tegemist on tasuta reklaamiga või enesereklaamiga. Siin hulgas on tootenäidete teave või info annetuste ja koostööpartnerite kohta</string>
-    <string name="color_accent">Aktsentvärv</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Teavitused</string>
     <string name="app_icon">Ikoon</string>
     <string name="enabled">Sisse lülitatud</string>
@@ -123,7 +117,6 @@
     <string name="auth_instance_summary">Kasuta autenditud päringute jaoks teist vaheserverit</string>
     <string name="auth_instances">Vali autentimise jaoks vaheserver</string>
     <string name="behavior">Käitumine</string>
-    <string name="player_summary">Vaikeväärtused ja käitumine</string>
     <string name="seek_increment">Edasikerimise samm</string>
     <string name="pauseOnScreenOff">Automaatne paus</string>
     <string name="pauseOnScreenOff_summary">Peata esitamine, kui ekraan lülitub välja</string>
@@ -133,21 +126,18 @@
     <string name="reset_message">Kas lähtestame kõik seadistused ja logime välja?</string>
     <string name="deleteAccount">Kustuta konto</string>
     <string name="deleteAccount_summary">Kustuta oma konto teenuses Piped</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Heli ja video</string>
     <string name="video">Video</string>
     <string name="downloading">Laadime alla…</string>
     <string name="download_paused">Allalaadimine on peatatud</string>
     <string name="download_completed">Allalaadimine on lõppenud</string>
     <string name="show_updates">Kontrolli uuendusi automaatselt</string>
-    <string name="instance_summary">Piped, sisseligimine ja kasutajakonto</string>
     <string name="customInstance_summary">Lisa…</string>
     <string name="instance_name">Vaheserveri nimi</string>
     <string name="instance_api_url">Vaheserveri API aadress</string>
     <string name="addInstance">Lisa vaheserver</string>
     <string name="empty_instance">Sisesta nimi ja API aadress.</string>
     <string name="invalid_url">Palun sisesta aadress, mis toimib</string>
-    <string name="version">Versioon %1$s</string>
     <string name="albums">Albumid</string>
     <string name="category_interaction_summary">Lühike meeldetuletus video keskel tema meeldivaks märkimiseks või kanali tellimiseks. Kui meeldetuletus on pikem või midagi täpsemat, siis ta peaks olema märgitud enesereklaamiks</string>
     <string name="category_outro">Lõpukaadrid ja -tiitrid</string>
@@ -171,7 +161,6 @@
     <string name="data_saver_mode_summary">Ära kuva pisipilte ja muid pilte</string>
     <string name="captions">Subtiitrid</string>
     <string name="search_history_summary">Jäta otsingud meelde</string>
-    <string name="general_summary">Allalaadimised ja andmeserver</string>
     <string name="general">Üldist</string>
     <string name="none">Määratlemata</string>
     <string name="irreversible">Kas sa oled kindel? Seda tegevust ei saa tagasi pöörata!</string>
@@ -210,7 +199,6 @@
     <string name="repeat_mode">Korduse viis</string>
     <string name="resize_mode_fit">Sobita</string>
     <string name="resize_mode_zoom">Suumi</string>
-    <string name="audio_video_summary">Kvaliteet ja vorming</string>
     <string name="renamePlaylist">Muuda esitusloendi nime</string>
     <string name="wifi">WiFi</string>
     <string name="mobile_data">Mobiilne andmeside</string>
@@ -222,7 +210,6 @@
     <string name="player_autoplay">Automaatne kordus</string>
     <string name="open">Ava…</string>
     <string name="autoRotatePlayer">Automaatne täisekraanivaade</string>
-    <string name="no_search_result">Otsingutulemusi pole.</string>
     <string name="error_occurred">Viga</string>
     <string name="export_subscriptions">Ekspordi tellimused</string>
     <string name="take_a_break">Palun tee üks puhkepaus</string>
@@ -234,7 +221,6 @@
     <string name="local_playlists">Kohalikud esitusloendid</string>
     <string name="volume">Helivaljus</string>
     <string name="brightness">Eredus</string>
-    <string name="history_summary">Otsingute ja vaatamiste ajalugu</string>
     <string name="play_all">Esita kõik</string>
     <string name="caption_settings">Subtiitrid</string>
     <string name="playerAudioQuality">Helikvaliteet</string>
@@ -322,7 +308,6 @@
     <string name="audio_only_mode_summary">Muuda LibreTube muusikamängijaks</string>
     <string name="sleep_timer">Unetaimer</string>
     <string name="skip_silence">Jäta vaikus vahele</string>
-    <string name="faq">Korduma kippuvad küsimused</string>
     <string name="mark_as_watched">Märgi vaadatuks</string>
     <string name="stats_for_nerds">Statistika it-huvilistele</string>
     <string name="video_id">Video tunnus</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

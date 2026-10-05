@@ -36,8 +36,6 @@
     <string name="settings">ସେଟିଂ</string>
     <string name="location">ଜାଗା</string>
     <string name="instance">ଇନ୍ସ୍ତାନ</string>
-    <string name="customization">ସୁନିୟୋଜନ</string>
-    <string name="website">ୱେବ୍ ସାଇଟ୍</string>
     <string name="videoCount">%1$d ଭିଡିଓ</string>
     <string name="retry">ପୁନର୍ଚେଷ୍ଟା</string>
     <string name="comments">ମନ୍ତବ୍ୟ ଗୁଡ଼ିକ</string>
@@ -60,7 +58,6 @@
     <string name="category_outro_summary">ସମାପ୍ତି ପରେ ଥିବା ସୂଚନା ପାଇଁ। ସୂଚନା ସହିତ ସିଦ୍ଧାନ୍ତ ପାଇଁ ନୁହେଁ</string>
     <string name="category_filler">ହସକଥା</string>
     <string name="category_music_offtopic">ଅଣ ସଙ୍ଗୀତ</string>
-    <string name="color_accent">ଆସେଣ୍ଟ</string>
     <string name="app_icon">ଆଇକନ</string>
     <string name="enabled">ଅନ୍</string>
     <string name="disabled">ବନ୍ଦ ଅଛି</string>
@@ -88,7 +85,6 @@
     <string name="noInternet">ଇଣ୍ଟରନେଟ କୁ ପ୍ରଥମେ ସଂଯୋଗ କରନ୍ତୁ ।</string>
     <string name="clear_history">ଇତିହାସ ଖାଲି କରନ୍ତୁ</string>
     <string name="history">ଇତିହାସ</string>
-    <string name="sponsorblock_summary">ଏହା ବ୍ୟବହାର କରେ https://sponsor.ajay.app</string>
     <string name="category_intro">ଅନ୍ତରାଳ</string>
     <string name="category_intro_summary">ପ୍ରକୃତ ବିଷୟବସ୍ତୁ ବିନା ଏକ ବ୍ୟବଧାନ । ଏକ ବିରାମ, ଷ୍ଟାଟିକ୍ ଫ୍ରେମ୍, ପୁନରାବୃତ୍ତି ଆନିମେସନ୍ ହୋଇପାରେ । ସୂଚନା ଧାରଣ କରିଥିବା ସ୍ଥାନାନ୍ତରଣ ପାଇଁ ବ୍ୟବହୃତ ହେବା ଉଚିତ୍ ନୁହେଁ</string>
     <string name="category_sponsor">ପ୍ରଯୋଜକ</string>
@@ -96,7 +92,6 @@
     <string name="category_selfpromo_summary">ଅନାଦେୟ କିମ୍ବା ଆତ୍ମ ପଦୋନ୍ନତି ବ୍ୟତୀତ \"ପ୍ରାୟୋଜକ\" ସହିତ ସମାନ । ବାଣିଜ୍ୟ, ଦାନ, କିମ୍ବା ସେମାନେ କାହା ସହିତ ସହଯୋଗ କରିଥିଲେ ସେ ସମ୍ବନ୍ଧରେ ସୂଚନା ଏଥିରେ ଅନ୍ତର୍ଭୂକ୍ତ କରେ</string>
     <string name="category_filler_summary">ଭିଡିଓର ମୁଖ୍ୟ ବିଷୟବସ୍ତୁ ବୁଝିବା ପାଇଁ ଅନାବଶ୍ୟକ, କେବଳ ଫିଲର୍ କିମ୍ବା ହାସ୍ୟରସ ପାଇଁ ଯୋଡିହୋଇଥିବା ଦୃଶ୍ୟ ପାଇଁ</string>
     <string name="category_music_offtopic_summary">କେବଳ ସଙ୍ଗୀତ ଭିଡିଓରେ ବ୍ୟବହାର ପାଇଁ । ଏହି ଭିଡିଓର କିଛି ଅଂଶ ସରକାରୀ ମିଶ୍ରଣର ଅଂଶ ନୁହେଁ ।ଶେଷରେ, ଭିଡିଓଟି ସ୍ପୋଟିଫାଇ କିମ୍ବା ଅନ୍ୟ କୌଣସି ମିଶ୍ରିତ ସଂସ୍କରଣ ସହିତ ଯଥାସମ୍ଭବ ସମାନ ହେବା ଉଚିତ, କିମ୍ବା କଥାବାର୍ତ୍ତା କିମ୍ବା ଅନ୍ୟାନ୍ୟ ବିଭ୍ରାଟକୁ ହ୍ରାସ କରିବା ଉଚିତ୍</string>
-    <string name="material_you">ମିଟରିଆଲ ୟୁ</string>
     <string name="category_preview">ରିକେପ୍</string>
     <string name="license">ଲାଇସେନ୍ସ</string>
     <string name="category_preview_summary">ଅତିରିକ୍ତ ସୂଚନା ବିନା ଭବିଷ୍ୟତର ବିଷୟବସ୍ତୁକୁ ବିସ୍ତୃତ ବିଭାଗଗୁଡିକ ପାଇଁ | ଯଦି ଏଥିରେ କ୍ଲିପ୍ ଅନ୍ତର୍ଭୂକ୍ତ ହୁଏ ଯାହା କେବଳ ଏଠାରେ ଦେଖାଯାଏ, ଏହା ସମ୍ଭବତଃ ଭୁଲ ବର୍ଗ ଅଟେ</string>
@@ -125,7 +120,6 @@
     <string name="addInstance">ଇନଷ୍ଟାନ୍ସ ଯୋଡନ୍ତୁ</string>
     <string name="empty_instance">ନାମ ଏବଂ API URL ପୁରଣ କରନ୍ତୁ ।</string>
     <string name="invalid_url">ଦୟାକରି ଏକ URL ପ୍ରବେଶ କରନ୍ତୁ ଯାହା କାମ କରେ</string>
-    <string name="version">ସଂସ୍କରଣ %1$s</string>
     <string name="related_streams_summary">ଆପଣ ଯାହା ଦେଖୁଛନ୍ତି ତାହା ସହିତ ସମାନ ଷ୍ଟ୍ରିମ୍ ଦେଖାନ୍ତୁ</string>
     <string name="buffering_goal">ପ୍ରିଲୋଡିଂ</string>
     <string name="no_audio">ସ୍ୱର ନାହିଁ</string>
@@ -134,7 +128,6 @@
     <string name="downloading">ଡାଉନଲୋଡ୍ ହେଉଛି …</string>
     <string name="player_autoplay">ସ୍ୱତଃଚାଳନ</string>
     <string name="instance_frontend_url">ଫ୍ରଣ୍ଟେଣ୍ଡ୍ ପାଇଁ URL</string>
-    <string name="player_summary">ଡିଫଲ୍ଟ ଓ ଆଚରଣ</string>
     <string name="seek_increment">ବୃଦ୍ଧି ଖୋଜ</string>
     <string name="pauseOnScreenOff">ସ୍ଵତଃ-ବିରାମ</string>
     <string name="clonePlaylist">କ୍ଲୋନ୍ ପ୍ଲେଲିଷ୍ଟ୍</string>
@@ -144,7 +137,6 @@
     <string name="watch_positions">ସ୍ଥିତି ମନେରଖ</string>
     <string name="auth_instance">ପ୍ରାମାଣିକିକରଣ ଉଦାହରଣ</string>
     <string name="auth_instance_summary">ପ୍ରାମାଣିକ କଲ୍ ପାଇଁ ଏକ ଭିନ୍ନ ଉଦାହରଣ ବ୍ୟବହାର କରନ୍ତୁ</string>
-    <string name="github">ଗିଥବ୍</string>
     <string name="audio_video">ଅଡିଓ ଏବଂ ଭିଡିଓ</string>
     <string name="aspect_ratio">ଭିଡିଓ ଦିଗ ଅନୁପାତ</string>
     <string name="portrait">ଆନୁଲମ୍ବିକ</string>
@@ -157,7 +149,6 @@
     <string name="reset_watch_positions">ପୁନସେଟ୍ କରନ୍ତୁ</string>
     <string name="system_caption_style">ସିଷ୍ଟମ୍ କ୍ୟାପସନ୍ ଶଇଳୀ</string>
     <string name="general">ସାଧାରଣ</string>
-    <string name="general_summary">ଭାଷା ଓ ଜାଗା</string>
     <string name="caption_settings">କ୍ୟାପସନ୍</string>
     <string name="default_subtitle_language">ସବ୍ଟାଇଟ୍ଲ ଭାଷା</string>
     <string name="notifications">ବିଜ୍ଞପ୍ତି ଗୁଡ଼ିକ</string>
@@ -175,7 +166,6 @@
     <string name="preferences">ପସନ୍ଦ</string>
     <string name="time_code">ଟାଇମ୍ କୋଡ୍ (ସେକେଣ୍ଡରେ)</string>
     <string name="queue">ଧାଡ଼ି</string>
-    <string name="instance_summary">ପାଇପ୍, ଲଗଇନ୍, ଏବଂ ଆକାଉଣ୍ଟ୍</string>
     <string name="related_streams">ସମ୍ବନ୍ଧିତ ବିଷୟବସ୍ତୁ</string>
     <string name="pauseOnScreenOff_summary">ସ୍କ୍ରିନ୍ ବନ୍ଦ ହୋଇଗଲେ ପ୍ଲେ-ବକ୍ ବନ୍ଦ କରନ୍ତୁ</string>
     <string name="behavior">ବ୍ୟବହାର</string>
@@ -188,7 +178,6 @@
     <string name="open_copied">ଖୋଲନ୍ତୁ</string>
     <string name="device_info">ଉପକରଣ ସୂଚନା</string>
     <string name="delete">ଡାଉନଲୋଡ୍ ରୁ ଡିଲିଟ୍ କରନ୍ତୁ</string>
-    <string name="audio_video_summary">ଗୁଣବତ୍ତା ଏବଂ ଫର୍ମାଟ୍</string>
     <string name="renamePlaylist">ପ୍ଲେ ଲିଷ୍ଟର ନାମ ପରିବର୍ତ୍ତନ କରନ୍ତୁ</string>
     <string name="mobile_data">ମୋବାଇଲ୍ ଡାଟା</string>
     <string name="new_videos_badge">ନୂତନ ଭିଡିଓ ପାଇଁ ସୂଚକ</string>
@@ -220,13 +209,11 @@
     <string name="data_saver_mode_summary">ଥମ୍ବନେଲ ଏବଂ ଅନ୍ୟାନ୍ୟ ପ୍ରତିଛବିଗୁଡ଼ିକୁ ଏଡ଼ାଇଦିଅ</string>
     <string name="watch_positions_title">ପ୍ଲେବ୍ୟାକ୍ ସ୍ଥିତିକୁ ମନେରଖ</string>
     <string name="none">କିଛି ବି ନାହିଁ</string>
-    <string name="history_summary">ଇତିହାସ ଦେଖନ୍ତୁ ଏବଂ ସନ୍ଧାନ କରନ୍ତୁ</string>
     <string name="captions">କ୍ୟାପସନ୍</string>
     <string name="worst_quality">ସବୁଠାରୁ ଖରାପ</string>
     <string name="notify_new_streams_summary">ଆପଣ ଅନୁସରଣ କରୁଥିବା ସୃଷ୍ଟିକର୍ତ୍ତାଙ୍କ ଠାରୁ ନୂତନ ଷ୍ଟ୍ରିମ୍ ପାଇଁ ବିଜ୍ଞପ୍ତି ପ୍ରଦର୍ଶନ କରନ୍ତୁ</string>
     <string name="least_recent">ପୁରୁଣା</string>
     <string name="required_network">ଆବଶ୍ୟକ କନେକ୍ସନ୍</string>
-    <string name="no_search_result">ଫଳାଫଳ ନାହିଁ।</string>
     <string name="network_all">ସମସ୍ତ</string>
     <string name="checking_frequency">ପ୍ରତ୍ୟେକ ଯାଞ୍ଚ କରୁଛନ୍ତି…</string>
     <string name="least_views">କମ୍ ଦୃଶ୍ୟ</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">ଶୋଇବା ସମୟ</string>
     <string name="skip_silence">ନୀରବତା ଛାଡିଦିଅ</string>
     <string name="help">ସାହାଯ୍ୟ</string>
-    <string name="faq">FAQ</string>
     <string name="replies">ଉତ୍ତର ଗୁଡିକ</string>
     <string name="mark_as_watched">ଦେଖାଯାଇଥିବା ପରି ଚିହ୍ନିତ କର</string>
     <string name="unsupported_file_format">ଅସମର୍ଥିତ ଫାଇଲ୍ ଫର୍ମାଟ୍: %1$s</string>
@@ -418,7 +404,6 @@
     <string name="contribute_to_sponsorblock">SponsorBlock ରେ ଯୋଗଦାନ କରନ୍ତୁ</string>
     <string name="sponsorblock_user_id">ପ୍ରଯୋଜକ ବ୍ଲକ୍ ୟୁଜର୍ ID</string>
     <string name="no_fullscreen_resolution">ନୋ-ଫୁଲସ୍କ୍ରିନ ରିଜୋଲ୍ୟୁସନ</string>
-    <string name="donate">ଦାନ କରନ୍ତୁ</string>
     <string name="music_artists">YT ସଂଗୀତ କଳାକାର</string>
     <string name="same_as_fullscreen">ସମ୍ପୂର୍ଣ୍ଣ ପରଦା ପରି ସମାନ</string>
     <string name="vote_for_segment">ସେଗମେଣ୍ଟ ପାଇଁ ଭୋଟ୍ ଦିଅନ୍ତୁ</string>
@@ -469,11 +454,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

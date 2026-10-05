@@ -13,6 +13,7 @@
             android:id="@+id/instanceApiUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoPersonalizedLearning"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -24,6 +25,7 @@
             android:id="@+id/instanceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoPersonalizedLearning"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -35,6 +37,7 @@
             android:id="@+id/instanceFrontendUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoPersonalizedLearning"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 

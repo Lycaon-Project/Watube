@@ -1,6 +1,5 @@
 package com.watube.yard.api
 
-import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.api.obj.DeArrowBody
 import com.watube.yard.api.obj.DeArrowContent
 import com.watube.yard.api.obj.PipedConfig
@@ -9,10 +8,8 @@ import com.watube.yard.api.obj.SubmitSegmentResponse
 import com.watube.yard.api.obj.VideoLabelData
 import com.watube.yard.api.obj.VoteInfo
 import com.watube.yard.obj.update.UpdateInfo
-import kotlinx.serialization.json.JsonElement
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -25,8 +22,6 @@ private const val SB_API_URL = "https://sponsor.ajay.app"
 // returnyoutubedislikeapi.com is the official Return YouTube Dislike API and is the very
 // URL announced by the setting summary (res/values*/strings.xml "local_ryd_summary").
 private const val RYD_API_URL = "https://returnyoutubedislikeapi.com"
-private const val GOOGLE_API_KEY = "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw"
-const val USER_AGENT = PrivacyHelper.GENERIC_USER_AGENT
 
 interface ExternalApi {
     @GET("config")
@@ -78,17 +73,4 @@ interface ExternalApi {
 
     @GET("$SB_API_URL/api/branding/{videoId}")
     suspend fun getDeArrowContent(@Path("videoId") videoId: String): Map<String, DeArrowContent>
-
-    @Headers(
-        "User-Agent: $USER_AGENT",
-        "Accept: application/json",
-        "Content-Type: application/json+protobuf",
-        "x-goog-api-key: $GOOGLE_API_KEY",
-        "x-user-agent: grpc-web-javascript/0.1",
-    )
-    @POST
-    suspend fun botguardRequest(
-        @Url url: String,
-        @Body jsonPayload: List<String>
-    ): JsonElement
 }

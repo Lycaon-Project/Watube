@@ -82,18 +82,17 @@ interface DownloadDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPlaylistVideoConnection(crossRef: DownloadPlaylistVideosCrossRef)
 
-    @Suppress("DEPRECATION")
     suspend fun deletePlaylistIncludingVideoRefs(playlist: DownloadPlaylist) {
         deletePlaylistCrossRef(playlist.playlistId)
         deletePlaylist(playlist)
     }
 
+    /** Leaves the playlist's video refs behind: call [deletePlaylistIncludingVideoRefs]. */
     @Delete
-    @Deprecated("Call deletePlaylistIncludingVideoRefs instead!")
     suspend fun deletePlaylist(playlist: DownloadPlaylist)
 
+    /** Only half of a playlist deletion: call [deletePlaylistIncludingVideoRefs]. */
     @Query("DELETE FROM downloadplaylistvideoscrossref WHERE playlistId = :playlistId")
-    @Deprecated("Call deletePlaylistIncludingVideoRefs instead!")
     suspend fun deletePlaylistCrossRef(playlistId: String)
 
     @Query("SELECT * FROM downloadplaylistvideoscrossref WHERE playlistId = :playlistId")

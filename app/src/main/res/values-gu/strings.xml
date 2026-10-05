@@ -33,12 +33,9 @@
     <string name="category_intro_summary">વાસ્તવિક સામગ્રી વિનાનો અંતરાલ. વિરામ, સ્થિર ફ્રેમ, એનિમેશનનું પુનરાવર્તન થઈ શકે છે. માહિતી ધરાવતા સંક્રમણો માટે તેનો ઉપયોગ થવો જોઈએ નહીં</string>
     <string name="playOnBackground">પાશ્વ ભાગમાં વગાડો</string>
     <string name="defaultIcon">મૂળભૂત</string>
-    <string name="customization">ગોઠવણીઓ</string>
     <string name="noInternet">પહેલા ઈન્ટરનેટ સાથે કનેક્ટ કરો.</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API નો ઉપયોગ કરે છે</string>
     <string name="category_interaction">ક્રિયાપ્રતિક્રિયા યાદ અપાવનાર (પસંદ અને સબ્સ્ક્રાઇબ કરો)</string>
     <string name="category_outro">અંતિમ પત્તાઓ અને ક્રેડિટ્સ</string>
-    <string name="color_accent">ઉચ્ચારો</string>
     <string name="appearance_summary">એપ્લિકેશનને તમારી પસંદ પ્રમાણે સમાયોજિત કરો</string>
     <string name="instance_api_url">URL નો નમૂનો API</string>
     <string name="addInstance">નમૂનો ઉમેરો</string>
@@ -65,7 +62,6 @@
     <string name="shapedIcon">મૂર્ખ આકારનું</string>
     <string name="flameIcon">ઉડતી જ્યોત</string>
     <string name="birdIcon">બુસ્ટેડ પક્ષી</string>
-    <string name="instance_summary">પાઇપ, લૉગિન, અને સબસ્ક્રિપ્શન્સ</string>
     <string name="empty_instance">નામ અને API URL ભરો.</string>
     <string name="audio">ઓડિયો</string>
     <string name="video">વિડિયો</string>
@@ -76,7 +72,6 @@
     <string name="reset_message">શું બધા સુયોજનોને પુન:સુયોજિત કરવા છે અને બહાર નીકળવા માંગો છો\?</string>
     <string name="restore">પુન:સંગ્રહ કરો</string>
     <string name="auth_instance">સત્તાધિકરણ નમૂનો</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">ઓડિયો અને વિડિયો</string>
     <string name="fullscreen_orientation">સંપૂર્ણસ્ક્રીન દિશા</string>
     <string name="aspect_ratio">વિડિયો એસ્પેક્ટ રેશિયો</string>
@@ -87,7 +82,6 @@
     <string name="data_saver_mode">માહિતી-સંગ્રહકર્તા સ્થિતિ</string>
     <string name="data_saver_mode_summary">થમ્બનેઈલ અને બીજા ચિત્રો છોડો</string>
     <string name="search_history_summary">શોધો યાદ રાખો</string>
-    <string name="history_summary">ઇતિહાસ જુઓ અને શોધો</string>
     <string name="reset_watch_positions">રીસેટ કરો</string>
     <string name="captions">કેપ્શનો</string>
     <string name="none">કંઇ નહિં</string>
@@ -101,7 +95,6 @@
     <string name="most_views">મોટાભાગનાં દૃશ્યો</string>
     <string name="network_all">તમામ</string>
     <string name="network_wifi">ફક્ત વાઇ-ફાઇ પર</string>
-    <string name="no_search_result">પરિણામ નથી.</string>
     <string name="background_mode">પાશ્વભાગ સ્થિતિ</string>
     <string name="misc">મિશ્ર</string>
     <string name="take_a_break">વિરામ લેવાનો સમય છે</string>
@@ -118,7 +111,6 @@
     <string name="renamePlaylist">પ્લેલીસ્ટનું નામ બદલો</string>
     <string name="mobile_data">મોબાઇલ માહિતી</string>
     <string name="navigation_bar">શોધખોળ પટ્ટી</string>
-    <string name="material_you">સામગ્રી તમે</string>
     <string name="layout">લેઆઉટ</string>
     <string name="change_region">વર્તમાન ક્ષેત્ર માટે ટ્રેન્ડિંગ અનુપલબ્ધ હોય તેવું લાગે છે. કૃપા કરીને સેટિંગ્સમાં અન્યને પસંદ કરો.</string>
     <string name="downloading">ડાઉનલોડ કરી રહ્યું છે…</string>
@@ -196,7 +188,6 @@
     <string name="play_latest_videos">તાજેતરની વિડિયોને વગાડો</string>
     <string name="settings">સુયોજનો</string>
     <string name="instance">નમૂનો</string>
-    <string name="website">વેબસાઇટ</string>
     <string name="videoCount">%1$d વિડિયો</string>
     <string name="retry">પુન:પ્રયત્ન કરો</string>
     <string name="comments">ટિપ્પણીઓ</string>
@@ -217,7 +208,6 @@
     <string name="never">કદી નહિં</string>
     <string name="autoRotatePlayer">ઓટો-ફુલસ્ક્રીન</string>
     <string name="general">જનરલ</string>
-    <string name="general_summary">ભાષા, અને વિસ્તાર</string>
     <string name="auto_quality">આપમેળે</string>
     <string name="worst_quality">ખરાબ</string>
     <string name="videos">વિડિયો</string>
@@ -240,10 +230,8 @@
     <string name="customInstance_summary">ઉમેરો…</string>
     <string name="instance_name">નમૂના નામ</string>
     <string name="invalid_url">મહેરબાની કરીને URL દાખલ કરો જે કામ કરે છે</string>
-    <string name="version">આવૃત્તિ %1$s</string>
     <string name="instance_frontend_url">URL થી instance forwardend</string>
     <string name="quality">ગુણવત્તા</string>
-    <string name="player_summary">મૂળભૂતો અને વર્તણૂક</string>
     <string name="watch_positions">સ્થિતિ યાદ રાખો</string>
     <string name="auth_instance_summary">સત્તાધિકરણ થયેલ કોલ માટે અલગ દાખલો વાપરો</string>
     <string name="auth_instances">ઑથ નમૂનો પસંદ કરો</string>
@@ -271,7 +259,6 @@
     <string name="delete">ડાઉનલોડમાંથી કાઢી નાંખો</string>
     <string name="repeat_mode">પુનરાવર્તન સ્થિતિ</string>
     <string name="repeat_mode_none">કંઇ નહિં</string>
-    <string name="audio_video_summary">ગુણવત્તા અને બંધારણ</string>
     <string name="new_videos_badge_summary">જો કેટલાક હોય તો નવી વિડિઓઝની માત્રા સાથેનો બેજ બતાવો</string>
     <string name="start_time">પ્રારંભ સમય</string>
     <string name="new_videos_badge">નવી વિડિયો માટે સૂચક</string>
@@ -295,11 +282,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

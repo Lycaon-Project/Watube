@@ -14,6 +14,13 @@
     <exclude
         domain="database"
         path="." />
+    <!-- Cast analytics state (session ids, application id, feature usage counters) -->
+    <exclude
+        domain="sharedpref"
+        path="com.watube.yard.client_cast_analytics_data.xml" />
+    <exclude
+        domain="sharedpref"
+        path="com.watube.yard.debug.client_cast_analytics_data.xml" />
     <exclude
         domain="root"
         path="cache" />

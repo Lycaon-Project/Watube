@@ -1,7 +1,5 @@
 <resources>
 
-    <color name="duration_background_color">#143126</color>
-    <color name="duration_text_color">#59E6A1</color>
     <color name="shortcut_color">#0061A6</color>
     <color name="splash_screen_icon_color">#222</color>
     <color name="watube_theme_light_primary">#35E08C</color>
@@ -74,127 +72,17 @@
     <color name="watube_theme_dark_surfaceBright">#1E2228</color>
     <color name="watube_theme_dark_outlineVariant">#14FFFFFF</color>
 
-    <color name="azur_theme_light_primary">#5AB8FF</color>
-    <color name="azur_theme_light_onPrimary">#07131F</color>
-    <color name="azur_theme_light_primaryContainer">#EAF6FF</color>
-    <color name="azur_theme_light_onPrimaryContainer">#07131F</color>
-    <color name="azur_theme_light_secondary">#5AB8FF</color>
-    <color name="azur_theme_light_onSecondary">#07131F</color>
-    <color name="azur_theme_light_secondaryContainer">#EAF6FF</color>
-    <color name="azur_theme_light_onSecondaryContainer">#07131F</color>
-    <color name="azur_theme_light_tertiary">#5AB8FF</color>
-    <color name="azur_theme_light_onTertiary">#07131F</color>
-    <color name="azur_theme_light_tertiaryContainer">#EAF6FF</color>
-    <color name="azur_theme_light_onTertiaryContainer">#07131F</color>
-    <color name="azur_theme_light_inversePrimary">#5AB8FF</color>
 
-    <color name="azur_theme_dark_primary">#5AB8FF</color>
-    <color name="azur_theme_dark_onPrimary">#07131F</color>
-    <color name="azur_theme_dark_primaryContainer">#1B2E3D</color>
-    <color name="azur_theme_dark_onPrimaryContainer">#78C5FF</color>
-    <color name="azur_theme_dark_secondary">#5AB8FF</color>
-    <color name="azur_theme_dark_onSecondary">#07131F</color>
-    <color name="azur_theme_dark_secondaryContainer">#1B2E3D</color>
-    <color name="azur_theme_dark_onSecondaryContainer">#78C5FF</color>
-    <color name="azur_theme_dark_tertiary">#5AB8FF</color>
-    <color name="azur_theme_dark_onTertiary">#07131F</color>
-    <color name="azur_theme_dark_tertiaryContainer">#1B2E3D</color>
-    <color name="azur_theme_dark_onTertiaryContainer">#78C5FF</color>
-    <color name="azur_theme_dark_inversePrimary">#5AB8FF</color>
 
-    <color name="corail_theme_light_primary">#FF7E67</color>
-    <color name="corail_theme_light_onPrimary">#2A0B06</color>
-    <color name="corail_theme_light_primaryContainer">#FFEEEB</color>
-    <color name="corail_theme_light_onPrimaryContainer">#2A0B06</color>
-    <color name="corail_theme_light_secondary">#FF7E67</color>
-    <color name="corail_theme_light_onSecondary">#2A0B06</color>
-    <color name="corail_theme_light_secondaryContainer">#FFEEEB</color>
-    <color name="corail_theme_light_onSecondaryContainer">#2A0B06</color>
-    <color name="corail_theme_light_tertiary">#FF7E67</color>
-    <color name="corail_theme_light_onTertiary">#2A0B06</color>
-    <color name="corail_theme_light_tertiaryContainer">#FFEEEB</color>
-    <color name="corail_theme_light_onTertiaryContainer">#2A0B06</color>
-    <color name="corail_theme_light_inversePrimary">#FF7E67</color>
 
-    <color name="corail_theme_dark_primary">#FF7E67</color>
-    <color name="corail_theme_dark_onPrimary">#2A0B06</color>
-    <color name="corail_theme_dark_primaryContainer">#392422</color>
-    <color name="corail_theme_dark_onPrimaryContainer">#FF9582</color>
-    <color name="corail_theme_dark_secondary">#FF7E67</color>
-    <color name="corail_theme_dark_onSecondary">#2A0B06</color>
-    <color name="corail_theme_dark_secondaryContainer">#392422</color>
-    <color name="corail_theme_dark_onSecondaryContainer">#FF9582</color>
-    <color name="corail_theme_dark_tertiary">#FF7E67</color>
-    <color name="corail_theme_dark_onTertiary">#2A0B06</color>
-    <color name="corail_theme_dark_tertiaryContainer">#392422</color>
-    <color name="corail_theme_dark_onTertiaryContainer">#FF9582</color>
-    <color name="corail_theme_dark_inversePrimary">#FF7E67</color>
 
-    <color name="lavande_theme_light_primary">#BC9CFF</color>
-    <color name="lavande_theme_light_onPrimary">#170B2A</color>
-    <color name="lavande_theme_light_primaryContainer">#F6F2FF</color>
-    <color name="lavande_theme_light_onPrimaryContainer">#170B2A</color>
-    <color name="lavande_theme_light_secondary">#BC9CFF</color>
-    <color name="lavande_theme_light_onSecondary">#170B2A</color>
-    <color name="lavande_theme_light_secondaryContainer">#F6F2FF</color>
-    <color name="lavande_theme_light_onSecondaryContainer">#170B2A</color>
-    <color name="lavande_theme_light_tertiary">#BC9CFF</color>
-    <color name="lavande_theme_light_onTertiary">#170B2A</color>
-    <color name="lavande_theme_light_tertiaryContainer">#F6F2FF</color>
-    <color name="lavande_theme_light_onTertiaryContainer">#170B2A</color>
-    <color name="lavande_theme_light_inversePrimary">#BC9CFF</color>
 
-    <color name="lavande_theme_dark_primary">#BC9CFF</color>
-    <color name="lavande_theme_dark_onPrimary">#170B2A</color>
-    <color name="lavande_theme_dark_primaryContainer">#2D293D</color>
-    <color name="lavande_theme_dark_onPrimaryContainer">#D0BCFF</color>
-    <color name="lavande_theme_dark_secondary">#BC9CFF</color>
-    <color name="lavande_theme_dark_onSecondary">#170B2A</color>
-    <color name="lavande_theme_dark_secondaryContainer">#2D293D</color>
-    <color name="lavande_theme_dark_onSecondaryContainer">#D0BCFF</color>
-    <color name="lavande_theme_dark_tertiary">#BC9CFF</color>
-    <color name="lavande_theme_dark_onTertiary">#170B2A</color>
-    <color name="lavande_theme_dark_tertiaryContainer">#2D293D</color>
-    <color name="lavande_theme_dark_onTertiaryContainer">#D0BCFF</color>
-    <color name="lavande_theme_dark_inversePrimary">#BC9CFF</color>
 
-    <color name="ambre_theme_light_primary">#FFC24D</color>
-    <color name="ambre_theme_light_onPrimary">#241503</color>
-    <color name="ambre_theme_light_primaryContainer">#FFF7E8</color>
-    <color name="ambre_theme_light_onPrimaryContainer">#241503</color>
-    <color name="ambre_theme_light_secondary">#FFC24D</color>
-    <color name="ambre_theme_light_onSecondary">#241503</color>
-    <color name="ambre_theme_light_secondaryContainer">#FFF7E8</color>
-    <color name="ambre_theme_light_onSecondaryContainer">#241503</color>
-    <color name="ambre_theme_light_tertiary">#FFC24D</color>
-    <color name="ambre_theme_light_onTertiary">#241503</color>
-    <color name="ambre_theme_light_tertiaryContainer">#FFF7E8</color>
-    <color name="ambre_theme_light_onTertiaryContainer">#241503</color>
-    <color name="ambre_theme_light_inversePrimary">#FFC24D</color>
 
-    <color name="ambre_theme_dark_primary">#FFC24D</color>
-    <color name="ambre_theme_dark_onPrimary">#241503</color>
-    <color name="ambre_theme_dark_primaryContainer">#39301D</color>
-    <color name="ambre_theme_dark_onPrimaryContainer">#FFD68A</color>
-    <color name="ambre_theme_dark_secondary">#FFC24D</color>
-    <color name="ambre_theme_dark_onSecondary">#241503</color>
-    <color name="ambre_theme_dark_secondaryContainer">#39301D</color>
-    <color name="ambre_theme_dark_onSecondaryContainer">#FFD68A</color>
-    <color name="ambre_theme_dark_tertiary">#FFC24D</color>
-    <color name="ambre_theme_dark_onTertiary">#241503</color>
-    <color name="ambre_theme_dark_tertiaryContainer">#39301D</color>
-    <color name="ambre_theme_dark_onTertiaryContainer">#FFD68A</color>
-    <color name="ambre_theme_dark_inversePrimary">#FFC24D</color>
     <color name="watube_splash_background">#08140E</color>
 
     <color name="watube_acc">#35E08C</color>
-    <color name="watube_acc_ink">#062015</color>
-    <color name="watube_acc_soft">#143126</color>
     <color name="watube_acc_text">#59E6A1</color>
-    <color name="watube_azure">#5AB8FF</color>
-    <color name="watube_coral">#FF7E67</color>
-    <color name="watube_lavender">#BC9CFF</color>
-    <color name="watube_amber">#FFC24D</color>
     <!-- Selected tab ink: the mockup acc-text token in day mode (color-mix acc 44% /
          #14161A). values-night ships #35E08C for the same name, so MainActivity
          re-applies watube_acc_text (the mockup's night acc-text) at runtime. -->

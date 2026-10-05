@@ -33,6 +33,9 @@ class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeS
     private var isTouchDownInsideHitArea = false
     private var shouldInterceptTouchEvent = false
 
+    /** This layout received the gesture's down event (directly or by intercepting the swipe). */
+    private var ownsGesture = false
+
     init {
         super.setTransitionListener(object : TransitionAdapter() {
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
@@ -97,6 +100,7 @@ class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeS
             MotionEvent.ACTION_DOWN -> {
                 shouldInterceptTouchEvent = false
                 isTouchDownInsideHitArea = false
+                ownsGesture = false
 
                 // never intercept touch event if we're currently in audio player mode
                 if (isAudioPlayer) return false
@@ -135,11 +139,23 @@ class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeS
     }
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) ownsGesture = true
+        // the rest of a gesture whose view left this layout midway (the player moving to the
+        // fullscreen window at the end of the swipe) is not a drag of the player sheet
+        if (!ownsGesture) return false
+
         if (isTouchDownInsideHitArea && startedMinimized) {
             // detect gesture only when the player is in minimized state
             gestureDetector.onTouchEvent(event)
         }
 
-        return isTouchDownInsideHitArea && super.onTouchEvent(event)
+        val handled = isTouchDownInsideHitArea && super.onTouchEvent(event)
+        // MotionLayout settles a drag on ACTION_UP only: a cancelled one stayed between both
+        // states, and the player kept its controls disabled (no tap, no pause) until a
+        // transition completed
+        if (event.actionMasked == MotionEvent.ACTION_CANCEL && progress > 0f && progress < 1f) {
+            if (progress < 0.5f) transitionToStart() else transitionToEnd()
+        }
+        return handled
     }
 }

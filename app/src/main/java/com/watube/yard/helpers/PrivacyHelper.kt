@@ -8,6 +8,8 @@ import android.webkit.WebView
 import androidx.core.content.edit
 import com.watube.yard.constants.PreferenceKeys
 import java.security.SecureRandom
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 private const val HOUR_MILLIS = 60L * 60 * 1000
 
@@ -28,14 +30,34 @@ private const val HOUR_MILLIS = 60L * 60 * 1000
  */
 object PrivacyHelper {
     /**
+     * Chrome 152 reached the stable channel on that day, and since then a major version ships
+     * every 2 weeks (chromiumdash.appspot.com milestone schedule). Refresh with app updates: the
+     * formula only bridges the time between two releases of Watube.
+     */
+    private val CHROME_ANCHOR_DATE = LocalDate.of(2026, 8, 25)
+    private const val CHROME_ANCHOR_MAJOR = 152
+    private const val CHROME_RELEASE_DAYS = 14L
+
+    /** A wrong device clock must not produce an absurd version. */
+    private const val CHROME_MAX_DRIFT_DAYS = 10L * 365
+
+    /**
      * Generic browser-like user agent used for all third party API calls when hardening
      * is enabled. It intentionally contains no device, app or version information, so all
      * hardened Watube users look the same to external observers (Tor/Mullvad style
      * "blend into the crowd" strategy).
+     *
+     * The Chrome version follows the stable channel, one release behind (staged rollouts keep
+     * most users there): a version frozen in the code (131) became, within months, a rare value
+     * that singled Watube users out instead of hiding them in the crowd.
      */
-    const val GENERIC_USER_AGENT =
+    val GENERIC_USER_AGENT: String by lazy {
+        val days = ChronoUnit.DAYS.between(CHROME_ANCHOR_DATE, LocalDate.now())
+            .coerceIn(0, CHROME_MAX_DRIFT_DAYS)
+        val major = CHROME_ANCHOR_MAJOR + days / CHROME_RELEASE_DAYS - 1
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)" +
-            " Chrome/131.0.0.0 Safari/537.36"
+            " Chrome/$major.0.0.0 Safari/537.36"
+    }
 
     /**
      * How often the rotating client identifiers (SponsorBlock user id **and** neutral
@@ -219,11 +241,12 @@ object PrivacyHelper {
 
     /**
      * Applies Mullvad-browser/Tor inspired WebView hardening where the public Android
-     * APIs allow it without breaking the PoToken challenge:
+     * APIs allow it:
      *  - disables the DOM cache, a classic persistent fingerprinting vector
+     *  - disables web storage (localStorage): nothing persists from one visit to the next, the
+     *    local pages fall back to the system theme and language. It used to stay on for the
+     *    BotGuard / PoToken challenge, which is gone (see SabrAttestationException).
      *  - blocks third party cookies for the embedded view
-     * Web storage (localStorage) stays untouched on purpose: the BotGuard/PoToken
-     * challenge relies on it, disabling it would break high quality playback.
      */
     fun applyWebViewAntiFingerprinting(webView: WebView) {
         if (!isHardeningEnabled()) return
@@ -231,6 +254,7 @@ object PrivacyHelper {
         runCatching {
             webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
             webView.settings.javaScriptCanOpenWindowsAutomatically = false
+            webView.settings.domStorageEnabled = false
         }
 
         runCatching {

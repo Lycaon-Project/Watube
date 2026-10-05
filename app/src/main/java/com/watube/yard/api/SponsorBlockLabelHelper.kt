@@ -6,6 +6,8 @@ import androidx.annotation.StringRes
 import com.watube.yard.R
 import com.watube.yard.api.obj.VideoLabelData
 import com.watube.yard.extensions.sha256Sum
+import retrofit2.HttpException
+import java.net.HttpURLConnection.HTTP_NOT_FOUND
 
 object SponsorBlockLabelHelper {
     /**
@@ -37,6 +39,10 @@ object SponsorBlockLabelHelper {
                 // https://wiki.sponsor.ajay.app/w/API_Docs/Draft#GET_/api/videoLabels/:sha256HashPrefix
                 videoId.sha256Sum().substring(0, 5),
             ).firstOrNull { it.videoID == videoId }
+        }.recoverCatching {
+            // 404 is the API's "no labelled video under this prefix", the answer for most videos:
+            // taken as a failure, it was never cached and every rebind asked again (battery, data)
+            if ((it as? HttpException)?.code() == HTTP_NOT_FOUND) null else throw it
         }
 
         // cache every completed lookup, including "this video has no label": otherwise

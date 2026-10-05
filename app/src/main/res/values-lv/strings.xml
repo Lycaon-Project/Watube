@@ -58,7 +58,6 @@
     <string name="comments">Komentāri</string>
     <string name="videoCount">%1$d videoklipi</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Izmanto API no https://sponsor.ajay.app/</string>
     <string name="channels">Kanāli</string>
     <string name="all">Viss</string>
     <string name="playlists">Atskaņošanas saraksti</string>
@@ -81,15 +80,11 @@
     <string name="category_sponsor_summary">Šeit ietilpst apmaksātas un tiešas reklāmas. Pašreklāmas un neapmaksātas ziņas neskaitās</string>
     <string name="category_selfpromo_summary">Šeit ietilpst neapmaksātas ziņas un pašreklāmas, tai skaitā dažādi ziņojumi par paša precēm vai ziedojumiem, kā arī informācija par to, ar ko viņi sadarbojās</string>
     <string name="license">Licence</string>
-    <string name="color_accent">Akcents</string>
-    <string name="material_you">Material You dizains</string>
     <string name="category_outro">Beigu ekrāns un titri</string>
     <string name="category_intro_summary">Šeit ietilpst brīži bez reāla satura, piemēram, pārtraukumi, statisks kadri, atkārtotas animācijas. Brīži, kuros ietilpst kaut kāda informācija, neskaitās</string>
     <string name="settings">Iestatījumi</string>
     <string name="location">Atrašanās vieta</string>
     <string name="instance">Serveris (Instance)</string>
-    <string name="customization">Pielāgojumi</string>
-    <string name="website">Vietne</string>
     <string name="sponsorblock_notifications">Paziņojumi</string>
     <string name="enabled">Ieslēgts</string>
     <string name="disabled">Izslēgts</string>
@@ -122,11 +117,9 @@
     <string name="category_music_offtopic">Mūzika: brīži bez mūzikas</string>
     <string name="category_preview">Priekšskatījums/atkārtojums</string>
     <string name="category_preview_summary">Segmentiem, kuros detalizēti aprakstīts turpmākais saturs bez papildu informācijas. Ja tajā ir iekļauti tikai šeit redzamie klipi, ļoti iespējams, ka tā ir nepareiza kategorija</string>
-    <string name="instance_summary">Piped, pieteikšanās un konts</string>
     <string name="instance_name">Instances nosaukums</string>
     <string name="instance_api_url">Instances API URL</string>
     <string name="addInstance">Pievienot instanci</string>
-    <string name="version">Versija %1$s</string>
     <string name="related_streams">Saistīts saturs</string>
     <string name="related_streams_summary">Rādīt līdzīgu saturu blakus tam, ko jūs skatāties</string>
     <string name="buffering_goal">Iepriekš ielādēt</string>
@@ -143,7 +136,6 @@
     <string name="instance_frontend_url">Servera URL saite (neobligāti)</string>
     <string name="quality">Kvalitāte</string>
     <string name="behavior">Uzvedība</string>
-    <string name="player_summary">Noklusējumi un uzvedība</string>
     <string name="seek_increment">Patīšanas solis</string>
     <string name="pauseOnScreenOff">Automātiski iepauzēt</string>
     <string name="pauseOnScreenOff_summary">Pārtraukt atskaņošanu, kad ekrāns tiek izslēgts</string>
@@ -161,7 +153,6 @@
     <string name="watch_positions">Saglabāt atskaņošanas pozīciju</string>
     <string name="auth_instance_summary">Lietojiet citu instanci priekš autentificētiem pieprasījumiem</string>
     <string name="auth_instances">Atlasīt autentificēto instanci</string>
-    <string name="github">GitHub</string>
     <string name="aspect_ratio">Video malu attiecība</string>
     <string name="auto_rotation">Noteikt no ierīces orientācijas</string>
     <string name="audio_video">Audio un video</string>
@@ -175,13 +166,11 @@
     <string name="data_saver_mode_summary">Izlaist sīktēlu un citu attēlu lejupielādi, lai ietaupītu datus</string>
     <string name="watch_history_summary">Uzglabāt skatīšanās vēsturi ierīcē</string>
     <string name="search_history_summary">Atcerēties meklēšanas vēsturi</string>
-    <string name="history_summary">Skatīšanās un meklēšanas vēsture</string>
     <string name="reset_watch_positions">Atiestatīt</string>
     <string name="watch_positions_title">Saglabāt atskaņošanas pozīcijas</string>
     <string name="captions">Subtitri</string>
     <string name="none">Nav</string>
     <string name="general">Vispārīgie</string>
-    <string name="general_summary">Lejupielādes un datu taupīšana</string>
     <string name="data_saver_mode">Datu taupīšanas režīms</string>
     <string name="autoRotatePlayer">Automātiski pāriet pilnekrāna režīmā</string>
     <string name="pure_theme">Tīrais motīvs</string>
@@ -198,7 +187,6 @@
     <string name="least_recent">Senākie</string>
     <string name="most_views">Skatītākie</string>
     <string name="network_metered">Ierobežots</string>
-    <string name="no_search_result">Nav rezultātu.</string>
     <string name="least_views">Neskatītākie</string>
     <string name="history_empty">Vēsture ir tukša.</string>
     <string name="required_network">Nepieciešamais savienojums</string>
@@ -227,7 +215,6 @@
     <string name="copied_to_clipboard">Nokopēts starpliktuvē</string>
     <string name="player_resize_mode">Izmēra mainīšanas režīms</string>
     <string name="device_info">Informācija par ierīci</string>
-    <string name="audio_video_summary">Kvalitāte un izšķirtspēja</string>
     <string name="delete">Dzēst no lejupielādēm</string>
     <string name="renamePlaylist">Pārsaukt atskaņošanas sarakstu</string>
     <string name="new_videos_badge">Jauno video indikators</string>
@@ -308,7 +295,6 @@
     <string name="bookmark">Grāmatzīme</string>
     <string name="push_channel_description">Parāda paziņojumu, kad pieejami jauni video.</string>
     <string name="help">Palīdzība</string>
-    <string name="faq">Biežāk uzdotie jautājumi</string>
     <string name="concurrent_downloads_limit_reached">Sasniegts vienlaikus atļauto lejuipelāžu skaits.</string>
     <string name="resume">Atsākt</string>
     <string name="unknown">Nezināms</string>
@@ -362,7 +348,6 @@
     <string name="export_playlists_to">Izgūt atskaņošanas sarakstus uz</string>
     <string name="albums">Albumi</string>
     <string name="grid_landscape">Režģa kolonnas (ainavas)</string>
-    <string name="donate">Ziedot</string>
     <string name="finished">Pabeigts</string>
     <string name="comments_count">Komentāri (%1$s)</string>
     <string name="music_artists">YT Music Izpildītāji</string>
@@ -506,11 +491,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

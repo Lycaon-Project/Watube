@@ -12,7 +12,6 @@
     <string name="createPlaylist">បង្កើតកម្រងវីដេអូ</string>
     <string name="playOnBackground">ចាក់នៅផ្ទៃខាងក្រោយ</string>
     <string name="music_albums">អាល់ប៊ុម យូធូបតន្ត្រី</string>
-    <string name="website">វេបសាយ</string>
     <string name="playlists">កម្រងវីដេអូ</string>
     <string name="all">ទាំងអស់</string>
     <string name="videos">វីដេអូ</string>
@@ -20,7 +19,6 @@
     <string name="enabled">បើក</string>
     <string name="search_history">ប្រវត្តិស្វែងរក</string>
     <string name="success">ជោគជ័យ។</string>
-    <string name="color_accent">សង្កត់ពណ៌</string>
     <string name="subscribers">អ្នកជាវ %1$s នាក់</string>
     <string name="category_sponsor_summary">ការផ្សព្វផ្សាយបង់ប្រាក់, ការណែនាំបង់ប្រាក់ និងការផ្សាយពាណិជ្ជកម្មផ្ទាល់។ មិនសម្រាប់ការផ្សាយខ្លួនឯង/ក្លែងធ្វើឥតគិតថ្លៃ, ស្រែកហៅរកមូលហេតុ, អ្នកបង្កើតមាតិកា, វេបសាយ និងផលិតផល</string>
     <string name="category_interaction_summary">នៅពេលដែលមានការរំលឹកខ្លីមួយនៅកណ្តាលមាតិកាដើម្បី ចូលចិត្ត ជាវ ឬតាមដាន។ ប្រសិនបើវាវែង ឬអំពីអ្វីមួយជាក់លាក់ វាគួរតែជាការផ្សព្វផ្សាយខ្លួនឯងជំនួសវិញ</string>
@@ -31,7 +29,6 @@
     <string name="search_hint">ស្វែងរក</string>
     <string name="downloads">ទាញយក</string>
     <string name="defres">កម្រិតបង្ហាញវីដេអូ</string>
-    <string name="material_you">សំភារៈអ្នក</string>
     <string name="app_icon">អាយខន</string>
     <string name="server_error">វាហាក់ដូចជាមានបញ្ហាជាមួយសេវូបករណ៍ ដែលបានជ្រើស។ សាកល្បងឧទាហរណ៍ផ្សេងទៀត។</string>
     <string name="yes">បាទ/ចាស</string>
@@ -47,7 +44,6 @@
     <string name="loggedIn">បានបញ្ជាប់ចូល។</string>
     <string name="retry">ព្យាយាមម្តងទៀត</string>
     <string name="playback_speed">ល្បឿនចាក់</string>
-    <string name="customization">ការកែតម្រូវ</string>
     <string name="instance">ឧបមា</string>
     <string name="areYouSure">លុបកម្រងវីដេអូឬ\?</string>
     <string name="download">ទាញយក</string>
@@ -76,13 +72,11 @@
     <string name="okay">យល់ព្រម</string>
     <string name="startpage">ទំព័រដើម</string>
     <string name="error">មានអ្វីមួយមិនប្រក្រតី។</string>
-    <string name="sponsorblock_summary">ប្រើ API https://sponsor.ajay.app</string>
     <string name="logout">បណ្ដាច់ចេញ</string>
     <string name="replies">ឆ្លើយតប</string>
     <string name="grid">ជួរឈរក្រឡាចត្រង្គ (បញ្ឈរ)</string>
     <string name="sponsorblock">ប្លុកឧបត្ថម្ភក</string>
     <string name="fail">បានបរាជ័យ :(</string>
-    <string name="donate">បរិច្ចាគ</string>
     <string name="music_artists">សិល្បករ យូធូបតន្ត្រី</string>
     <string name="login">បញ្ជាប់ចូល</string>
     <string name="update_summary">ពិនិត្យអាប់ដេត</string>
@@ -123,7 +117,6 @@
     <string name="instance_api_url">URL ទៅ API ឧបមា</string>
     <string name="customInstance_summary">បន្ថែម…</string>
     <string name="portrait">បញ្ឈរ</string>
-    <string name="history_summary">ប្រវត្តិមើល និងស្វែងរក</string>
     <string name="auto_rotation">ស្វ័យបង្វិល</string>
     <string name="downloading">កំពុងទាញយក…</string>
     <string name="category_preview_summary">សម្រាប់ចម្រៀកដែលអនាគតមាតិកាលម្អិតដោយគ្មានព័ត៌មានលម្អិតបន្ថែម។ បើសិនវារួមបញ្ចូលឃ្លីបដែលបង្ហាញតែរូបរាងនៅទីនេះ នេះទំនងជាខុសចំណាត់ថ្នាក់</string>
@@ -135,7 +128,6 @@
     <string name="pause">ផ្អាក</string>
     <string name="pauseOnScreenOff">ស្វ័យផ្អាក</string>
     <string name="buffering_goal">កំពុងផ្ទុកជាមុន</string>
-    <string name="github">GitHub</string>
     <string name="category_highlight">បង្ហាញវីដេអូលេចធ្លោ</string>
     <string name="download_completed">ការទាញយកបានបញ្ចប់</string>
     <string name="auth_instance">យថាភូតកម្មឧបមា</string>
@@ -155,7 +147,6 @@
     <string name="history_empty">មិនទាន់មានប្រវត្តិនៅឡើយ។</string>
     <string name="watch_history">ប្រវត្តិទស្សនា</string>
     <string name="aspect_ratio">សមាមាត្រវីដេអូ</string>
-    <string name="version">កំណែ %1$s</string>
     <string name="copied">បានចម្លង</string>
     <string name="stop">បញ្ឈប់</string>
     <string name="related_streams">មាតិកាដែលពាក់ព័ន្ធ</string>
@@ -179,7 +170,6 @@
     <string name="instance_name">ឈ្មោះឧបមា</string>
     <string name="share_with_time">ចែករំលែកជាមួយកូដម៉ោង</string>
     <string name="live">ផ្សាយផ្ទាល់</string>
-    <string name="no_search_result">គ្មានលទ្ធផល។</string>
     <string name="always">ជានិច្ច</string>
     <string name="player_autoplay">ស្វ័យចាក់</string>
     <string name="related_streams_summary">បង្ហាញស្ទ្រីមស្រដៀងគ្នាជាមួយនឹងអ្វីដែលអ្នកមើល</string>
@@ -193,20 +183,17 @@
     <string name="require_restart_message">រីស្តាតកម្មវិធី ដើម្បីប្រើការផ្លាស់ប្តូរថ្មីនេះ។</string>
     <string name="irreversible">តើអ្នកប្រាកដឬអត់\? នេះមិនអាចត្រឡប់វិញបានទេ!</string>
     <string name="general">ជាទូទៅ</string>
-    <string name="player_summary">បុរេជម្រើស និងឥរិយាបថ</string>
     <string name="auth_instance_summary">ប្រើតាមឧបមាផ្សេងសម្រាប់ហៅយថាភូតកម្ម។</string>
     <string name="require_restart">តម្រូវឱ្យរីស្តាតកម្មវិធី</string>
     <string name="gradientIcon">ជម្រាល</string>
     <string name="most_views">ពេញនិយមមើល</string>
     <string name="video">វីដេអូ</string>
     <string name="clonePlaylist">ក្លូនកម្រងវីដេអូ</string>
-    <string name="instance_summary">Piped បញ្ជាប់ចូល និងគណនី</string>
     <string name="no_video">គ្មានវីដេអូ</string>
     <string name="data_saver_mode_summary">រំលងរូបតូចៗ និងរូបភាពផ្សេងទៀត</string>
     <string name="quality">គុណភាព</string>
     <string name="never">មិនដែល</string>
     <string name="worst_quality">អាក្រក់បំផុត</string>
-    <string name="general_summary">ភាសា និងតំបន់</string>
     <string name="player">ការីចាក់</string>
     <string name="addInstance">បន្ថែមឧបមា</string>
     <string name="flameIcon">អណ្តាតភ្លើងហោះ</string>
@@ -221,7 +208,6 @@
     <string name="renamePlaylist">ប្ដូរឈ្មោះបញ្ជីចាក់</string>
     <string name="copied_to_clipboard">បានចម្លងទៅក្ដារតម្រៀប</string>
     <string name="mobile_data">ទិន្នន័យចល័ត</string>
-    <string name="audio_video_summary">គុណភាព និងហ្វ័រម៉ាត</string>
     <string name="misc">ហ្គីតា</string>
     <string name="new_videos_badge">បង្ហាញប្រាប់សម្រាប់វីដេអូថ្មី</string>
     <string name="wifi">វ៉ាយហ្វាយ</string>
@@ -253,11 +239,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

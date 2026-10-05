@@ -26,7 +26,6 @@
     <string name="region">Sebit</string>
     <string name="login_register">Gir/hasaba al</string>
     <string name="license">Ygtyýarnama</string>
-    <string name="color_accent">Tema renkleri</string>
     <string name="sponsorblock_notifications">Bildirişler</string>
     <string name="app_icon">Nyşan</string>
     <string name="enabled">Aç</string>
@@ -44,12 +43,10 @@
     <string name="live">Göni ýaýlym</string>
     <string name="shareTo">URL-i paýlaşyň</string>
     <string name="defaultIcon">Deslapky</string>
-    <string name="instance_summary">Piped, hasap, we abunalar</string>
     <string name="customInstance_summary">Goş…</string>
     <string name="instance_name">Salgylanma ady</string>
     <string name="instance_api_url">URL-den salgylanma API</string>
     <string name="addInstance">Salgylanma goşuň</string>
-    <string name="version">V %1$s</string>
     <string name="related_streams">Degişli mazmun</string>
     <string name="related_streams_summary">Görýän zatlaryňyz bilen baglanyşykly wideolary görkeziň</string>
     <string name="buffering_goal">Öňünden ýükleme</string>
@@ -62,7 +59,6 @@
     <string name="player_autoplay">Awtomatiki başlat</string>
     <string name="quality">Hil</string>
     <string name="behavior">Häsiýet</string>
-    <string name="player_summary">Hil, we pleýeriň häsiýeti</string>
     <string name="seek_increment">Öňe geçir</string>
     <string name="pauseOnScreenOff">Awto-säginme</string>
     <string name="pauseOnScreenOff_summary">Ekrany öçürilende pleýeri duruz</string>
@@ -73,7 +69,6 @@
     <string name="restore">Dikelt</string>
     <string name="watch_history">Belliklere serediň</string>
     <string name="watch_positions">Soňky ýeri ýatda sakla</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Ses we wideo</string>
     <string name="fullscreen_orientation">Doly ekran ugry</string>
     <string name="aspect_ratio">Wideonyň öleçeglerine görä</string>
@@ -105,8 +100,6 @@
     <string name="subscribers">%1$s abonentler</string>
     <string name="settings">Sazlamalar</string>
     <string name="instance">Salgylanma</string>
-    <string name="customization">Düzedişler</string>
-    <string name="website">Websaýt</string>
     <string name="videoCount">%1$d wideolar</string>
     <string name="channels">Kanallar</string>
     <string name="all">Ählisi</string>
@@ -120,7 +113,6 @@
     <string name="music_albums">YT Aýdym-saz albomlary</string>
     <string name="music_playlists">YT aýdym-saz sanawlary</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Https://sponsor.ajay.app API ulanýar</string>
     <string name="segment_skipped">Geçirilen bölüm</string>
     <string name="category_segments">Bölümler</string>
     <string name="category_sponsor">Hemaýatkär</string>
@@ -141,7 +133,6 @@
     <string name="chapters">Baplar</string>
     <string name="require_restart">Programmany täzeden açmak zerurly</string>
     <string name="require_restart_message">Programma täzeden açylsynmy\? Üýtgeşmeler indiki gezek programma başlanda güýje girer.</string>
-    <string name="history_summary">Görülen we gözlenenler barada bellikler</string>
     <string name="search_history_summary">Gözlegleri bellikde saklaň</string>
     <string name="watch_history_summary">Görülen wideolary ýerli derejede saklaň</string>
     <string name="reset_watch_positions">Deslapky</string>
@@ -150,7 +141,6 @@
     <string name="autoRotatePlayer">Awtomatiki doly ekran</string>
     <string name="autoRotatePlayer_summary">Enjam öwrülende pleýeriň doly ekranyna awtomatiki geçiň</string>
     <string name="general">Umumy</string>
-    <string name="general_summary">Dil, we sebit</string>
     <string name="notifications">Bildirişler</string>
     <string name="irreversible">Siz barladyňyzmy\? Soňra yzyna gaýtaryp bolmaz!</string>
     <string name="history_empty">Heniz bellik ýok.</string>
@@ -160,7 +150,6 @@
     <string name="error_occurred">Ýalňyşlyk</string>
     <string name="translate">Terjime</string>
     <string name="worst_quality">Iň erbet</string>
-    <string name="no_search_result">Netije ýok.</string>
     <string name="default_subtitle_language">Subtitr dili</string>
     <string name="notify_new_streams_summary">Abuna bolan kanallaryňyzyň täze wideolary barada bildirişler</string>
     <string name="most_recent">Iň täze</string>
@@ -194,11 +183,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

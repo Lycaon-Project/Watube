@@ -53,7 +53,6 @@
     <string name="location">位置</string>
     <string name="addToPlaylist">添加到播放列表</string>
     <string name="instance">实例</string>
-    <string name="customization">调节</string>
     <string name="clear_history">清除历史记录</string>
     <string name="music_videos">YT Music 视频</string>
     <string name="music_playlists">YT Music 播放列表</string>
@@ -76,7 +75,6 @@
     <string name="settings">设置</string>
     <string name="search_history">搜索记录</string>
     <string name="music_albums">YT Music 专辑</string>
-    <string name="website">网站</string>
     <string name="all">所有</string>
     <string name="playlists">播放列表</string>
     <string name="segment_skipped">跳过的片段</string>
@@ -84,12 +82,9 @@
     <string name="category_selfpromo">无偿/自我推广</string>
     <string name="category_selfpromo_summary">除了无偿或自我宣传，与 \"赞助商 \"类似。这包括有关商品、捐赠或与谁合作的信息</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">使用 https://sponsor.ajay.app 的 API</string>
     <string name="category_sponsor">赞助商</string>
     <string name="category_interaction">交互提醒</string>
     <string name="category_interaction_summary">内容中求点赞、订阅或关注的简短提示算作交互。如果是长篇大论或关于某些特定的内容，则应属于自我推广</string>
-    <string name="color_accent">强调色</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">通知</string>
     <string name="enabled">开</string>
     <string name="disabled">关</string>
@@ -113,7 +108,6 @@
     <string name="gradientIcon">渐变</string>
     <string name="torchIcon">时尚火炬</string>
     <string name="fireIcon">简约火焰</string>
-    <string name="instance_summary">Piped、登录和账户</string>
     <string name="instance_api_url">实例 API 的 URL</string>
     <string name="addInstance">添加实例</string>
     <string name="empty_instance">需要填写名称与实例URL或链接才能保存。</string>
@@ -122,7 +116,6 @@
     <string name="related_streams_summary">在您观看的内容旁边显示相似的影音流</string>
     <string name="customInstance_summary">添加…</string>
     <string name="instance_name">实例名称</string>
-    <string name="version">版本 %1$s</string>
     <string name="buffering_goal">预加载</string>
     <string name="buffering_goal_summary">缓冲视频的最长时间</string>
     <string name="no_audio">没有音频</string>
@@ -139,7 +132,6 @@
     <string name="instance_frontend_url">实例前端的 URL（可选）</string>
     <string name="quality">清晰度</string>
     <string name="behavior">行为</string>
-    <string name="player_summary">默认和行为</string>
     <string name="seek_increment">跳转时长</string>
     <string name="pauseOnScreenOff">自动暂停</string>
     <string name="pauseOnScreenOff_summary">屏幕关闭时暂停播放</string>
@@ -156,7 +148,6 @@
     <string name="auth_instance_summary">对认证指令(call)使用不同实例</string>
     <string name="auth_instances">选择认证实例</string>
     <string name="auth_instance">认证实例</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">音频和视频</string>
     <string name="fullscreen_orientation">全屏方向</string>
     <string name="aspect_ratio">视频长宽比</string>
@@ -177,7 +168,6 @@
     <string name="data_saver_mode">省流量模式</string>
     <string name="search_history_summary">记住搜索词</string>
     <string name="watch_history_summary">在本地追踪已观看的视频</string>
-    <string name="history_summary">观看和搜索记录</string>
     <string name="watch_positions_title">记住观看位置</string>
     <string name="reset_watch_positions">重置</string>
     <string name="system_caption_style">系统字幕样式</string>
@@ -185,7 +175,6 @@
     <string name="none">无</string>
     <string name="data_saver_mode_summary">不加载缩略图和其他图像</string>
     <string name="general">常规</string>
-    <string name="general_summary">下载和数据节省</string>
     <string name="caption_settings">字幕</string>
     <string name="playerAudioQuality">音频质量</string>
     <string name="worst_quality">最差</string>
@@ -205,7 +194,6 @@
     <string name="network_metered">按流量计费的网络</string>
     <string name="network_wifi">仅 WiFi</string>
     <string name="translate">翻译</string>
-    <string name="no_search_result">无结果。</string>
     <string name="error_occurred">出错</string>
     <string name="copied">已复制</string>
     <string name="share_with_time">带时间码分享</string>
@@ -227,7 +215,6 @@
     <string name="open_copied">打开</string>
     <string name="copied_to_clipboard">已复制到剪贴板</string>
     <string name="device_info">设备信息</string>
-    <string name="audio_video_summary">清晰度和格式</string>
     <string name="delete">从下载删除</string>
     <string name="renamePlaylist">重命名播放列表</string>
     <string name="mobile_data">移动数据</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">睡眠定时器</string>
     <string name="skip_silence">跳过静音</string>
     <string name="help">帮助</string>
-    <string name="faq">常见问题</string>
     <string name="replies">回复</string>
     <string name="mark_as_watched">标记为已观看</string>
     <string name="unsupported_file_format">不支持的文件格式：%1$s</string>
@@ -416,7 +402,6 @@
     <string name="sb_invalid_segment">无效的分段开头或结尾</string>
     <string name="contribute_to_sponsorblock">给 SponsorBlock 出力</string>
     <string name="sponsorblock_user_id">SponsorBlock UserID</string>
-    <string name="donate">捐赠</string>
     <string name="music_artists">YT Music 艺人</string>
     <string name="no_fullscreen_resolution">非全屏分辨率</string>
     <string name="same_as_fullscreen">与全屏一致</string>
@@ -533,11 +518,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

@@ -53,7 +53,6 @@
     <string name="subscriptions">Subskrypcje</string>
     <string name="library">Biblioteka</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Używa API https://sponsor.ajay.app/</string>
     <string name="channels">Kanały</string>
     <string name="all">Wszystko</string>
     <string name="playlists">Playlisty</string>
@@ -77,14 +76,10 @@
     <string name="location">Lokalizacja</string>
     <string name="settings">Ustawienia</string>
     <string name="instance">Instancja</string>
-    <string name="customization">Dostosowywanie</string>
-    <string name="website">Strona WWW</string>
     <string name="videoCount">%1$d filmów</string>
     <string name="noInternet">Najpierw połącz się z Internetem.</string>
     <string name="retry">Ponów</string>
     <string name="comments">Komentarze</string>
-    <string name="color_accent">Akcenty</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Powiadomienia</string>
     <string name="app_icon">Ikona</string>
     <string name="music_songs">Muzyka (YT Music)</string>
@@ -99,7 +94,6 @@
     <string name="app_uptodate">Uruchomiona jest najnowsza wersja.</string>
     <string name="appearance_summary">Dostosuj aplikację do swoich potrzeb</string>
     <string name="shareTo">Udostępnij link do</string>
-    <string name="instance_summary">Piped, logowanie i konto</string>
     <string name="instance_api_url">Link do interfejsu API instancji</string>
     <string name="addInstance">Dodaj instancję</string>
     <string name="empty_instance">Wpisz nazwę i adres URL interfejsu API.</string>
@@ -107,7 +101,6 @@
     <string name="customInstance_summary">Dodaj…</string>
     <string name="update_summary">Sprawdź czy jest nowa wersja</string>
     <string name="instance_name">Nazwa instancji</string>
-    <string name="version">Wersja %1$s</string>
     <string name="appearance">Wygląd</string>
     <string name="downloads">Pobrane</string>
     <string name="playback_speed">Prędkość odtwarzania</string>
@@ -150,9 +143,7 @@
     <string name="history_empty">Nie ma jeszcze historii.</string>
     <string name="required_network">Wymagane połączenie</string>
     <string name="network_all">Każdy typ sieci</string>
-    <string name="no_search_result">Brak wyników.</string>
     <string name="watch_positions">Zapamiętaj pozycję</string>
-    <string name="github">GitHub</string>
     <string name="landscape">Wymuś tryb poziomy</string>
     <string name="add_to_queue">Dodaj do kolejki</string>
     <string name="misc">Różne</string>
@@ -181,13 +172,11 @@
     <string name="data_saver_mode_summary">Pomiń miniatury i inne obrazy</string>
     <string name="search_history_summary">Zapamiętaj wyszukiwania</string>
     <string name="watch_history_summary">Przechowuj lokalnie historię obejrzanych filmów</string>
-    <string name="history_summary">Ostatnio obejrzane i wyszukiwane</string>
     <string name="watch_positions_title">Zapamiętane pozycje odtwarzania</string>
     <string name="reset_watch_positions">Zresetuj</string>
     <string name="system_caption_style">Styl napisów systemowych</string>
     <string name="captions">Napisy</string>
     <string name="general">Ogólne</string>
-    <string name="general_summary">Pobieranie i zapisywanie danych</string>
     <string name="caption_settings">Ustawienia napisów</string>
     <string name="default_subtitle_language">Język napisów</string>
     <string name="most_recent">Najnowsze</string>
@@ -216,8 +205,6 @@
     <string name="autoRotatePlayer_summary">Obróć urządzenie, aby odtwarzać na pełnym ekranie</string>
     <string name="pure_theme">Czysty motyw</string>
     <string name="seek_increment">Wielkość skoku przewijania</string>
-    <string name="player_summary">Domyślne ustawienia i zachowanie</string>
-    <string name="audio_video_summary">Jakość i format</string>
     <string name="delete">Usuń z pobranych</string>
     <string name="playerAudioQuality">Jakość dźwięku</string>
     <string name="worst_quality">Najgorsza</string>
@@ -312,7 +299,6 @@
     <string name="sleep_timer">Wyłącz po czasie</string>
     <string name="skip_silence">Pomiń cisze</string>
     <string name="help">Pomoc</string>
-    <string name="faq">Często zadawane pytania</string>
     <string name="unsupported_file_format">Nieobsługiwany format pliku: %1$s</string>
     <string name="mark_as_watched">Oznacz jako obejrzane</string>
     <string name="replies">Odpowiedzi</string>
@@ -419,7 +405,6 @@
     <string name="contribute_to_sponsorblock">Wspomóż rozwój SponsorBlock</string>
     <string name="sponsorblock_user_id">ID użytkownika SponsorBlock</string>
     <string name="no_fullscreen_resolution">Rozdzielczość wideo w trybie nie-pełnoekranowym</string>
-    <string name="donate">Wspomóż</string>
     <string name="music_artists">Artyści (YT Music)</string>
     <string name="same_as_fullscreen">Taka sama jak w trybie pełnoekranowym</string>
     <string name="vote_for_segment">Zagłosuj na segment</string>
@@ -525,11 +510,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

@@ -26,8 +26,8 @@ android {
         minSdk = 28
         targetSdk = 37
 
-        versionCode = 6158
-        versionName = "26.10.3"
+        versionCode = 6210
+        versionName = "26.10.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -164,7 +164,12 @@ dependencies {
     implementation(libs.androidx.media3.session)
 
     /* Google Cast */
-    implementation(libs.google.play.services.cast.framework)
+    implementation(libs.google.play.services.cast.framework) {
+        // Google's telemetry transport (Firelog uploads, with its event database, upload jobs
+        // and encoders) is not shipped at all: the few symbols Cast links against are inert
+        // stand-ins, see app/src/main/java/com/google/android/datatransport
+        exclude(group = "com.google.android.datatransport")
+    }
     implementation(libs.androidx.mediarouter)
 
     /* Retrofit and Kotlinx Serialization */
@@ -178,6 +183,8 @@ dependencies {
 
     /* NewPipe Extractor */
     implementation(libs.newpipeextractor)
+    // already packaged by the extractor; declared to read its player response (session renewal)
+    implementation(libs.nanojson)
 
     /* Coil */
     coreLibraryDesugaring(libs.desugaring)
@@ -212,5 +219,23 @@ protobuf {
                 }
             }
         }
+    }
+}
+// Privacy guard: the release build fails when telemetry code is back in the dex, typically after
+// a library update made the obfuscated rules of proguard-rules.pro stale (re-audit them then).
+tasks.matching { it.name == "minifyReleaseWithR8" }.configureEach {
+    doLast {
+        val markers = listOf(
+            "JobInfoSchedulerService", // Google datatransport (Firelog uploads)
+            "IUsageReportingService", // Cast analytics consent
+            "feature_usage_", // Cast feature usage analytics
+            "IClientTelemetryService", // Play Services client telemetry
+            "createPlaybackSession" // Media3 platform diagnostics
+        )
+        val dex = outputs.files.asFileTree.filter { it.extension == "dex" }
+            .joinToString("") { it.readText(Charsets.ISO_8859_1) }
+        check(dex.isNotEmpty()) { "Privacy guard: no dex found in the R8 output" }
+        val found = markers.filter { it in dex }
+        check(found.isEmpty()) { "Telemetry code survived R8: $found, re-audit proguard-rules.pro" }
     }
 }

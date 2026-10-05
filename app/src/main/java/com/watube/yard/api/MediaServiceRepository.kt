@@ -18,6 +18,12 @@ interface MediaServiceRepository {
 
     suspend fun getTrending(region: String, category: TrendingCategory): List<StreamItem>
     suspend fun getStreams(videoId: String): Streams
+
+    /**
+     * A new streaming session for [streams], nothing else fetched again (see
+     * [com.watube.yard.player.SabrAttestationException]); null when the backend has none to offer.
+     */
+    suspend fun renewStreamingSession(videoId: String, streams: Streams): Streams? = null
     suspend fun getComments(videoId: String): CommentsPage
     suspend fun getSegments(
         videoId: String,

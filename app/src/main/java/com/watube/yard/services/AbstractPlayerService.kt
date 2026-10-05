@@ -40,6 +40,7 @@ import com.watube.yard.extensions.updateParameters
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
 import com.watube.yard.ui.activities.MainActivity
+import com.watube.yard.ui.tools.RestMode
 import com.watube.yard.util.DefaultTrackSelectorWithAudioQualitySupport
 import com.watube.yard.util.NowPlayingNotification
 import com.watube.yard.util.PauseableTimer
@@ -83,12 +84,25 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
      */
     protected var shouldHandleAutoplay = true
 
+    private val pauseForRestMode: () -> Unit = { exoPlayer?.pause() }
+
     private val playerListener = object : Player.Listener {
+        override fun onPositionDiscontinuity(
+            oldPosition: Player.PositionInfo,
+            newPosition: Player.PositionInfo,
+            reason: Int
+        ) {
+            // the SponsorBlock loop sleeps until the next segment: a seek moves that target
+            checkForSegments()
+        }
+
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
 
             // Start or pause watch position timer
             if (isPlaying) {
+                // nothing plays while the scheduled rest mode runs, whoever started it
+                if (RestMode.isActive) exoPlayer?.pause()
                 watchPositionTimer.resume()
                 // the SponsorBlock polling loop stops while paused: restart it here
                 checkForSegments()
@@ -100,7 +114,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            // show a toast on errors
+            // show a toast on errors, unless the service recovers on its own
+            if (recoverFromPlayerError(error)) return
             toastFromMainThread(error.localizedMessage.orEmpty())
         }
 
@@ -321,7 +336,15 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             return
         }
 
-        handler.postDelayed(segmentsChecker, 100)
+        // battery: sleep until the next segment starts instead of polling 10 times a second for
+        // the whole video; seeks restart the loop (onPositionDiscontinuity)
+        val position = player.currentPosition
+        val nextStart = sponsorBlockSegments
+            .map { (it.segmentStartAndEnd.first * 1000f).toLong() }
+            .filter { it > position }
+            .minOrNull()
+        val untilNext = nextStart?.let { ((it - position) / player.playbackParameters.speed).toLong() }
+        handler.postDelayed(segmentsChecker, (untilNext ?: MAX_SEGMENT_CHECK_DELAY).coerceIn(100, MAX_SEGMENT_CHECK_DELAY))
 
         val (currentSegment, sbSkipOption) = player.getCurrentSegment(
             sponsorBlockSegments,
@@ -443,6 +466,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         player.setWakeMode(if (isOfflinePlayer) C.WAKE_MODE_LOCAL else C.WAKE_MODE_NETWORK)
         player.addListener(playerListener)
         this.exoPlayer = player
+        RestMode.pausePlayback = pauseForRestMode
 
         val forwardingPlayer = MediaSessionForwarder(player)
 
@@ -460,6 +484,9 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             onDestroy()
         }
     }
+
+    /** Returns true when the error is being handled here, without any message to the user. */
+    protected open fun recoverFromPlayerError(error: PlaybackException) = false
 
     /**
      * Load the stream source and start the playback.
@@ -524,6 +551,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             saveWatchPosition()
 
             notificationProvider = null
+            // a newer service may already have taken over the rest mode hook
+            if (RestMode.pausePlayback === pauseForRestMode) RestMode.pausePlayback = null
             watchPositionTimer.destroy()
 
             handler.removeCallbacksAndMessages(null)
@@ -593,6 +622,9 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         private const val START_SERVICE_ACTION = "start_service_action"
         private const val STOP_SERVICE_ACTION = "stop_service_action"
         private const val RUN_PLAYER_COMMAND_ACTION = "run_player_command_action"
+
+        /** Longest sleep of the SponsorBlock loop between two segments. */
+        private const val MAX_SEGMENT_CHECK_DELAY = 2000L
 
         val startServiceCommand = SessionCommand(START_SERVICE_ACTION, Bundle.EMPTY)
         val stopServiceCommand = SessionCommand(STOP_SERVICE_ACTION, Bundle.EMPTY)

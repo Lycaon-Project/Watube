@@ -1,6 +1,7 @@
 package com.watube.yard.ui.fragments
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -11,6 +12,9 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.PixelFormat
+import android.graphics.Rect
 import android.media.session.PlaybackState
 import android.os.Build
 import android.os.Bundle
@@ -26,20 +30,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewOutlineProvider
+import android.view.animation.PathInterpolator
 import androidx.activity.BackEventCompat
 import androidx.activity.ComponentDialog
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.trackPipAnimationHintView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.TransitionAdapter
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.core.os.postDelayed
-import androidx.core.view.WindowCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
@@ -89,11 +95,11 @@ import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
-import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.helpers.WindowHelper
 import com.watube.yard.obj.ShareData
 import com.watube.yard.obj.VideoResolution
 import com.watube.yard.parcelable.PlayerData
+import com.watube.yard.player.SabrAttestationException
 import com.watube.yard.services.AbstractPlayerService
 import com.watube.yard.services.OfflinePlayerService
 import com.watube.yard.services.OnlinePlayerService
@@ -106,6 +112,7 @@ import com.watube.yard.ui.dialogs.PlayOfflineDialog
 import com.watube.yard.ui.dialogs.ShareDialog
 import com.watube.yard.ui.extensions.animateDown
 import com.watube.yard.ui.extensions.getSystemInsets
+import com.watube.yard.ui.extensions.preferLowFrameRate
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.interfaces.CustomPlayerCallback
@@ -137,11 +144,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 
 private const val CAST_ROUTE_DIALOG_TAG = "cast_route_dialog"
 
 /** Time given to a restored orientation request to rotate the activity before re-checking */
 private const val ORIENTATION_SETTLE_DELAY_MS = 1000L
+
+/** Continuity animation between the page and fullscreen (Material 3 medium duration) */
+private const val FULLSCREEN_TRANSITION_MS = 300L
 
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
@@ -211,19 +222,28 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private var hasReExtractedOnError = false
 
     private val baseActivity get() = activity as AbstractPlayerHostActivity
-    private val windowInsetsControllerCompat
-        get() = WindowCompat
-            .getInsetsController(requireActivity().window, requireActivity().window.decorView)
+
+    /** Black behind the fullscreen video, faded by the continuity animation */
+    private val fullscreenBackdrop = Color.BLACK.toDrawable()
+
+    /** Where the video sat in the page when fullscreen started (screen pixels) */
+    private var inlineVideoBounds: Rect? = null
+    private var inlineOrientation = Configuration.ORIENTATION_UNDEFINED
+
+    /** Concludes the running page <-> fullscreen animation, also when it has not started yet */
+    private var finishFullscreenTransition: (() -> Unit)? = null
 
     private val fullscreenDialog by lazy {
         object : ComponentDialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
             override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
-                onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        unsetFullscreen()
-                    }
-                })
+                // translucent: the page stays visible under the backdrop while it fades
+                window?.setFormat(PixelFormat.TRANSLUCENT)
+                window?.setBackgroundDrawable(fullscreenBackdrop)
+                // not bound to the dialog lifecycle: ComponentDialog destroys it on every dismiss,
+                // which dropped the callback after the first exit, so back then closed the dialog
+                // without leaving fullscreen (player gone from the page, fullscreen state stuck)
+                onBackPressedDispatcher.addCallback { unsetFullscreen(animate = true) }
             }
 
             override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
@@ -376,10 +396,16 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                     JsonHelper.json.decodeFromString(it)
                 }
             viewModel.segments.postValue(segments.orEmpty())
+            // the skip button loop waits for segments: runs after the value lands (same looper)
+            handler.post(segmentsChecker)
         }
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
+            // the service is already replacing a session flagged by YouTube, at the same
+            // position: a retry from here would race it (only the cause's message survives the
+            // trip to the controller, not its class)
+            if (error.cause?.message == SabrAttestationException.MESSAGE) return
             // Erreurs transitoires (coupure réseau brève, fenêtre live dépassée) : on
             // retente la même source en place. Plafonné, sinon un live dont la source
             // est morte déclenche une boucle prepare()/play() infinie.
@@ -398,7 +424,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 when {
                     ::playerController.isInitialized && transient && playbackErrorRetries < 3 -> {
                         playbackErrorRetries++
-                        playerController.seekToDefaultPosition()
+                        // back to the live edge for a live stream only: for a video the default
+                        // position is 0:00, every network hiccup used to restart it from the start
+                        if (playerController.isCurrentMediaItemLive) playerController.seekToDefaultPosition()
                         // togglePlayPauseState prepares an errored player again before playing,
                         // a plain play() left it stuck
                         playerController.togglePlayPauseState()
@@ -481,6 +509,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentPlayerBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        // ticks twice a second in the mini player
+        binding.miniplayerProgress.preferLowFrameRate()
 
         activity?.getSystemInsets()?.let { systemBars ->
             with(binding.root) {
@@ -684,7 +714,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 if (_binding == null) return
 
                 baseActivity.setPlayerContainerProgress(progress.absoluteValue)
-                disableController()
+                // once per transition, not on every frame (it restarts a fade animation)
+                if (binding.player.useController) disableController()
                 commonPlayerViewModel.setSheetExpand(false)
             }
 
@@ -1044,8 +1075,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         baseActivity.requestedOrientation = PlayerHelper.getFullscreenOrientation(streams.isShort)
     }
 
-    private fun setFullscreen() {
-        windowInsetsControllerCompat.isAppearanceLightStatusBars = false
+    private fun setFullscreen(animate: Boolean = false) {
+        finishFullscreenTransition?.invoke()
+        inlineVideoBounds = videoBoundsOnScreen()
+        inlineOrientation = resources.configuration.orientation
 
         commonPlayerViewModel.isFullscreen.value = true
         updateFullscreenOrientation()
@@ -1055,24 +1088,33 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         openOrCloseFullscreenDialog(true)
 
         binding.player.updateMarginsByFullscreenMode()
+
+        if (animate) animateFullscreen(enter = true) {}
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
-    fun unsetFullscreen() {
+    fun unsetFullscreen(animate: Boolean = false) {
         if (activity == null || _binding == null) return
 
+        finishFullscreenTransition?.invoke()
         commonPlayerViewModel.isFullscreen.value = false
 
         if (!PlayerHelper.autoFullscreenEnabled) {
             baseActivity.requestedOrientation = baseActivity.screenOrientationPref
         }
 
-        openOrCloseFullscreenDialog(false)
-
-        binding.player.updateMarginsByFullscreenMode()
-
-        windowInsetsControllerCompat.isAppearanceLightStatusBars =
-            !ThemeHelper.isDarkMode(requireContext())
+        val leaveFullscreenWindow = {
+            openOrCloseFullscreenDialog(false)
+            binding.player.updateMarginsByFullscreenMode()
+        }
+        // the page is still laid out as when fullscreen started: the video can travel back
+        if (animate && fullscreenDialog.isShowing &&
+            inlineOrientation == resources.configuration.orientation
+        ) {
+            animateFullscreen(enter = false, onEnd = leaveFullscreenWindow)
+        } else {
+            leaveFullscreenWindow()
+        }
 
         // Leaving fullscreen while the device is still held in landscape causes no
         // configuration change (the activity already is in landscape), so the player kept its
@@ -1108,9 +1150,103 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         val isFullscreen = commonPlayerViewModel.isFullscreen.value == true
         if (!isFullscreen) {
-            setFullscreen()
+            setFullscreen(animate = !fullscreenRotatesScreen())
         } else {
-            unsetFullscreen()
+            unsetFullscreen(animate = true)
+        }
+    }
+
+    /** Whether going fullscreen turns the screen: the system animates that rotation itself. */
+    private fun fullscreenRotatesScreen(): Boolean {
+        if (PlayerHelper.autoFullscreenEnabled || !this::streams.isInitialized) return false
+        val landscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        return when (PlayerHelper.getFullscreenOrientation(streams.isShort)) {
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE -> !landscape
+            ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT -> landscape
+            else -> false
+        }
+    }
+
+    /** The video frame of the player in screen pixels, its transformations ignored. */
+    private fun videoBoundsOnScreen(): Rect {
+        val player = binding.player
+        val frame = player.backgroundBinding.exoContentFrame
+        val bounds = Rect(0, 0, frame.width, frame.height)
+        player.offsetDescendantRectToMyCoords(frame, bounds)
+        val origin = IntArray(2).also { player.getLocationOnScreen(it) }
+        bounds.offset(origin[0], origin[1])
+        return bounds
+    }
+
+    /**
+     * Continuity between the page and the fullscreen window, instead of a cut: the video travels
+     * from its place in the page to its fullscreen place (or back), the black around it is
+     * cropped until it unfolds, and the backdrop fades over the page. [onEnd] runs at the end
+     * (right away when there is nothing to animate).
+     */
+    private fun animateFullscreen(enter: Boolean, onEnd: () -> Unit) {
+        val inline = inlineVideoBounds?.takeUnless { it.isEmpty } ?: return onEnd()
+        val player = binding.player
+        var animator: ValueAnimator? = null
+        var finished = false
+        val finish = {
+            if (!finished) {
+                finished = true
+                finishFullscreenTransition = null
+                animator?.removeAllListeners()
+                animator?.cancel()
+                // leaving, the player moves back to the page first: resetting it while still in
+                // the fullscreen window would flash it there for a frame
+                onEnd()
+                player.scaleX = 1f
+                player.scaleY = 1f
+                player.translationX = 0f
+                player.translationY = 0f
+                player.resetPivot()
+                player.clipBounds = null
+                fullscreenBackdrop.alpha = 255
+            }
+        }
+        finishFullscreenTransition = finish
+        if (enter) fullscreenBackdrop.alpha = 0
+
+        // entering, the fullscreen window is measured during its first layout, before any frame
+        player.doOnLayout {
+            if (finished) return@doOnLayout
+            val full = videoBoundsOnScreen()
+            if (full.isEmpty) return@doOnLayout finish()
+            val origin = IntArray(2).also { player.getLocationOnScreen(it) }
+            val scale = inline.width().toFloat() / full.width()
+            val dx = inline.exactCenterX() - full.exactCenterX()
+            val dy = inline.exactCenterY() - full.exactCenterY()
+            val video = Rect(full).apply { offset(-origin[0], -origin[1]) }
+            val clip = Rect()
+            fun lerp(from: Int, to: Int, f: Float) = (from + (to - from) * f).roundToInt()
+
+            player.pivotX = video.exactCenterX()
+            player.pivotY = video.exactCenterY()
+            // 0 = the video in its place in the page, 1 = fullscreen
+            animator = ValueAnimator.ofFloat(if (enter) 0f else 1f, if (enter) 1f else 0f).apply {
+                duration = FULLSCREEN_TRANSITION_MS
+                // Material 3 "emphasized" easing
+                interpolator = PathInterpolator(0.2f, 0f, 0f, 1f)
+                addUpdateListener {
+                    val f = it.animatedValue as Float
+                    val s = scale + (1 - scale) * f
+                    player.scaleX = s
+                    player.scaleY = s
+                    player.translationX = dx * (1 - f)
+                    player.translationY = dy * (1 - f)
+                    clip.set(
+                        lerp(video.left, 0, f), lerp(video.top, 0, f),
+                        lerp(video.right, player.width, f), lerp(video.bottom, player.height, f)
+                    )
+                    player.clipBounds = clip
+                    fullscreenBackdrop.alpha = lerp(0, 255, f)
+                }
+                doOnEnd { finish() }
+                start()
+            }
         }
     }
 
@@ -1119,10 +1255,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         (playerView.parent as ViewGroup).removeView(playerView)
 
         if (open) {
+            fullscreenBackdrop.alpha = 255
             fullscreenDialog.addContentView(
                 binding.player,
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             )
+            // configured before it is shown, so its first frame is already fullscreen; a
+            // dismissed dialog has no window on screen, closing needs nothing
+            WindowHelper.applyFullscreen(fullscreenDialog.window!!)
             fullscreenDialog.show()
             // Force the dialog window to fill the whole screen. Without this it keeps its
             // default (smaller) size, so the player - and therefore the seek bar - only
@@ -1137,8 +1277,6 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             playerView.currentWindow = null
             fullscreenDialog.dismiss()
         }
-
-        WindowHelper.toggleFullscreen(fullscreenDialog.window!!, open)
     }
 
     override fun onPause() {
@@ -1175,6 +1313,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         setAutoPlayCountdownEnabled(PlayerHelper.autoPlayCountdown)
         setVideoTrackTypeDisabled(false)
+
+        // the skip button loop stopped while unseen
+        checkForSegments()
 
         // battery: relancer le tick du mini-lecteur seulement s'il est réellement affiché
         if (commonPlayerViewModel.isMiniPlayerVisible.value == true) {
@@ -1227,6 +1368,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             PictureInPictureCompat
                 .setPictureInPictureParams(requireActivity(), pipParams)
         }
+
+        finishFullscreenTransition?.invoke()
 
         runCatching {
             if (fullscreenDialog.isShowing) fullscreenDialog.dismiss()
@@ -1286,11 +1429,18 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         // a single loop: play / pause / play within one tick used to leave two of them running
         handler.removeCallbacks(segmentsChecker)
         if (!::playerController.isInitialized || !playerController.isPlaying || !PlayerHelper.sponsorBlockEnabled) return
+        // battery: the loop only drives the skip button (the service does the skipping), so it
+        // stops while unseen or for a video without segments, most of them; onResume() and the
+        // arrival of segments start it again
+        if (viewModel.segments.value.isNullOrEmpty()) {
+            playerBackgroundBinding.sbSkipBtn.isGone = true
+            return
+        }
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
 
         // battery: 200 ms au lieu de 100 ms — latence de saut imperceptible, mais
         // deux fois moins de réveils du thread principal pendant toute la lecture
         handler.postDelayed(segmentsChecker, 200)
-        if (viewModel.segments.value.isNullOrEmpty()) return
 
         val segmentData = playerController.getCurrentSegment(
             viewModel.segments.value.orEmpty(),
@@ -1755,6 +1905,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        // a rotation relays everything out: the trip the animation computed is void
+        finishFullscreenTransition?.invoke()
 
         if (_binding == null ||
             PictureInPictureCompat.isInPictureInPictureMode(requireActivity())

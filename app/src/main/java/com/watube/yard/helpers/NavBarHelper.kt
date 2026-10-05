@@ -162,8 +162,9 @@ object NavBarHelper {
             getNavBarItemPreference(context).firstOrNull { (_, isVisible) -> isVisible }?.first
                 ?: R.id.homeFragment
         } else {
-            // -1 (unknown item) or a stale index must not throw IndexOutOfBounds
-            defaultNavItems.getOrNull(pref)?.itemId ?: R.id.homeFragment
+            // -1 (unknown item) or a stale index must not throw IndexOutOfBounds; settings can no
+            // longer be the start tab, an older choice of it falls back to home
+            defaultNavItems.getOrNull(pref)?.itemId?.takeUnless(::isPinned) ?: R.id.homeFragment
         }
     }
 

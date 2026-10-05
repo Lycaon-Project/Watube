@@ -18,8 +18,6 @@
     <string name="instance">Instància</string>
     <string name="lightTheme">Clar</string>
     <string name="location">Localització</string>
-    <string name="website">Lloc web</string>
-    <string name="customization">Personalització</string>
     <string name="advanced">Avançat</string>
     <string name="login">Inicia sessió</string>
     <string name="logout">Tanca la sessió</string>
@@ -94,7 +92,6 @@
     <string name="music_albums">Àlbums musicals de YT</string>
     <string name="music_playlists">Llistes de reproducció de YT Music</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Fes servir l\'API de https://sponsor.ajay.app</string>
     <string name="segment_skipped">Segment omès</string>
     <string name="category_segments">Segments</string>
     <string name="category_sponsor">Patrocinador</string>
@@ -111,8 +108,6 @@
     <string name="category_preview">Vista prèvia/Recapitulació</string>
     <string name="category_preview_summary">Per als segments que detallin el contingut proper d\'aquest o de futurs vídeos de la seva sèrie, però no proporcioneu informació addicional. Si inclou clips que només apareixen aquí, és molt probable que aquesta sigui la categoria incorrecta</string>
     <string name="license">llicència</string>
-    <string name="color_accent">Accents</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Notificacions</string>
     <string name="app_icon">Icona</string>
     <string name="enabled">Activat</string>
@@ -135,7 +130,6 @@
     <string name="shapedIcon">Forma ximple</string>
     <string name="flameIcon">Flama viva</string>
     <string name="birdIcon">Ocell</string>
-    <string name="instance_summary">Canalització, inici de sessió i compte</string>
     <string name="instance_name">Nom de la instància</string>
     <string name="addInstance">Afegeix una instància</string>
     <string name="invalid_url">Introduïu un URL que funcioni</string>
@@ -155,7 +149,6 @@
     <string name="network_metered">Mesurat</string>
     <string name="rich_caption_rendering">Renderitzat de subtítols enriquits</string>
     <string name="portrait">Vertical</string>
-    <string name="history_summary">Historial de cerques i visualitzacions</string>
     <string name="auto_rotation">Rotació automàtica</string>
     <string name="translate">Traducció</string>
     <string name="misc">Miscel·lània</string>
@@ -166,7 +159,6 @@
     <string name="autoRotatePlayer">Pantalla completa automàtica</string>
     <string name="pause">Pausa</string>
     <string name="pauseOnScreenOff">Pausa automàtica</string>
-    <string name="github">GitHub</string>
     <string name="category_highlight">Mostra el moment destacat</string>
     <string name="download_completed">Descàrrega completada</string>
     <string name="auth_instance">Instància d\'autenticació</string>
@@ -185,7 +177,6 @@
     <string name="history_empty">Encara no hi ha historial.</string>
     <string name="watch_history">Historial de visualitzacions</string>
     <string name="aspect_ratio">Relació d\'aspecte del vídeo</string>
-    <string name="version">Versió %1$s</string>
     <string name="copied">Copiat</string>
     <string name="stop">Atura</string>
     <string name="system_caption_style">Estil de subtítols del sistema</string>
@@ -207,7 +198,6 @@
     <string name="notify_new_streams_summary">Mostra les notificacions de les transmissions noves dels creadors que segueixes</string>
     <string name="repeat_mode_all">Repetir tot</string>
     <string name="share_with_time">Comparteix amb el codi de temps</string>
-    <string name="no_search_result">Sense resultats.</string>
     <string name="always">Sempre</string>
     <string name="landscape">Horitzontal</string>
     <string name="background_mode">Mode de segon pla</string>
@@ -217,7 +207,6 @@
     <string name="irreversible">N\'esteu segur? Això no es pot desfer!</string>
     <string name="general">General</string>
     <string name="repeat_mode_none">Cap</string>
-    <string name="player_summary">Valors predeterminats i comportament</string>
     <string name="auth_instance_summary">Utilitzeu una instància diferent per a les sol·licituds autenticades</string>
     <string name="require_restart">Cal reiniciar l\'aplicació</string>
     <string name="resize_mode_fill">Omplir</string>
@@ -228,14 +217,12 @@
     <string name="clonePlaylist">Clona la llista de reproducció</string>
     <string name="autoRotatePlayer_summary">Reproducció a pantalla completa quan el dispositiu s\'encén</string>
     <string name="resize_mode_zoom">Escala</string>
-    <string name="donate">Donar</string>
     <string name="music_artists">Artistes de YT Music</string>
     <string name="data_saver_mode_summary">Omet les miniatures i altres imatges</string>
     <string name="never">Mai</string>
     <string name="watch_positions_title">Posicions de reproducció recordades</string>
     <string name="yt_shorts">Curts</string>
     <string name="worst_quality">La pitjor</string>
-    <string name="general_summary">Descàrregues i estalvi de dades</string>
     <string name="playerAudioQuality">Qualitat d\'àudio</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d vídeos</string>
     <string name="deleteAccount">Esborrar compte</string>
@@ -322,7 +309,6 @@
     <string name="sleep_timer">Temporitzador</string>
     <string name="skip_silence">Salta el silenci</string>
     <string name="help">Ajuda</string>
-    <string name="faq">PMF</string>
     <string name="category">Categoria</string>
     <string name="stats_for_nerds">Estadístiques tècniques</string>
     <string name="video_id">ID del vídeo</string>
@@ -359,7 +345,6 @@
     <string name="comments_count">Comentaris (%1$s)</string>
     <string name="category_highlight_summary">Podria ser el títol anunciat, la miniatura o la part més interessant del vídeo. Podeu saltar-hi fent clic sobre ell a la secció de capítols</string>
     <string name="pure_theme">Tema Pur</string>
-    <string name="audio_video_summary">Qualitat i format</string>
     <string name="delete">Suprimeix de les descàrregues</string>
     <string name="new_videos_badge">Indicador pels vídeos nous</string>
     <string name="skip_segment">Salta el segment</string>
@@ -539,11 +524,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

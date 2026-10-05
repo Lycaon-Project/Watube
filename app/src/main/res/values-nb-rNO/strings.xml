@@ -51,7 +51,6 @@
     <string name="subscribers">%1$s abonnenter</string>
     <string name="category_segments">Segmenter</string>
     <string name="category_sponsor">Sponsor</string>
-    <string name="color_accent">Aksentfarger</string>
     <string name="okay">OK</string>
     <string name="emptyPlaylistName">Spillelistenavnet kan ikke være tomt</string>
     <string name="import_from_yt_summary">Fra YouTube eller NewPipe</string>
@@ -67,8 +66,6 @@
     <string name="settings">Innstillinger</string>
     <string name="location">Sted</string>
     <string name="instance">Instans</string>
-    <string name="customization">Tilpasning</string>
-    <string name="website">Nettside</string>
     <string name="videoCount">%1$d videoer</string>
     <string name="retry">Prøv igjen</string>
     <string name="comments">Kommentarer</string>
@@ -88,7 +85,6 @@
     <string name="legacyIcon">God gammeldags</string>
     <string name="gradientIcon">Glidende gradient</string>
     <string name="enabled">På</string>
-    <string name="material_you">Materiell du</string>
     <string name="update_summary">Klikk for å sjekke at du har siste versjon.</string>
     <string name="app_uptodate">Kjører siste versjon.</string>
     <string name="appearance_summary">Tilpass programmet til din smak</string>
@@ -99,7 +95,6 @@
     <string name="noInternet">Koble til Internett først.</string>
     <string name="music_playlists">YT Musikk-spillelister</string>
     <string name="category_outro">Sluttinfo og rulletekst</string>
-    <string name="sponsorblock_summary">Bruker https://sponsor.ajay.app-API-et</string>
     <string name="category_interaction">Interaksjonspåminnelse</string>
     <string name="category_outro_summary">Info etter slutten av videoen. Ikke for oppsummeringer med info</string>
     <string name="playOnBackground">Spill i bakgrunnen</string>
@@ -114,14 +109,12 @@
     <string name="playback_speed">Avspillingshastighet</string>
     <string name="advanced">Avansert</string>
     <string name="player">Avspiller</string>
-    <string name="instance_summary">Piped, innlogging, og konto</string>
     <string name="customInstance_summary">Legg til …</string>
     <string name="instance_name">Navn på instans</string>
     <string name="instance_api_url">Nettadresse for instans-API</string>
     <string name="addInstance">Legg til instans</string>
     <string name="invalid_url">Skriv inn en nettadresse som virker</string>
     <string name="empty_instance">Fyll inn navnet og API-nettadressen.</string>
-    <string name="version">Versjon %1$s</string>
     <string name="related_streams">Relatert innhold</string>
     <string name="related_streams_summary">Vis lignende strømmer ved siden av</string>
     <string name="category_filler">Fyll-utledelser/vitser</string>
@@ -141,7 +134,6 @@
     <string name="no_video">Ingen video</string>
     <string name="quality">Kvalitet</string>
     <string name="behavior">Oppførsel</string>
-    <string name="player_summary">Forvalg og adferd</string>
     <string name="seek_increment">Blafringsmengde</string>
     <string name="reset_message">Tilbakestill alle innstillinger og logg ut\?</string>
     <string name="reset">Gjenopprett forvalg</string>
@@ -154,7 +146,6 @@
     <string name="watch_history">Visningshistorikk</string>
     <string name="watch_positions">Husk posisjon</string>
     <string name="auth_instances">Velg en instans for identitetsbekreftelse</string>
-    <string name="github">GitHub</string>
     <string name="auth_instance">Instans for identitetsbekreftelse</string>
     <string name="auth_instance_summary">Bruk en annen instans for identitetsbekreftede kall</string>
     <string name="chapters">Kapitler</string>
@@ -176,7 +167,6 @@
     <string name="general">Generelt</string>
     <string name="autoRotatePlayer">Automatisk fullskjerm</string>
     <string name="data_saver_mode">Datasparingsmodus</string>
-    <string name="general_summary">Språk, og region</string>
     <string name="search_history_summary">Husk søk</string>
     <string name="notifications">Merknader</string>
     <string name="most_recent">Nyeste</string>
@@ -196,14 +186,12 @@
     <string name="notify_new_streams">Merknader om nye strømmer</string>
     <string name="notify_new_streams_summary">Merknader om nytt innhold fra skapere du følger</string>
     <string name="checking_frequency">Sjekker hvert …</string>
-    <string name="no_search_result">Resultatløst.</string>
     <string name="copied">Kopiert</string>
     <string name="error_occurred">Feil</string>
     <string name="share_with_time">Del med starttid</string>
     <string name="autoRotatePlayer_summary">Fullskjerm når enheten ligger</string>
     <string name="data_saver_mode_summary">Spar data ved å unngå bilder</string>
     <string name="watch_history_summary">Holde rede på sette videoer</string>
-    <string name="history_summary">Visnings- og søkehistorikk</string>
     <string name="watch_positions_title">Huskede visningsposisjoner</string>
     <string name="reset_watch_positions">Tilbakestill</string>
     <string name="system_caption_style">Systemundertekststil</string>
@@ -225,7 +213,6 @@
     <string name="take_a_break">På tide å ta en pause</string>
     <string name="device_info">Enhetsinfo</string>
     <string name="player_resize_mode">Modus for endring av størrelse</string>
-    <string name="audio_video_summary">Kvalitet og format</string>
     <string name="delete">Slett fra nedlastinger</string>
     <string name="copied_to_clipboard">Kopiert til utklippstavlen</string>
     <string name="open_copied">Åpne</string>
@@ -311,7 +298,6 @@
     <string name="sleep_timer">Søvntidsur</string>
     <string name="skip_silence">Hopp over stillhet</string>
     <string name="help">Hjelp</string>
-    <string name="faq">O-S-S</string>
     <string name="add_to_bookmarks">Bokmerk</string>
     <string name="remove_bookmark">Fjern bokmerke</string>
     <string name="mark_as_watched">Marker som sett</string>
@@ -417,7 +403,6 @@
     <string name="sponsorblock_user_id">SponsorBlock-bruker-ID</string>
     <string name="segment_type">Segmenttype</string>
     <string name="contribute_to_sponsorblock">Bidra til SponsorBlock</string>
-    <string name="donate">Doner</string>
     <string name="no_fullscreen_resolution">Oppløsning uten fullskjerm</string>
     <string name="music_artists">YT-musikkartister</string>
     <string name="same_as_fullscreen">Samme som fullskjermsvisning</string>
@@ -472,11 +457,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

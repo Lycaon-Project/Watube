@@ -54,8 +54,6 @@
     <string name="settings">Agordoj</string>
     <string name="location">Loko</string>
     <string name="instance">Izolaĵo</string>
-    <string name="customization">Alĝustigoj</string>
-    <string name="website">Retejo</string>
     <string name="videoCount">%1$d filmetoj</string>
     <string name="noInternet">Konektu al la Interreto unue.</string>
     <string name="retry">Reprovi</string>
@@ -72,7 +70,6 @@
     <string name="music_albums">Albumoj de YT Music</string>
     <string name="music_playlists">Ludlistoj de YT Music</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Uzas API-n de https://sponsor.ajay.app/</string>
     <string name="segment_skipped">Segmento preterlasiĝis</string>
     <string name="category_segments">Segmentoj</string>
     <string name="category_sponsor">Sponsoro</string>
@@ -87,8 +84,6 @@
     <string name="category_outro">Finaj kartoj kaj kreditoj</string>
     <string name="category_outro_summary">Agnoskoj aŭ kiam aperas la finkartoj de YouTube. Ne por konkludoj kun informoj</string>
     <string name="license">Permesilo</string>
-    <string name="color_accent">Emfaza koloro</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Atentigoj</string>
     <string name="app_icon">Apa bildsimbolo</string>
     <string name="enabled">Ebligita</string>
@@ -98,7 +93,6 @@
     <string name="subscriberAndVideoCounts">%1$s abonantoj • %2$d videoj</string>
     <string name="finished">Finita</string>
     <string name="replies">Respondoj</string>
-    <string name="donate">Donaci</string>
     <string name="music_artists">YT-Muzikaj Artistoj</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d videoj</string>
     <string name="change_region">Tendenco ŝajnas esti maldisponebla por la nuna regiono. Bonvolu elekti alian en la agordoj.</string>
@@ -134,11 +128,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

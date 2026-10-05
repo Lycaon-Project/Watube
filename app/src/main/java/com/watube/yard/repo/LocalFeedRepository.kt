@@ -13,6 +13,7 @@ import com.watube.yard.extensions.parallelMap
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.NewPipeExtractorInstance
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.dialogs.ShareDialog.Companion.YOUTUBE_FRONTEND_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -86,7 +87,10 @@ class LocalFeedRepository : FeedRepository {
             onProgressUpdate(FeedProgress(0, channelIds.size))
         }
 
-        for (channelIdChunk in channelIds.chunked(CHANNEL_CHUNK_SIZE)) {
+        // privacy: in a fixed order, the burst of channel requests is a stable signature that
+        // links the user across networks and VPNs; a new order on every refresh breaks it
+        val requestOrder = if (PrivacyHelper.isHardeningEnabled()) channelIds.shuffled() else channelIds
+        for (channelIdChunk in requestOrder.chunked(CHANNEL_CHUNK_SIZE)) {
             val count = channelExtractionCount.get();
             if (count >= CHANNEL_BATCH_SIZE) {
                 // add a delay after each BATCH_SIZE amount of fully-fetched channels

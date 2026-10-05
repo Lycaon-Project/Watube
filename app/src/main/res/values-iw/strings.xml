@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="customization">התאמות</string>
     <string name="search_hint">חיפוש</string>
     <string name="videos">סרטונים</string>
     <string name="subscribe">רישום</string>
@@ -45,7 +44,6 @@
     <string name="category_outro">כרטיסי סיום וקרדיטים</string>
     <string name="category_outro_summary">מידע לאחר הסיום. לא למסקנות עם מידע</string>
     <string name="license">רישיון</string>
-    <string name="color_accent">צבעים משניים</string>
     <string name="sponsorblock_notifications">התראות</string>
     <string name="app_icon">סמל</string>
     <string name="enabled">פעיל</string>
@@ -65,7 +63,6 @@
     <string name="yes">כן</string>
     <string name="login">כניסה</string>
     <string name="logout">יציאה</string>
-    <string name="sponsorblock_summary">משתמש ב־API ‏https://sponsor.ajay.app/‎</string>
     <string name="download">הורדה</string>
     <string name="username">שם משתמש</string>
     <string name="registered">ההרשמה הצליחה. עכשיו אפשר להירשם למינוי לערוצים.</string>
@@ -86,12 +83,10 @@
     <string name="instance">עותק</string>
     <string name="videoCount">%1$d סרטונים</string>
     <string name="category_interaction_summary">כשיש תזכורת קצרה לעשות לייק, להירשם למינוי או לעקוב באמצע התוכן. אם זה ארוך או על משהו מסוים, זה אמור להיות קידום עצמי במקום</string>
-    <string name="website">אתר</string>
     <string name="noInternet">קודם צריך להתחבר לאינטרנט.</string>
     <string name="retry">לנסות שוב</string>
     <string name="sponsorblock">חסימת חסות</string>
     <string name="category_segments">מקטעים</string>
-    <string name="material_you">Material You‎</string>
     <string name="update_available">יש עדכון</string>
     <string name="segment_skipped">מקטע שדולג</string>
     <string name="category_sponsor">נותן חסות</string>
@@ -113,12 +108,10 @@
     <string name="flameIcon">להבה מעופפת</string>
     <string name="birdIcon">ציפור מוגברת</string>
     <string name="torchIcon">לפיד בוער</string>
-    <string name="instance_summary">Piped, כניסה וחשבון</string>
     <string name="customInstance_summary">הוספה…</string>
     <string name="instance_name">שם העותק</string>
     <string name="empty_instance">יש למלא את השם ואת כתובת ה־API.</string>
     <string name="invalid_url">נא למלא כתובת שעובדת</string>
-    <string name="version">גרסה %1$s</string>
     <string name="instance_api_url">כתובת ל־API של העותק</string>
     <string name="addInstance">הוספת עותק</string>
     <string name="shapedIcon">צורה טיפשית</string>
@@ -139,7 +132,6 @@
     <string name="downloading">מתבצעת הורדה…</string>
     <string name="player_autoplay">נגינה אוטומטית</string>
     <string name="instance_frontend_url">כתובת למנשק המשתמש של העותק (רשות)</string>
-    <string name="player_summary">ברירות מחדל והתנהגות</string>
     <string name="quality">איכות</string>
     <string name="behavior">התנהגות</string>
     <string name="seek_increment">הגדלת קפיצה</string>
@@ -156,7 +148,6 @@
     <string name="auth_instance">עותק אימות</string>
     <string name="auth_instance_summary">להשתמש בעותק אחר לשיחות מאומתות</string>
     <string name="auth_instances">בחירת עותק אימות</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">שמע ווידאו</string>
     <string name="fullscreen_orientation">כיוון מסך מלא</string>
     <string name="landscape">לרוחב</string>
@@ -177,7 +168,6 @@
     <string name="data_saver_mode">מצב חיסכון בתעבורה</string>
     <string name="search_history_summary">שמירת החיפושים</string>
     <string name="watch_history_summary">לעקוב אחר סרטונים בהם צפית באופן מקומי</string>
-    <string name="history_summary">לעקוב ולחפש בהיסטוריה</string>
     <string name="watch_positions_title">מיקומי נגינה שנשמרו</string>
     <string name="reset_watch_positions">איפוס</string>
     <string name="system_caption_style">סגנון כתוביות מערכת</string>
@@ -185,7 +175,6 @@
     <string name="none">ללא</string>
     <string name="data_saver_mode_summary">לדלג על תמונות ממוזערות ותמונות אחרות</string>
     <string name="general">כללי</string>
-    <string name="general_summary">הורדות וחסכון בתעבורה</string>
     <string name="caption_settings">כתוביות</string>
     <string name="playerAudioQuality">איכות שמע</string>
     <string name="worst_quality">הנחותה ביותר</string>
@@ -205,7 +194,6 @@
     <string name="network_metered">מדודה</string>
     <string name="network_wifi">ברשת אלחוטית בלבד</string>
     <string name="translate">תרגום</string>
-    <string name="no_search_result">אין תוצאות.</string>
     <string name="copied">הועתק</string>
     <string name="error_occurred">שגיאה</string>
     <string name="share_with_time">שיתוף עם קוד זמן</string>
@@ -227,7 +215,6 @@
     <string name="copied_to_clipboard">הועתק ללוח גזירים</string>
     <string name="open_copied">פתיחה</string>
     <string name="device_info">פרטי מכשיר</string>
-    <string name="audio_video_summary">איכות ותצורה</string>
     <string name="delete">מחיקה מההורדות</string>
     <string name="renamePlaylist">שינוי שם רשימת נגינה</string>
     <string name="mobile_data">גלישה סלולרית</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">מתזמן שינה</string>
     <string name="skip_silence">דילוג על שקט</string>
     <string name="help">עזרה</string>
-    <string name="faq">שו״ת</string>
     <string name="replies">תגובות</string>
     <string name="mark_as_watched">סימון כנצפה</string>
     <string name="unsupported_file_format">סוג הקובץ לא נתמך: %1$s</string>
@@ -418,7 +404,6 @@
     <string name="sb_invalid_segment">התחלת או סיום המקטע שגוי</string>
     <string name="contribute_to_sponsorblock">תרומה ל־SponsorBlock</string>
     <string name="sponsorblock_user_id">מזהה משתמש לחסימת מפרסמים</string>
-    <string name="donate">תרומה</string>
     <string name="no_fullscreen_resolution">רזולוציה למסך לא מלא</string>
     <string name="music_artists">אומנים ב־YT Music</string>
     <string name="same_as_fullscreen">כמו מסך מלא</string>
@@ -531,11 +516,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

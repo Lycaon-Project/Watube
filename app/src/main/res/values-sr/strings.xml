@@ -42,8 +42,6 @@
     <string name="settings">Подешавања</string>
     <string name="location">Локација</string>
     <string name="instance">Инстанце</string>
-    <string name="customization">Прилагођавања</string>
-    <string name="website">Веб-сајт</string>
     <string name="videoCount">%1$d видео снимака</string>
     <string name="noInternet">Прво се повежите на интернет.</string>
     <string name="all">Све</string>
@@ -54,7 +52,6 @@
     <string name="music_videos">YT Music видео снимци</string>
     <string name="music_albums">YT Music албуми</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Коришћење https://sponsor.ajay.app API-ја</string>
     <string name="segment_skipped">Прескочени сегмент</string>
     <string name="category_segments">Сегменти</string>
     <string name="category_sponsor">Спонзор</string>
@@ -71,8 +68,6 @@
     <string name="category_music_offtopic">Музика: Сегмент без музике</string>
     <string name="category_preview">Преглед/Рекапитулација</string>
     <string name="category_preview_summary">За сегменте са детаљима будућег садржаја без додатних информација. Ако укључује клипове који се појављују само овде, ово је врло вероватно погрешна категорија</string>
-    <string name="color_accent">Боја наглашавања</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Обавештења</string>
     <string name="app_icon">Иконица</string>
     <string name="enabled">Укључено</string>
@@ -88,14 +83,12 @@
     <string name="shapedIcon">Глупо обликовано</string>
     <string name="flameIcon">Летећи пламен</string>
     <string name="birdIcon">Појачана птица</string>
-    <string name="instance_summary">Piped, пријава и налог</string>
     <string name="customInstance_summary">Додајте…</string>
     <string name="instance_name">Назив инстанце</string>
     <string name="instance_api_url">URL адреса до API-ја инстанце</string>
     <string name="addInstance">Додај инстанцу</string>
     <string name="empty_instance">Унесите назив и URL адресу API-ја.</string>
     <string name="invalid_url">Унесите исправну URL адресу</string>
-    <string name="version">Верзија %1$s</string>
     <string name="related_streams">Сродан садржај</string>
     <string name="related_streams_summary">Прикажите сродан садржај уз оно што гледате</string>
     <string name="buffering_goal">Предучитавање</string>
@@ -107,7 +100,6 @@
     <string name="instance_frontend_url">URL адреса до фронтенда инстанце (опционално)</string>
     <string name="quality">Квалитет</string>
     <string name="behavior">Понашање</string>
-    <string name="player_summary">Подразумевано и понашање</string>
     <string name="seek_increment">Период премотавања</string>
     <string name="pauseOnScreenOff">Аутоматска пауза</string>
     <string name="pauseOnScreenOff_summary">Паузирање репродукције када је екран искључен</string>
@@ -120,7 +112,6 @@
     <string name="auth_instance">Инстанца аутентификације</string>
     <string name="auth_instance_summary">Користите другу инстанцу за аутентификоване позиве</string>
     <string name="auth_instances">Избор инстанце аутентификације</string>
-    <string name="github">GitHub</string>
     <string name="fullscreen_orientation">Оријентација преко целог екрана</string>
     <string name="aspect_ratio">Размера видео снимка</string>
     <string name="auto_rotation">Аутоматска ротација</string>
@@ -182,10 +173,8 @@
     <string name="reset_message">Ресетовати сва подешавања и одјавити се\?</string>
     <string name="audio_video">Аудио и видео снимци</string>
     <string name="data_saver_mode_summary">Прескакање сличица и других слика</string>
-    <string name="history_summary">Историја гледања и претраге</string>
     <string name="system_caption_style">Системски стил титлова</string>
     <string name="general">Опште</string>
-    <string name="general_summary">Језик и регион</string>
     <string name="default_subtitle_language">Језик титлова</string>
     <string name="notifications">Обавештења</string>
     <string name="history_empty">Још нема историје.</string>
@@ -194,7 +183,6 @@
     <string name="most_views">Највише прегледа</string>
     <string name="least_views">Најмање прегледа</string>
     <string name="translate">Преводи</string>
-    <string name="no_search_result">Нема резултата.</string>
     <string name="network_metered">Ограничена мрежа</string>
     <string name="notify_new_streams">Прикажи обавештења за нове стримове</string>
     <string name="checking_frequency">Провера на сваких …</string>
@@ -245,7 +233,6 @@
     <string name="download_channel_name">Услуга преузимања</string>
     <string name="download_channel_description">Приказује обавештења приликом преузимања медија.</string>
     <string name="renamePlaylist">Преименуј плејлисту</string>
-    <string name="audio_video_summary">Квалитет и формат</string>
     <string name="added_to_playlist">Додато на плејлисту %1$s</string>
     <string name="queue">Редослед</string>
     <string name="time_code">Временски кôд (секунде)</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Тајмер спавања</string>
     <string name="skip_silence">Прескочи тишину</string>
     <string name="help">Помоћ</string>
-    <string name="faq">ЧПП</string>
     <string name="normal_views">%1$s прегледа%2$s</string>
     <string name="replies">Одговори</string>
     <string name="unsupported_file_format">Неподржан формат фајла: %1$s</string>
@@ -335,7 +321,6 @@
     <string name="category_highlight">Прикажи истакнути део видео снимка</string>
     <string name="category_highlight_summary">Може бити рекламни наслов, сличица или најзанимљивији део видео снимка. Можете прескочити на њега тако што ћете га додирнути у сегменту за поглавља</string>
     <string name="stop">Заустави</string>
-    <string name="donate">Донација</string>
     <string name="music_artists">YT Music извођачи</string>
     <string name="emptyPlaylistDescription">Опис плејлисте не може бити празан</string>
     <string name="group_name_error_exists">Изаберите име које је јединствено</string>
@@ -501,11 +486,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

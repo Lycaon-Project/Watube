@@ -9,6 +9,7 @@ import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaItem.SubtitleConfiguration
 import androidx.media3.common.MimeTypes
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
@@ -34,10 +35,13 @@ import com.watube.yard.extensions.updateParameters
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getSubtitleRoleFlags
 import com.watube.yard.parcelable.PlayerData
+import com.watube.yard.player.SabrAttestationException
 import com.watube.yard.player.SabrMediaSource
+import com.watube.yard.player.SabrSessionRenewals
 import com.watube.yard.player.manifest.SabrManifest
 import com.watube.yard.util.DeArrowUtil
 import com.watube.yard.util.PlayingQueue
+import com.watube.yard.util.SharedHttpClient
 import com.watube.yard.util.YoutubeHlsPlaylistParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -144,20 +148,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
         // stop any previous task for loading video info
         fetchVideoInfoJob?.cancelAndJoin()
 
+        SabrSessionRenewals.start(videoId)
+
         // start loading the video info while keeping a reference to the job
         // so that it can be canceled once a different video is loaded
         fetchVideoInfoJob = scope.launch {
-            streams = withContext(Dispatchers.IO) {
-                try {
-                    MediaServiceRepository.instance.getStreams(videoId).let {
-                        DeArrowUtil.deArrowStreams(it, videoId)
-                    }
-                }  catch (e: Exception) {
-                    Log.e(TAG(), e.stackTraceToString())
-                    toastFromMainDispatcher(e.localizedMessage.orEmpty())
-                    return@withContext null
-                }
-            } ?: return@launch
+            streams = fetchStreams() ?: return@launch
 
             streams?.toStreamItem(videoId)?.let {
                 // save the current stream to the queue
@@ -184,6 +180,63 @@ open class OnlinePlayerService : AbstractPlayerService() {
 
         fetchVideoInfoJob?.join()
         fetchVideoInfoJob = null
+    }
+
+    private suspend fun fetchStreams(): Streams? = withContext(Dispatchers.IO) {
+        try {
+            MediaServiceRepository.instance.getStreams(videoId).let {
+                DeArrowUtil.deArrowStreams(it, videoId)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG(), e.stackTraceToString())
+            toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            null
+        }
+    }
+
+    /**
+     * A streaming session flagged by YouTube stops after about a minute (see
+     * [SabrAttestationException]): a new session is played on from the same position, without
+     * the "source error" and the restart from 0:00 it used to end with.
+     *
+     * The first renewal only asks for a new stream ([MediaServiceRepository.renewStreamingSession]:
+     * two requests, no third party). When the server refuses that session as well (seen on device:
+     * an immediate player reload request), the next ones are full extractions, which it accepted
+     * in that case. The title and thumbnail shown are kept, so DeArrow is not asked again.
+     */
+    override fun recoverFromPlayerError(error: PlaybackException): Boolean {
+        val current = streams
+        if (error.cause !is SabrAttestationException || current == null) return false
+        val attempt = SabrSessionRenewals.consume(videoId)
+        if (attempt == 0) return false
+
+        val position = exoPlayer?.currentPosition ?: 0L
+        Log.i(TAG(), "renewing the streaming session (attempt $attempt) at $position ms")
+        fetchVideoInfoJob?.cancel()
+        fetchVideoInfoJob = scope.launch {
+            // privacy: the new session opens its own connections, none is shared with the old one
+            SharedHttpClient.dropIdleConnections()
+            val renewed = runCatching {
+                if (attempt == 1) {
+                    MediaServiceRepository.instance.renewStreamingSession(videoId, current)
+                } else {
+                    MediaServiceRepository.instance.getStreams(videoId)
+                        .copy(title = current.title, thumbnailUrl = current.thumbnailUrl)
+                }
+            }.onFailure { Log.e(TAG(), "streaming session renewal failed", it) }.getOrNull()
+            if (renewed == null) {
+                // nothing left to try: the message the error would have shown
+                toastFromMainDispatcher(error.localizedMessage.orEmpty())
+                return@launch
+            }
+            withContext(Dispatchers.Main) {
+                streams = renewed
+                setStreamSource()
+                exoPlayer?.seekTo(position)
+                exoPlayer?.prepare()
+            }
+        }
+        return true
     }
 
     private fun configurePlayer(seekToPositionMs: Long) {

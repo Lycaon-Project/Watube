@@ -58,9 +58,6 @@
     <string name="settings">Sozlamalar</string>
     <string name="location">Joylashuv</string>
     <string name="instance">Instansiya</string>
-    <string name="customization">Sozlashlar</string>
-    <string name="website">Veb-sayt</string>
-    <string name="donate">Xayriya qilish</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d ta video</string>
     <string name="subscriberAndVideoCounts">%1$s obunachi • %2$d ta video</string>
     <string name="videoCount">%1$d ta video</string>
@@ -84,7 +81,6 @@
     <string name="music_playlists">YT Music Pleylistlari</string>
     <string name="music_artists">YT Music Ijrochilari</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API’dan foydalanadi</string>
     <string name="segment_skipped">O‘tkazib yuborilgan bo‘lim</string>
     <string name="category_segments">Bo‘limlar</string>
     <string name="category_sponsor">Homiy</string>
@@ -109,8 +105,6 @@
     <string name="category_hook">Qiziqtiruvchi kirish/Salomlashuv</string>
     <string name="category_hook_summary">Tomoshabinning e’tiborini tortish uchun ishlatiladigan hikoyaviy kirishlar uchun (ko‘pincha birinchi sahna sifatida), xuddi shu videodagi yoki turkumning keyingi qismlaridagi voqealarni ishora qilib yoki tasvirlab beradi</string>
     <string name="license">Litsenziya</string>
-    <string name="color_accent">Aksentlar</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Bildirishnomalar</string>
     <string name="app_icon">Belgi</string>
     <string name="enabled">Yoqilgan</string>
@@ -121,7 +115,6 @@
     <string name="captions">Subtitrlar</string>
     <string name="none">Yo‘q</string>
     <string name="general">Umumiy</string>
-    <string name="general_summary">Yuklab olishlar va trafikni tejash</string>
     <string name="caption_settings">Subtitrlar</string>
     <string name="playerAudioQuality">Audio sifati</string>
     <string name="worst_quality">Eng yomon</string>
@@ -149,7 +142,6 @@
     <string name="network_metered">Hisoblangan</string>
     <string name="network_wifi">Faqat Wi-Fi orqali</string>
     <string name="translate">Tarjima</string>
-    <string name="no_search_result">Natija topilmadi.</string>
     <string name="error_occurred">Xatolik</string>
     <string name="copied">Nusxa olindi</string>
     <string name="share_with_time">Vaqt kodi bilan ulashish</string>
@@ -175,14 +167,12 @@
     <string name="shapedIcon">Qiziq shaklli</string>
     <string name="flameIcon">Uchayotgan alanga</string>
     <string name="birdIcon">Kuchaytirilgan qush</string>
-    <string name="instance_summary">Piped, kirish va hisob</string>
     <string name="customInstance_summary">Qo‘shish…</string>
     <string name="instance_name">Instansiya nomi</string>
     <string name="instance_api_url">Instansiya API uchun URL</string>
     <string name="addInstance">Instansiya Qo‘shish</string>
     <string name="empty_instance">Nomini va API URL manzilini kiriting.</string>
     <string name="invalid_url">Iltimos, ishlaydigan URL kiriting</string>
-    <string name="version">Versiya %1$s</string>
     <string name="show_updates">Yangilanishlarni avtomatik tekshirish</string>
     <string name="related_streams">Bog‘liq kontent</string>
     <string name="related_streams_summary">Tomosha qilayotganingiz bilan birga o‘xshash strimlarni ko‘rsatish</string>
@@ -205,7 +195,6 @@
     <string name="instance_frontend_url">Instansiya frontend uchun URL (ixtiyoriy)</string>
     <string name="quality">Sifat</string>
     <string name="behavior">Xatti-harakat</string>
-    <string name="player_summary">Standart sozlamalar va xatti-harakat</string>
     <string name="seek_increment">O‘tkazish qadamı</string>
     <string name="pauseOnScreenOff">Avtomatik pauza</string>
     <string name="pauseOnScreenOff_summary">Ekran o‘chirilganda video ijrosini to‘xtatish</string>
@@ -220,7 +209,6 @@
     <string name="auth_instance">Autentifikatsiya instansiyasi</string>
     <string name="auth_instance_summary">Autentifikatsiya talab qilinadigan chaqiruvlar uchun boshqa instansiyadan foydalanish</string>
     <string name="auth_instances">Autentifikatsiya instansiyasini tanlash</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Audio va video</string>
     <string name="fullscreen_orientation">To‘liq ekran rejimidagi orientatsiya</string>
     <string name="aspect_ratio">Video tomonlar nisbati</string>
@@ -242,7 +230,6 @@
     <string name="data_saver_mode_summary">Muqovalar va boshqa rasmlarni o‘tkazib yuborish</string>
     <string name="search_history_summary">Qidiruvlarni eslab qolish</string>
     <string name="watch_history_summary">Tomosha qilingan videolarni qurilmada saqlab borish</string>
-    <string name="history_summary">Tomosha va qidiruv tarixi</string>
     <string name="watch_positions_title">Eslab qolingan ijro joylari</string>
     <string name="reset_watch_positions">Tiklash</string>
     <string name="system_caption_style">Tizim subtitr uslubi</string>
@@ -265,7 +252,6 @@
     <string name="copied_to_clipboard">Buferga nusxalandi</string>
     <string name="open_copied">Ochish</string>
     <string name="device_info">Qurilma maʼlumotlari</string>
-    <string name="audio_video_summary">Sifat va format</string>
     <string name="delete">Yuklab olinganlardan o‘chirish</string>
     <string name="delete_all">Barcha yuklab olinganlar o‘chiriladi!</string>
     <string name="renamePlaylist">Pleylist nomini o‘zgartirish</string>
@@ -351,7 +337,6 @@
     <string name="sleep_timer">Uyqu taymeri</string>
     <string name="skip_silence">Sukunatni o‘tkazib yuborish</string>
     <string name="help">Yordam</string>
-    <string name="faq">Ko‘p so‘raladigan savollar (FAQ)</string>
     <string name="mark_as_watched">Ko‘rilgan deb belgilash</string>
     <string name="category">Kategoriya</string>
     <string name="stats_for_nerds">Texnik ma’lumotlar</string>
@@ -525,11 +510,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

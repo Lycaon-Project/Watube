@@ -60,8 +60,6 @@
     <string name="location">Konum</string>
     <string name="settings">Ayarlar</string>
     <string name="instance">Oluşum</string>
-    <string name="customization">Ayarlamalar</string>
-    <string name="website">İnternet Sitesi</string>
     <string name="category_outro_summary">Sonunu takip eden bilgi. Bilgi içeren sonuçlar için değil</string>
     <string name="clear_history">Geçmişi temizle</string>
     <string name="sponsorblock">SponsorBlock</string>
@@ -71,7 +69,6 @@
     <string name="history">Geçmiş</string>
     <string name="all">Hepsi</string>
     <string name="search_history">Arama geçmişi</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API\'sini kullanır</string>
     <string name="category_segments">Bölümler</string>
     <string name="category_sponsor">Sponsor</string>
     <string name="segment_skipped">Bölüm atlandı</string>
@@ -88,8 +85,6 @@
     <string name="music_videos">YT Müzik Videoları</string>
     <string name="music_playlists">YT Müzik Oynatma Listeleri</string>
     <string name="license">Lisans</string>
-    <string name="color_accent">Vurgular</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Bildirimler</string>
     <string name="enabled">Açık</string>
     <string name="disabled">Kapalı</string>
@@ -114,14 +109,12 @@
     <string name="legacyIcon">Kayıp miras</string>
     <string name="shapedIcon">Aptal şekilli</string>
     <string name="flameIcon">Uçan alev</string>
-    <string name="instance_summary">Piped, giriş ve hesap</string>
     <string name="addInstance">Oluşum Ekle</string>
     <string name="instance_api_url">Oluşum API\'sinin URL\'si</string>
     <string name="customInstance_summary">Ekle…</string>
     <string name="empty_instance">Adı ve API URL\'sini girin.</string>
     <string name="instance_name">Oluşum adı</string>
     <string name="invalid_url">Lütfen, çalışan bir URL girin</string>
-    <string name="version">Sürüm %1$s</string>
     <string name="category_filler">Alakasız/Şakalar</string>
     <string name="category_filler_summary">Videonun ana içeriğini anlamak için gerekli olmayan yalnızca dolgu veya mizah için eklenen teğet sahneler için</string>
     <string name="category_music_offtopic">Müzik: Müzik Dışı Bölüm</string>
@@ -140,7 +133,6 @@
     <string name="player_autoplay">Oto.oynat</string>
     <string name="quality">Kalite</string>
     <string name="behavior">Davranış</string>
-    <string name="player_summary">Varsayılan ayarlar ve davranış</string>
     <string name="instance_frontend_url">Sunucu ön ucunun internet adresi (isteğe bağlı)</string>
     <string name="seek_increment">Arama artışı</string>
     <string name="pauseOnScreenOff">Otomatik duraklatma</string>
@@ -156,7 +148,6 @@
     <string name="auth_instance_summary">Doğrulanmış davetiyeler için farklı bir oluşum kullanın</string>
     <string name="auth_instances">Yetkilendirme örneği seçin</string>
     <string name="auth_instance">Doğrulayıcı oluşum</string>
-    <string name="github">GitHub</string>
     <string name="fullscreen_orientation">Tam ekran yönü</string>
     <string name="aspect_ratio">Video en boy oranı</string>
     <string name="auto_rotation">Otomatik döndür</string>
@@ -182,9 +173,7 @@
     <string name="data_saver_mode">Veri tasarrufu modu</string>
     <string name="search_history_summary">Kaydedilen aramalar</string>
     <string name="watch_history_summary">İzlenen videoları yerel olarak takip edin</string>
-    <string name="history_summary">İzleme ve arama geçmişi</string>
     <string name="watch_positions_title">Kaydedilmiş oynatma konumları</string>
-    <string name="general_summary">İndirmeler ve veri tasarrufu</string>
     <string name="general">Genel</string>
     <string name="caption_settings">Altyazılar</string>
     <string name="playerAudioQuality">Ses kalitesi</string>
@@ -201,7 +190,6 @@
     <string name="least_recent">En eski</string>
     <string name="notify_new_streams_summary">Takip ettiğiniz yaratıcılardan yeni videolar için bildirimler görüntüle</string>
     <string name="translate">Çeviri</string>
-    <string name="no_search_result">Sonuç yok.</string>
     <string name="network_wifi">Yalnızca Wi-Fi\'de</string>
     <string name="required_network">Gerekli bağlantı</string>
     <string name="network_all">Hepsi</string>
@@ -227,7 +215,6 @@
     <string name="open_copied">Açık</string>
     <string name="copied_to_clipboard">Panoya kopyalandı</string>
     <string name="device_info">Aygıt Bilgisi</string>
-    <string name="audio_video_summary">Kalite ve biçim</string>
     <string name="delete">İndirilenlerden sil</string>
     <string name="new_videos_badge">Yeni videolar için gösterge</string>
     <string name="new_videos_badge_summary">Varsa, yeni videoların miktarını içeren bir rozet gösterin</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Uyku zamanlayıcı</string>
     <string name="skip_silence">Sessizliği atla</string>
     <string name="help">Yardım</string>
-    <string name="faq">SSS</string>
     <string name="replies">Cevaplar</string>
     <string name="mark_as_watched">İzlendi olarak işaretle</string>
     <string name="unsupported_file_format">Desteklenmeyen dosya biçimi: %1$s</string>
@@ -418,7 +404,6 @@
     <string name="sponsorblock_user_id">SponsorBlock Kullanıcı Kimliği</string>
     <string name="contribute_to_sponsorblock">SponsorBlock\'a katkıda bulun</string>
     <string name="repeat_mode_all">Tümünü tekrarla</string>
-    <string name="donate">Bağış</string>
     <string name="music_artists">YT Müzik Sanatçıları</string>
     <string name="time_in_minutes">Dakika cinsinden zaman</string>
     <string name="invalid_input">Geçersiz giriş</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

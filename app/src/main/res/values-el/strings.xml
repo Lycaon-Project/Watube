@@ -55,8 +55,6 @@
     <string name="darkTheme">Σκοτεινό</string>
     <string name="comments">Σχόλια</string>
     <string name="settings">Ρυθμίσεις</string>
-    <string name="customization">Προσαρμογές</string>
-    <string name="website">Ιστοσελίδα</string>
     <string name="location">Τοποθεσία</string>
     <string name="noInternet">Συνδεθείτε πρώτα στο Διαδίκτυο.</string>
     <string name="retry">Προσπαθήστε ξανά</string>
@@ -76,7 +74,6 @@
     <string name="music_albums">YT Music Άλμπουμ</string>
     <string name="music_playlists">YT Music Λίστες αναπαραγωγής</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Χρησιμοποιεί το API https://sponsor.ajay.app</string>
     <string name="category_segments">Τμήματα</string>
     <string name="segment_skipped">Παραλήφθηκε τμήμα</string>
     <string name="category_intro">Διάλειμμα/Εισαγωγή</string>
@@ -88,8 +85,6 @@
     <string name="category_intro_summary">Ένα διάστημα χωρίς πραγματικό περιεχόμενο. Θα μπορούσε να είναι μια παύση, ένα στατικό καρέ, μια επαναλαμβανόμενη κίνηση. Δεν πρέπει να χρησιμοποιείται για μεταβάσεις που περιέχουν πληροφορίες</string>
     <string name="category_interaction_summary">Όταν υπάρχει μια σύντομη υπενθύμιση για να πατήσετε μου αρέσει, να εγγραφείτε ή να ακολουθήσετε το κανάλι στη μέση του περιεχομένου. Αν είναι μακροσκελές ή αφορά κάτι συγκεκριμένο, θα πρέπει να παρατίθεται στην αυτοπροώθηση</string>
     <string name="license">Άδεια</string>
-    <string name="color_accent">Αποχρώσεις</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Ειδοποιήσεις</string>
     <string name="app_icon">Εικονίδιο</string>
     <string name="enabled">Ενεργοποιημένο</string>
@@ -116,12 +111,10 @@
     <string name="birdIcon">Ενισχυμένο πουλί</string>
     <string name="customInstance_summary">Πρόσθεση…</string>
     <string name="instance_name">Όνομα διακομιστή</string>
-    <string name="instance_summary">Piped, σύνδεση και λογαριασμός</string>
     <string name="invalid_url">Παρακαλούμε εισάγετε μια διεύθυνση URL που λειτουργεί</string>
     <string name="instance_api_url">Διεύθυνση URL για το API του διακομιστή</string>
     <string name="addInstance">Προσθήκη διακομιστή</string>
     <string name="empty_instance">Συμπληρώστε το όνομα και τη διεύθυνση URL του API.</string>
-    <string name="version">Έκδοση %1$s</string>
     <string name="related_streams">Σχετικό περιεχόμενο</string>
     <string name="related_streams_summary">Εμφάνιση παρόμοιων βίντεο παράλληλα με αυτό που παρακολουθείτε</string>
     <string name="category_filler_summary">Για εφαπτόμενες σκηνές που προστίθενται μόνο για γέμισμα ή χιούμορ που δεν απαιτούνται για την κατανόηση του κύριου περιεχομένου του βίντεο</string>
@@ -141,7 +134,6 @@
     <string name="instance_frontend_url">Διεύθυνση URL στη σελίδα του διακομιστή</string>
     <string name="quality">Ποιότητα</string>
     <string name="behavior">Συμπεριφορά</string>
-    <string name="player_summary">Προεπιλογές και συμπεριφορά</string>
     <string name="seek_increment">Προσαύξηση αναπήδησης</string>
     <string name="reset">Επαναφορά προεπιλογών</string>
     <string name="reset_message">Επαναφορά όλων των ρυθμίσεων και αποσύνδεση;</string>
@@ -156,7 +148,6 @@
     <string name="auth_instance">Διακομιστής αυθεντικοποίησης</string>
     <string name="auth_instance_summary">Χρησιμοποιήστε ένα διαφορετικό διακομιστή για αυθεντικοποιημένες κλήσεις</string>
     <string name="auth_instances">Επιλέξτε ενα διακομιστή αυθεντικοποίησης</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Ήχος και βίντεο</string>
     <string name="fullscreen_orientation">Προσανατολισμός πλήρους οθόνης</string>
     <string name="aspect_ratio">Αναλογία διαστάσεων βίντεο</string>
@@ -175,7 +166,6 @@
     <string name="captions">Λεζάντες</string>
     <string name="none">Κανένα</string>
     <string name="watch_positions_title">Αποθηκευμένες θέσεις παρακολούθησης</string>
-    <string name="general_summary">Γλώσσα και περιοχή</string>
     <string name="resize_mode_zoom">Μεγέθυνση</string>
     <string name="default_subtitle_language">Γλώσσα υποτίτλων</string>
     <string name="notifications">Ειδοποιήσεις</string>
@@ -199,7 +189,6 @@
     <string name="required_network">Απαιτούμενη σύνδεση</string>
     <string name="network_wifi">Μόνο στο Wi-Fi</string>
     <string name="translate">Μετάφραση</string>
-    <string name="no_search_result">Δεν υπάρχουν αποτελέσματα.</string>
     <string name="share_with_time">Μοιραστείτε με κωδικό χρόνου</string>
     <string name="chapters">Κεφάλαια</string>
     <string name="export_subscriptions">Εξαγωγή εγγραφών</string>
@@ -222,7 +211,6 @@
     <string name="autoRotatePlayer_summary">Αναπαραγωγή πλήρους οθόνης όταν η συσκευή γυρίζει</string>
     <string name="search_history_summary">Αποθήκευση αναζητήσεων</string>
     <string name="watch_history_summary">Αποθήκευση των βίντεο που παρακολουθήσατε τοπικά</string>
-    <string name="history_summary">Ιστορικό παρακολούθησης και αναζήτησης</string>
     <string name="pure_theme">Καθαρό θέμα</string>
     <string name="general">Γενικά</string>
     <string name="playerAudioQuality">Ποιότητα ήχου</string>
@@ -235,7 +223,6 @@
     <string name="swipe_controls_summary">Χρησιμοποιήστε το σήμα ολίσθησης για να προσαρμόσετε τη φωτεινότητα και την ένταση</string>
     <string name="wifi">Wi-Fi</string>
     <string name="device_info">Πληροφορίες συσκευής</string>
-    <string name="audio_video_summary">Ποιότητα και μορφή</string>
     <string name="mobile_data">Δεδομένα κινητού</string>
     <string name="new_videos_badge">Ένδειξη για νέα βίντεο</string>
     <string name="new_videos_badge_summary">Δείξε ένα σήμα με τον αριθμό των νέων βίντεο, εάν υπάρχουν κάποια</string>
@@ -265,7 +252,6 @@
     <string name="sleep_timer">Χρονοδιακόπτης ύπνου</string>
     <string name="skip_silence">Παράλειψη σιωπής</string>
     <string name="help">Βοήθεια</string>
-    <string name="faq">FAQ</string>
     <string name="download_channel_description">Εμφανίζει μια ειδοποίηση κατά τη λήψη πολυμέσων.</string>
     <string name="push_channel_description">Εμφανίζει μια ειδοποίηση όταν είναι διαθέσιμες νέες ροές.</string>
     <string name="no_comments_available">Αυτό το βίντεο δεν έχει σχόλια.</string>
@@ -359,11 +345,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

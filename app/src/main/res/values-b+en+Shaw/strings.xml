@@ -14,7 +14,6 @@
     <string name="playlistName">𐑐𐑤𐑱𐑤𐑦𐑕𐑑 𐑯𐑱𐑥</string>
     <string name="addToPlaylist">𐑨𐑛 𐑑 𐑐𐑤𐑱𐑤𐑦𐑕𐑑</string>
     <string name="success">𐑛𐑳𐑯.</string>
-    <string name="donate">𐑛𐑴𐑯𐑱𐑑</string>
     <string name="fail">𐑓𐑱𐑤𐑛 :(</string>
     <string name="changeLanguage">𐑤𐑨𐑙𐑜𐑢𐑦𐑡</string>
     <string name="about">𐑩𐑚𐑬𐑑</string>
@@ -64,8 +63,6 @@
     <string name="settings">𐑕𐑧𐑑𐑦𐑙𐑟</string>
     <string name="location">𐑤𐑴𐑒𐑱𐑖𐑩𐑯</string>
     <string name="instance">𐑦𐑯𐑕𐑑𐑩𐑯𐑕</string>
-    <string name="customization">𐑩𐑡𐑳𐑕𐑑𐑥𐑩𐑯𐑑𐑕</string>
-    <string name="website">𐑢𐑧𐑚𐑕𐑲𐑑</string>
     <string name="videoCount">%1$d videos</string>
     <string name="noInternet">𐑒𐑩𐑯𐑧𐑒𐑑 𐑑 𐑞 𐑦𐑯𐑑𐑼𐑯𐑧𐑑 𐑓𐑻𐑕𐑑.</string>
     <string name="retry">𐑮𐑰𐑑𐑮𐑲</string>
@@ -89,7 +86,6 @@
     <string name="sponsorblock_notifications">𐑯𐑴𐑑𐑦𐑓𐑦𐑒𐑱𐑖𐑩𐑯𐑟</string>
     <string name="app_icon">𐑲𐑒𐑪𐑯</string>
     <string name="disabled">𐑪𐑓</string>
-    <string name="material_you">𐑥𐑩𐑑𐑽𐑾𐑤 𐑿</string>
     <string name="appearance">𐑩𐑐𐑽𐑩𐑯𐑕</string>
     <string name="downloads">𐑛𐑬𐑯𐑤𐑴𐑛𐑟</string>
     <string name="update_summary">𐑗𐑧𐑒 𐑓 𐑳𐑐𐑛𐑱𐑑</string>
@@ -103,7 +99,6 @@
     <string name="gradientIcon">𐑜𐑤𐑦𐑚 𐑜𐑮𐑱𐑛𐑾𐑯𐑑</string>
     <string name="torchIcon">𐑑𐑮𐑧𐑯𐑛𐑦 𐑑𐑹𐑗</string>
     <string name="shapedIcon">𐑕𐑦𐑤𐑦 𐑖𐑱𐑐𐑑</string>
-    <string name="instance_summary">·𐑐𐑲𐑐𐑑, 𐑤𐑪𐑜𐑦𐑯, 𐑯 𐑩𐑒𐑬𐑯𐑑</string>
     <string name="customInstance_summary">𐑨𐑛…</string>
     <string name="invalid_url">𐑐𐑤𐑰𐑟 𐑧𐑯𐑑𐑼 𐑩 ⸰𐑿𐑮𐑤 𐑞𐑨𐑑 𐑢𐑻𐑒𐑕</string>
     <string name="show_updates">𐑗𐑧𐑒 𐑳𐑐𐑛𐑱𐑑𐑕 𐑷𐑑𐑩𐑥𐑨𐑑𐑦𐑒𐑤𐑦</string>
@@ -125,7 +120,6 @@
     <string name="watch_positions">𐑮𐑦𐑥𐑧𐑥𐑚𐑼 𐑐𐑩𐑟𐑦𐑖𐑩𐑯</string>
     <string name="auth_instance">𐑷𐑔𐑧𐑯𐑑𐑦𐑒𐑱𐑖𐑩𐑯 𐑦𐑯𐑕𐑑𐑩𐑯𐑕</string>
     <string name="auth_instances">𐑗𐑵𐑟 𐑩𐑯 𐑷𐑔 𐑦𐑯𐑕𐑑𐑩𐑯𐑕</string>
-    <string name="github">·𐑜𐑦𐑑𐑣𐑳𐑚</string>
     <string name="audio_video">𐑷𐑛𐑦𐑴 𐑯 𐑝𐑦𐑛𐑦𐑴</string>
     <string name="aspect_ratio">𐑝𐑦𐑛𐑦𐑴 𐑨𐑕𐑐𐑧𐑒𐑑 𐑮𐑱𐑖𐑦𐑴</string>
     <string name="auto_rotation">𐑷𐑑𐑴-𐑮𐑴𐑑𐑱𐑖𐑩𐑯</string>
@@ -137,11 +131,9 @@
     <string name="autoRotatePlayer">𐑷𐑑𐑴-𐑓𐑫𐑤𐑕𐑒𐑮𐑰𐑯</string>
     <string name="data_saver_mode">𐑛𐑱𐑑𐑩-𐑕𐑱𐑝𐑼 𐑥𐑴𐑛</string>
     <string name="data_saver_mode_summary">𐑕𐑒𐑦𐑐 𐑔𐑳𐑥𐑯𐑱𐑤𐑟 𐑯 𐑳𐑞𐑼 𐑦𐑥𐑦𐑡𐑩𐑟</string>
-    <string name="history_summary">𐑢𐑪𐑗 𐑯 𐑕𐑻𐑗 𐑣𐑦𐑕𐑑𐑼𐑦</string>
     <string name="rich_caption_rendering">𐑮𐑦𐑗 𐑒𐑨𐑐𐑖𐑩𐑯 𐑮𐑧𐑯𐑛𐑼𐑦𐑙</string>
     <string name="rich_caption_rendering_summary">𐑮𐑧𐑯𐑛𐑼 𐑢𐑧𐑚 𐑒𐑨𐑐𐑖𐑩𐑯𐑟 𐑓 𐑩 𐑥𐑹 𐑮𐑦𐑗 𐑯 𐑒𐑳𐑕𐑑𐑩𐑥𐑲𐑟𐑛 𐑦𐑒𐑕𐑐𐑽𐑾𐑯𐑕</string>
     <string name="general">𐑡𐑧𐑯𐑼𐑩𐑤</string>
-    <string name="general_summary">𐑤𐑨𐑙𐑜𐑢𐑦𐑡 𐑯 𐑮𐑰𐑡𐑩𐑯</string>
     <string name="caption_settings">𐑒𐑨𐑐𐑖𐑩𐑯𐑟</string>
     <string name="worst_quality">𐑢𐑻𐑕𐑑</string>
     <string name="default_subtitle_language">𐑕𐑳𐑚𐑑𐑲𐑑𐑩𐑤 𐑤𐑨𐑙𐑜𐑢𐑦𐑡</string>
@@ -154,7 +146,6 @@
     <string name="network_metered">𐑥𐑰𐑑𐑼𐑛</string>
     <string name="network_wifi">𐑴𐑯𐑤𐑦 𐑪𐑯 ·𐑢𐑲-𐑓𐑲</string>
     <string name="translate">𐑑𐑮𐑨𐑯𐑟𐑤𐑱𐑖𐑩𐑯</string>
-    <string name="no_search_result">𐑯𐑴 𐑮𐑦𐑟𐑳𐑤𐑑𐑕.</string>
     <string name="copied">𐑒𐑪𐑐𐑦𐑛</string>
     <string name="share_with_time">𐑖𐑺 𐑢𐑦𐑞 𐑑𐑲𐑥 𐑒𐑴𐑛</string>
     <string name="background_mode">𐑚𐑨𐑒𐑜𐑮𐑬𐑯𐑛 𐑥𐑴𐑛</string>
@@ -170,7 +161,6 @@
     <string name="pip">⸰𐑐𐑦𐑐</string>
     <string name="copied_to_clipboard">𐑒𐑪𐑐𐑦𐑛 𐑑 𐑒𐑤𐑦𐑐𐑚𐑹𐑛</string>
     <string name="open_copied">𐑴𐑐𐑩𐑯</string>
-    <string name="audio_video_summary">𐑒𐑢𐑪𐑤𐑦𐑑𐑦 𐑯 𐑓𐑹𐑥𐑨𐑑</string>
     <string name="delete_all">¡𐑷𐑤 𐑛𐑬𐑯𐑤𐑴𐑛𐑟 𐑢𐑦𐑤 𐑚𐑰 𐑛𐑦𐑤𐑰𐑑𐑩𐑛!</string>
     <string name="wifi">·𐑢𐑲-𐑓𐑲</string>
     <string name="mobile_data">𐑥𐑴𐑚𐑲𐑤 𐑛𐑱𐑑𐑩</string>
@@ -226,7 +216,6 @@
     <string name="sleep_timer">𐑕𐑤𐑰𐑐 𐑑𐑲𐑥𐑼</string>
     <string name="skip_silence">𐑕𐑒𐑦𐑐 𐑕𐑲𐑤𐑩𐑯𐑕</string>
     <string name="help">𐑣𐑧𐑤𐑐</string>
-    <string name="faq">⸰𐑓𐑭𐑒</string>
     <string name="stats_for_nerds">𐑕𐑑𐑨𐑑𐑕 𐑓 𐑯𐑻𐑛𐑟</string>
     <string name="video_id">𐑝𐑦𐑛𐑦𐑴 ⸰𐑲𐑛</string>
     <string name="copy_tooltip">𐑒𐑪𐑐𐑦</string>
@@ -256,7 +245,6 @@
     <string name="import_temp_playlist">¿𐑦𐑥𐑐𐑹𐑑 𐑑𐑧𐑥𐑐𐑼𐑼𐑦 𐑐𐑤𐑱𐑤𐑦𐑕𐑑?</string>
     <string name="import_temp_playlist_summary">¿𐑛𐑵 𐑿 𐑢𐑪𐑯𐑑 𐑑 𐑒𐑮𐑦𐑱𐑑 𐑩 𐑯𐑿 𐑐𐑤𐑱𐑤𐑦𐑕𐑑 𐑯𐑱𐑥𐑛 «%1$s»? 𐑞 𐑐𐑤𐑱𐑤𐑦𐑕𐑑 𐑢𐑦𐑤 𐑒𐑩𐑯𐑑𐑱𐑯 %2$d 𐑝𐑦𐑛𐑦𐑴𐑟.</string>
     <string name="music_albums">⸰𐑿𐑑 𐑥𐑿𐑟𐑦𐑒 𐑨𐑤𐑚𐑩𐑥𐑟</string>
-    <string name="sponsorblock_summary">𐑿𐑟𐑩𐑟 𐑞 https://sponsor.ajay.app ⸰𐑨𐑐𐑦</string>
     <string name="category_sponsor">𐑕𐑐𐑪𐑯𐑕𐑼</string>
     <string name="yes">𐑘𐑧𐑕</string>
     <string name="library">𐑤𐑲𐑚𐑮𐑼𐑦</string>
@@ -274,7 +262,6 @@
     <string name="instance_api_url">⸰𐑿𐑮𐑤 𐑑 𐑦𐑯𐑕𐑑𐑩𐑯𐑕 ⸰𐑨𐑐𐑦</string>
     <string name="addInstance">𐑨𐑛 𐑦𐑯𐑕𐑑𐑩𐑯𐑕</string>
     <string name="empty_instance">𐑓𐑦𐑤 𐑦𐑯 𐑞 𐑯𐑱𐑥 𐑯 𐑞 ⸰𐑨𐑐𐑦 ⸰𐑿𐑮𐑤.</string>
-    <string name="version">𐑝𐑻𐑠𐑩𐑯 %1$s</string>
     <string name="related_streams">𐑮𐑦𐑤𐑱𐑑𐑩𐑛 𐑒𐑩𐑯𐑑𐑧𐑯𐑑</string>
     <string name="behavior">𐑚𐑦𐑣𐑱𐑝𐑘𐑼</string>
     <string name="no_audio">𐑯𐑴 𐑷𐑛𐑦𐑴</string>
@@ -283,7 +270,6 @@
     <string name="quality">𐑒𐑢𐑪𐑤𐑦𐑑𐑦</string>
     <string name="resume">𐑮𐑧𐑟𐑿𐑥</string>
     <string name="stop">𐑕𐑑𐑪𐑐</string>
-    <string name="player_summary">𐑛𐑦𐑓𐑷𐑤𐑑𐑕 𐑯 𐑚𐑦𐑣𐑱𐑝𐑘𐑼</string>
     <string name="restore">𐑮𐑦𐑕𐑑𐑹</string>
     <string name="seek_increment">𐑕𐑰𐑒 𐑦𐑯𐑒𐑮𐑩𐑥𐑩𐑯𐑑</string>
     <string name="pauseOnScreenOff">𐑷𐑑𐑴-𐑐𐑷𐑟</string>
@@ -326,7 +312,6 @@
     <string name="category_preview_summary">𐑓 𐑕𐑧𐑜𐑥𐑩𐑯𐑑𐑕 𐑛𐑰𐑑𐑱𐑤𐑦𐑙 𐑓𐑿𐑗𐑼 𐑒𐑩𐑯𐑑𐑧𐑯𐑑 𐑢𐑦𐑞𐑬𐑑 𐑩𐑛𐑦𐑖𐑩𐑯𐑩𐑤 𐑦𐑯𐑓𐑴. 𐑦𐑓 𐑦𐑑 𐑦𐑯𐑒𐑤𐑵𐑛𐑟 𐑒𐑤𐑦𐑐𐑕 𐑞𐑨𐑑 𐑴𐑯𐑤𐑦 𐑩𐑐𐑽 𐑣𐑽, 𐑞𐑦𐑕 𐑦𐑟 𐑝𐑧𐑮𐑦 𐑤𐑲𐑒𐑤𐑦 𐑞 𐑮𐑪𐑙 𐑒𐑨𐑑𐑩𐑜𐑼𐑦</string>
     <string name="category_music_offtopic_summary">𐑴𐑯𐑤𐑦 𐑓 𐑿𐑕 𐑦𐑯 𐑥𐑿𐑟𐑦𐑒 𐑝𐑦𐑛𐑦𐑴𐑟. 𐑦𐑑 𐑖𐑫𐑛 𐑒𐑳𐑝𐑼 𐑐𐑸𐑑𐑕 𐑝 𐑞 𐑝𐑦𐑛𐑦𐑴 𐑯𐑪𐑑 𐑐𐑸𐑑 𐑝 𐑩𐑓𐑦𐑖𐑩𐑤 𐑥𐑦𐑒𐑕𐑩𐑟. 𐑦𐑯 𐑞 𐑧𐑯𐑛, 𐑞 𐑝𐑦𐑛𐑦𐑴 𐑖𐑫𐑛 𐑮𐑦𐑟𐑧𐑥𐑚𐑩𐑤 𐑞 ·𐑕𐑐𐑪𐑑𐑦𐑓𐑲 𐑹 𐑧𐑯𐑦 𐑳𐑞𐑼 𐑥𐑦𐑒𐑕𐑑 𐑝𐑻𐑠𐑩𐑯 𐑨𐑟 𐑒𐑤𐑴𐑕𐑤𐑦 𐑨𐑟 𐑐𐑪𐑕𐑩𐑚𐑩𐑤, 𐑹 𐑮𐑦𐑛𐑿𐑕 𐑑𐑷𐑒𐑦𐑙 𐑹 𐑳𐑞𐑼 𐑛𐑦𐑕𐑑𐑮𐑨𐑒𐑖𐑩𐑯𐑟</string>
     <string name="license">𐑤𐑲𐑕𐑩𐑯𐑕</string>
-    <string name="color_accent">𐑨𐑒𐑕𐑩𐑯𐑑𐑕</string>
     <string name="enabled">𐑪𐑯</string>
     <string name="playOnBackground">𐑐𐑤𐑱 𐑦𐑯 𐑞 𐑚𐑨𐑒𐑜𐑮𐑬𐑯𐑛</string>
     <string name="update_available">𐑳𐑐𐑛𐑱𐑑 𐑩𐑝𐑱𐑤𐑩𐑚𐑩𐑤</string>
@@ -481,11 +466,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

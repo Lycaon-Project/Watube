@@ -36,7 +36,6 @@
     <string name="subscribers">%1$s 個人訂閱咗</string>
     <string name="settings">設定</string>
     <string name="location">位置</string>
-    <string name="website">網站</string>
     <string name="videoCount">%1$d 條片</string>
     <string name="noInternet">連左上網先.</string>
     <string name="retry">試多次</string>
@@ -66,10 +65,8 @@
     <string name="search_history">搵記錄</string>
     <string name="clear_history">清哂啲記錄</string>
     <string name="music_videos">YT Music 片</string>
-    <string name="sponsorblock_summary">用 https://sponsor.ajay.app 嘅 API</string>
     <string name="music_songs">YT Music 歌</string>
     <string name="category_sponsor">Sponsor</string>
-    <string name="customization">較嘢</string>
     <string name="startpage">主頁</string>
     <string name="library">拉把</string>
     <string name="autoRotatePlayer">自動 Fullscreen</string>
@@ -89,10 +86,8 @@
     <string name="player">播放器</string>
     <string name="shareTo">些牙個網址俾</string>
     <string name="defaultIcon">預設</string>
-    <string name="instance_summary">Piped, 登入同訂閱</string>
     <string name="customInstance_summary">加…</string>
     <string name="invalid_url">請確定你打嘅網址係冇打錯</string>
-    <string name="version">版本 %1$s</string>
     <string name="no_audio">無聲</string>
     <string name="no_video">無片</string>
     <string name="no_subtitle">無字幕</string>
@@ -112,7 +107,6 @@
     <string name="restore">復原</string>
     <string name="watch_history">睇片記錄</string>
     <string name="watch_positions">記住上次睇到邊</string>
-    <string name="github">Github</string>
     <string name="audio_video">聲同片</string>
     <string name="auto_rotation">自動轉角度</string>
     <string name="turnInternetOn">請你開返 Wi-Fi 或者用返數據連接返你嘅網路。</string>
@@ -127,7 +121,6 @@
     <string name="play_latest_videos">播最後一條片</string>
     <string name="add_to_bookmarks">加去拉把</string>
     <string name="sleep_timer">瞓教計時器</string>
-    <string name="faq">問同答</string>
     <string name="push_channel_description">有人開緊 Live 嗰陣就出個通知俾我.</string>
     <string name="yt_shorts">Shorts</string>
     <string name="open_copied">開</string>
@@ -161,7 +154,6 @@
     <string name="least_views">最少人睇</string>
     <string name="error_occurred">Error</string>
     <string name="network_wifi">淨係 Wi-Fi</string>
-    <string name="no_search_result">無結果.</string>
     <string name="copied">已經抄底咗</string>
     <string name="share_with_time">分享埋個時間點</string>
     <string name="export_subscriptions">匯出訂閱</string>
@@ -182,11 +174,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

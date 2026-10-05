@@ -59,8 +59,6 @@
     <string name="videoCount">%1$d Videos</string>
     <string name="settings">Einstellungen</string>
     <string name="location">Standort</string>
-    <string name="customization">Anpassungen</string>
-    <string name="website">Website</string>
     <string name="instance">Instanz</string>
     <string name="channels">Kanäle</string>
     <string name="all">Alle</string>
@@ -75,7 +73,6 @@
     <string name="playlists">Wiedergabelisten</string>
     <string name="category_intro">Unterbrechung/Intro-Animation</string>
     <string name="category_outro">Endkarten und Abspann</string>
-    <string name="sponsorblock_summary">Verwendet die https://sponsor.ajay.app API</string>
     <string name="category_segments">Abschnitte</string>
     <string name="category_selfpromo_summary">Ähnlich wie „Bezahlte Videosegmente“, außer für unbezahlte Werbung oder Eigenwerbung. Dazu gehören Abschnitte über Merchandise, Spenden oder Informationen darüber, mit wem zusammengearbeitet wurde</string>
     <string name="sponsorblock">SponsorBlock</string>
@@ -88,8 +85,6 @@
     <string name="category_interaction_summary">Wenn es mitten im Inhalt eine kurze Aufforderung zum Liken, Abonnieren oder Folgen gibt. Falls der Abschnitt lang ist oder sich auf etwas Bestimmtes bezieht, sollte er stattdessen \"Unbezahlt/Eigenwerbung\" sein</string>
     <string name="category_intro_summary">Ein Videoabschnitt ohne eigentlichen Inhalt. Kann eine Pause, ein statisches Bild oder eine sich wiederholende Animation sein. Sollte nicht für Übergänge mit Informationen verwendet werden</string>
     <string name="license">Lizenz</string>
-    <string name="color_accent">Akzente</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Benachrichtigungen</string>
     <string name="enabled">Ein</string>
     <string name="disabled">Aus</string>
@@ -112,14 +107,12 @@
     <string name="addInstance">Instanz hinzufügen</string>
     <string name="empty_instance">Gib den Namen und die API-URL ein.</string>
     <string name="invalid_url">Bitte eine funktionierende URL angeben</string>
-    <string name="instance_summary">Piped Instanz, Anmeldung und Konto</string>
     <string name="customInstance_summary">Hinzufügen…</string>
     <string name="category_music_offtopic">Musik: Nicht-Musik-Abschnitt</string>
     <string name="category_preview">Vorschau/Rückblick</string>
     <string name="buffering_goal">Vorausladen</string>
     <string name="buffering_goal_summary">Maximale Anzahl von Sekunden, die ein Video gepuffert werden soll</string>
     <string name="category_music_offtopic_summary">Nur zur Verwendung in Musikvideos. Es sollte Teile des Videos abdecken, die nicht Teil der offiziellen Abmischungen sind. Am Ende sollte das Video der offiziellen/originalen Version so nahe wie möglich kommen oder das Sprechen und andere Ablenkungen reduzieren. Dies sollte nur für Abschnitte von Musikvideos verwendet werden, die noch nicht von einer anderen Kategorie abgedeckt sind</string>
-    <string name="version">Version %1$s</string>
     <string name="category_preview_summary">Abschnitte, die zukünftig in diesem Video erscheinende Inhalte beschreiben ohne zusätzliche Informationen zu enthalten. Wenn sie Clips enthalten, die nur hier erscheinen, ist dies sehr wahrscheinlich die falsche Kategorie</string>
     <string name="player_autoplay">Automatische Wiedergabe (Autoplay)</string>
     <string name="related_streams_summary">Zeige ähnliche Inhalte neben dem, was du schaust</string>
@@ -136,7 +129,6 @@
     <string name="restore">Wiederherstellen</string>
     <string name="quality">Qualität</string>
     <string name="behavior">Verhalten</string>
-    <string name="player_summary">Einstellungen und Verhalten des Players</string>
     <string name="pauseOnScreenOff">Automatische Pause</string>
     <string name="clonePlaylist">Playlist duplizieren</string>
     <string name="watch_history">Wiedergabeverlauf</string>
@@ -146,7 +138,6 @@
     <string name="auth_instance">Authentifizierungsinstanz</string>
     <string name="auth_instance_summary">Verwende für authentifizierte Aufrufe (anmelden, Playlists speichern usw.) eine andere Instanz</string>
     <string name="auth_instances">Wähle eine Authentifizierungsinstanz</string>
-    <string name="github">GitHub</string>
     <string name="turnInternetOn">Bitte schalte WLAN oder mobile Daten ein, um eine Verbindung zum Internet herzustellen.</string>
     <string name="open">Öffnen…</string>
     <string name="chapters">Kapitel</string>
@@ -180,9 +171,7 @@
     <string name="checking_frequency">Überprüfe alle …</string>
     <string name="reset_watch_positions">Zurücksetzen</string>
     <string name="general">Allgemein</string>
-    <string name="general_summary">Downloads und Datensparmodus</string>
     <string name="watch_history_summary">Angesehene Videos lokal speichern</string>
-    <string name="history_summary">Wiedergabe- und Suchverlauf</string>
     <string name="captions">Untertitel-Systemeinstellungen</string>
     <string name="seek_increment">Vorspul-Länge</string>
     <string name="watch_positions_title">Gespeicherte Wiedergabepositionen</string>
@@ -190,7 +179,6 @@
     <string name="playerAudioQuality">Audio-Qualität</string>
     <string name="worst_quality">Schlechteste Qualität</string>
     <string name="system_caption_style">Untertitel-Stil des Systems nutzen</string>
-    <string name="no_search_result">Keine Ergebnisse.</string>
     <string name="copied_to_clipboard">In Zwischenablage kopiert</string>
     <string name="default_subtitle_language">Untertitelsprache</string>
     <string name="notify_new_streams_summary">Erhalte Benachrichtigungen, wenn abonnierte Kanäle neue Videos veröffentlichen</string>
@@ -222,7 +210,6 @@
     <string name="download_channel_name">Download-Service</string>
     <string name="push_channel_name">Benachrichtigungsdienst</string>
     <string name="resize_mode_fill">Ausfüllen</string>
-    <string name="audio_video_summary">Qualität und Format</string>
     <string name="repeat_mode_current">Aktuelles Video</string>
     <string name="mobile_data">Mobile Daten</string>
     <string name="new_videos_badge_summary">Zeigt ein Abzeichen mit der Anzahl neuer Videos an, falls vorhanden</string>
@@ -311,7 +298,6 @@
     <string name="replies">Antworten</string>
     <string name="concurrent_downloads_limit_reached">Maximal Anzahl von Downloads erreicht.</string>
     <string name="audio_only_mode_summary">LibreTube in einen Musikplayer umwandeln</string>
-    <string name="faq">Häufig gestellte Fragen</string>
     <string name="help">Hilfe</string>
     <string name="sleep_timer">Einschlaf-Timer</string>
     <string name="skip_silence">Stille überspringen</string>
@@ -417,7 +403,6 @@
     <string name="segment_type">Abschnitts-Kategorie</string>
     <string name="contribute_to_sponsorblock">Zu SponsorBlock beitragen</string>
     <string name="sponsorblock_user_id">SponsorBlock Anmelde-ID</string>
-    <string name="donate">Spenden</string>
     <string name="music_artists">YT Music-Künstler:innen</string>
     <string name="no_fullscreen_resolution">Auflösung außerhalb des Vollbildmodus</string>
     <string name="same_as_fullscreen">Gleich wie im Vollbild</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

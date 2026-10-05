@@ -23,7 +23,6 @@ class AddToQueueActivity : BaseActivity() {
             // the launcher entry is an activity-alias swapped by the icon picker: never null here
             val newIntent = packageManager.getLaunchIntentForPackage(packageName)
                 ?: Intent(this, MainActivity::class.java)
-                ?: Intent(this, MainActivity::class.java)
 
             // if playing a video currently, the video will be added to the queue
             if (PlayingQueue.isNotEmpty()) {

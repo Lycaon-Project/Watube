@@ -1,13 +1,16 @@
 package com.watube.yard.ui.preferences
 
+import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.text.format.DateFormat
 import android.text.format.DateUtils
 import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
@@ -17,7 +20,13 @@ import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.base.BasePreferenceFragment
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.sheets.SleepTimerSheet
+import com.watube.yard.ui.tools.RestMode
 import com.watube.yard.ui.tools.SleepTimer
+import java.time.DayOfWeek
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.format.TextStyle
 import kotlin.math.ceil
 
 class PlayerSettings : BasePreferenceFragment() {
@@ -53,6 +62,7 @@ class PlayerSettings : BasePreferenceFragment() {
         childFragmentManager.setFragmentResultListener(SleepTimerSheet.SLEEP_TIMER_REQUEST_KEY, this) { _, _ ->
             updateSleepTimerSummaries()
         }
+        setupRestModeSchedule()
 
         findPreference<ListPreference>(PreferenceKeys.ORIENTATION)
             ?.setOnPreferenceChangeListener { _, _ ->
@@ -88,6 +98,53 @@ class PlayerSettings : BasePreferenceFragment() {
             R.string.sleep_timer_all_videos_summary,
             resources.getQuantityString(R.plurals.sleep_timer_chip_minutes, minutes, minutes)
         )
+    }
+
+    /** Days of the week (Monday first) and start / end hours of the scheduled rest mode. */
+    private fun setupRestModeSchedule() {
+        val locale = resources.configuration.locales[0]
+        findPreference<MultiSelectListPreference>(PreferenceKeys.REST_MODE_DAYS)?.apply {
+            entries = DayOfWeek.entries.map { day ->
+                day.getDisplayName(TextStyle.FULL_STANDALONE, locale).replaceFirstChar { it.titlecase(locale) }
+            }.toTypedArray()
+            entryValues = DayOfWeek.entries.map { it.value.toString() }.toTypedArray()
+        }
+        // the listener runs before the value is stored: reschedule right after it
+        val onChange = Preference.OnPreferenceChangeListener { _, _ ->
+            listView.post { onRestModeChanged() }
+            true
+        }
+        findPreference<Preference>(PreferenceKeys.REST_MODE_SCHEDULE)?.onPreferenceChangeListener = onChange
+        findPreference<Preference>(PreferenceKeys.REST_MODE_DAYS)?.onPreferenceChangeListener = onChange
+        setupRestModeTime(PreferenceKeys.REST_MODE_START, { RestMode.start }) { RestMode.start = it }
+        setupRestModeTime(PreferenceKeys.REST_MODE_END, { RestMode.end }) { RestMode.end = it }
+        updateRestModeSummaries()
+    }
+
+    private fun setupRestModeTime(key: String, read: () -> LocalTime, write: (LocalTime) -> Unit) {
+        findPreference<Preference>(key)?.setOnPreferenceClickListener {
+            val time = read()
+            TimePickerDialog(requireContext(), { _, hour, minute ->
+                write(LocalTime.of(hour, minute))
+                onRestModeChanged()
+            }, time.hour, time.minute, DateFormat.is24HourFormat(requireContext())).show()
+            true
+        }
+    }
+
+    private fun onRestModeChanged() {
+        RestMode.schedule()
+        updateRestModeSummaries()
+    }
+
+    private fun updateRestModeSummaries() {
+        val locale = resources.configuration.locales[0]
+        val timeFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale)
+        findPreference<Preference>(PreferenceKeys.REST_MODE_START)?.summary = timeFormat.format(RestMode.start)
+        findPreference<Preference>(PreferenceKeys.REST_MODE_END)?.summary = timeFormat.format(RestMode.end)
+        findPreference<Preference>(PreferenceKeys.REST_MODE_DAYS)?.summary = RestMode.days.sorted()
+            .joinToString { it.getDisplayName(TextStyle.SHORT, locale) }
+            .ifEmpty { getString(R.string.rest_mode_no_days) }
     }
 
     private fun setupSubtitlePref(preference: ListPreference) {

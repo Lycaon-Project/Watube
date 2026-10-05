@@ -12,23 +12,7 @@
         <item>D</item>
     </string-array>
 
-    <string-array name="accents">
-        <item>@string/material_you</item>
-        <item>@string/color_watube</item>
-        <item>@string/color_azur</item>
-        <item>@string/color_corail</item>
-        <item>@string/color_lavande</item>
-        <item>@string/color_ambre</item>
-    </string-array>
 
-    <string-array name="accentsValue">
-        <item>my</item>
-        <item>aqua</item>
-        <item>azur</item>
-        <item>corail</item>
-        <item>lavande</item>
-        <item>ambre</item>
-    </string-array>
 
     <string-array name="app_fonts">
         <item>@string/font_system</item>
