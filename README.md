@@ -28,7 +28,7 @@
   <p>
     <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-2EA043?style=for-the-badge&logo=gnu&logoColor=white" alt="GPL-v3"></a>
     <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
-    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.10.2-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Latest release 26.10.2"></a>
+    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.10.4-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Latest release 26.10.2"></a>
   </p>
 
   <br>
