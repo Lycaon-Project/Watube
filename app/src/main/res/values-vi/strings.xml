@@ -44,7 +44,6 @@
     <string name="systemLanguage">Ngôn ngữ hệ thống</string>
     <string name="instance">Máy chủ</string>
     <string name="videoCount">%1$d đoạn phim</string>
-    <string name="website">Trang web</string>
     <string name="noInternet">Kết nối với mạng trước.</string>
     <string name="retry">Thử lại</string>
     <string name="comments">Bình luận</string>
@@ -67,7 +66,6 @@
     <string name="category_intro">Gián đoạn/Hoạt cảnh giới thiệu</string>
     <string name="category_outro_summary">Thông tin theo sau phần kết. Không phải dạng cho kết luận với thông tin</string>
     <string name="license">Giấy phép</string>
-    <string name="color_accent">Nhấn màu</string>
     <string name="sponsorblock_notifications">Thông báo</string>
     <string name="update_available">Đã có bản cập nhật</string>
     <string name="downloads">Tải xuống</string>
@@ -84,14 +82,11 @@
     <string name="systemDefault">Hệ thống</string>
     <string name="success">Xong.</string>
     <string name="addToPlaylist">Thêm vào</string>
-    <string name="customization">Tùy chỉnh</string>
-    <string name="sponsorblock_summary">Sử dụng API của sponsor.ajay.app</string>
     <string name="category_selfpromo_summary">Tương tự như \"nhà tài trợ\" ngoại trừ không trả tiền hoặc tự quảng cáo. Điều này bao gồm các phần về hàng hóa, quyên góp hoặc thông tin về người mà họ đã cộng tác</string>
     <string name="category_interaction_summary">Khi có một lời nhắc ngắn là hãy thích, đăng ký hoặc theo dõi ở giữa nội dung. Nếu dài hoặc về một cái gì đó cụ thể, nó nên được xem là dạng tự quảng cáo</string>
     <string name="category_outro">Phần kết thúc và danh đề kết thúc</string>
     <string name="update_summary">Kiểm tra cập nhật mới</string>
     <string name="app_uptodate">Đang chạy phiên bản mới nhất.</string>
-    <string name="instance_summary">Piped, đăng nhập và tài khoản</string>
     <string name="invalid_url">Hãy nhập một URL mà hoạt đông được</string>
     <string name="darkTheme">Tối</string>
     <string name="lightTheme">Sáng</string>
@@ -100,13 +95,11 @@
     <string name="category_filler">Tình tiết cho có / Câu đùa</string>
     <string name="category_preview">Xem trước/Tóm tắt</string>
     <string name="category_preview_summary">Đối với các phân đoạn nêu chi tiết nội dung trong tương lai mà không có thông tin bổ sung. Nếu nó bao gồm các clip chỉ xuất hiện ở đây, thì rất có thể đây là danh mục sai</string>
-    <string name="material_you">Cá nhân sắc</string>
     <string name="app_icon">Biểu tượng</string>
     <string name="enabled">Kích hoạt</string>
     <string name="disabled">Tắt</string>
     <string name="playOnBackground">Chơi trong nền</string>
     <string name="addInstance">Thêm máy chủ</string>
-    <string name="version">Phiên bản %1$s</string>
     <string name="buffering_goal_summary">Số giây được tải trước của đoạn phim</string>
     <string name="login">Đăng nhập</string>
     <string name="registered">Tài khoản đã đăng ký thành công. Bây giờ bạn có thể đăng ký các kênh.</string>
@@ -143,7 +136,6 @@
     <string name="instance_frontend_url">Đường dẫn đến máy chủ trực quan (không bắt buộc)</string>
     <string name="quality">Chất lượng</string>
     <string name="behavior">Hành vi</string>
-    <string name="player_summary">Mặc định và hành vi</string>
     <string name="seek_increment">Tua nhanh thêm</string>
     <string name="pauseOnScreenOff">Tự động tạm ngừng</string>
     <string name="pauseOnScreenOff_summary">Tạm ngừng phát lại khi màn hình tắt</string>
@@ -166,7 +158,6 @@
     <string name="least_views">Ít lượt xem nhất</string>
     <string name="most_views">Nhiều lượt xem nhất</string>
     <string name="require_restart_message">Khởi động lại ứng dụng để áp dụng các thay đổi.</string>
-    <string name="general_summary">Tải xuống và tiết kiệm dữ liệu</string>
     <string name="required_network">Yêu cầu kết nối mạng</string>
     <string name="network_all">Tất cả</string>
     <string name="landscape">Ngang</string>
@@ -174,7 +165,6 @@
     <string name="watch_positions">Nhớ vị trí</string>
     <string name="auth_instance">Máy chủ để xác minh</string>
     <string name="auth_instances">Chọn một máy chủ để xác minh</string>
-    <string name="github">GitHub</string>
     <string name="fullscreen_orientation">Hướng toàn màn hình</string>
     <string name="aspect_ratio">Tỷ lệ khung hình của đoạn phim</string>
     <string name="auto_rotation">Tự động xoay</string>
@@ -186,7 +176,6 @@
     <string name="data_saver_mode_summary">Bỏ qua hình thu nhỏ và các hình ảnh khác</string>
     <string name="search_history_summary">Nhớ hoạt động tìm kiếm</string>
     <string name="watch_history_summary">Theo dõi các đoạn phim đã xem cục bộ</string>
-    <string name="history_summary">Lịch sử xem và tìm kiếm</string>
     <string name="watch_positions_title">Nhớ vị trí phát lại</string>
     <string name="open_copied">Mở</string>
     <string name="audio_video">Âm thanh và đoạn phim</string>
@@ -217,7 +206,6 @@
     <string name="repeat_mode_current">Hiện tại</string>
     <string name="device_info">Thông tin thiết bị</string>
     <string name="translate">Bản dịch</string>
-    <string name="no_search_result">Không có kết quả.</string>
     <string name="error_occurred">Lỗi</string>
     <string name="share_with_time">Chia sẻ với thời gian</string>
     <string name="add_to_queue">Thêm vào hàng đợi</string>
@@ -238,7 +226,6 @@
     <string name="backup">Sao lưu</string>
     <string name="player_resize_mode">Chế độ thay đổi kích thước</string>
     <string name="copied_to_clipboard">Sao chép vào clipboard</string>
-    <string name="audio_video_summary">Chất lượng và định dạng</string>
     <string name="delete">Xóa khỏi tải xuống</string>
     <string name="renamePlaylist">Đổi tên danh sách phát</string>
     <string name="mobile_data">Dữ liệu di động</string>
@@ -393,7 +380,6 @@
     <string name="tooltip_unlocked">Mở khóa trình phát</string>
     <string name="registration_disabled">Đăng ký bị vô hiệu hóa</string>
     <string name="tooltip_clear_queue">Xóa hàng đợi</string>
-    <string name="faq">Câu hỏi thường gặp</string>
     <string name="sort_by">Sắp xếp theo</string>
     <string name="player_channel_description">Hiển thị thông báo khi đang phát</string>
     <string name="tooltip_scroll_to_top">Cuộn lên đầu</string>
@@ -412,7 +398,6 @@
     <string name="player_channel_name">Dịch vụ trình phát</string>
     <string name="tooltip_dismiss">Bỏ qua</string>
     <string name="group_name_error_empty">Hãy nhập một cái tên</string>
-    <string name="donate">Khuyên góp</string>
     <string name="music_artists">Các nghệ sĩ YT Music</string>
     <string name="tooltip_edit_groups">Chỉnh sửa nhóm</string>
     <string name="screen_orientation">Hướng màn hình</string>
@@ -533,11 +518,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

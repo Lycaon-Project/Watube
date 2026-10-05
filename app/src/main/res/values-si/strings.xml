@@ -39,8 +39,6 @@
     <string name="settings">සැකසුම්</string>
     <string name="location">ස්ථානය</string>
     <string name="instance">සේවාදායකය</string>
-    <string name="customization">ගැලපීම්</string>
-    <string name="website">වෙබ් අඩවිය</string>
     <string name="videoCount">%1$d වීඩියෝ</string>
     <string name="noInternet">මුලින්ම අන්තර්ජාලයට සම්බන්ධ වෙන්න.</string>
     <string name="retry">නැවත උත්සාහ කරන්න</string>
@@ -67,7 +65,6 @@
     <string name="category_selfpromo_summary">නොගෙවූ හෝ ස්වයං ප්‍රවර්ධනය හැර \"අනුග්‍රාහකයා\" හා සමානයි. මෙයට වෙළඳ භාණ්ඩ, පරිත්‍යාග, හෝ ඔවුන් සහයෝගීව කටයුතු කළ අය පිළිබඳ තොරතුරු පිළිබඳ කොටස් ඇතුළත් වේ</string>
     <string name="category_preview">පෙරදසුන/සාරාංශය</string>
     <string name="license">බලපත්රය</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">දැනුම්දීම්</string>
     <string name="app_icon">නිරූපකය</string>
     <string name="enabled">සක්‍රිය</string>
@@ -83,16 +80,13 @@
     <string name="live">සජීවි</string>
     <string name="shareTo">URL එක බෙදාගන්න</string>
     <string name="defaultIcon">පෙරනිමිය</string>
-    <string name="color_accent">අවධාරණ</string>
     <string name="playback_speed">වාදන වේගය</string>
     <string name="fireIcon">විලාසිතාමය ගින්න</string>
     <string name="torchIcon">නවීන පන්දම</string>
     <string name="flameIcon">පියාඹන දැල්ල</string>
-    <string name="instance_summary">Piped, පුරනය සහ ගිණුම</string>
     <string name="instance_name">සේවාදායකයේ නම</string>
     <string name="instance_api_url">සේවාදායක API වෙත URL</string>
     <string name="addInstance">සේවාදායකයක් එකතු කරන්න</string>
-    <string name="version">අනුවාදය %1$s</string>
     <string name="related_streams">අදාළ අන්තර්ගත</string>
     <string name="gradientIcon">Glib ශ්‍රේණියේ වර්ණය</string>
     <string name="birdIcon">පියාඹන කුරුල්ලා</string>
@@ -107,7 +101,6 @@
     <string name="resume">අරඹන්න</string>
     <string name="instance_frontend_url">සේවාදායක ඉදිරිපස URL</string>
     <string name="quality">ගුණත්වය</string>
-    <string name="player_summary">පෙරනිමි සහ හැසිරීම</string>
     <string name="seek_increment">වර්ධක අන්වේෂණය කරන්න</string>
     <string name="player_autoplay">ස්වයංක්‍රීය වාදනය</string>
     <string name="reset">පෙරනිමි ප්‍රත්‍යර්පණය කරන්න</string>
@@ -117,7 +110,6 @@
     <string name="watch_history">නැරඹුම් ඉතිහාසය</string>
     <string name="auth_instance">සත්‍යතාව තහවුරු කිරීමේ සේවාදායකය</string>
     <string name="auth_instances">සත්‍යතාව තහවුරු කිරීමට සේවාදායකයක් තෝරන්න</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">ශ්රව්ය සහ වීඩියෝ</string>
     <string name="fullscreen_orientation">පූර්ණ තිර නැඹුරුව</string>
     <string name="landscape">භූ දර්ශනය</string>
@@ -132,11 +124,9 @@
     <string name="data_saver_mode">දත්ත සුරැකීමේ ප්‍රකාරය</string>
     <string name="data_saver_mode_summary">සිඟිති රූ සහ අනෙකුත් පින්තූර මඟ හරින්න</string>
     <string name="watch_history_summary">නැරඹූ වීඩියෝ දේශීයව මතක තබා ගන්න</string>
-    <string name="history_summary">නැරඹුම් සහ සෙවුම් ඉතිහාසය</string>
     <string name="reset_watch_positions">ප්‍රත්‍යාරම්භ කරන්න</string>
     <string name="autoRotatePlayer_summary">උපාංගය හැරවූ විට පූර්ණ තිර වාදනය</string>
     <string name="watch_positions_title">මතක වාදන ස්ථාන</string>
-    <string name="general_summary">භාෂාව සහ ප්‍රදේශය</string>
     <string name="caption_settings">සිරස්තල</string>
     <string name="playerAudioQuality">ශ්‍රව්‍ය ගුණත්වය</string>
     <string name="worst_quality">නරකම</string>
@@ -151,7 +141,6 @@
     <string name="network_metered">සීමිත</string>
     <string name="network_wifi">Wi-Fi මත පමණි</string>
     <string name="translate">පරිවර්තනය</string>
-    <string name="no_search_result">ප්‍රතිපල නැත.</string>
     <string name="error_occurred">දෝෂයකි</string>
     <string name="copied">පිටපත් කර ඇත</string>
     <string name="share_with_time">කාල කේතය සමඟ බෙදා ගන්න</string>
@@ -168,7 +157,6 @@
     <string name="backup">උපස්ථ කිරීම</string>
     <string name="open_copied">විවෘත කරන්න</string>
     <string name="device_info">උපාංග තොරතුරු</string>
-    <string name="audio_video_summary">ගුණත්වය සහ ආකෘතිය</string>
     <string name="delete">බාගත කිරීම් වලින් මකන්න</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">ජංගම දත්ත</string>
@@ -238,7 +226,6 @@
     <string name="defres">වීඩියෝ විභේදනය</string>
     <string name="playlistName">වාදන ලැයිස්තුවේ නම</string>
     <string name="history">ඉතිහාසය</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API භාවිත කරයි</string>
     <string name="category_segments">කොටස්</string>
     <string name="category_interaction_summary">අතරතුර කැමති වීමට, දායක වීමට හෝ අනුගමනය කිරීමට කෙටි මතක් කිරීමක් ඇති විට. දිගු හෝ විශේෂිත දෙයක් ගැන නම්, ඒ වෙනුවට එය ස්වයං ප්‍රවර්ධනයකි</string>
     <string name="category_intro_summary">සැබෑ අන්තර්ගතයක් නොමැති විරාමයක්. නැවතීමක්, ස්ථිතික රාමුවක්, පුනරාවර්තන සජීවිකරණයක් විය හැකිය. තොරතුරු අඩංගු සංක්‍රාන්ති සඳහා භාවිතා නොකළ යුතුය</string>
@@ -313,7 +300,6 @@
     <string name="replies">පිළිතුරු</string>
     <string name="skip_silence">නිහඬ කොටස් මඟ හරින්න</string>
     <string name="help">උදව්</string>
-    <string name="faq">නිතර අසන ප්‍රශ්න</string>
     <string name="sleep_timer">නින්ද ටයිමරය</string>
     <string name="mark_as_watched">නැරඹූ ලෙස ලකුණු කරන්න</string>
     <string name="unsupported_file_format">සහාය නොදක්වන ගොනු ආකෘතියකි: %1$s</string>
@@ -345,11 +331,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

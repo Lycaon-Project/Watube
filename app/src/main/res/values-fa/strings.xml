@@ -61,8 +61,6 @@
     <string name="clear_history">پاک‌سازی تاریخچه</string>
     <string name="settings">تنظیمات</string>
     <string name="instance">نمونه</string>
-    <string name="customization">تنظیمات</string>
-    <string name="website">پایگاه وب</string>
     <string name="videoCount">%1$d ویدیو</string>
     <string name="noInternet">نخست به اینترنت وصل شوید.</string>
     <string name="retry">تلاش دوباره</string>
@@ -77,7 +75,6 @@
     <string name="segment_skipped">بخش رد شده</string>
     <string name="category_segments">بخش‌ها</string>
     <string name="category_interaction">یادآوری تعامل</string>
-    <string name="color_accent">لهجه‌ها</string>
     <string name="enabled">روشن</string>
     <string name="disabled">خاموش</string>
     <string name="appearance">ظاهر</string>
@@ -86,7 +83,6 @@
     <string name="music_songs">آوازهای آهنگ‌های یوتوب</string>
     <string name="music_videos">ویدیوهای آهنگ‌های یوتوب</string>
     <string name="category_intro">وقفه / انیمیشن ورودی</string>
-    <string name="sponsorblock_summary">استفاده از https://sponsor.ajay.app API</string>
     <string name="category_selfpromo_summary">شبیه «حامی» به جز تبلیغات بدون پرداخت یا تبلیغ خود. شامل بخش‌هایی دربارهٔ به کالاها، اعانه‌ها یا اطّلاعاتی دربارهٔ هم‌کاری‌ها</string>
     <string name="playOnBackground">پخش در پس‌زمینه</string>
     <string name="category_interaction_summary">هنگامی که در میان محتوا یادآوری کوتاهی برای پسند، اشتراک یا پی‌گیری وجود دارد. اگر طولانی یا دربارهٔ مورد خاصی باشد باید تبلیغ خود درنظر گرفته شود</string>
@@ -107,16 +103,13 @@
     <string name="defaultIcon">پیش‌گزیده</string>
     <string name="video">ویدیو</string>
     <string name="player_autoplay">پخش خودکار</string>
-    <string name="instance_summary">پایپد، ورود و حساب</string>
     <string name="subscriberAndVideoCounts">%1$s مشترک • %2$d ویدیو</string>
-    <string name="version">نگارش %1$s</string>
     <string name="no_audio">بدون صدا</string>
     <string name="no_video">بدون ویدیو</string>
     <string name="audio">صدا</string>
     <string name="downloading">درحال بارگیری…</string>
     <string name="replies">پاسخ ها</string>
     <string name="audio_video">صدا و ویدیو</string>
-    <string name="github">گیت‌هاب</string>
     <string name="local_playlists">سیاهه‌های پخش محلی</string>
     <string name="play_all">پخش همه</string>
     <string name="brightness">روشنایی</string>
@@ -130,7 +123,6 @@
     <string name="pauseOnScreenOff">مکث خودکار</string>
     <string name="notify_new_streams">نمایش آگاهی برای جریان‌های جدید</string>
     <string name="default_subtitle_language">زبان زیرنویس</string>
-    <string name="player_summary">پیش‌گزیده‌ها و رفتار</string>
     <string name="watch_history">سابقه تماشا</string>
     <string name="deleteAccount">حذف حساب</string>
     <string name="restore">بازگردانی</string>
@@ -143,7 +135,6 @@
     <string name="always">همواره</string>
     <string name="data_saver_mode">حالت ذخیرهٔ داده</string>
     <string name="data_saver_mode_summary">پرش از بندانگشتی‌ها و دیگر تصویرها</string>
-    <string name="general_summary">بارگیری‌ها و ذخیره کنندهٔ داده</string>
     <string name="worst_quality">بدترین</string>
     <string name="background_mode">حالت پس‌زمینه</string>
     <string name="resize_mode_zoom">بزرگ‌نمایی</string>
@@ -152,7 +143,6 @@
     <string name="proceed">ادامه</string>
     <string name="username_email">استفاده از نشانی رایانامه به عنوان نام کاربری پیشنهاد نمی‌شود. ادامه به هر روی؟</string>
     <string name="help">راهنما</string>
-    <string name="faq">پرسش‌های پرتکرار</string>
     <string name="download_channel_name">خدمت بارگیری</string>
     <string name="most_recent">جدیدترین</string>
     <string name="least_recent">قدیمی‌ترین</string>
@@ -193,7 +183,6 @@
     <string name="none">هیچ</string>
     <string name="notifications">آگاهی‌ها</string>
     <string name="playerAudioQuality">کیفیت صدا</string>
-    <string name="history_summary">تاریخچهٔ جست‌وجو و تماشا</string>
     <string name="notify_new_streams_summary">نمایش آگاهی برای جریان‌های جدید از ایجادکننده‌هایی که دنبال می‌کنید</string>
     <string name="least_views">کم‌ترین مشاهده‌ها</string>
     <string name="network_metered">اندازه‌گیری شده</string>
@@ -204,7 +193,6 @@
     <string name="repeat_mode_current">کنونی</string>
     <string name="wifi">وای‌فای</string>
     <string name="renamePlaylist">تغییر نام سیاههٔ پخش</string>
-    <string name="audio_video_summary">کیفیت و قالب</string>
     <string name="device_info">اطّلاعات افزاره</string>
     <string name="local_subscriptions">اشتراک‌های محلی</string>
     <string name="preferences">ترجیحات</string>
@@ -235,9 +223,7 @@
     <string name="auto">خودکار</string>
     <string name="category">دسته</string>
     <string name="defaultIconLight">روشن پیش‌گزیده</string>
-    <string name="material_you">متریال یو</string>
     <string name="reset">بازگردانی پیش‌گزیده‌ها</string>
-    <string name="no_search_result">بدون نتیجه.</string>
     <string name="start_time">زمان‌آغاز</string>
     <string name="playlistCloned">سیاههٔ پخش شبیه‌سازی شد</string>
     <string name="appearance_summary">تنظیم کاره به سلیقه‌تان</string>
@@ -412,7 +398,6 @@
     <string name="player_channel_name">خدمت پخش‌کننده</string>
     <string name="tooltip_dismiss">رد کردن</string>
     <string name="group_name_error_empty">لطفاً نامی وارد کنید</string>
-    <string name="donate">اعانه</string>
     <string name="tooltip_edit_groups">ویرایش گروه‌ها</string>
     <string name="screen_orientation">جهت صفحه</string>
     <string name="duration_span">طول: %1$s</string>
@@ -535,11 +520,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

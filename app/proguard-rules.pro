@@ -168,3 +168,39 @@
     public void printStackTrace(java.io.PrintStream);
     public void printStackTrace(java.io.PrintWriter);
 }
+
+# ----------------------------------------------------------------------------
+# PRIVACY: Google telemetry removal (audited 2026-10-05: play-services-cast-framework 22.3.1,
+# play-services-base 18.7.2, media3 1.9.2).
+#
+# Google's datatransport libraries (Firelog uploads) are not shipped at all, see the Cast
+# dependency in build.gradle.kts. The rules below cut the entry points of the telemetry that
+# lives inside the libraries we do ship, so R8 deletes all the code only they reach. Names made
+# of "za"/"zz" are obfuscated and only valid for the versions above: after an update the release
+# build fails (see the guard in build.gradle.kts) until they are verified again.
+
+# 1. Cast analytics: Play Services answers CastContext with a flags bundle that starts the whole
+#    analytics stack (session, application and feature usage analytics, usage reporting consent).
+-assumenosideeffects class com.google.android.gms.cast.framework.CastContext {
+    void zzf(android.os.Bundle);
+}
+#    feature usage counters, called by the Cast UI widgets
+-assumenosideeffects class com.google.android.gms.internal.cast.zzr {
+    static void zzb(com.google.android.gms.internal.cast.zzpm);
+}
+
+# 2. Play Services client telemetry: a collector attached to every Google API call (counts,
+#    timings, results) and the client that reports the batches to Play Services.
+-assumenosideeffects class com.google.android.gms.common.api.internal.GoogleApiManager {
+    private void zaI(com.google.android.gms.tasks.TaskCompletionSource, int, com.google.android.gms.common.api.GoogleApi);
+    private com.google.android.gms.common.internal.TelemetryLoggingClient zaL() return _NONNULL_;
+}
+-assumenosideeffects interface com.google.android.gms.common.internal.TelemetryLoggingClient {
+    com.google.android.gms.tasks.Task log(com.google.android.gms.common.internal.TelemetryData);
+}
+
+# 3. Media3 platform diagnostics: even with setUsePlatformDiagnostics(false), every player opens
+#    a MediaMetricsManager playback session whose id tags its codecs and audio track.
+-assumenosideeffects class androidx.media3.exoplayer.ExoPlayerImpl$Api31 {
+    static void registerMediaMetricsListener(android.content.Context, androidx.media3.exoplayer.ExoPlayerImpl, boolean, androidx.media3.exoplayer.analytics.PlayerId);
+}

@@ -44,8 +44,6 @@
     <string name="settings">Setări</string>
     <string name="location">Locație</string>
     <string name="instance">Instanță</string>
-    <string name="customization">Ajustări</string>
-    <string name="website">Pagină web</string>
     <string name="videoCount">%1$d videoclipuri</string>
     <string name="noInternet">Conectați-vă mai întâi la internet.</string>
     <string name="retry">Reîncercați</string>
@@ -69,7 +67,6 @@
     <string name="category_interaction">Reamintire de interacțiune</string>
     <string name="category_intro">Intervale de pauză / Animațiile de introducere</string>
     <string name="license">Licență</string>
-    <string name="color_accent">Accente</string>
     <string name="startpage">Acasă</string>
     <string name="save">Salvați</string>
     <string name="login">Autentificare</string>
@@ -82,7 +79,6 @@
     <string name="emptyList">Nimic aici.</string>
     <string name="changeLanguage">Limbă</string>
     <string name="systemDefault">Sistem</string>
-    <string name="sponsorblock_summary">Se utilizează API-ul https://sponsor.ajay.app</string>
     <string name="category_sponsor_summary">Promovare plătită, recomandări plătite și reclame directe. Nu pentru autopromovare sau pentru a face publicitate autentică gratuită pentru cauze, creatori, site-uri web și produse</string>
     <string name="category_selfpromo_summary">Asemănător cu \"sponsor\", cu excepția cazului în care nu este plătit sau se promovează singur. Aceasta include secțiuni despre produse, donații sau informații despre persoanele cu care au colaborat</string>
     <string name="category_interaction_summary">Atunci când există un scurt mesaj de reamintire pentru a da like, a vă abona sau a urmări în mijlocul conținutului. Dacă este lung sau se referă la ceva anume, ar trebui să fie în schimb autopromovare</string>
@@ -115,27 +111,22 @@
     <string name="empty_instance">Completați numele și URL-ul API.</string>
     <string name="related_streams_summary">Afișați fluxuri similare alături de ceea ce urmăriți</string>
     <string name="sponsorblock_notifications">Notificări</string>
-    <string name="material_you">Material You</string>
     <string name="downloads">Descărcări</string>
     <string name="live">În direct</string>
     <string name="flameIcon">Flacără zburătoare</string>
     <string name="shapedIcon">În formă poznașă</string>
-    <string name="instance_summary">Piped, autentificare și cont</string>
     <string name="invalid_url">Introduceți o adresă URL care funcționează</string>
-    <string name="version">Versiune %1$s</string>
     <string name="related_streams">Conținut asociat</string>
     <string name="normal_views">%1$s vizualizări%2$s</string>
     <string name="chapters">Capitole</string>
     <string name="system_caption_style">Stilul de subtitrare a sistemului</string>
     <string name="search_history_summary">Rețineți căutările</string>
     <string name="watch_history_summary">Urmăriți videoclipurile vizionate la nivel local</string>
-    <string name="history_summary">Istoricul vizionărilor și căutărilor</string>
     <string name="watch_positions_title">Pozițiile de redare reținute</string>
     <string name="captions">Subtitrări</string>
     <string name="none">Niciunul</string>
     <string name="caption_settings">Subtitrări</string>
     <string name="playerAudioQuality">Calitate audio</string>
-    <string name="general_summary">Descărcări și economizor de date</string>
     <string name="notify_new_streams_summary">Afișează notificări pentru fluxuri noi de la creatorii pe care îi urmărești</string>
     <string name="most_views">Cele mai multe vizualizări</string>
     <string name="copied">Copiat</string>
@@ -163,7 +154,6 @@
     <string name="most_recent">Cele mai recente</string>
     <string name="add_to_queue">Adăugați în coadă</string>
     <string name="misc">Diverse</string>
-    <string name="audio_video_summary">Calitate și format</string>
     <string name="category_music_offtopic">Muzică: Secțiunea non-muzică</string>
     <string name="category_preview">Previzualizare/Recapitulare</string>
     <string name="category_filler">Tangenta de umplere/Glume</string>
@@ -190,7 +180,6 @@
     <string name="watch_positions">Rețineți poziția</string>
     <string name="auth_instance">Instanță de autentificare</string>
     <string name="auth_instances">Alegeți o instanță de autentificare</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Audio și video</string>
     <string name="fullscreen_orientation">Orientare pe ecran complet</string>
     <string name="auto_rotation">Rotație automată</string>
@@ -222,7 +211,6 @@
     <string name="backup_customInstances">Instanțe personalizate</string>
     <string name="play_next">Redați următorul</string>
     <string name="navigation_bar">Bară de navigare</string>
-    <string name="player_summary">Valori prestabilite și comportament</string>
     <string name="replies">Răspunsuri</string>
     <string name="category_music_offtopic_summary">Numai pentru utilizare în videoclipuri muzicale. Ar trebui să acopere părți ale videoclipului, care nu fac parte din mixajele oficiale. În cele din urmă, videoclipul ar trebui să semene cât mai mult cu Spotify sau cu orice altă versiune mixtă sau să reducă vorbirea sau alte distrageri</string>
     <string name="category_preview_summary">Pentru segmente care detaliază conținut viitor fără informații suplimentare. Dacă include clipuri care apar doar aici, aceasta este foarte probabil o categorie greșită</string>
@@ -243,7 +231,6 @@
     <string name="device_info">Informații despre dispozitiv</string>
     <string name="network_wifi">Doar pe Wi-Fi</string>
     <string name="required_network">Conexiune necesară</string>
-    <string name="no_search_result">Fără rezultate.</string>
     <string name="wifi">Wi-Fi</string>
     <string name="new_videos_badge">Indicator pentru videoclipuri noi</string>
     <string name="repeat_mode_current">Actual</string>
@@ -302,7 +289,6 @@
     <string name="audio_only_mode">Modul numai audio</string>
     <string name="audio_only_mode_summary">Transformă LibreTube într-un player audio</string>
     <string name="help">Ajutor</string>
-    <string name="faq">Întrebări frecvente</string>
     <string name="mark_as_watched">Marcați ca urmărit</string>
     <string name="download_channel_description">Afișați o notificare la descărcarea conținutului media.</string>
     <string name="defaultIconLight">Luminată implicită</string>
@@ -392,7 +378,6 @@
     <string name="segment_type">Tipul de segment</string>
     <string name="visibility_public">Public</string>
     <string name="group_name_error_empty">Vă rugăm să introduceți un nume</string>
-    <string name="donate">Donaţi</string>
     <string name="screen_orientation">Orientarea ecranului</string>
     <string name="duration_span">Durata: %1$s</string>
     <string name="tooltip_close">Închidere</string>
@@ -539,11 +524,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

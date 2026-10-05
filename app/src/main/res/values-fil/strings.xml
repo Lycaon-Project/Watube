@@ -33,7 +33,6 @@
     <string name="subscribers">Mga %1$s subscribers</string>
     <string name="settings">Ayos ng App</string>
     <string name="location">Lokasyon</string>
-    <string name="customization">Pagsasaayos</string>
     <string name="videoCount">Mga %1$d video</string>
     <string name="retry">Subukan muli</string>
     <string name="comments">Mga Komento</string>
@@ -47,7 +46,6 @@
     <string name="music_videos">Mga Video sa YT Music</string>
     <string name="music_albums">Mga Album sa YT Music</string>
     <string name="music_playlists">Mga Playlist sa YT Music</string>
-    <string name="sponsorblock_summary">Ginagamit ang API ng https://sponsor.ajay.app</string>
     <string name="segment_skipped">Nilaktawan ang bahagi ng video</string>
     <string name="category_segments">Mga Bahagi ng Video</string>
     <string name="category_interaction">Paalala sa Interaksyon (paglike at subscribe)</string>
@@ -73,14 +71,12 @@
     <string name="customInstance_summary">Magdagdag…</string>
     <string name="playOnBackground">Mag-play sa background</string>
     <string name="enabled">Nakabukas</string>
-    <string name="color_accent">Mga accent</string>
     <string name="update_available">Available na ang bersyon %1$s</string>
     <string name="appearance">Hitsura</string>
     <string name="downloads">Mga Download</string>
     <string name="yes">Oo</string>
     <string name="username">Username</string>
     <string name="deletePlaylist">Burahin ang playlist</string>
-    <string name="version">Bersyon %1$s</string>
     <string name="loggedIn">Naka-log in.</string>
     <string name="playback_speed">Bilis ng playback</string>
     <string name="areYouSure">Burahin ang playlist\?</string>
@@ -94,7 +90,6 @@
     <string name="disabled">Nakapatay</string>
     <string name="replies">Mga reply</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="donate">Mag-abuloy</string>
     <string name="update_summary">Tumingin para sa update</string>
     <string name="loggedout">Naka-log out.</string>
     <string name="addInstance">Magdagdag ng Instance</string>
@@ -102,11 +97,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

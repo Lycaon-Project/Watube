@@ -45,7 +45,6 @@
     <string name="category_outro">Канчатковая застаўка і тытры</string>
     <string name="category_filler">Філеры/Жарты</string>
     <string name="category_preview">Папярэдні прагляд/Паўторы</string>
-    <string name="color_accent">Акцэнты</string>
     <string name="sponsorblock_notifications">Апавяшчэнні</string>
     <string name="disabled">Адкл.</string>
     <string name="appearance">Знешні выгляд</string>
@@ -64,14 +63,12 @@
     <string name="shapedIcon">Фармальная форма</string>
     <string name="flameIcon">Пырхаючы полымя</string>
     <string name="birdIcon">Прыкольная птушка</string>
-    <string name="instance_summary">Piped, лагін і ўліковы запіс</string>
     <string name="customInstance_summary">Дадаць…</string>
     <string name="instance_name">Назва сервера</string>
     <string name="instance_api_url">URL для API сервера</string>
     <string name="addInstance">Дадаць сервер</string>
     <string name="empty_instance">Ўвядзіце імя і URL-адрас API.</string>
     <string name="invalid_url">Калі ласка, увядзіце URL, які працуе</string>
-    <string name="version">Версія %1$s</string>
     <string name="related_streams">Звязаны кантэнт</string>
     <string name="related_streams_summary">Паказвайце падобныя патокі побач з тым, што вы праглядаеце</string>
     <string name="buffering_goal">Папярэдняя загрузка</string>
@@ -88,7 +85,6 @@
     <string name="player_autoplay">Аўтазапуск</string>
     <string name="quality">Якасць</string>
     <string name="behavior">Паводзіны</string>
-    <string name="player_summary">Па змаўчанні і паводзіны</string>
     <string name="pauseOnScreenOff">Аўтапаўза</string>
     <string name="pauseOnScreenOff_summary">Спыняць прайграванне пры адключэнні экрана</string>
     <string name="clonePlaylist">Кланаваць плэйліст</string>
@@ -101,7 +97,6 @@
     <string name="watch_positions">Запомніць пазіцыю</string>
     <string name="auth_instance">Сервер аўтэнтыфікацыі</string>
     <string name="auth_instances">Выберыце сервер аўтарызацыі</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Аўдыё і відэа</string>
     <string name="fullscreen_orientation">Поўнаэкранная арыентацыя</string>
     <string name="aspect_ratio">Суадносіны бакоў відэа</string>
@@ -121,12 +116,10 @@
     <string name="data_saver_mode_summary">Прапусціць мініяцюры і іншыя выявы</string>
     <string name="search_history_summary">Запомніце пошукавыя запыты</string>
     <string name="watch_history_summary">Сачыце за прагледжанымі відэа лакальна</string>
-    <string name="history_summary">Гісторыя прагляду і пошуку</string>
     <string name="reset_watch_positions">Скінуць</string>
     <string name="captions">Субтытры</string>
     <string name="none">Адсутнічае</string>
     <string name="general">Агульныя</string>
-    <string name="general_summary">Загрузкі і эканомія даных</string>
     <string name="caption_settings">Налады субтытраў</string>
     <string name="playerAudioQuality">Якасць гуку</string>
     <string name="worst_quality">Найгоршая</string>
@@ -161,10 +154,7 @@
     <string name="retry">Паўтарыць</string>
     <string name="deletePlaylist">Выдаліць плэйліст</string>
     <string name="changeLanguage">Мова</string>
-    <string name="customization">Канфігурацыя</string>
     <string name="noInternet">Спачатку падключыцеся да Інтэрнэту.</string>
-    <string name="website">Вэб-сайт</string>
-    <string name="sponsorblock_summary">На аснове API https://sponsor.ajay.app</string>
     <string name="channels">Каналы</string>
     <string name="all">Ўсе</string>
     <string name="clear_history">Ачысціць гісторыю</string>
@@ -182,7 +172,6 @@
     <string name="category_filler_summary">Для датычных сцэн, дададзеных толькі для напаўнення або гумару, не патрабуецца для разумення асноўнага зместу відэа</string>
     <string name="category_music_offtopic">Музыка: немузычны раздзел</string>
     <string name="license">Ліцэнзія</string>
-    <string name="material_you">Material You</string>
     <string name="app_icon">Значок</string>
     <string name="enabled">Ўкл.</string>
     <string name="update_available">Даступна абнаўленне</string>
@@ -211,7 +200,6 @@
     <string name="network_metered">Дазаваны</string>
     <string name="network_wifi">Толькі па Wi-Fi</string>
     <string name="translate">Пераклад</string>
-    <string name="no_search_result">Няма вынікаў.</string>
     <string name="error_occurred">Памылка</string>
     <string name="copied">Скапіравана</string>
     <string name="background_mode">Фонавы рэжым</string>
@@ -227,7 +215,6 @@
     <string name="copied_to_clipboard">Скапіравана ў буфер абмену</string>
     <string name="open_copied">Адкрыты</string>
     <string name="device_info">Інфармацыя пра прыладу</string>
-    <string name="audio_video_summary">Якасць і фармат</string>
     <string name="delete">Выдаліць з загрузак</string>
     <string name="irreversible">Вы ўпэўнены\? Гэта нельга адмяніць!</string>
     <string name="share_with_time">Падзяліцеся з тайм-кодам</string>
@@ -310,7 +297,6 @@
     <string name="mark_as_watched">Пазначыць як прагледжанае</string>
     <string name="alternative_pip_controls">Альтэрнатыўныя элементы кіравання PiP</string>
     <string name="alternative_pip_controls_summary">Паказваць толькі аўдыя і прапускаць элементы кіравання ў PiP замест перамоткі наперад і назад</string>
-    <string name="faq">Часта задаюць пытанні</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d відэа</string>
     <string name="new_videos_badge_summary">Паказаць значок з колькасцю новых відэа, калі яны ёсць</string>
     <string name="change_region">«Трэнды» недаступныя для бягучага рэгіёну. Калі ласка, абярыце іншы ў наладах.</string>
@@ -419,7 +405,6 @@
     <string name="sb_invalid_segment">Няправільны пачатак або канец сегмента</string>
     <string name="sponsorblock_user_id">ID карыстальніка ў SponsorBlock</string>
     <string name="contribute_to_sponsorblock">Унесці свой уклад у SponsorBlock</string>
-    <string name="donate">Падтрымліваць</string>
     <string name="no_fullscreen_resolution">Разрозненне непаўнаэкраннага рэжыму</string>
     <string name="music_artists">Выканаўцы музыкі YT</string>
     <string name="same_as_fullscreen">Такая ж як для поўнаэкраннага рэжыму</string>
@@ -542,11 +527,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

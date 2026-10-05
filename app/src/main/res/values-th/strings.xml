@@ -7,7 +7,6 @@
     <string name="playlistName">ชื่อเพลย์ลิสต์</string>
     <string name="addToPlaylist">เพิ่มไปยังเพลย์ลิสต์</string>
     <string name="videoCount">%1$d วิดีโอ</string>
-    <string name="version">เวอร์ชั่น %1$s</string>
     <string name="subscriptions">การติดตาม</string>
     <string name="region">ภูมิภาค</string>
     <string name="login_register">ลงชื่อเข้าใช้/สมัครสมาชิก</string>
@@ -36,7 +35,6 @@
     <string name="registered">ลงทะเบียนแล้ว ตอนนี้คุณสามารถสมัครรับข้อมูลช่องต่างๆได้แล้ว</string>
     <string name="loggedIn">ล็อกอินเรียบร้อย</string>
     <string name="notgmail">นี่สำหรับบัญชี Piped</string>
-    <string name="donate">โดเนท</string>
     <string name="already_logged_in">เข้าสู่ระบบแล้ว คุณสามารถออกจากระบบบัญชีของคุณได้</string>
     <string name="library">คลัง</string>
     <string name="noInternet">ต้องเชื่อมต่ออินเทอร์เน็ตก่อน</string>
@@ -51,8 +49,6 @@
     <string name="settings">ตั้งค่า</string>
     <string name="location">สถานที่</string>
     <string name="instance">อินสแตนซ์</string>
-    <string name="customization">การปรับเปลี่ยน</string>
-    <string name="website">เว็บไซต์</string>
     <string name="retry">ลองอีกครั้ง</string>
     <string name="comments">ความคิดเห็น</string>
     <string name="channels">ช่อง</string>
@@ -88,7 +84,6 @@
     <string name="music_songs">เพลง YT Music</string>
     <string name="category_sponsor">สปอนเซอร์</string>
     <string name="music_artists">ศิลปิน YT Music</string>
-    <string name="sponsorblock_summary">ใช้ API จาก https://sponsor.ajay.app</string>
     <string name="category_preview">ตัวอย่าง/สรุป</string>
     <string name="video">วิดีโอ</string>
     <string name="license">ลิขสิทธิ์</string>
@@ -152,7 +147,6 @@
     <string name="shorts_notifications">การแจ้งเตือนสำหรับ Shorts</string>
     <string name="manual">ข้ามเอง</string>
     <string name="help">ช่วยเหลือ</string>
-    <string name="faq">คำถามที่พบบ่อย</string>
     <string name="hide_watched_from_feed">ซ่อนวิดีโอที่ดูแล้ว</string>
     <string name="playlistUrl">เพลย์ลิสต์ URL</string>
     <string name="playing_next">เล่นวิดีโอถัดไปใน %1$s</string>
@@ -160,7 +154,6 @@
     <string name="contribute_to_dearrow">ช่วยเหลือให้ DeArrow</string>
     <string name="dearrow_summary">แสดงชื่อและภาพของวิดีโอให้ตรงกับเนื้อหาของวิดีโอมากยิ่งขึ้นและลดความน่าตื่นเต้นที่ไม่จำเป็นลง ระยะเวลาการโหลดจะเพิ่มขึ้น</string>
     <string name="live">ไลฟ์สด</string>
-    <string name="github">GitHub</string>
     <string name="yt_shorts">Shorts</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">ข้อมูลมือถือ</string>
@@ -178,7 +171,6 @@
     <string name="data_saver_mode">โหมดประหยัดข้อมูล</string>
     <string name="data_saver_mode_summary">ข้ามการโหลดรูปวิดีโอและรูปอื่นๆ</string>
     <string name="search_history_summary">จดจำการค้นหา</string>
-    <string name="history_summary">ประวัติการดูและค้นหา</string>
     <string name="watch_positions_title">จดจำตำแหน่งวิดีโอ</string>
     <string name="reset_watch_positions">รีเซ็ต</string>
     <string name="system_caption_style">รูปแบบระบบคำบรรยาย</string>
@@ -216,7 +208,6 @@
     <string name="copied_to_clipboard">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
     <string name="open_copied">เปิด</string>
     <string name="device_info">ข้อมูลอุปกรณ์</string>
-    <string name="audio_video_summary">คุณภาพและรูปแบบ</string>
     <string name="delete">ลบจากดาวน์โหลด</string>
     <string name="delete_all">วิดีโอที่โหลดเอาไว้จะถูกลบออกทั้งหมด!</string>
     <string name="playback_pitch">ระดับเสียง</string>
@@ -267,7 +258,6 @@
     <string name="category_hook">ฮุค/แนะนำตัว</string>
     <string name="category_hook_summary">สำหรับช่วงฮุคเพื่อดึงดูดความสนใจของผู้ชม (เป็นฉากแรกโดยส่วนมาก) โดยการชมตัวอย่างสั้นหรืออธิบายเหตุการณ์ที่จะเกิดขึ้นภายหลังในวิดีโอนี้หรือตอนถัดไปในอนาคต</string>
     <string name="category_highlight_summary">อาจจะเป็นจุดที่ตามชื่อวิดีโอได้เขียนเอาไว้หรือรูปวิดีโอ หรือจุดที่น่าสนใจที่สุดของวิดีโอนั้น คุณสามารถข้ามโดยการแตะบนหน้าต่างบท</string>
-    <string name="color_accent">สี</string>
     <string name="normal_views">%1$s วิว %2$s</string>
     <string name="shareTo">แชร์ URL ไปยัง</string>
     <string name="upcoming">เร็วๆ นี้</string>
@@ -360,7 +350,6 @@
     <string name="import_temp_playlist">นำเข้าเพลย์ลิสต์ชั่วคราว?</string>
     <string name="import_temp_playlist_summary">คุณต้องการสร้างเพลย์ลิสต์ใหม่ด้วยชื่อ \'%1$s\' หรือไม่? เพลย์ลิสต์นี้จะมี %2$d วิดีโอ</string>
     <string name="customInstance_summary">เพิ่ม…</string>
-    <string name="instance_summary">Piped ล็อกอินและบัญชี</string>
     <string name="instance_name">ชื่ออินสแตนซ์</string>
     <string name="instance_api_url">URL สำหรับ API ของอินสแตนซ์นี้</string>
     <string name="addInstance">เพิ่มอินสแตนซ์</string>
@@ -386,7 +375,6 @@
     <string name="instance_frontend_url">URL สำหรับอินสแตนซ์ส่วนหน้า (ไม่จำเป็น)</string>
     <string name="quality">คุณภาพ</string>
     <string name="behavior">รูปแบบพฤติกรรม</string>
-    <string name="player_summary">พฤติกรรมของระบบตามปกติ</string>
     <string name="seek_increment">ปริมาณวินาทีที่จะกรอ</string>
     <string name="pauseOnScreenOff">หยุดพักอัตโนมัติ</string>
     <string name="pauseOnScreenOff_summary">หยุดเล่นเมื่อหน้าจอถูกปิด</string>
@@ -435,7 +423,6 @@
     <string name="download_playlist">ดาวน์โหลดเพลย์ลิสต์</string>
     <string name="enqueue_playlist_description">แสดงการแจ้งเตือนในขณะวิดีโอที่อยู่ในคิวของเพลย์ลิสต์กำลังจะดาวน์โหลด</string>
     <string name="enqueueing_playlist_download">กำลังจัดคิววิดีโอเพื่อจะดาวน์โหลดจากเพลย์ลิสต์ %1$s</string>
-    <string name="general_summary">ดาวน์โหลดและประหยัดข้อมูล</string>
     <string name="notify_new_streams">แสดงการแจ้งเตือนสำหรับวิดีโอใหม่</string>
     <string name="notify_new_streams_summary">แสดงการแจ้งเตือนสำหรับวิดีโอใหม่จากช่องที่คุณกำลังติดตามอยู่</string>
     <string name="most_views">ยอดวิวมากสุด</string>
@@ -444,7 +431,6 @@
     <string name="network_metered">จำกัด</string>
     <string name="network_wifi">เฉพาะ Wi-Fi</string>
     <string name="translate">แปลภาษา</string>
-    <string name="no_search_result">ไม่มีผลลัพธ์</string>
     <string name="share_with_time">แชร์โค้ดเวลา</string>
     <string name="export_subscriptions">ส่งออกการติดตาม</string>
     <string name="misc">เบ็ดเตล็ด</string>
@@ -524,11 +510,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

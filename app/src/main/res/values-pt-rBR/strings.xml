@@ -53,17 +53,14 @@
     <string name="subscribers">%1$s inscritos</string>
     <string name="library">Biblioteca</string>
     <string name="startpage">Início</string>
-    <string name="customization">Ajustes</string>
     <string name="settings">Configurações</string>
     <string name="videoCount">%1$d vídeos</string>
     <string name="location">Localização</string>
     <string name="instance">Instância</string>
-    <string name="website">Site</string>
     <string name="comments">Comentários</string>
     <string name="noInternet">Conecte-se à Internet primeiro.</string>
     <string name="retry">Tentar novamente</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Usa a API https://sponsor.ajay.app</string>
     <string name="channels">Canais</string>
     <string name="clear_history">Excluir histórico</string>
     <string name="all">Todos</string>
@@ -88,8 +85,6 @@
     <string name="category_interaction">Lembrete de interação</string>
     <string name="category_interaction_summary">Quando houver um breve lembrete para curtir, inscrever-se ou seguir no meio do conteúdo. Se for longo ou sobre algo específico, deve ser uma autopromoção</string>
     <string name="category_outro_summary">Informações após o final. Não para conclusões com informações</string>
-    <string name="color_accent">Cor de destaque</string>
-    <string name="material_you">Material You</string>
     <string name="app_icon">Estilo de ícone (app)</string>
     <string name="sponsorblock_notifications">Notificações</string>
     <string name="enabled">Habilitado</string>
@@ -102,7 +97,6 @@
     <string name="gradientIcon">Gradiente suave</string>
     <string name="torchIcon">Tocha moderna</string>
     <string name="customInstance_summary">Adicionar…</string>
-    <string name="version">Versão %1$s</string>
     <string name="category_filler">Enrolação/Piadas</string>
     <string name="category_music_offtopic">Música: Partes sem música</string>
     <string name="category_music_offtopic_summary">Apenas para uso em videoclipes. Deve cobrir partes do vídeo que não fazem parte das mixagens oficiais. No final, o vídeo deve ser o mais parecido possível com o Spotify ou qualquer outra versão mista, ou reduzir conversas ou outras distrações</string>
@@ -118,7 +112,6 @@
     <string name="shareTo">Compartilhar URL</string>
     <string name="legacyIcon">Legado perdido</string>
     <string name="flameIcon">Chama voadora</string>
-    <string name="instance_summary">Piped, login e conta</string>
     <string name="instance_name">Nome da instância</string>
     <string name="instance_api_url">URL para API da instância</string>
     <string name="addInstance">Adicionar instância</string>
@@ -130,7 +123,6 @@
     <string name="buffering_goal">Pré-carregamento</string>
     <string name="buffering_goal_summary">Número máximo de segundos para pôr em memória</string>
     <string name="update_available">Atualização disponível</string>
-    <string name="player_summary">Padrões e comportamento</string>
     <string name="related_streams_summary">Mostrar conteúdo semelhante aos vídeos que você assiste</string>
     <string name="open">Abrir…</string>
     <string name="reset">Restaurar configurações</string>
@@ -161,14 +153,12 @@
     <string name="network_metered">Dados móveis</string>
     <string name="most_recent">Mais recente</string>
     <string name="network_all">Todas</string>
-    <string name="no_search_result">Sem resultados.</string>
     <string name="reset_message">Redefinir todas as configurações e sair?</string>
     <string name="watch_history">Histórico de exibição</string>
     <string name="watch_positions">Lembrar posição</string>
     <string name="auth_instance">Instância de autenticação</string>
     <string name="auth_instance_summary">Usar uma instância diferente para chamadas autenticadas</string>
     <string name="auth_instances">Escolha uma instância de autenticação</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Áudio e vídeo</string>
     <string name="fullscreen_orientation">Orientação em tela cheia</string>
     <string name="aspect_ratio">Proporção do vídeo</string>
@@ -188,13 +178,11 @@
     <string name="data_saver_mode">Economia de dados</string>
     <string name="data_saver_mode_summary">Ignorar miniaturas e outras imagens</string>
     <string name="search_history_summary">Lembrar buscas</string>
-    <string name="history_summary">Histórico de buscas e exibição</string>
     <string name="watch_positions_title">Reprodução organizada</string>
     <string name="system_caption_style">Estilo de legenda do sistema</string>
     <string name="captions">Legendas</string>
     <string name="none">Nenhum</string>
     <string name="general">Geral</string>
-    <string name="general_summary">Downloads e economia de dados</string>
     <string name="instance_frontend_url">URL para a interface da instância (opcional)</string>
     <string name="quality">Qualidade</string>
     <string name="behavior">Comportamento</string>
@@ -209,7 +197,6 @@
     <string name="new_videos_badge_summary">Mostrar um ícone com a quantidade de novos vídeos, se houver</string>
     <string name="backup_restore">Backup &amp; Restauração</string>
     <string name="open_copied">Abrir</string>
-    <string name="audio_video_summary">Qualidade e formato</string>
     <string name="delete">Excluir dos downloads</string>
     <string name="local_subscriptions">Inscrições locais</string>
     <string name="preferences">Preferências</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Temporizador</string>
     <string name="skip_silence">Pular silêncio</string>
     <string name="help">Ajuda</string>
-    <string name="faq">Perguntas frequentes</string>
     <string name="replies">Respostas</string>
     <string name="unsupported_file_format">Formato de arquivo não suportado: %1$s</string>
     <string name="mark_as_watched">Marcar como assistido</string>
@@ -418,7 +404,6 @@
     <string name="sb_invalid_segment">Início ou fim do segmento inválido</string>
     <string name="contribute_to_sponsorblock">Contribuir para SponsorBlock</string>
     <string name="sponsorblock_user_id">ID do usuário SponsorBlock</string>
-    <string name="donate">Doações</string>
     <string name="no_fullscreen_resolution">Resolução sem tela cheia</string>
     <string name="music_artists">Artistas do YT Music</string>
     <string name="same_as_fullscreen">O mesmo que tela cheia</string>
@@ -539,11 +524,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

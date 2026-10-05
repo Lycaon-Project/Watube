@@ -57,13 +57,10 @@
     <string name="retry">Zkusit znovu</string>
     <string name="location">Lokace</string>
     <string name="instance">Instance</string>
-    <string name="customization">Přizpůsobení</string>
-    <string name="website">Webové stránky</string>
     <string name="videoCount">%1$d videí</string>
     <string name="noInternet">Nejprve se připojte k internetu.</string>
     <string name="comments">Komentáře</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Používá API https://sponsor.ajay.app</string>
     <string name="segment_skipped">Segment přeskočen</string>
     <string name="category_segments">Segmenty</string>
     <string name="category_sponsor">Sponzor</string>
@@ -88,8 +85,6 @@
     <string name="music_albums">Alba YT Music</string>
     <string name="music_playlists">Playlisty YT Music</string>
     <string name="license">Licence</string>
-    <string name="color_accent">Barvy</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Upozornění</string>
     <string name="enabled">Zap</string>
     <string name="disabled">Vyp</string>
@@ -112,9 +107,7 @@
     <string name="fireIcon">Módní oheň</string>
     <string name="flameIcon">Létající plamen</string>
     <string name="birdIcon">Posílený pták</string>
-    <string name="instance_summary">Piped, přihlášení a účet</string>
     <string name="customInstance_summary">Přidat…</string>
-    <string name="version">Verze %1$s</string>
     <string name="category_filler">Výplň / vtipy</string>
     <string name="category_music_offtopic">Hudba: nehudební sekce</string>
     <string name="category_preview">Náhled / shrnutí</string>
@@ -127,7 +120,6 @@
     <string name="auth_instance">Autentifikační instance</string>
     <string name="auth_instance_summary">Použít jinou instanci pro autentifikační volání</string>
     <string name="auth_instances">Vyberte autent. instanci</string>
-    <string name="github">GitHub</string>
     <string name="category_filler_summary">Pro výplňové scény přidané jen jako přídavek nebo humor, které nejsou vyžadovány pro pochopení hlavního obsahu videa</string>
     <string name="category_music_offtopic_summary">Použití pouze u hudebních videí. Mělo by pokrývat části videa, ne části oficiálních skladeb. Ve výsledku by mělo video připomínat verzi ze Spotify nebo jakoukoli jinou mixovanou verzi jak nejlépe je to možné, nebo omezit mluvení a další rušivé prvky</string>
     <string name="category_preview_summary">Pro segmenty popisující budoucí obsah bez dalších informací. Pokud obsahuje klipy, které se objevují pouze zde, je to velmi pravděpodobně špatná kategorie</string>
@@ -154,11 +146,9 @@
     <string name="always">Vždy</string>
     <string name="quality">Kvalita</string>
     <string name="captions">Titulky</string>
-    <string name="general_summary">Stahování a úspora dat</string>
     <string name="restore">Obnovit</string>
     <string name="torchIcon">Módní pochodeň</string>
     <string name="behavior">Chování</string>
-    <string name="player_summary">Výchozí hodnoty a chování</string>
     <string name="deleteAccount_summary">Odstranit účet Piped</string>
     <string name="no_audio">Žádný zvuk</string>
     <string name="audio">Zvuk</string>
@@ -168,7 +158,6 @@
     <string name="no_video">Žádné video</string>
     <string name="video">Video</string>
     <string name="watch_history_summary">Ponechat historii sledování lokálně</string>
-    <string name="history_summary">Historie sledování a hledání</string>
     <string name="watch_positions_title">Zapamatované pozice přehrávání</string>
     <string name="reset_watch_positions">Obnovit</string>
     <string name="general">Obecné</string>
@@ -205,7 +194,6 @@
     <string name="irreversible">Opravdu? Tato akce je nevratná!</string>
     <string name="network_all">Všechny</string>
     <string name="network_metered">Měřené</string>
-    <string name="no_search_result">Žádné výsledky.</string>
     <string name="error_occurred">Chyba</string>
     <string name="copied">Zkopírováno</string>
     <string name="share_with_time">Sdílet s časovým kódem</string>
@@ -227,7 +215,6 @@
     <string name="copied_to_clipboard">Zkopírováno do schránky</string>
     <string name="open_copied">Otevřít</string>
     <string name="device_info">Informace o zařízení</string>
-    <string name="audio_video_summary">Kvalita a formát</string>
     <string name="delete">Odstranit ze stažených</string>
     <string name="renamePlaylist">Přejmenovat playlist</string>
     <string name="new_videos_badge">Značka u nových videí</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Časovač spánku</string>
     <string name="skip_silence">Přeskočit ticho</string>
     <string name="help">Nápověda</string>
-    <string name="faq">Často kladené dotazy</string>
     <string name="replies">Odpovědi</string>
     <string name="mark_as_watched">Označit jako zhlédnuté</string>
     <string name="unsupported_file_format">Nepodporovaný formát souboru: %1$s</string>
@@ -418,7 +404,6 @@
     <string name="sb_invalid_segment">Neplatný začátek nebo konec segmentu</string>
     <string name="contribute_to_sponsorblock">Přispívat do služby SponsorBlock</string>
     <string name="sponsorblock_user_id">ID uživatele SponsorBlock</string>
-    <string name="donate">Přispět</string>
     <string name="no_fullscreen_resolution">Rozlišení mimo celou obrazovku</string>
     <string name="music_artists">Umělci YT Music</string>
     <string name="same_as_fullscreen">Stejné jako při celé obrazovce</string>
@@ -541,11 +526,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

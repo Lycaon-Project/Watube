@@ -48,7 +48,6 @@
     <string name="music_albums">YouTube Music - Albums</string>
     <string name="music_playlists">YouTube Music - Afspeellijsten</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Overslaan van video-reclames</string>
     <string name="segment_skipped">Segment overgeslagen</string>
     <string name="category_segments">Segmenten</string>
     <string name="category_sponsor">Sponsor</string>
@@ -65,8 +64,6 @@
     <string name="category_outro">Eindkaarten en aftiteling</string>
     <string name="category_outro_summary">Info na afloop. Niet voor conclusies met info</string>
     <string name="license">Licentie</string>
-    <string name="color_accent">Accenten</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Meldingen</string>
     <string name="app_icon">Pictogram</string>
     <string name="enabled">Aan</string>
@@ -76,7 +73,6 @@
     <string name="loggedIn">Ingelogd</string>
     <string name="emptyPlaylistName">De naam van de afspeel­lijst mag niet leeg zijn</string>
     <string name="fail">Mislukt :(</string>
-    <string name="customization">Aanpassingen</string>
     <string name="emptyList">Niets te zien hier</string>
     <string name="deletePlaylist">Afspeel­lijst verwijderen</string>
     <string name="areYouSure">De afspeel­lijst verwijderen?</string>
@@ -95,7 +91,6 @@
     <string name="systemDefault">Systeem</string>
     <string name="subscribers">%1$s abonnees</string>
     <string name="instance">Instantie</string>
-    <string name="website">Website</string>
     <string name="reset">Standaardwaarden herstellen</string>
     <string name="reset_message">Alle instellingen resetten en uitloggen\?</string>
     <string name="downloads">Downloads</string>
@@ -107,7 +102,6 @@
     <string name="torchIcon">Trendy zaklamp</string>
     <string name="shapedIcon">Dwaas gevormd</string>
     <string name="invalid_url">Voer een URL in die werkt</string>
-    <string name="version">Versie %1$s</string>
     <string name="category_filler">Opvulling/grappen</string>
     <string name="category_music_offtopic">Muziek: Niet-muziek-sectie</string>
     <string name="category_preview">Voorbeschouwing/samenvatting</string>
@@ -121,7 +115,6 @@
     <string name="live">Live</string>
     <string name="flameIcon">Vliegende vlam</string>
     <string name="birdIcon">Verhoogde vogel</string>
-    <string name="instance_summary">Piped, login, en account</string>
     <string name="customInstance_summary">Voeg toe…</string>
     <string name="instance_name">Instantienaam</string>
     <string name="instance_api_url">URL naar instantie-API</string>
@@ -143,7 +136,6 @@
     <string name="instance_frontend_url">URL naar instantie-front-end (optioneel)</string>
     <string name="quality">Kwaliteit</string>
     <string name="behavior">Gedrag</string>
-    <string name="player_summary">Standaardwaarden en spelersgedrag</string>
     <string name="seek_increment">Zoek­stap</string>
     <string name="pauseOnScreenOff">Automatisch pauzeren</string>
     <string name="pauseOnScreenOff_summary">Pauzeer media wanneer het scherm wordt uitgeschakeld</string>
@@ -164,7 +156,6 @@
     <string name="error_occurred">Fout</string>
     <string name="copied">Gekopieerd</string>
     <string name="notifications">Meldingen</string>
-    <string name="github">GitHub</string>
     <string name="auto_rotation">Auto­rotatie</string>
     <string name="chapters">Hoofdstukken</string>
     <string name="always">Altijd</string>
@@ -197,7 +188,6 @@
     <string name="volume">Volume</string>
     <string name="rewind">Terugspoelen</string>
     <string name="help">Hulp</string>
-    <string name="faq">Veelgestelde vragen</string>
     <string name="watch_positions">Positie onthouden</string>
     <string name="resume">Hervatten</string>
     <string name="caption_settings">Ondertitels</string>
@@ -264,10 +254,7 @@
     <string name="sort_by">Sorteren op</string>
     <string name="duration_span">Duur: %1$s</string>
     <string name="navigation_bar">Navigatiebalk</string>
-    <string name="audio_video_summary">Kwaliteit en formaat</string>
-    <string name="general_summary">Downloads en gegevens­besparing</string>
     <string name="history_empty">Nog geen geschiedenis</string>
-    <string name="no_search_result">Geen resultaten</string>
     <string name="repeat_mode">Herhalings­modus</string>
     <string name="network_wifi">Enkel via wifi</string>
     <string name="backup_restore">Back-up en herstel</string>
@@ -387,7 +374,6 @@
     <string name="auth_instance_summary">Gebruik een andere instantie voor geauthenticeerde verzoeken</string>
     <string name="auth_instances">Kies een authenticatie­instantie</string>
     <string name="watch_history_summary">Houd bekeken video\'s lokaal bij</string>
-    <string name="history_summary">Kijk- en zoek­geschiedenis</string>
     <string name="sb_custom_colors">Aangepaste segment­kleuren</string>
     <string name="invalid_color">Ongeldige kleur­waarde ingevoerd!</string>
     <string name="original_or_main_audio_track">Origineel</string>
@@ -417,7 +403,6 @@
     <string name="sb_invalid_segment">Ongeldig segment­begin of -einde</string>
     <string name="contribute_to_sponsorblock">Bijdragen aan SponsorBlock</string>
     <string name="sponsorblock_user_id">SponsorBlock-gebruikers-ID</string>
-    <string name="donate">Doneren</string>
     <string name="no_fullscreen_resolution">Resolutie in kleine speler</string>
     <string name="music_artists">Youtube Music - Artiesten</string>
     <string name="same_as_fullscreen">Zelfde als in volledig scherm</string>
@@ -535,11 +520,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

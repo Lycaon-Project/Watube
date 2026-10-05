@@ -31,6 +31,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.media3.common.C
+import androidx.media3.common.Format
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
@@ -39,6 +40,7 @@ import androidx.media3.session.MediaController
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.CaptionStyleCompat
 import androidx.media3.ui.PlayerView
+import androidx.media3.ui.PlayerView.ControllerVisibilityListener
 import androidx.media3.ui.SubtitleView
 import androidx.media3.ui.TimeBar
 import com.watube.yard.R
@@ -69,6 +71,7 @@ import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.controllers.FullscreenGestureAnimationController
 import com.watube.yard.ui.dialogs.SubmitDeArrowDialog
 import com.watube.yard.ui.dialogs.SubmitSegmentDialog
+import com.watube.yard.ui.extensions.preferLowFrameRate
 import com.watube.yard.ui.extensions.toggleSystemBars
 import com.watube.yard.ui.interfaces.CustomPlayerCallback
 import com.watube.yard.ui.interfaces.PlayerGestureOptions
@@ -82,6 +85,7 @@ import com.watube.yard.ui.sheets.ChaptersBottomSheet
 import com.watube.yard.ui.sheets.PlaybackOptionsSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
 import com.watube.yard.ui.sheets.StatsSheet
+import com.watube.yard.ui.sheets.TranslationSheet
 import com.watube.yard.util.PlayingQueue
 import java.util.Locale
 import kotlin.math.ceil
@@ -150,6 +154,9 @@ class CustomExoPlayerView(
      */
     private var rememberedPlaybackSpeed: Float? = null
 
+    /** Whether the controls, hence the position labels, are on screen. */
+    private var controlsShown = false
+
     private fun toggleController(show: Boolean = !isControllerFullyVisible) {
         if (show) showController() else hideController()
     }
@@ -197,6 +204,11 @@ class CustomExoPlayerView(
         )
         // a placeholder until the first video size: the opening transition must not resize it
         fixSurfaceSize(DEFAULT_SURFACE_WIDTH, DEFAULT_SURFACE_HEIGHT)
+
+        setControllerVisibilityListener(ControllerVisibilityListener { visibility ->
+            controlsShown = visibility == VISIBLE
+            updateCurrentPosition()
+        })
     }
 
     /**
@@ -273,6 +285,10 @@ class CustomExoPlayerView(
         binding.autoPlay.setOnCheckedChangeListener { _, isChecked ->
             PlayerHelper.autoPlayEnabled = isChecked
         }
+
+        // redrawn every 100 ms while playing: no need for the screen's top refresh rate
+        listOf(binding.exoProgress, binding.position, binding.timeLeft, binding.duration)
+            .forEach { it.preferLowFrameRate() }
 
         // restore the duration type from the previous session
         updateDisplayedDurationType()
@@ -390,6 +406,12 @@ class CustomExoPlayerView(
 
             override fun onVideoSizeChanged(videoSize: VideoSize) =
                 fixSurfaceSize(videoSize.width, videoSize.height)
+
+            override fun onPositionDiscontinuity(
+                oldPosition: Player.PositionInfo,
+                newPosition: Player.PositionInfo,
+                reason: Int
+            ) = updateCurrentPosition()
 
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
@@ -680,22 +702,19 @@ class CustomExoPlayerView(
         ) {
             onQualityClicked()
         },
+        // audio channel and subtitles share one entry, and one sheet
         BottomSheetItem(
-            context.getString(R.string.audio_track),
-            R.drawable.ic_audio,
-            this::getCurrentAudioTrackTitle
-        ) {
-            onAudioStreamClicked()
-        },
-        BottomSheetItem(
-            context.getString(R.string.captions),
-            R.drawable.ic_caption,
+            context.getString(R.string.translation),
+            R.drawable.ic_translate,
             {
-                player?.let { PlayerHelper.getCurrentPlayedCaptionFormat(it)?.language }
+                val captions = player?.let { PlayerHelper.getCurrentPlayedCaptionFormat(it)?.language }
+                    ?.let { Locale.forLanguageTag(it).getDisplayLanguage(Locale.getDefault()) }
                     ?: context.getString(R.string.none)
+                listOf(getCurrentAudioTrackTitle(), captions)
+                    .joinToString(" · ") { it.replaceFirstChar { c -> c.titlecase(Locale.getDefault()) } }
             }
         ) {
-            onCaptionsClicked()
+            onTranslationClicked()
         },
         // hidden unless enabled in the player settings
         BottomSheetItem(
@@ -978,38 +997,36 @@ class CustomExoPlayerView(
             .show(supportFragmentManager)
     }
 
-    override fun onCaptionsClicked() {
-        val player = player ?: return
+    override fun onTranslationClicked() {
+        val player = player as? MediaController ?: return
+        TranslationSheet()
+            .setChoices(audioChoices(player), captionChoices(player))
+            .show(supportFragmentManager)
+    }
 
-        val captions = PlayerHelper.getCaptionTracks(player)
+    private fun captionChoices(player: Player): List<TranslationSheet.Choice> {
+        val currentSubtitle = PlayerHelper.getCurrentPlayedCaptionFormat(player)
+        val selectCaption = { format: Format? ->
+            updateCurrentSubtitle(format?.id)
+            playerViewModel?.currentCaptionId = format?.id
+        }
+        val none = TranslationSheet.Choice(
+            context.getString(R.string.none), currentSubtitle == null
+        ) { selectCaption(null) }
+
+        return listOf(none) + PlayerHelper.getCaptionTracks(player)
             // put normal tracks before auto-generated tracks
             .sortedBy { it.roleFlags == PlayerHelper.ROLE_FLAG_AUTO_GEN_SUBTITLE }
-            .associateWith {
-                val displayName = Locale.forLanguageTag(it.language.orEmpty())
+            .map { format ->
+                val displayName = Locale.forLanguageTag(format.language.orEmpty())
                     .getDisplayLanguage(Locale.getDefault())
-
-                if (it.roleFlags == PlayerHelper.ROLE_FLAG_AUTO_GEN_SUBTITLE) {
+                val title = if (format.roleFlags == PlayerHelper.ROLE_FLAG_AUTO_GEN_SUBTITLE) {
                     "$displayName (${context.getString(R.string.auto_generated)})"
                 } else {
                     displayName
                 }
+                TranslationSheet.Choice(title, format == currentSubtitle) { selectCaption(format) }
             }
-
-        val currentSubtitle = PlayerHelper.getCurrentPlayedCaptionFormat(player)
-        BaseBottomSheet()
-            .setSimpleItems(
-                listOf(context.getString(R.string.none)) + captions.values.toList(),
-                preselectedItem = captions.entries.firstOrNull { (track, _) ->
-                    track == currentSubtitle
-                }?.value ?: context.getString(R.string.none)
-            ) { index ->
-                val captionsFormat =
-                    captions.keys.toList().getOrNull(index - 1)
-
-                updateCurrentSubtitle(captionsFormat?.id)
-                playerViewModel?.currentCaptionId = captionsFormat?.id
-            }
-            .show(supportFragmentManager)
     }
 
     fun updateCurrentSubtitle(trackId: String?) {
@@ -1118,15 +1135,11 @@ class CustomExoPlayerView(
         selectedResolution = resolution
     }
 
-    override fun onAudioStreamClicked() {
-        val player = player as? MediaController ?: return
-        val context = context ?: return
-
+    private fun audioChoices(player: MediaController): List<TranslationSheet.Choice> {
         val audioLanguagesAndRoleFlags = PlayerHelper.getAudioLanguagesAndRoleFlagsFromTrackGroups(
             player.currentTracks.groups,
             false
         )
-        val baseBottomSheet = BaseBottomSheet()
 
         if (audioLanguagesAndRoleFlags.isEmpty() || (audioLanguagesAndRoleFlags.size == 1 &&
                     audioLanguagesAndRoleFlags[0].first == null &&
@@ -1138,40 +1151,32 @@ class CustomExoPlayerView(
             // no language and no role flags, it should mean that there is only a single audio
             // track which has no language or track type set in the video played
             // Consider it as the default audio track (or unknown)
-            baseBottomSheet.setSimpleItems(
-                listOf(context.getString(R.string.default_or_unknown_audio_track)),
-                preselectedItem = context.getString(R.string.default_or_unknown_audio_track),
-                listener = null
+            return listOf(
+                TranslationSheet.Choice(context.getString(R.string.default_or_unknown_audio_track), true) {}
             )
-        } else {
-            val sortedAudioTracks = audioLanguagesAndRoleFlags
-                // audio tracks have only a single flag set
-                // ordered by main, dubbed, audio descriptive
-                .sortedBy { it.second }
-
-            baseBottomSheet.setSimpleItems(
-                sortedAudioTracks
-                .map {
-                    PlayerHelper.getAudioTrackNameFromFormat(context, it)
-                },
-                preselectedItem = getCurrentAudioTrackTitle(),
-            ) { index ->
-                val selectedAudioFormat = sortedAudioTracks[index]
-                player.sendCustomCommand(
-                    AbstractPlayerService.runPlayerActionCommand, bundleOf(
-                        PlayerCommand.SET_AUDIO_ROLE_FLAGS.name to selectedAudioFormat.second
-                    )
-                )
-                player.sendCustomCommand(
-                    AbstractPlayerService.runPlayerActionCommand, bundleOf(
-                        PlayerCommand.SET_AUDIO_LANGUAGE.name to selectedAudioFormat.first
-                    )
-                )
-                selectedAudioLanguageAndRoleFlags = selectedAudioFormat
-            }
         }
 
-        baseBottomSheet.show(supportFragmentManager)
+        val currentTitle = getCurrentAudioTrackTitle()
+        return audioLanguagesAndRoleFlags
+            // audio tracks have only a single flag set
+            // ordered by main, dubbed, audio descriptive
+            .sortedBy { it.second }
+            .map { audioFormat ->
+                val title = PlayerHelper.getAudioTrackNameFromFormat(context, audioFormat)
+                TranslationSheet.Choice(title, title == currentTitle) {
+                    player.sendCustomCommand(
+                        AbstractPlayerService.runPlayerActionCommand, bundleOf(
+                            PlayerCommand.SET_AUDIO_ROLE_FLAGS.name to audioFormat.second
+                        )
+                    )
+                    player.sendCustomCommand(
+                        AbstractPlayerService.runPlayerActionCommand, bundleOf(
+                            PlayerCommand.SET_AUDIO_LANGUAGE.name to audioFormat.first
+                        )
+                    )
+                    selectedAudioLanguageAndRoleFlags = audioFormat
+                }
+            }
     }
 
     override fun onStatsClicked() {
@@ -1283,7 +1288,13 @@ class CustomExoPlayerView(
             binding.timeLeft.text = timeLeftText
         }
 
-        runnableHandler.postDelayed(100, UPDATE_POSITION_TOKEN, this::updateCurrentPosition)
+        // battery: the labels only show with the controls and only move while playing, so the
+        // loop stops otherwise (it used to wake the main thread 10 times a second for the whole
+        // session, paused or in the background). Play / pause changes, seeks and the controls
+        // showing up restart it.
+        if (controlsShown && player?.isPlaying == true) {
+            runnableHandler.postDelayed(100, UPDATE_POSITION_TOKEN, this::updateCurrentPosition)
+        }
     }
 
     /**

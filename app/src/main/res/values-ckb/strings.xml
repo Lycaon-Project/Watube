@@ -65,7 +65,6 @@
     <string name="shareTo">ناردنی ناونیشان بۆ</string>
     <string name="playOnBackground">لێدان لە پشت شاشە</string>
     <string name="defaultIcon">بنەڕەتی</string>
-    <string name="customization">دەستکاریکردن</string>
     <string name="noInternet">سەرەتا پێویستە پەیوەستی ئینتەرنێت بیت.</string>
     <string name="category_selfpromo_summary">هاوشێوەی \"سپۆنسەر\" بەڵام بەبێ پارەدان بۆ خۆ بەرزکردنەوە، ئەمەش بەشەکانی کاڵا، بەخشین، یان زانیاری دەربارەی ئەوەی کە کێ هاوکاری کردوون دەگرێتەوە</string>
     <string name="category_interaction">بیرخستنەوەی کاردانەوە</string>
@@ -84,9 +83,7 @@
     <string name="torchIcon">ئایکۆنی ٤</string>
     <string name="flameIcon">ئایکۆنی ٦</string>
     <string name="birdIcon">ئایکۆنی ٧</string>
-    <string name="instance_summary">هەژمار و چونەژوورەوە</string>
     <string name="related_streams_summary">پیشاندانی ناوەڕۆکە هاوشێوەکان لەکاتی سەیرکردندا</string>
-    <string name="player_summary">فرمانە بنەڕەتییەکان</string>
     <string name="instance_frontend_url">ناونیشانی ڕاستەوخۆ (دڵخواز)</string>
     <string name="customInstance_summary">زیادکردن…</string>
     <string name="category_segments">بەشەکان</string>
@@ -128,7 +125,6 @@
     <string name="music_playlists">لیستی لێدانەکانی یوتوب میوزیک</string>
     <string name="update_available">نوێکردنەوە بەردەستە</string>
     <string name="downloads">داگرتنەکان</string>
-    <string name="website">ماڵپەڕ</string>
     <string name="videoCount">%1$d ڤیدیۆ</string>
     <string name="retry">هەوڵدانەوە</string>
     <string name="settings">ڕێکخستنەکان</string>
@@ -142,24 +138,19 @@
     <string name="search_history">مێژووی گەڕان</string>
     <string name="clear_history">سڕینەوەی مێژوو</string>
     <string name="sponsorblock">ڕێگریکردنی سپۆنسەر</string>
-    <string name="sponsorblock_summary">بەکارهێنانی سایتی https://sponsor.ajay.app</string>
     <string name="segment_skipped">بەشە فەرامۆشکراوەکان</string>
     <string name="category_filler">ڕێگریکردنی گاڵتەجاری/نوکتەکان</string>
     <string name="category_music_offtopic">میوزیک: کە پەیوەندی نییە بە میوزیکەوە</string>
     <string name="category_preview">پێشبینین/لێدانەوە</string>
-    <string name="color_accent">لەهجە</string>
-    <string name="material_you">ماتریاڵی نوێ</string>
     <string name="enabled">چالاک</string>
     <string name="normal_views">%1$s بینین%2$s</string>
     <string name="fireIcon">ئایکۆنی ٣</string>
     <string name="shapedIcon">ئایکۆنی ٥</string>
-    <string name="version">وەشانی %1$s</string>
     <string name="related_streams">بابەتی هاوشێوە</string>
     <string name="buffering_goal">ماوەی چاوەڕوانی</string>
     <string name="download_completed">داگرتن تەواوبوو</string>
     <string name="player_autoplay">لێدانی خۆکاری</string>
     <string name="pure_theme">ڕووکاری سادە</string>
-    <string name="history_summary">مێژووی سەیرکردن و گەڕان</string>
     <string name="behavior">فرمانەکان</string>
     <string name="quality">کوالێتی</string>
     <string name="seek_increment">ماوەی پێشخستن</string>
@@ -174,7 +165,6 @@
     <string name="export_subscriptions">هەڵگرتنی هاوبەشیكردنەکان</string>
     <string name="backup">پاشکەوتکردن</string>
     <string name="open_copied">کردنەوە</string>
-    <string name="audio_video_summary">کوالێتی و شێواز</string>
     <string name="delete">سڕینەوە لە داگرتنەکاندا</string>
     <string name="most_recent">نوێترین</string>
     <string name="portrait">ستوونی (ئاسایی)</string>
@@ -185,7 +175,6 @@
     <string name="data_saver_mode_summary">فەرامۆشکردنی وێنەی بچووککراوە و وێنەکانی تر</string>
     <string name="watch_positions_title">بیرخستنەوەی شوێنی لێدان</string>
     <string name="none">هیچیان</string>
-    <string name="general_summary">زمان و شوێن</string>
     <string name="system_caption_style">شێوازی ژێرنووسی سیستەم</string>
     <string name="captions">ژێرنووس</string>
     <string name="general">گشتی</string>
@@ -229,7 +218,6 @@
     <string name="auth_instance">هاوکاتکردنی سێرڤەر</string>
     <string name="auth_instance_summary">بەکارهێنانی سێرڤەری جیاواز بۆ هاوکاتکردنی پەیوەندی</string>
     <string name="auth_instances">سێرڤەری هاوکاتکەر هەڵبژێرە</string>
-    <string name="github">گیتهەب</string>
     <string name="fullscreen_orientation">شێوازی پڕ بە شاشە</string>
     <string name="aspect_ratio">ڕێژەی قیاسی ڤیدیۆ</string>
     <string name="auto_rotation">سوڕانی خۆکاری</string>
@@ -237,7 +225,6 @@
     <string name="notify_new_streams">پیشاندانی ئاگادارکردنەوە بۆ بڵاوکردنەوە نوێیەکان</string>
     <string name="notify_new_streams_summary">ئاگادارکردنەوە لە نوێترین بابەتی ئەو کەسانەی شوێنیان کەوتویت</string>
     <string name="least_views">کەمترین بینراو</string>
-    <string name="no_search_result">هیچ ئەنجامێک نەبوو.</string>
     <string name="error_occurred">هەڵە هەیە</string>
     <string name="copied">لەبەریگیرایەوە</string>
     <string name="share_with_time">بڵاوکردنەوە لەگەڵ هەمان کاتدا</string>
@@ -301,7 +288,6 @@
     <string name="play_latest_videos">لێدانی دوایین ڤیدیۆکان</string>
     <string name="nothing_selected">هیچ شتێک دیارینەکراوە!</string>
     <string name="hide_watched_from_feed">شاردنەوەی ڤیدیۆ بینراوەکان</string>
-    <string name="faq">کراوە بە کوردی لەلایەن: گۆران غەریب</string>
     <string name="playing_next">ڤیدیۆیی دواتر لێدەدەرێت لەدوای %1$s</string>
     <string name="defaultIconLight">سپی</string>
     <string name="category">بەشەکان</string>
@@ -417,7 +403,6 @@
     <string name="sb_invalid_segment">سەرەتا و کۆتایی بەش نادروستە</string>
     <string name="contribute_to_sponsorblock">بەشداربوون لە SponsorBlock</string>
     <string name="sponsorblock_user_id">زانیاری بەکارهێنەری SponsorBlock</string>
-    <string name="donate">بەخشین</string>
     <string name="no_fullscreen_resolution">قەبارەی پڕ بەشاشە بەردەست نیە</string>
     <string name="repeat_mode_all">دووبارەکردنەوەی هەمووی</string>
     <string name="finished">تەواوبوو</string>
@@ -535,11 +520,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

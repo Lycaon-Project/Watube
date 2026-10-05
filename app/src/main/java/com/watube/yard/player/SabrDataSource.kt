@@ -38,6 +38,8 @@ class SabrDataSource(
                 SabrClient::class.java.name,
                 "open: failed to get segment ${playbackRequest?.segment} for ${playbackRequest?.format?.itag}: $e"
             )
+            // a flagged session reaches the player as such: the service then renews it
+            if (e is SabrAttestationException) throw e
             // keep the original cause so that ExoPlayer / logs can report the real failure
             throw IOException("Failed to fetch SABR segment", e)
         }

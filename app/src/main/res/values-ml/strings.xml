@@ -23,7 +23,6 @@
     <string name="changeLanguage">ഭാഷ</string>
     <string name="location">സ്ഥലം</string>
     <string name="subscribers">%1$s സബ്സ്ക്രൈബറുകൾ</string>
-    <string name="website">വെബ്സൈറ്റ്</string>
     <string name="retry">വീണ്ടും ശ്രമിക്കുക</string>
     <string name="noInternet">ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല</string>
     <string name="library">ലൈബ്രറി</string>
@@ -57,7 +56,6 @@
     <string name="search_history">തിരയൽ ചരിത്രം</string>
     <string name="clear_history">ചരിത്രം മായ്ക്കുക</string>
     <string name="music_songs">YT സംഗീത ഗാനങ്ങൾ</string>
-    <string name="sponsorblock_summary">ഉപയോഗിക്കുന്ന എപിഐ https://sponsor.ajay.app/</string>
     <string name="license">ലൈസൻസ്</string>
     <string name="already_logged_in">ഇതിനകം ലോഗിൻ ചെയ്തിട്ടുണ്ട്. നിങ്ങളുടെ അക്കൗണ്ടിൽ നിന്ന് നിങ്ങൾക്ക് ലോഗ് ഔട്ട് ചെയ്യാം.</string>
     <string name="server_error">സെർവറിൽ ഒരു പ്രശ്നമുണ്ട്. മറ്റൊരു ഉദാഹരണം പരീക്ഷിക്കണോ\?</string>
@@ -79,7 +77,6 @@
     <string name="grid">ഗ്രിഡ് നിരകൾ</string>
     <string name="systemDefault">വ്യവസ്ഥ</string>
     <string name="lightTheme">വെളിച്ചം</string>
-    <string name="customization">കസ്റ്റമൈസേഷനുകൾ</string>
     <string name="comments">അഭിപ്രായങ്ങൾ</string>
     <string name="music_videos">YT സംഗീത വീഡിയോകൾ</string>
     <string name="music_albums">YT സംഗീത ആൽബങ്ങൾ</string>
@@ -93,7 +90,6 @@
     <string name="category_outro">എൻഡ്കാർഡുകൾ/ക്രെഡിറ്റുകൾ</string>
     <string name="category_outro_summary">ക്രെഡിറ്റുകൾ അല്ലെങ്കിൽ YouTube എൻഡ്കാർഡുകൾ ദൃശ്യമാകുമ്പോൾ. വിവരങ്ങളുള്ള നിഗമനങ്ങൾക്ക് വേണ്ടിയല്ല</string>
     <string name="playOnBackground">പശ്ചാത്തലത്തിൽ പ്ലേ ചെയ്യുക</string>
-    <string name="color_accent">വർണ്ണ ആക്സന്റ്</string>
     <string name="sponsorblock_notifications">അറിയിപ്പുകൾ</string>
     <string name="update_available">%1$s പതിപ്പ് ലഭ്യമാണ്</string>
     <string name="appearance">രൂപഭാവം</string>
@@ -113,7 +109,6 @@
     <string name="legacyIcon">ലെഗസി</string>
     <string name="torchIcon">ടോർച്ച്</string>
     <string name="shapedIcon">ഷേപ്പ്ഡ്</string>
-    <string name="material_you">മെറ്റീരിയൽ You</string>
     <string name="notifications">അറിയിപ്പുകൾ</string>
     <string name="chapters">അധ്യായങ്ങൾ</string>
     <string name="search_history_summary">തിരയലുകൾ ഓർക്കുക</string>
@@ -121,7 +116,6 @@
     <string name="pause">താൽക്കാലികമായി നിർത്തുക</string>
     <string name="instance_name">ഉദാഹരണ നാമം</string>
     <string name="normal_views">%1$s കാഴ്‌ചകൾ%2$s</string>
-    <string name="version">പതിപ്പ് %1$s</string>
     <string name="privacy_alert">സ്വകാര്യതാ മുന്നറിയിപ്പ്</string>
     <string name="replies">മറുപടികൾ</string>
     <string name="related_streams_summary">നിങ്ങൾ കാണുന്നതിനൊപ്പം സമാന സ്ട്രീമുകളും കാണിക്കുക</string>
@@ -133,7 +127,6 @@
     <string name="addInstance">ഉദാഹരണം ചേർക്കുക</string>
     <string name="related_streams">ബന്ധപ്പെട്ട ഉള്ളടക്കം</string>
     <string name="customInstance_summary">ചേർക്കുക…</string>
-    <string name="general_summary">ഭാഷ, പ്രദേശം</string>
     <string name="caption_settings">അടിക്കുറിപ്പുകൾ</string>
     <string name="none">ഒന്നുമില്ല</string>
     <string name="time">സമയം</string>
@@ -150,7 +143,6 @@
     <string name="open">തുറക്കുക…</string>
     <string name="exportsuccess">കയറ്റുമതി ചെയ്തു.</string>
     <string name="help">സഹായം</string>
-    <string name="faq">പതിവുചോദ്യങ്ങൾ</string>
     <string name="mark_as_watched">കണ്ടതായി അടയാളപ്പെടുത്തുക</string>
     <string name="all_caught_up_summary">നിങ്ങൾ എല്ലാ പുതിയ വീഡിയോകളും കണ്ടു</string>
     <string name="nothing_selected">ഒന്നും തിരഞ്ഞെടുത്തില്ല!</string>
@@ -180,11 +172,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

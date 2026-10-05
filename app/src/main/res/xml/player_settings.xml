@@ -12,7 +12,7 @@
             app:title="@string/swipe_controls" />
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/ic_fullscreen"
             app:key="fullscreen_gestures"
             app:title="@string/fullscreen_gestures" />
@@ -83,17 +83,6 @@
             app:key="auto_pip"
             app:title="@string/auto_pip" />
 
-        <Preference
-            android:icon="@drawable/ic_sleep"
-            app:key="sleep_timer"
-            app:title="@string/sleep_timer" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:icon="@drawable/ic_sleep"
-            app:key="sleep_timer_all_videos"
-            app:title="@string/sleep_timer_all_videos" />
-
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_headphones"
@@ -109,6 +98,46 @@
             app:key="orientation"
             app:title="@string/screen_orientation"
             app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/rest_mode">
+
+        <Preference
+            android:icon="@drawable/ic_sleep"
+            app:key="sleep_timer"
+            app:title="@string/sleep_timer" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_sleep"
+            app:key="sleep_timer_all_videos"
+            app:title="@string/sleep_timer_all_videos" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/watube_moon"
+            android:summary="@string/rest_mode_schedule_summary"
+            app:key="rest_mode_schedule"
+            app:title="@string/rest_mode_schedule" />
+
+        <MultiSelectListPreference
+            android:dependency="rest_mode_schedule"
+            android:icon="@drawable/ic_time_outlined"
+            app:key="rest_mode_days"
+            app:title="@string/rest_mode_days" />
+
+        <Preference
+            android:dependency="rest_mode_schedule"
+            android:icon="@drawable/ic_time"
+            app:key="rest_mode_start"
+            app:title="@string/rest_mode_start" />
+
+        <Preference
+            android:dependency="rest_mode_schedule"
+            android:icon="@drawable/ic_time"
+            app:key="rest_mode_end"
+            app:title="@string/rest_mode_end" />
 
     </PreferenceCategory>
 

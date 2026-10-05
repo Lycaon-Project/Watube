@@ -1,7 +1,6 @@
 package com.watube.yard.util
 
 import com.watube.yard.helpers.PrivacyHelper
-import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.schabi.newpipe.extractor.downloader.Downloader
 import org.schabi.newpipe.extractor.downloader.Request
@@ -10,8 +9,8 @@ import org.schabi.newpipe.extractor.exceptions.ReCaptchaException
 import java.io.IOException
 
 class NewPipeDownloaderImpl : Downloader() {
-    private val client = OkHttpClient.Builder()
-        .build()
+    // the app wide pool: the extractor's requests reuse the connections of the other clients
+    private val client = SharedHttpClient.base
 
     @Throws(IOException::class, ReCaptchaException::class)
     override fun execute(request: Request): Response {

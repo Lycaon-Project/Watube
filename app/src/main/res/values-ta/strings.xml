@@ -44,7 +44,6 @@
     <string name="defaultIcon">இயல்புநிலை</string>
     <string name="fireIcon">நாகரீகமான தீ</string>
     <string name="torchIcon">நவநாகரீக டார்ச்</string>
-    <string name="instance_summary">குழாய், உள்நுழைவு மற்றும் கணக்கு</string>
     <string name="no_subtitle">வசன வரிகள் இல்லை</string>
     <string name="audio">ஆடியோ</string>
     <string name="pause">இடைநிறுத்தம்</string>
@@ -56,7 +55,6 @@
     <string name="autoRotatePlayer">ஆட்டோ-ஃபுல்ச்கிரீன்</string>
     <string name="none">எதுவுமில்லை</string>
     <string name="backup_restore">காப்புப்பிரதி மற்றும் மீட்டமை</string>
-    <string name="audio_video_summary">தகுதி மற்றும் வடிவம்</string>
     <string name="change_region">தற்போதைய பிராந்தியத்திற்கு ட்ரெண்டிங் கிடைக்கவில்லை என்று தெரிகிறது. அமைப்புகளில் இன்னொன்றைத் தேர்ந்தெடுக்கவும்.</string>
     <string name="all_caught_up">நீங்கள் அனைத்தும் பிடிபட்டீர்கள்</string>
     <string name="group_name_error_exists">தனித்துவமான பெயரைத் தேர்வுசெய்க</string>
@@ -88,7 +86,6 @@
     <string name="subscribers">%1$s சந்தாதாரர்கள்</string>
     <string name="settings">அமைப்புகள்</string>
     <string name="instance">சான்று</string>
-    <string name="customization">சரிசெய்தல்</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d வீடியோக்கள்</string>
     <string name="subscriberAndVideoCounts">%1$s சந்தாதாரர்கள் • %2$d வீடியோக்கள்</string>
     <string name="videoCount">%1$d வீடியோக்கள்</string>
@@ -107,7 +104,6 @@
     <string name="category_music_offtopic_summary">இசை வீடியோக்களில் மட்டுமே பயன்படுத்த. இது அதிகாரப்பூர்வ கலவைகளின் ஒரு பகுதியாக அல்ல வீடியோவின் பகுதிகளை மறைக்க வேண்டும். முடிவில், வீடியோ ச்பாட்ஃபை அல்லது வேறு எந்த கலப்பு பதிப்பையும் முடிந்தவரை நெருக்கமாக ஒத்திருக்க வேண்டும், அல்லது பேசும் அல்லது பிற கவனச்சிதறல்களைக் குறைக்க வேண்டும்</string>
     <string name="category_preview_summary">கூடுதல் செய்தி இல்லாமல் எதிர்கால உள்ளடக்கத்தை விவரிக்கும் பிரிவுகளுக்கு. இங்கே மட்டுமே தோன்றும் கிளிப்புகள் இதில் இருந்தால், இது தவறான வகையாகும்</string>
     <string name="category_highlight_summary">விளம்பரப்படுத்தப்பட்ட தலைப்பு, சிறுபடம் அல்லது வீடியோவின் மிகவும் சுவையான பகுதியாக இருக்கலாம். அத்தியாயங்கள் பிரிவில் அதைத் தட்டுவதன் மூலம் அதைத் தவிர்க்கலாம்</string>
-    <string name="material_you">பொருள் நீங்கள்</string>
     <string name="sponsorblock_notifications">அறிவிப்புகள்</string>
     <string name="app_icon">படவுரு</string>
     <string name="playOnBackground">பின்னணியில் விளையாடுங்கள்</string>
@@ -123,7 +119,6 @@
     <string name="instance_name">சான்று பெயர்</string>
     <string name="instance_api_url">உதாரணமாக பநிஇ க்கு முகவரி</string>
     <string name="invalid_url">வேலை செய்யும் முகவரி ஐ உள்ளிடவும்</string>
-    <string name="version">பதிப்பு %1$s</string>
     <string name="related_streams">தொடர்புடைய உள்ளடக்கம்</string>
     <string name="video">ஒளிதோற்றம்</string>
     <string name="downloading">பதிவிறக்கம்…</string>
@@ -138,7 +133,6 @@
     <string name="watch_history">வரலாற்றைப் பாருங்கள்</string>
     <string name="watch_positions">நிலையை நினைவில் கொள்க</string>
     <string name="auth_instances">அங்கீகார நிகழ்வைத் தேர்வுசெய்க</string>
-    <string name="github">கிரப்</string>
     <string name="fullscreen_orientation">முழுத்திரை நோக்குநிலை</string>
     <string name="pure_theme_summary">தூய வெள்ளை/கருப்பு கருப்பொருள்</string>
     <string name="reset_watch_positions">மீட்டமை</string>
@@ -146,7 +140,6 @@
     <string name="rich_caption_rendering_summary">மிகவும் பணக்கார மற்றும் தனிப்பயனாக்கப்பட்ட அனுபவத்திற்கு வலை தலைப்புகளை வழங்கவும்</string>
     <string name="captions">தலைப்புகள்</string>
     <string name="general">பொது</string>
-    <string name="general_summary">பதிவிறக்கங்கள் மற்றும் தரவு சேமிப்பான்</string>
     <string name="worst_quality">மோசமான</string>
     <string name="default_subtitle_language">வசன மொழி</string>
     <string name="notifications">அறிவிப்புகள்</string>
@@ -274,7 +267,6 @@
     <string name="buffering_goal">முன்பே ஏற்றுதல்</string>
     <string name="quality">தகுதி</string>
     <string name="behavior">நடத்தை</string>
-    <string name="player_summary">இயல்புநிலை மற்றும் நடத்தை</string>
     <string name="seek_increment">அதிகரிப்பு தேடுங்கள்</string>
     <string name="pauseOnScreenOff_summary">திரை அணைக்கப்படும்போது பின்னணி இடைநிறுத்து</string>
     <string name="clonePlaylist">நகலி பிளேலிச்ட்</string>
@@ -302,7 +294,6 @@
     <string name="view_count">%1$s காட்சிகள்</string>
     <string name="player_channel_name">வீரர் பணி</string>
     <string name="help">உதவி</string>
-    <string name="faq">கேள்விகள்</string>
     <string name="network_wifi">வைஃபை மட்டுமே</string>
     <string name="remove_watched_videos">பார்த்த வீடியோக்களை அகற்று</string>
     <string name="tooltip_unlocked">பிளேயரைத் திறக்கவும்</string>
@@ -317,7 +308,6 @@
     <string name="require_restart_message">புதிய மாற்றங்களைப் பயன்படுத்த பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.</string>
     <string name="data_saver_mode">தரவு-சேவர் பயன்முறை</string>
     <string name="caption_settings">தலைப்புகள்</string>
-    <string name="no_search_result">முடிவுகள் இல்லை.</string>
     <string name="copied_to_clipboard">இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டது</string>
     <string name="delete">பதிவிறக்கங்களிலிருந்து நீக்கு</string>
     <string name="mobile_data">மொபைல் தரவு</string>
@@ -364,9 +354,7 @@
     <string name="also_clear_watch_positions">தெளிவான கடிகார நிலைகளும்</string>
     <string name="addToPlaylist">பிளேலிச்ட்டில் சேர்க்கவும்</string>
     <string name="success">முடிந்தது.</string>
-    <string name="website">வலைத்தளம்</string>
     <string name="sponsorblock">ஒப்புரவாளர் தொகுதி</string>
-    <string name="sponsorblock_summary">Https://sponsor.ajay.app பநிஇ ஐப் பயன்படுத்துகிறது</string>
     <string name="app_uptodate">அண்மைக் கால பதிப்பை இயக்குகிறது.</string>
     <string name="no_video">வீடியோ இல்லை</string>
     <string name="watch_positions_title">நினைவுகூரப்பட்ட பின்னணி நிலைகள்</string>
@@ -393,7 +381,6 @@
     <string name="data_saver_mode_summary">சிறு உருவங்கள் மற்றும் பிற படங்களைத் தவிர்க்கவும்</string>
     <string name="search_history_summary">தேடல்களை நினைவில் கொள்க</string>
     <string name="watch_history_summary">பார்த்த வீடியோக்களை உள்நாட்டில் கண்காணிக்கவும்</string>
-    <string name="history_summary">வரலாற்றைப் பார்த்து தேடல்</string>
     <string name="copy_tooltip">நகலெடு</string>
     <string name="autoplay_countdown">ஆட்டோபிளே கவுண்டவுன்</string>
     <string name="skip_segment">பிரிவைத் தவிர்க்கவும்</string>
@@ -420,10 +407,8 @@
     <string name="library">நூலகம்</string>
     <string name="import_from_yt_summary">YouTube அல்லது NewPipe இலிருந்து</string>
     <string name="deletePlaylist">பிளேலிச்ட்டை நீக்கு</string>
-    <string name="donate">நன்கொடை</string>
     <string name="category_sponsor">ஒப்புரவாளர்</string>
     <string name="category_exclusive_access">பிரத்யேக அணுகல்</string>
-    <string name="color_accent">உச்சரிப்புகள்</string>
     <string name="downloads">பதிவிறக்கங்கள்</string>
     <string name="least_recent">பழமையானது</string>
     <string name="wifi">இல்</string>
@@ -528,11 +513,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

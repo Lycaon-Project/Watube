@@ -35,6 +35,8 @@ class NavBarOptionsAdapter(
             val isPinned = NavBarHelper.isPinned(item.itemId)
             checkbox.isEnabled = !isPinned
             dragView.isInvisible = isPinned
+            // nor be the tab the app opens on
+            home.isInvisible = isPinned
             home.setImageResource(
                 if (item.itemId == selectedHomeTabId) R.drawable.ic_home_dark else R.drawable.ic_home_outlined
             )

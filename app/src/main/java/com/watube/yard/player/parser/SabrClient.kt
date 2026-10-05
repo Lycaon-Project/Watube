@@ -6,11 +6,13 @@ import androidx.media3.common.MimeTypes
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
 import com.watube.yard.WatubeApp
-import com.watube.yard.api.poToken.PoTokenGenerator
 import com.watube.yard.helpers.DisplayHelper
+import com.watube.yard.player.SabrAttestationException
+import com.watube.yard.player.SabrSessionRenewals
 import com.watube.yard.player.manifest.Representation
 import com.watube.yard.player.manifest.SabrManifest
 import com.watube.yard.ui.dialogs.ShareDialog
+import com.watube.yard.util.SharedHttpClient
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -175,11 +177,6 @@ class SabrClient private constructor(
     private val ustreamerConfig: ByteString,
 ) {
 
-    /** Generator to create PoTokens. */
-    private var poTokenGenerator = PoTokenGenerator()
-    /** Po (Proof of Origin) Token. */
-    private var poToken: ByteString? = null
-
     private var fatalError: SabrError? = null
     private val dispatcher = Dispatchers.IO.limitedParallelism(1)
 
@@ -193,12 +190,6 @@ class SabrClient private constructor(
         manifest.serverAbrStreamingUri.toString(),
         ByteString.copyFrom(manifest.videoPlaybackUstreamerConfig)
     )
-
-    init {
-        poTokenGenerator.getCachedWebClientPoToken()?.let {
-            poToken = ByteString.copyFrom(it.streamingDataPoToken!!.toByteArray())
-        }
-    }
 
     /**
      * Initialized formats.
@@ -216,24 +207,6 @@ class SabrClient private constructor(
      * Segments are stored here temporarily until they are fully processed.
      */
     private val partialSegments = mutableMapOf<Int, Segment>()
-
-    /** HTTP Client for requesting UMP data. */
-    private val client: OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor { chain ->
-            val request = chain.request().newBuilder()
-                .addHeader("Content-Type", CONTENT_TYPE)
-                .addHeader("Accept-Encoding", ENCODING)
-                .addHeader("Accept", ACCEPT)
-                .addHeader("Origin", ShareDialog.YOUTUBE_FRONTEND_URL)
-                .addHeader("Referer", "${ShareDialog.YOUTUBE_FRONTEND_URL}/")
-                .addHeader("User-Agent", USER_AGENT)
-                .build()
-            chain.proceed(request)
-        }
-        // the server may hold a response for more than 10 s (OkHttp default): timing out
-        // dropped the data and the retry started a new wait, so playback never resumed
-        .readTimeout(SABR_READ_TIMEOUT_S, TimeUnit.SECONDS)
-        .build()
 
     /** Sequence number of the request. */
     private var requestNumber = 1
@@ -438,7 +411,6 @@ class SabrClient private constructor(
             .addAllBufferedRanges(initializedFormats.values.flatMap { it.buildBufferedRanges() })
             .setStreamerContext(
                 StreamerContext.newBuilder()
-                    .setPoToken(poToken ?: ByteString.empty())
                     .setClientInfo(
                         StreamerContext.ClientInfo.newBuilder()
                             .setClientName(101)
@@ -576,13 +548,13 @@ class SabrClient private constructor(
 
             UMPPartId.SABR_REDIRECT -> {
                 val redirect = SabrRedirect.parseFrom(part.data)
-                // The next request carries the PoToken and playback cookie: only follow a
+                // The next request carries the playback cookie: only follow a
                 // redirect that stays on https and inside the YouTube/Google host family,
                 // otherwise the credentials would be sent to an arbitrary host.
                 if (isTrustedStreamUrl(redirect.url)) {
                     url = redirect.url
                 } else {
-                    // host only: the url carries the PoToken and playback cookies
+                    // host only: the url carries the playback cookies
                     val rejectedHost = redirect.url.toHttpUrlOrNull()?.host ?: "invalid url"
                     Log.e(
                         TAG,
@@ -634,10 +606,11 @@ class SabrClient private constructor(
             }
 
             UMPPartId.RELOAD_PLAYER_RESPONSE -> {
-                // this is called if the streams are expired or a new configuration feature needs to be set
-                // in either case, we purposefully crash the player here, as the first one is a rare edge-case
-                // and the second one cannot be handled
-                throw Exception("Server requested player reload")
+                // expired streams, or a session the server won't serve any more (seen on device
+                // right after a flagged one): retrying it fails the same way every time, a new
+                // player response, hence a new session, is what the server asks for
+                Log.w(TAG, "processPart: server requested a player reload")
+                throw SabrAttestationException()
             }
 
             UMPPartId.STREAM_PROTECTION_STATUS -> {
@@ -647,12 +620,11 @@ class SabrClient private constructor(
                     1 -> Log.i(TAG, "processPart: [StreamProtectionStatus] OK")
                     2 -> {
                         Log.i(TAG, "processPart: [StreamProtectionStatus] Attestation pending.")
-                        // try to regenerate the poToken for the next request
-                        poToken = generatePoToken()
+                        // a flagged session stops after about a minute: the player opens a new one
+                        // right away, before downloading media it could not keep playing
+                        if (SabrSessionRenewals.canRenew(videoId)) throw SabrAttestationException()
                     }
-                    // we assume that we got an attestation pending warning before and already tried to regenerate the token,
-                    // but it's not accepted, so we bail
-                    3 -> throw Exception("Attestation required")
+                    3 -> throw SabrAttestationException()
                     else -> Log.e(TAG, "processPart: Unknown StreamProtectionStatus (${status.status})")
                 }
             }
@@ -670,16 +642,6 @@ class SabrClient private constructor(
         }
     }
 
-    /**
-     * Generates new poToken using the set generator.
-     *
-     * NOTE: This should use the same client used for the requests made for the server
-     */
-    fun generatePoToken() : ByteString? {
-        val poTokenResult = poTokenGenerator.getWebClientPoToken(videoId) ?: return null
-        return ByteString.copyFrom(poTokenResult.streamingDataPoToken!!.toByteArray())
-    }
-
     companion object {
         private const val TAG = "SabrStream"
         private const val SABR_READ_TIMEOUT_S = 30L
@@ -687,6 +649,24 @@ class SabrClient private constructor(
         private const val ENCODING = "identity"
         private const val ACCEPT = "application/vnd.yt-ump"
         private const val USER_AGENT = "com.google.visionos.youtube/1.02(RealityDevice14,1; U; CPU visionOS 25_6_0 like Mac OS X; GB)";
+
+        /** HTTP client of every stream (one per app, it used to be built for each video). */
+        private val client: OkHttpClient = SharedHttpClient.base.newBuilder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Content-Type", CONTENT_TYPE)
+                    .addHeader("Accept-Encoding", ENCODING)
+                    .addHeader("Accept", ACCEPT)
+                    .addHeader("Origin", ShareDialog.YOUTUBE_FRONTEND_URL)
+                    .addHeader("Referer", "${ShareDialog.YOUTUBE_FRONTEND_URL}/")
+                    .addHeader("User-Agent", USER_AGENT)
+                    .build()
+                chain.proceed(request)
+            }
+            // the server may hold a response for more than 10 s (OkHttp default): timing out
+            // dropped the data and the retry started a new wait, so playback never resumed
+            .readTimeout(SABR_READ_TIMEOUT_S, TimeUnit.SECONDS)
+            .build()
 
         /** Domains a stream request is allowed to be redirected to. */
         private val TRUSTED_STREAM_HOSTS = setOf(

@@ -38,7 +38,6 @@
     <string name="settings">Nustatymai</string>
     <string name="location">Vietovė</string>
     <string name="instance">Perdavimo šaltinis</string>
-    <string name="website">Interneto svetainė</string>
     <string name="noInternet">Pirmiausia prisijunkite prie interneto.</string>
     <string name="channels">Kanalai</string>
     <string name="all">Visi</string>
@@ -50,10 +49,8 @@
     <string name="music_albums">YT Music albumai</string>
     <string name="music_playlists">YT Music grojaraščiai</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Naudoja https://sponsor.ajay.app API</string>
     <string name="segment_skipped">Praleistas segmentas</string>
     <string name="license">Licencija</string>
-    <string name="color_accent">Akcentai</string>
     <string name="app_icon">Piktograma</string>
     <string name="enabled">Įjungta</string>
     <string name="playOnBackground">Groti fone</string>
@@ -66,13 +63,11 @@
     <string name="appearance_summary">Pritaikykite programėlę pagal savo skonį</string>
     <string name="live">Tiesiogiai</string>
     <string name="defaultIcon">Numatyta</string>
-    <string name="instance_summary">Piped, prisijungimas ir prenumeratos</string>
     <string name="customInstance_summary">Pridėti…</string>
     <string name="instance_name">Perdavimo šaltinio pavadinimas</string>
     <string name="instance_api_url">URL į perdavimo šaltinio API</string>
     <string name="empty_instance">Įveskite pavadinimą ir API URL.</string>
     <string name="invalid_url">Įveskite veikiantį URL</string>
-    <string name="version">Versija %1$s</string>
     <string name="related_streams">Susijęs turinys</string>
     <string name="buffering_goal">Išankstinis įkėlimas</string>
     <string name="no_audio">Nėra garso</string>
@@ -87,7 +82,6 @@
     <string name="pauseOnScreenOff_summary">Pristabdyti atkūrimą, kai ekranas išjungtas</string>
     <string name="reset">Atkurti numatytus nustatymus</string>
     <string name="auth_instance">Autentifikavimo perdavimo šaltinis</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Garsas ir vaizdas</string>
     <string name="portrait">Portretas</string>
     <string name="turnInternetOn">Norėdami prisijungti prie interneto, įjunkite Wi-Fi arba mobiliuosius duomenis.</string>
@@ -101,7 +95,6 @@
     <string name="data_saver_mode_summary">Praleisti miniatiūras ir kitus vaizdus</string>
     <string name="search_history_summary">Atsiminti paieškas</string>
     <string name="watch_history_summary">Kaupti peržiūrėtų video istorija vietoje</string>
-    <string name="history_summary">Žiūrėjimo ir paieškos istorija</string>
     <string name="reset_watch_positions">Atstatyti</string>
     <string name="system_caption_style">Sistemos subtitrų stilius</string>
     <string name="captions">Subtitrai</string>
@@ -194,16 +187,12 @@
     <string name="auth_instances">Pasirinkite autentifikavimo perdavimo šaltinį</string>
     <string name="autoRotatePlayer_summary">Atkūrti per visą ekraną, kai įrenginys pasukamas</string>
     <string name="landscape">Gulsčias</string>
-    <string name="general_summary">Kalba ir regionas</string>
     <string name="always">Visada</string>
     <string name="notify_new_streams_summary">Pranešimai apie naują turinį iš kūrėjų, kuriuos stebite</string>
     <string name="checking_frequency">Tikrinama kas …</string>
     <string name="default_subtitle_language">Subtitrų kalba</string>
-    <string name="no_search_result">Nėra rezultatų.</string>
     <string name="share_with_time">Dalintis su laiko kodu</string>
-    <string name="audio_video_summary">Kokybė ir formatas</string>
     <string name="subscribers">%1$s prenumeratoriai</string>
-    <string name="customization">Pritaikymas</string>
     <string name="videoCount">%1$d vaizdo įrašai</string>
     <string name="retry">Bandyti dar kartą</string>
     <string name="category_sponsor_summary">Apmokama reklama, apmokamos rekomendacijos ir tiesioginė reklama. Ne savireklama ar neapmokamas nuoširdus, kūrėjų, svetainių ir produktų reklamavimas</string>
@@ -215,7 +204,6 @@
     <string name="category_filler_summary">Mažai susijusios scenos, pridėtos tik užpildui ar humorui, žiūrint nereikia suprasti pagrindinio vaizdo įrašo turinio</string>
     <string name="category_music_offtopic">Muzika: su muzika nesusijusi dalis</string>
     <string name="category_preview">Peržiūra / apibendrinimas</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Pranešimai</string>
     <string name="downloads">Atsiuntimai</string>
     <string name="shareTo">Bendrinti URL su</string>
@@ -228,7 +216,6 @@
     <string name="birdIcon">Pasipūtęs paukštis</string>
     <string name="related_streams_summary">Rodyti panašias transliacijas šalia to, ką žiūrite</string>
     <string name="buffering_goal_summary">Didžiausias užkrauto vaizdo įrašo sekundžių skaičius atmintyje</string>
-    <string name="player_summary">Numatyti nustatymai ir elgsena</string>
     <string name="seek_increment">Prasukimo žingsnio dydis</string>
     <string name="fullscreen_orientation">Viso ekrano padėtis</string>
     <string name="pure_theme">Juodai balta tema</string>
@@ -294,7 +281,6 @@
     <string name="nothing_selected">Niekas nepasirinkta!</string>
     <string name="grid_landscape">Tinklelio stulpeliai (gulsčiai)</string>
     <string name="createNewPlaylist">Sukurti nauja grojaraštį</string>
-    <string name="donate">Paaukoti</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d vaizdo įrašai</string>
     <string name="subscriberAndVideoCounts">%1$s prenumeratoriai • %2$d vaizdo įrašai</string>
     <string name="comments_count">Komentarai (%1$s)</string>
@@ -361,7 +347,6 @@
     <string name="sleep_timer">Miego laikmatis</string>
     <string name="skip_silence">Pereiti prie garso</string>
     <string name="help">Pagalba</string>
-    <string name="faq">Klausimai atsakymai</string>
     <string name="mark_as_watched">Pažymėti kaip peržiūrėta</string>
     <string name="category">Kategorija</string>
     <string name="stats_for_nerds">Statistikos pažengusiems</string>
@@ -534,11 +519,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

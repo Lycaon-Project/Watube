@@ -56,8 +56,6 @@
     <string name="settings">Pengaturan</string>
     <string name="location">Lokasi</string>
     <string name="instance">Instansi</string>
-    <string name="customization">Penyesuaian</string>
-    <string name="website">Situs web</string>
     <string name="videoCount">%1$d video</string>
     <string name="noInternet">Hubungkan ke internet terlebih dahulu.</string>
     <string name="retry">Coba lagi</string>
@@ -74,7 +72,6 @@
     <string name="music_albums">Album YT Music</string>
     <string name="music_playlists">Daftar Putar YT Music</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Menggunakan API dari https://sponsor.ajay.app/</string>
     <string name="segment_skipped">Segmen dilewati</string>
     <string name="category_sponsor">Sponsor</string>
     <string name="category_segments">Segmen</string>
@@ -90,8 +87,6 @@
     <string name="category_interaction_summary">Saat ada pengingat singkat untuk meminta suka, berlangganan atau mengikuti di tengah konten. Jika panjang atau tentang sesuatu yang spesifik, sebaiknya pakai kategori promosi diri sendiri</string>
     <string name="playOnBackground">Putar di latar belakang</string>
     <string name="license">Lisensi</string>
-    <string name="color_accent">Aksen</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Notifikasi</string>
     <string name="enabled">Nyala</string>
     <string name="disabled">Mati</string>
@@ -105,7 +100,6 @@
     <string name="gradientIcon">Gradien glib</string>
     <string name="instance_api_url">URL ke API instansi</string>
     <string name="player_autoplay">Mainkan secara otomatis</string>
-    <string name="instance_summary">Piped, log masuk, dan akun</string>
     <string name="reset">Atur ulang ke bawaan</string>
     <string name="watch_history">Riwayat tontonan</string>
     <string name="audio">Audio</string>
@@ -132,7 +126,6 @@
     <string name="empty_instance">Isi nama dan URL API.</string>
     <string name="network_all">Semua</string>
     <string name="network_metered">Terbatas</string>
-    <string name="version">Versi %1$s</string>
     <string name="error_occurred">Kesalahan</string>
     <string name="copied">Disalin</string>
     <string name="device_info">Info Perangkat</string>
@@ -147,7 +140,6 @@
     <string name="worst_quality">Terburuk</string>
     <string name="network_wifi">Hanya pada Wi-Fi</string>
     <string name="translate">Terjemahan</string>
-    <string name="no_search_result">Tidak ada hasil.</string>
     <string name="share_with_time">Bagikan dengan kode waktu</string>
     <string name="category_filler_summary">Untuk adegan tangensial yang ditambahkan hanya untuk pengisi atau lelucon tidak dibutuhkan untuk mengerti konten utama video</string>
     <string name="category_filler">Pengisi Lelucon/Tangensial</string>
@@ -193,13 +185,11 @@
     <string name="deleteAccount_summary">Hapus akun Piped Anda</string>
     <string name="auth_instance">Instansi otentikasi</string>
     <string name="auth_instance_summary">Gunakan instansi yang lain untuk panggilan terotentikasi</string>
-    <string name="github">GitHub</string>
     <string name="chapters">Bab</string>
     <string name="pure_theme">Tema murni</string>
     <string name="pure_theme_summary">Tema putih/hitam murni</string>
     <string name="data_saver_mode">Mode penghemat data</string>
     <string name="watch_history_summary">Simpan riwayat video yang ditonton secara lokal</string>
-    <string name="history_summary">Riwayat tontonan dan penelusuran</string>
     <string name="system_caption_style">Gaya takarir sistem</string>
     <string name="captions">Takarir</string>
     <string name="none">Tidak ada</string>
@@ -223,11 +213,8 @@
     <string name="never">Tidak pernah</string>
     <string name="autoRotatePlayer">Penuhi layar secara otomatis</string>
     <string name="autoRotatePlayer_summary">Memainkan dengan layar penuh secara otomatis ketika perangkat diputar</string>
-    <string name="general_summary">Unduhan dan penghemat data</string>
     <string name="quality">Kualitas</string>
     <string name="behavior">Perilaku</string>
-    <string name="player_summary">Bawaan dan perilaku</string>
-    <string name="audio_video_summary">Kualitas dan format</string>
     <string name="downloading">Mengunduh…</string>
     <string name="delete">Hapus dari unduhan</string>
     <string name="playerAudioQuality">Kualitas audio</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Pewaktu tidur</string>
     <string name="skip_silence">Lewati keheningan</string>
     <string name="help">Bantuan</string>
-    <string name="faq">SSD</string>
     <string name="replies">Balasan</string>
     <string name="mark_as_watched">Tandai sebagai ditonton</string>
     <string name="unsupported_file_format">Format berkas tidak didukung: %1$s</string>
@@ -416,7 +402,6 @@
     <string name="sb_invalid_segment">Awal atau akhir segmen tidak valid</string>
     <string name="contribute_to_sponsorblock">Berkontribusi ke SponsorBlock</string>
     <string name="sponsorblock_user_id">ID pengguna SponsorBlock</string>
-    <string name="donate">Donasi</string>
     <string name="no_fullscreen_resolution">Resolusi tanpa layar penuh</string>
     <string name="music_artists">Artis YT Music</string>
     <string name="same_as_fullscreen">Sama seperti layar penuh</string>
@@ -533,11 +518,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

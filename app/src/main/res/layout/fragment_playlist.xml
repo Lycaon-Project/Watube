@@ -252,7 +252,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/watube_search_field"
                 android:hint="@string/playlist_search_hint"
-                android:imeOptions="actionSearch"
+                android:imeOptions="actionSearch|flagNoPersonalizedLearning"
                 android:importantForAutofill="no"
                 android:inputType="text"
                 android:paddingStart="16dp"

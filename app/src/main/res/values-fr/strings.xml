@@ -58,14 +58,13 @@
     <string name="videoCount">%1$d vidéos</string>
     <string name="retry">Réessayer</string>
     <string name="noInternet">Connectez-vous d’abord à Internet.</string>
-    <string name="website">Site internet</string>
     <string name="instance">Instance</string>
     <string name="settings">Paramètres</string>
     <string name="location">Emplacement</string>
-    <string name="customization">Ajustements</string>
     <string name="channels">Chaînes</string>
     <string name="all">Tout</string>
     <string name="playlists">Playlists</string>
+    <string name="open">Ouvrir…</string>
     <string name="okay">OK</string>
     <string name="history">Historique</string>
     <string name="search_history">Historique de recherche</string>
@@ -75,7 +74,6 @@
     <string name="music_albums">Albums YouTube Music</string>
     <string name="music_playlists">Playlists YouTube Music</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Utilise l’API https://sponsor.ajay.app/</string>
     <string name="category_outro_summary">Infos après la fin. Pas pour les conclusions avec des informations</string>
     <string name="category_intro_summary">Un intervalle sans contenu réel. Il peut s’agir d’une pause, d’une image statique ou d’une animation répétitive. Ne doit pas être utilisé pour les transitions contenant des informations.</string>
     <string name="category_outro">Générique de fin et crédits</string>
@@ -89,8 +87,6 @@
     <string name="category_interaction_summary">Lorsqu’il y a un bref rappel pour aimer, s’abonner ou suivre au milieu du contenu. S’il est long ou porte sur un sujet spécifique, il devrait plutôt s’agir d’autopromotion.</string>
     <string name="category_sponsor_summary">Communication commerciale, recommandations payées et publicités directes. Il ne s’agit pas d’autopromotion ou d’une véritable mise en avant gratuite de causes, de créateurs, de sites web et de produits.</string>
     <string name="category_interaction">Rappel d’interaction</string>
-    <string name="color_accent">Thème de couleurs</string>
-    <string name="material_you">Material You</string>
     <string name="app_font">Police d’écriture</string>
     <string name="font_system">Système (par défaut)</string>
     <string name="font_figtree">Figtree</string>
@@ -115,7 +111,6 @@
     <string name="fireIcon">Feu à la mode</string>
     <string name="birdIcon">Oiseau boosté</string>
     <string name="torchIcon">Torche à tendances</string>
-    <string name="instance_summary">Piped, connexion et compte</string>
     <string name="invalid_url">Veuillez saisir une URL qui fonctionne</string>
     <string name="customInstance_summary">Ajouter…</string>
     <string name="instance_name">Nom de l’instance</string>
@@ -125,7 +120,6 @@
     <string name="empty_instance">Complétez le nom et l’URL de l’API.</string>
     <string name="shapedIcon">Forme idiote</string>
     <string name="gradientIcon">Dégradé désinvolte</string>
-    <string name="version">Version %1$s</string>
     <string name="related_streams">Contenu associé</string>
     <string name="related_streams_summary">Afficher des flux similaires à côté de ce que vous regardez</string>
     <string name="category_filler">Contenu pour meubler / Blagues</string>
@@ -145,7 +139,6 @@
     <string name="instance_frontend_url">URL vers l’interface de l’instance (facultatif)</string>
     <string name="quality">Qualité</string>
     <string name="behavior">Comportement</string>
-    <string name="player_summary">Valeurs par défaut et comportement</string>
     <string name="seek_increment">Incrément d’avance / recul</string>
     <string name="reset_message">Souhaitez-vous réinitialiser tous vos paramètres et vous déconnecter ?</string>
     <string name="pauseOnScreenOff">Pause automatique</string>
@@ -157,7 +150,6 @@
     <string name="watch_history">Historique de lecture</string>
     <string name="watch_positions">Mémoriser la position</string>
     <string name="auth_instance">Instance d’authentification</string>
-    <string name="github">GitHub</string>
     <string name="auth_instance_summary">Utiliser une instance différente pour les appels authentifiés</string>
     <string name="auth_instances">Choisissez une instance d’authentification</string>
     <string name="audio_video">Audio et vidéo</string>
@@ -166,7 +158,6 @@
     <string name="landscape">Paysage</string>
     <string name="portrait">Portrait</string>
     <string name="aspect_ratio">Ratio d’aspect vidéo</string>
-    <string name="open">Ouvrir…</string>
     <string name="turnInternetOn">Veuillez activer le Wi-Fi ou les données mobiles pour vous connecter à internet.</string>
     <string name="chapters">Chapitres</string>
     <string name="require_restart_message">Redémarrez l’application pour appliquer les nouvelles modifications.</string>
@@ -182,7 +173,6 @@
     <string name="data_saver_mode">Mode économie de données</string>
     <string name="search_history_summary">Mémoriser les recherches</string>
     <string name="watch_history_summary">Garder la trace des vidéos regardées localement</string>
-    <string name="history_summary">Historique des vidéos regardées et des recherches</string>
     <string name="watch_positions_title">Mémoriser la position courante des lectures</string>
     <string name="reset_watch_positions">Réinitialiser</string>
     <string name="system_caption_style">Style de légende du système</string>
@@ -191,7 +181,6 @@
     <string name="data_saver_mode_summary">Ignorer les miniatures et autres images</string>
     <string name="never">Jamais</string>
     <string name="pure_theme_summary">Économise la batterie sur OLED</string>
-    <string name="general_summary">Téléchargements et économiseur de données</string>
     <string name="general">Général</string>
     <string name="playerAudioQuality">Qualité audio</string>
     <string name="worst_quality">Plus mauvaise</string>
@@ -210,7 +199,6 @@
     <string name="notify_new_streams">Afficher des notifications pour les nouveaux flux</string>
     <string name="notify_new_streams_summary">Afficher des notifications pour les nouveaux flux des créateurs que vous suivez</string>
     <string name="network_metered">Limité</string>
-    <string name="no_search_result">Aucun résultat</string>
     <string name="required_network">Connexion nécessaire</string>
     <string name="checking_frequency">Vérifier tous les…</string>
     <string name="copied">Copié</string>
@@ -238,7 +226,6 @@
     <string name="open_source_licenses_message">Watube est publié sous licence GPL-3.0. Cette application intègre aussi les bibliothèques de logiciels libres suivantes. Touchez une entrée pour lire sa licence.</string>
     <string name="watube_features">Fonctions de Watube</string>
     <string name="watube_features_message">Ces fonctions sont spécifiques à Watube et ne font pas partie du code source d’origine :\n\n• Centre de confidentialité : un seul écran regroupant tous les interrupteurs anti-empreintes\n• Durcissement activé par défaut (la confidentialité se désactive, elle ne s’active pas)\n• Rotation automatique de l’identifiant SponsorBlock (12 h / 24 h / manuelle)\n• Mode région neutre : le pays envoyé pour les tendances et l’accueil tourne dans une liste fixe\n• Un User-Agent générique pour toutes les requêtes : API, vignettes, téléchargements et services tiers\n• Aucune fuite de pays par la carte SIM ou l’opérateur\n• Durcissement du WebView : pas de cache DOM, pas de cookies tiers\n• Réinitialisation des identifiants en une touche (identifiant SponsorBlock + région neutre)\n• Les versions de release ne font confiance qu’aux certificats système : les certificats utilisateur restent réservés au debug\n• Compteur de dislikes Return YouTube Dislike en local</string>
-    <string name="audio_video_summary">Qualité et format</string>
     <string name="new_videos_badge">Indicateur de nouvelles vidéos</string>
     <string name="new_videos_badge_summary">Afficher un badge avec le nombre de nouvelles vidéos s’il y en a</string>
     <string name="delete">Supprimer des téléchargements</string>
@@ -270,7 +257,8 @@
     <string name="notification_time">Limiter le temps de notification</string>
     <string name="notification_time_summary">Limiter la durée d’affichage des notifications de flux</string>
     <string name="layout">Mise en page</string>
-    <string name="audio_track">Piste audio</string>
+    <string name="audio_track">Canal audio</string>
+    <string name="translation">Traduction</string>
     <string name="auto_quality">Auto</string>
     <string name="featured">En vedette</string>
     <string name="trends">Tendances</string>
@@ -315,13 +303,22 @@
     <string name="auto_pip_summary">Continuer la vidéo dans une petite fenêtre en quittant l’application</string>
     <string name="sleep_timer_all_videos">Appliquer à toutes les vidéos</string>
     <string name="sleep_timer_all_videos_summary">Lance la minuterie (%1$s) à chaque nouvelle vidéo</string>
+    <string name="rest_mode">Mode repos</string>
+    <string name="rest_mode_schedule">Mode repos programmé</string>
+    <string name="rest_mode_schedule_summary">Bloque Watube les jours et heures choisis</string>
+    <string name="rest_mode_days">Jours</string>
+    <string name="rest_mode_no_days">Aucun jour sélectionné</string>
+    <string name="rest_mode_start">Début</string>
+    <string name="rest_mode_end">Fin</string>
+    <string name="rest_mode_active">Le mode repos est activé</string>
+    <string name="rest_mode_active_message">Watube est en pause jusqu’à %1$s. Place au repos !</string>
+    <string name="rest_mode_quit">Quitter</string>
     <string name="show_stats_for_nerds">Afficher les statistiques pour les nerds</string>
     <string name="stats_for_nerds_summary">Ajoute les détails techniques de la lecture aux options du lecteur</string>
     <string name="persistent_search_bar">Barre de recherche persistante</string>
     <string name="persistent_search_bar_summary">Garde la barre de recherche et les filtres en haut de l’accueil pendant le défilement</string>
     <string name="alternative_pip_controls">Commandes d’image dans l’image alternatives</string>
     <string name="alternative_pip_controls_summary">Afficher uniquement l’audio et les commandes de saut dans le mode « Image dans l’image » au lieu de l’avance et du retour en arrière</string>
-    <string name="faq">FAQ</string>
     <string name="skip_silence">Passer les silences</string>
     <string name="concurrent_downloads_limit_reached">Limite maximale de téléchargements simultanés atteinte.</string>
     <string name="unknown">Inconnu</string>
@@ -358,7 +355,7 @@
     <string name="no_subtitle">Pas de sous-titre</string>
     <string name="download_paused">Téléchargement interrompu</string>
     <string name="download_completed">Téléchargement terminé</string>
-    <string name="sleep_timer">Minuterie de mise en veille</string>
+    <string name="sleep_timer">Minuterie du mode repos</string>
     <string name="replies">Réponses</string>
     <string name="normal_views">%1$s vues%2$s</string>
     <string name="autoplay_countdown">Compte à rebours de lecture automatique</string>
@@ -469,7 +466,6 @@
     <string name="color">Couleur</string>
     <string name="show_search_suggestions">Afficher les suggestions de recherche</string>
     <string name="no_fullscreen_resolution">Résolution sans plein écran</string>
-    <string name="donate">Faire un don</string>
     <string name="music_artists">Artistes YouTube Music</string>
     <string name="same_as_fullscreen">Identique au plein écran</string>
     <string name="vote_for_segment">Voter pour le segment</string>
@@ -482,8 +478,8 @@
     <string name="successfully_removed_from_playlist">Suppression réussie de « %1$s » de la playlist.</string>
     <string name="time_in_minutes">Temps en minutes</string>
     <string name="invalid_input">Entrée non valide</string>
-    <string name="disable_sleep_timer">Désactiver la minuterie de sommeil</string>
-    <string name="start_sleep_timer">Démarrer la minuterie de sommeil</string>
+    <string name="disable_sleep_timer">Arrêter la minuterie du mode repos</string>
+    <string name="start_sleep_timer">Démarrer la minuterie du mode repos</string>
     <string name="finished">Terminé</string>
     <string name="no_segments_found">Il n’y a pas encore de segments pour cette vidéo.</string>
     <string name="add_to_group">Ajouter au groupe</string>
@@ -596,11 +592,8 @@
 
     <!-- Paramètres Confidentialité -->
     <string name="privacy">Confidentialité</string>
-    <string name="privacy_summary">Protections anti-empreinte numérique et gestion des identifiants</string>
     <string name="privacy_hardening">Renforcement de la confidentialité</string>
     <string name="privacy_hardening_summary">Bloque l’empreinte liée à la carte SIM, au réseau et à l’appareil : user-agent générique, aucune donnée de téléphonie, WebView durcie pour les jetons d’intégrité</string>
-    <string name="reset_sb_uuid_daily">Rotation quotidienne de l’ID SponsorBlock</string>
-    <string name="reset_sb_uuid_daily_summary">Génère un nouvel identifiant aléatoire de soumission SponsorBlock chaque jour (inspiré de la rotation Tor/Mullvad)</string>
     <string name="privacy_rotation_frequency">Fréquence de rotation</string>
     <string name="rotation_frequency_summary">%1$s — fait tourner l’ID SponsorBlock et la région neutre en même temps</string>
     <string name="rotation_every_12_hours">Toutes les 12 heures</string>
@@ -626,12 +619,10 @@
     <string name="home_featured_tag">À LA UNE</string>
     <string name="cache_cleared">Cache vidé</string>
     <string name="checking_for_updates">Recherche de mises à jour…</string>
-    <string name="last_update_check">Dernière vérification : %1$s</string>
     <string name="clear_cache">Vider le cache</string>
     <string name="clear_cache_summary">Vider le cache de l’application (%1$s)</string>
     <string name="clear_cache_dialog_message">Vider tout le cache de l’application ? Cela supprimera les images en cache, le cache réseau et les fichiers temporaires.</string>
     <string name="empty">Vide</string>
-    <string name="dialog_ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="dialog_reset">Réinitialiser</string>
     <string name="privacy_neutral_region">Région neutre</string>
@@ -686,9 +677,6 @@
 
     <!-- Feuille du lecteur Watube (maquette v27.1) -->
     <string name="up_next">À suivre</string>
-    <string name="like">J\'aime</string>
-    <string name="dislike">Je n\'aime pas</string>
-    <string name="toast_feature_soon">Pas encore disponible</string>
     <string name="player_chapter_chip">Chap. %1$d/%2$d</string>
     <string name="about_code_source">Code source</string>
     <string name="about_privacy">Politique de confidentialité</string>

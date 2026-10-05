@@ -31,8 +31,6 @@
     <string name="okay">OK</string>
     <string name="history">Historik</string>
     <string name="search_history">Sökhistorik</string>
-    <string name="color_accent">Accentfärg</string>
-    <string name="material_you">Material You</string>
     <string name="app_icon">Appikon</string>
     <string name="enabled">På</string>
     <string name="disabled">Av</string>
@@ -76,14 +74,11 @@
     <string name="lightTheme">Ljust</string>
     <string name="darkTheme">Mörkt</string>
     <string name="instance">Instans</string>
-    <string name="customization">Justeringar</string>
-    <string name="website">Webbplats</string>
     <string name="noInternet">Anslut till internet först.</string>
     <string name="retry">Försök igen</string>
     <string name="comments">Kommentarer</string>
     <string name="location">Plats</string>
     <string name="clear_history">Rensa historiken</string>
-    <string name="sponsorblock_summary">Använder API:et på https://sponsor.ajay.app</string>
     <string name="segment_skipped">Segmentet hoppades över</string>
     <string name="music_videos">YT Music-videor</string>
     <string name="music_albums">YT Music-album</string>
@@ -109,7 +104,6 @@
     <string name="player">Spelare</string>
     <string name="shapedIcon">Tokigt formad</string>
     <string name="torchIcon">Trendig fackla</string>
-    <string name="instance_summary">Piped, inloggning och konto</string>
     <string name="instance_name">Instansnamn</string>
     <string name="addInstance">Lägg till instans</string>
     <string name="empty_instance">Fyll i namn och API-URL.</string>
@@ -122,7 +116,6 @@
     <string name="videoCount">%1$d videor</string>
     <string name="app_uptodate">Du använder den senaste versionen.</string>
     <string name="related_streams">Relaterade videor</string>
-    <string name="version">Version %1$s</string>
     <string name="customInstance_summary">Lägg till…</string>
     <string name="category_filler">Utfyllnad/sidospår/skämt</string>
     <string name="category_filler_summary">Sidospår och extrascener som endast har lagts till som utfyllnad eller skämt och inte behövs för att förstå videons huvudsakliga innehåll.</string>
@@ -132,7 +125,6 @@
     <string name="category_preview_summary">Avsnitt som beskriver kommande innehåll utan ytterligare information. Om avsnittet innehåller klipp som bara visas där är detta troligen fel kategori.</string>
     <string name="buffering_goal">Förladdning</string>
     <string name="buffering_goal_summary">Högsta antal sekunder som videon ska buffras</string>
-    <string name="github">GitHub</string>
     <string name="behavior">Beteende</string>
     <string name="subscriberAndVideoCounts">%1$s prenumeranter • %2$d videor</string>
     <string name="reset_message">Vill du återställa alla inställningar och logga ut?</string>
@@ -153,7 +145,6 @@
         <item quantity="other">%d nya videor</item>
     </plurals>
     <string name="portrait">Stående</string>
-    <string name="history_summary">Visnings- och sökhistorik</string>
     <string name="auto_rotation">Automatisk rotation</string>
     <string name="downloading">Laddar ner…</string>
     <string name="translate">Översättning</string>
@@ -200,7 +191,6 @@
     <string name="concurrent_downloads_limit_reached">Gränsen för samtidiga nedladdningar har nåtts.</string>
     <string name="notify_new_streams_summary">Visa aviseringar om nya videor från skapare du följer</string>
     <string name="share_with_time">Dela med tidskod</string>
-    <string name="no_search_result">Inga resultat.</string>
     <string name="always">Alltid</string>
     <string name="player_autoplay">Spela automatiskt</string>
     <string name="landscape">Liggande</string>
@@ -212,7 +202,6 @@
     <string name="irreversible">Är du säker\? Det här kan inte ångras!</string>
     <string name="general">Allmänt</string>
     <string name="sb_custom_colors">Anpassade segmentfärger</string>
-    <string name="player_summary">Standardvärden och beteende</string>
     <string name="auth_instance_summary">Använd en annan instans för autentiserade anrop</string>
     <string name="require_restart">Omstart av appen krävs</string>
     <string name="most_views">Flest visningar</string>
@@ -221,7 +210,6 @@
     <string name="video">Video</string>
     <string name="clonePlaylist">Klona spellista</string>
     <string name="autoRotatePlayer_summary">Uppspelning i fullskärm när enheten roteras</string>
-    <string name="donate">Donera</string>
     <string name="music_artists">YT Music-artister</string>
     <string name="no_video">Ingen video</string>
     <string name="data_saver_mode_summary">Hoppa över förhandsbilder och andra bilder</string>
@@ -230,7 +218,6 @@
     <string name="watch_positions_title">Sparade positioner för uppspelning</string>
     <string name="yt_shorts">Shorts</string>
     <string name="worst_quality">Lägsta</string>
-    <string name="general_summary">Nedladdningar och datasparläge</string>
     <string name="playerAudioQuality">Ljudkvalitet</string>
     <string name="invalid_color">Ogiltigt färgvärde.</string>
     <string name="push_channel_description">Visar en avisering när nya videor är tillgängliga.</string>
@@ -256,7 +243,6 @@
     <string name="end_time">Sluttid</string>
     <string name="mobile_data">Mobildata</string>
     <string name="unknown_or_no_audio">okänt eller inget ljud</string>
-    <string name="audio_video_summary">Kvalitet och format</string>
     <string name="pinch_control">Nypgester</string>
     <string name="change_region">Populärt innehåll verkar inte vara tillgängligt i den aktuella regionen. Välj en annan region i inställningarna.</string>
     <string name="import_playlists_from">Importera spellistor från</string>
@@ -309,7 +295,6 @@
     <string name="device_info">Enhetsinformation</string>
     <string name="local_playlists">Lokala spellistor</string>
     <string name="autoplay_countdown_summary">Visa en nedräkning på 5 sekunder innan nästa video spelas upp automatiskt</string>
-    <string name="faq">Vanliga frågor</string>
     <string name="swipe_controls">Svepkontroller</string>
     <string name="sort_by">Sortera efter</string>
     <string name="queue">Kö</string>
@@ -511,11 +496,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

@@ -58,10 +58,8 @@
     <string name="videoCount">%1$d videota</string>
     <string name="retry">Yritä uudelleen</string>
     <string name="location">Sijainti</string>
-    <string name="customization">Mukauttaminen</string>
     <string name="settings">Asetukset</string>
     <string name="instance">Instanssi</string>
-    <string name="website">Verkkosivusto</string>
     <string name="app_icon">Kuvake</string>
     <string name="enabled">Päällä</string>
     <string name="disabled">Pois päältä</string>
@@ -99,13 +97,10 @@
     <string name="music_videos">YT Music Videot</string>
     <string name="category_sponsor_summary">Maksettu mainostaminen, maksetut vittaukset ja suorat mainokset. Ei itsensä mainostamiselle tai ilmaisille maininnoille kampanjoista, luojista, sivustoista ja tuotteista</string>
     <string name="defaultIcon">Oletus</string>
-    <string name="sponsorblock_summary">Käyttää https://sponsor.ajay.app ohjelmointirajapintaa</string>
     <string name="category_intro_summary">Aikaväli ilman mitään todellista sisältöä. Voi olla tauko, staattinen freimi tai toistuva animaatio. Ei tule käyttää siirroksiin, jotka sisältävät tietoa</string>
     <string name="category_interaction_summary">Kun on lyhyt muistutus tykätä, tilata tai seurata sisällön keskellä. Jos se on pitkä tai jotain erityistä, sen tulisi olla itsensä mainostamista</string>
     <string name="category_outro">Loppukortit ja kiitettävää</string>
-    <string name="color_accent">Aksentit</string>
     <string name="category_outro_summary">Tiedot lopun jälkeen. Ei johtopäätöksille, jotka sisältävät tietoa</string>
-    <string name="material_you">Material You</string>
     <string name="torchIcon">Trendikäs soihtu</string>
     <string name="fireIcon">Muodikas tuli</string>
     <string name="empty_instance">Täydennä nimi ja ohjelmointirajapinnan linkki.</string>
@@ -123,11 +118,9 @@
     <string name="legacyIcon">Kadotettu perintö</string>
     <string name="shapedIcon">Hölmösti muotoiltu</string>
     <string name="flameIcon">Lentävä liekki</string>
-    <string name="instance_summary">Piped, kirjautuminen ja tili</string>
     <string name="customInstance_summary">Lisää…</string>
     <string name="instance_name">Instanssin nimi</string>
     <string name="addInstance">Lisää instanssi</string>
-    <string name="version">Versio %1$s</string>
     <string name="gradientIcon">Lipevä liukuväri</string>
     <string name="birdIcon">Tehostettu lintu</string>
     <string name="instance_api_url">Linkki instanssin ohjelmointirajapintaan</string>
@@ -146,7 +139,6 @@
     <string name="instance_frontend_url">Linkki instanssin käyttöliittymään (vapaavalintainen)</string>
     <string name="quality">Laatu</string>
     <string name="behavior">Käytös</string>
-    <string name="player_summary">Oletukset ja käytös</string>
     <string name="seek_increment">Etsi lisäystä</string>
     <string name="pauseOnScreenOff_summary">Pysäytä toisto, kun näyttö on pois päältä</string>
     <string name="pauseOnScreenOff">Automaattinen tauko</string>
@@ -162,8 +154,6 @@
     <string name="search_history_summary">Muista haut</string>
     <string name="captions">Tekstitykset</string>
     <string name="repeat_mode_current">Nykyinen</string>
-    <string name="no_search_result">Ei tuloksia.</string>
-    <string name="faq">Usein kysytyt kysymykset</string>
     <string name="no_comments_available">Tällä videolla ei ole kommentteja.</string>
     <string name="pause">Tauko</string>
     <string name="forward">Eteenpäin</string>
@@ -237,7 +227,6 @@
     <string name="auth_instance_summary">Käytä eri instanssia todentamiskutsuille</string>
     <string name="auth_instance">Todentamisinstanssi</string>
     <string name="auth_instances">Valitse todentamisinstanssi</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Ääni ja video</string>
     <string name="never">Ei koskaan</string>
     <string name="autoRotatePlayer">Auto-koko näyttö</string>
@@ -247,11 +236,9 @@
     <string name="data_saver_mode">Tiedonsäästötila</string>
     <string name="data_saver_mode_summary">Sivuuta pikkukuvat ja muut kuvat</string>
     <string name="watch_history_summary">Pidä kirjaa katsotuista videoista paikallisesti</string>
-    <string name="history_summary">Katselu- ja hakuhistoria</string>
     <string name="watch_positions_title">Muistetut toistopaikat</string>
     <string name="system_caption_style">Laitteen tekstitystyyli</string>
     <string name="none">Ei mitään</string>
-    <string name="general_summary">Lataukset ja datansäästäjä</string>
     <string name="caption_settings">Tekstitykset</string>
     <string name="playerAudioQuality">Äänenlaatu</string>
     <string name="worst_quality">Huonoin</string>
@@ -272,7 +259,6 @@
     <string name="resize_mode_fill">Täytä</string>
     <string name="resize_mode_zoom">Zoomaa</string>
     <string name="repeat_mode_none">Ei mitään</string>
-    <string name="audio_video_summary">Laatu ja formaatti</string>
     <string name="delete">Poista latauksista</string>
     <string name="wifi">Wi-Fi</string>
     <string name="new_videos_badge">Uusien videoiden ilmaisin</string>
@@ -514,7 +500,6 @@
     <string name="external_download_provider_summary">Syötä videotallennussovelluksen paketin nimi. Jätä tyhjäksi käyttääksesi LibreTuben sisäänrakennettua tallentajaa.</string>
     <string name="category_highlight_summary">Voi olla mainostettu otsikko, pienoiskuvake tai kaikkein mielenkiintoisin osa videosta. Voit ohittaa sen napauttamalla sitä kappaleosiossa</string>
     <string name="category_hook_summary">Narratiivisia koukkuja varten, jotka kaappaavat katsojan huomion (usein aivan videon alussa) kiusoittelemalla tai kuvailemalla tapahtumia, jotka tapahtuvat myöhemmin samalla videolla tai sarjan myöhemmissa jaksoissa</string>
-    <string name="donate">Lahjoita</string>
     <string name="music_artists">YT Music Artistit</string>
     <string name="category_highlight">Näytä videon kohokohta</string>
     <string name="category_hook">Koukku/Tervehdys</string>
@@ -528,11 +513,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

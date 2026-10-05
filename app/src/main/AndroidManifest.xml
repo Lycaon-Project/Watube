@@ -410,6 +410,31 @@
             android:name=".receivers.NotificationReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <!--
+            Privacy: the system WebView (local "Pourquoi Watube" page) does not upload its
+            usage metrics to Google. Its code belongs to the system, so the opt-out is the
+            only lever: https://developer.android.com/develop/ui/views/layout/webapps/managing-webview (Opt out of metrics collection)
+        -->
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+
+        <!--
+            Privacy: emoji2 starts at launch and asks the system font provider (Google Play
+            services) for its downloadable emoji font, a request nobody asked for. Without the
+            initializer, text uses the emoji of the system font and R8 drops the loader:
+            https://developer.android.com/develop/ui/views/text-and-emoji/emoji2
+        -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                tools:node="remove" />
+        </provider>
     </application>
 
     <queries>

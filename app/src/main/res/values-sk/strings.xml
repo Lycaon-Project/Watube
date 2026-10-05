@@ -36,8 +36,6 @@
     <string name="darkTheme">Tmavá</string>
     <string name="subscribers">%1$s odberateľov</string>
     <string name="instance">Inštancia</string>
-    <string name="customization">Úpravy</string>
-    <string name="website">Webová stránka</string>
     <string name="videoCount">%1$d videí</string>
     <string name="noInternet">Najprv sa pripojte k internetu.</string>
     <string name="channels">Kanály</string>
@@ -52,7 +50,6 @@
     <string name="music_albums">Albumy YT Music</string>
     <string name="music_playlists">Zoznamy skladieb YT Music</string>
     <string name="license">Licencia</string>
-    <string name="color_accent">Akcenty</string>
     <string name="app_icon">Ikona</string>
     <string name="enabled">Zapnuté</string>
     <string name="disabled">Vypnuté</string>
@@ -82,9 +79,7 @@
     <string name="category_segments">Segmenty</string>
     <string name="category_sponsor">Sponzor</string>
     <string name="segment_skipped">Vynechaný segment</string>
-    <string name="sponsorblock_summary">Používa https://sponsor.ajay.app API</string>
     <string name="category_selfpromo">Neplatená/vlastná propagácia</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Oznámenia</string>
     <string name="category_intro">Animácia v prestávke/úvode</string>
     <string name="category_preview">Náhľad/Zhrnutie</string>
@@ -97,7 +92,6 @@
     <string name="birdIcon">Posilnený vták</string>
     <string name="instance_name">Názov inštancie</string>
     <string name="addInstance">Pridať inštanciu</string>
-    <string name="version">Verzia %1$s</string>
     <string name="related_streams">Súvisiaci obsah</string>
     <string name="player">Prehrávač</string>
     <string name="live">Naživo</string>
@@ -124,7 +118,6 @@
     <string name="buffering_goal_summary">Maximálny počet sekúnd videa vo vyrovnávacej pamäti</string>
     <string name="empty_instance">Vyplňte názov a adresu URL rozhrania API.</string>
     <string name="legacyIcon">Stratený odkaz</string>
-    <string name="instance_summary">Piped, prihlásenie a účet</string>
     <string name="gradientIcon">Glib prechod</string>
     <string name="update_available">K dispozícii je aktualizácia</string>
     <string name="category_interaction_summary">Keď sa uprostred obsahu nachádza krátke pripomenutie, aby ste sa prihlásili k odberu alebo sledovaniu. Ak je dlhé alebo o niečom konkrétnom, bude to sebapropagácia</string>
@@ -151,7 +144,6 @@
     <string name="network_wifi">Iba na wifi</string>
     <string name="error_occurred">Chyba</string>
     <string name="copied">Skopírované</string>
-    <string name="player_summary">Predvolené nastavenia a správanie</string>
     <string name="reset_message">Obnoviť všetky nastavenia a odhlásiť sa?</string>
     <string name="aspect_ratio">Pomer strán videa</string>
     <string name="auto_rotation">Automatické otáčanie</string>
@@ -165,12 +157,10 @@
     <string name="required_network">Vyžaduje sa pripojenie k sieti</string>
     <string name="network_all">Všetky</string>
     <string name="translate">Preklad</string>
-    <string name="no_search_result">Žiadne výsledky.</string>
     <string name="share_with_time">Zdieľať s časovým kódom</string>
     <string name="watch_history">História sledovania</string>
     <string name="watch_positions">Zapamätať pozíciu</string>
     <string name="auth_instance">Overovacia inštancia</string>
-    <string name="github">GitHub</string>
     <string name="background_mode">Režim na pozadí</string>
     <string name="audio_video">Audio a video</string>
     <string name="fullscreen_orientation">Orientácia na celú obrazovku</string>
@@ -200,14 +190,12 @@
     <string name="data_saver_mode_summary">Vynechá miniatúry a iné obrázky</string>
     <string name="search_history_summary">Zapamätá si vyhľadávanie</string>
     <string name="watch_history_summary">Zachová lokálne stopu sledovaných videí</string>
-    <string name="history_summary">História sledovania a vyhľadávania</string>
     <string name="watch_positions_title">Zapamätané pozície prehrávania</string>
     <string name="reset_watch_positions">Resetovať</string>
     <string name="captions">Titulky</string>
     <string name="system_caption_style">Systémový štýl titulkov</string>
     <string name="none">Žiadne</string>
     <string name="general">Všeobecné</string>
-    <string name="general_summary">Sťahovanie a šetrenie dát</string>
     <string name="quality">Kvalita</string>
     <string name="behavior">Správanie</string>
     <string name="pauseOnScreenOff">Automatická pauza</string>
@@ -220,7 +208,6 @@
     <string name="category_highlight">Zobraziť výber videa</string>
     <string name="download_paused">Sťahovanie je pozastavené</string>
     <string name="no_subtitle">Bez titulkov</string>
-    <string name="donate">Prispieť</string>
     <string name="music_artists">Umelci YT Music</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d videí</string>
     <string name="mobile_data">Mobilné dáta</string>
@@ -269,7 +256,6 @@
     <string name="preferences">Predvoľby</string>
     <string name="privacy_alert">Upozornenie o ochrane osobných údajov</string>
     <string name="captions_size">Veľkosť titulkov</string>
-    <string name="faq">Často kladené otázky</string>
     <string name="auto_quality">Automaticky</string>
     <string name="resume">Pokračovať</string>
     <string name="unknown">Neznámy</string>
@@ -346,7 +332,6 @@
     <string name="copied_to_clipboard">Skopírované do schránky</string>
     <string name="open_copied">Otvoriť</string>
     <string name="device_info">Informácie o zariadení</string>
-    <string name="audio_video_summary">Kvalita a formát</string>
     <string name="renamePlaylist">Premenovať zoznam skladieb</string>
     <string name="new_videos_badge">Indikátor nových videí</string>
     <string name="new_videos_badge_summary">Zobrazí znak s počtom nových videí, ak nejaké sú</string>
@@ -541,11 +526,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

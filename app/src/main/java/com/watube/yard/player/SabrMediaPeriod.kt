@@ -66,7 +66,7 @@ class SabrMediaPeriod(
             manifest.adaptationSets
         )
         trackGroups = result.first
-        trackGroupInfos = result.second as Array<TrackGroupInfo>
+        trackGroupInfos = @Suppress("UNCHECKED_CAST") (result.second as Array<TrackGroupInfo>)
     }
 
     fun release() {
@@ -141,6 +141,7 @@ class SabrMediaPeriod(
         val sampleStreamList: MutableList<ChunkSampleStream<SabrChunkSource?>> = mutableListOf();
         for (sampleStream in streams) {
             if (sampleStream is ChunkSampleStream<*>) {
+                @Suppress("UNCHECKED_CAST")
                 val stream =
                     sampleStream as ChunkSampleStream<SabrChunkSource?>
                 sampleStreamList.add(stream)
@@ -229,6 +230,7 @@ class SabrMediaPeriod(
         for (i in selections.indices) {
             if (selections[i] == null || !mayRetainStreamFlags[i]) {
                 if (streams[i] is ChunkSampleStream<*>) {
+                    @Suppress("UNCHECKED_CAST")
                     val stream = streams[i] as ChunkSampleStream<SabrChunkSource?>
                     stream.release(null)
                 }
@@ -259,6 +261,7 @@ class SabrMediaPeriod(
                 streams[i] = buildSampleStream(trackGroupInfo, selection, positionUs)
             } else if (streams[i] is ChunkSampleStream<*>) {
                 // Update selection in existing stream.
+                @Suppress("UNCHECKED_CAST")
                 val stream = streams[i] as ChunkSampleStream<SabrChunkSource?>
                 stream.getChunkSource().updateTrackSelection(selection)
             }
@@ -327,8 +330,11 @@ class SabrMediaPeriod(
                 trackGroupInfos
             )
 
+            @Suppress("UNCHECKED_CAST")
+            val filledTrackGroups = trackGroups as Array<out TrackGroup>
+
             return Pair.create(
-                TrackGroupArray(*trackGroups as Array<out TrackGroup>),
+                TrackGroupArray(*filledTrackGroups),
                 trackGroupInfos
             )
         }

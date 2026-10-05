@@ -4,12 +4,10 @@
     <string name="tooltip_options">Valkostir</string>
     <string name="category_intro">Millikafli/Hlé/Kynningarhreyfimynd</string>
     <string name="sponsorblock_notifications">Tilkynningar</string>
-    <string name="version">Útgáfa %1$s</string>
     <string name="empty_instance">Fylltu inn heiti og slóð á API-kerfisviðmótið.</string>
     <string name="related_streams_summary">Birta svipuð streymi jafnhliða því sem þú ert að horfa á</string>
     <string name="buffering_goal_summary">Hámarksfjöldi sekúndna myndskeiðs sem á að setja í biðminni</string>
     <string name="concurrent_downloads_limit_reached">Hámarksfjöldi samtímis niðurhala er náð.</string>
-    <string name="github">GitHub</string>
     <string name="autoRotatePlayer">Sjálfvirk skjáfylli</string>
     <string name="autoRotatePlayer_summary">Afspilun á fullum skjá þegar tækinu er snúið</string>
     <string name="playerAudioQuality">Hljóðgæði</string>
@@ -26,31 +24,26 @@
     <string name="music_albums">Hljómplötur á YT-tónlist</string>
     <string name="music_playlists">Spilunarlistar á YT-tónlist</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Uses theNotar</string>
     <string name="music_artists">Flytjendur á YT-tónlist</string>
     <string name="category_sponsor_summary">Kostaðar kynningar, tilvísanir gegn greiðslu og beinar auglýsingar. Ekki fyrir kynningu á sjálfum sér eða ókeypis áköll vegna málstaða, kynningar á framleiðendum efnis, vefsvæðum og vörum</string>
     <string name="category_interaction">Áminning um gagnvirkni</string>
-    <string name="material_you">Material You</string>
     <string name="update_summary">Athuga með uppfærslu</string>
     <string name="player">Spilari</string>
     <string name="appearance_summary">Aðlagaðu forritið að smekk þínum</string>
     <string name="shapedIcon">Fáránlega formað</string>
     <string name="live">Í beinni</string>
-    <string name="instance_summary">Piped, innskráning og aðgangur</string>
     <string name="flameIcon">Fljúgandi eldur</string>
     <string name="birdIcon">Endurbirt tíst</string>
     <string name="addInstance">Bæta við tilviki</string>
     <string name="invalid_url">Settu inn slóð sem virkar</string>
     <string name="instance_api_url">Slóð á API-kerfisviðmót tilviksins</string>
     <string name="download_completed">Niðurhali lokið</string>
-    <string name="player_summary">Sjálfgefin gildi og hegðun</string>
     <string name="seek_increment">Bil við hopp</string>
     <string name="audio_video">Hljóð og myndmerki</string>
     <string name="portrait">Lóðrétt</string>
     <string name="turnInternetOn">Kveiktu á Wi-Fi eða farsímagögnum til að tengjast við internetið.</string>
     <string name="open">Opna…</string>
     <string name="search_history_summary">Muna leitir</string>
-    <string name="history_summary">Áhorfs- og leitarferill</string>
     <string name="data_saver_mode">Gagnasparnaðarhamur</string>
     <string name="watch_positions_title">Geymdir spilunarstaðir</string>
     <string name="captions">Skýringatextar</string>
@@ -58,7 +51,6 @@
     <string name="least_recent">Elst</string>
     <string name="repeat_mode">Endurtekningarhamur</string>
     <string name="open_copied">Opna</string>
-    <string name="audio_video_summary">Gæði og snið</string>
     <string name="skip_segment">Sleppa bút</string>
     <string name="change_instance">Skipta um netþjónstilvik</string>
     <string name="playlistCloned">Spilunarlisti klónaður</string>
@@ -155,7 +147,6 @@
     <string name="time">Tími</string>
     <string name="notification_time">Takmarka tíma tilkynninga</string>
     <string name="double_tap_seek">Tvípikkaðu til að hoppa</string>
-    <string name="faq">FAQ / Algengar spurningar</string>
     <string name="mark_as_watched">Merkja sem séð</string>
     <string name="forward">Spóla áfram</string>
     <string name="category">Flokkur</string>
@@ -196,7 +187,6 @@
     <string name="app_icon">Táknmynd</string>
     <string name="enabled">Virkt</string>
     <string name="disabled">Slökkt</string>
-    <string name="color_accent">Áherslulitir</string>
     <string name="advanced">Ítarlegt</string>
     <string name="app_uptodate">Keyri nýjustu útgáfuna.</string>
     <string name="playback_speed">Afspilunarhraði</string>
@@ -272,7 +262,6 @@
     <string name="require_restart_message">Til að breytingarnar verði virkar, þarf að endurræsa forritið.</string>
     <string name="pure_theme_summary">Hreint hvítt/svart þema</string>
     <string name="general">Almennt</string>
-    <string name="general_summary">Niðurhal og gagnasparnaður</string>
     <string name="caption_settings">Skýringartexti</string>
     <string name="worst_quality">Verst</string>
     <string name="notifications">Tilkynningar</string>
@@ -328,8 +317,6 @@
     <string name="success">Búið.</string>
     <string name="changeLanguage">Tungumál</string>
     <string name="systemLanguage">Kerfi</string>
-    <string name="website">Vefsvæði</string>
-    <string name="donate">Styrkja</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d myndskeið</string>
     <string name="subscriberAndVideoCounts">%1$s áskrifendur • %2$d myndskeið</string>
     <string name="videoCount">%1$d myndskeið</string>
@@ -345,7 +332,6 @@
     <string name="watch_history_summary">Geyma staðvært hvaða myndskeið er búið að horfa á</string>
     <string name="least_views">Minnst áhorf</string>
     <string name="required_network">Nauðsynleg tenging</string>
-    <string name="no_search_result">Engar niðurstöður.</string>
     <string name="error_occurred">Villa</string>
     <string name="copied">Afritað</string>
     <string name="export_subscriptions">Flytja út áskriftir</string>
@@ -441,7 +427,6 @@
     <string name="instance">Netþjónstilvik</string>
     <string name="retry">Reyna aftur</string>
     <string name="comments">Athugasemdir</string>
-    <string name="customization">Lagfæringar</string>
     <string name="category_outro">Lokaskjáir og kreditlistar</string>
     <string name="trends">Tilhneiging</string>
     <string name="screen_orientation">Stefna skjás</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

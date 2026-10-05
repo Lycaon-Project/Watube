@@ -5,6 +5,7 @@ import com.watube.yard.api.GenericUserAgentInterceptor
 import com.watube.yard.db.obj.DownloadItem
 import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.DownloadHelper
+import com.watube.yard.util.SharedHttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
@@ -23,7 +24,7 @@ import kotlin.math.min
  */
 class RawByteStreamDownloadProvider(val url: HttpUrl) : DownloadProvider {
     private val httpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
+        SharedHttpClient.base.newBuilder()
             .connectTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
             .readTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
             .retryOnConnectionFailure(true)

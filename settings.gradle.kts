@@ -47,13 +47,13 @@ dependencyResolutionManagement {
             }
         }
 
-        // JitPack for GitHub-hosted libraries (NewPipeExtractor fork Watube)
-        maven("https://jitpack.io") {
-            content {
+        // JitPack builds GitHub sources on demand: only these groups may come from it, and they
+        // may come from nowhere else (no look-alike artifact published on another repository)
+        exclusiveContent {
+            forRepository { maven("https://jitpack.io") }
+            filter {
                 includeGroup("com.github.TeamNewPipe")
                 includeGroup("com.github.libre-tube")
-                includeGroup("com.github.Lycaon-Project")
-                includeGroupByRegex("com\\.github\\..*")
             }
         }
 

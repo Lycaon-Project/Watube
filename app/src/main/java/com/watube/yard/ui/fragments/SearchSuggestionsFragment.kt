@@ -1,6 +1,7 @@
 package com.watube.yard.ui.fragments
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -22,6 +23,8 @@ import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.adapters.SearchSuggestionsAdapter
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.models.SearchViewModel
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -63,6 +66,17 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
             }
         }
     )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // continuity with the home search pill: it morphs into the input (only used when the
+        // navigation shares it), while the rest of the screen fades in
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            scrimColor = Color.TRANSPARENT
+            duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
+        }
+        enterTransition = MaterialFadeThrough()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSearchSuggestionsBinding.bind(view)

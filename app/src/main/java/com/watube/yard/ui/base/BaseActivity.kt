@@ -19,6 +19,7 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.helpers.ThemeHelper.getThemeMode
 import com.watube.yard.helpers.WindowHelper
+import com.watube.yard.ui.tools.RestMode
 import java.util.Locale
 
 /**
@@ -113,6 +114,13 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun attachBaseContext(newBase: Context?) {
+        // the night mode has to be known before AppCompat builds this activity's configuration
+        // in super.attachBaseContext(): set later, the first activity of the process started with
+        // the system's day/night instead of the app theme, and enableEdgeToEdge() picked the
+        // status bar icon colour from it (white icons on the light theme when Android is dark)
+        val uiPref = PreferenceHelper.getString(PreferenceKeys.THEME_MODE, "D")
+        AppCompatDelegate.setDefaultNightMode(getThemeMode(uiPref))
+
         val baseContext = newBase ?: return super.attachBaseContext(null)
         super.attachBaseContext(baseContext)
 
@@ -135,14 +143,20 @@ open class BaseActivity : AppCompatActivity() {
             needsConfig = true
         }
 
-        // IMPORTANT : l'appel au thème est conservé nécessaire au comportement de l'app
-        // (changement de thème dynamique à la volée, ou Application non configurée)
-        val uiPref = PreferenceHelper.getString(PreferenceKeys.THEME_MODE, "D")
-        AppCompatDelegate.setDefaultNightMode(getThemeMode(uiPref))
-
         if (needsConfig) {
             applyOverrideConfiguration(configuration)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // the scheduled rest mode covers whichever screen is in front
+        RestMode.onResume(this)
+    }
+
+    override fun onPause() {
+        RestMode.onPause(this)
+        super.onPause()
     }
 
     /**

@@ -49,7 +49,6 @@
     <string name="videoCount">%1$d vídeos</string>
     <string name="comments">Comentários</string>
     <string name="retry">Tentar novamente</string>
-    <string name="customization">Ajustes</string>
     <string name="noInternet">Tem que estar ligado à Internet.</string>
     <string name="import_from_yt_summary">De YouTube ou de NewPipe</string>
     <string name="changeLanguage">Idioma</string>
@@ -61,7 +60,6 @@
     <string name="subscribers">%1$s subscritores</string>
     <string name="settings">Definições</string>
     <string name="location">Localização</string>
-    <string name="website">Site</string>
     <string name="channels">Canais</string>
     <string name="all">Todos</string>
     <string name="playlists">Listas de reprodução</string>
@@ -75,7 +73,6 @@
     <string name="category_sponsor_summary">Promoções, referências pagas e anúncios diretos. Não por autopromoção nem comunicações acerca de causas, criações, sites e produtos</string>
     <string name="music_playlists">Listas de música no YT</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Utiliza a API https://sponsor.ajay.app</string>
     <string name="segment_skipped">Segmento ignorado</string>
     <string name="category_segments">Segmentos</string>
     <string name="category_sponsor">Patrocínio</string>
@@ -87,7 +84,6 @@
     <string name="category_interaction_summary">É quando existe uma mensagem para votar, subscrever ou seguir algo durante a reprodução do conteúdo. Se for extenso ou acerca de algo em concreto, cai na categoria de autopromoção</string>
     <string name="category_intro_summary">É um intervalo sem qualquer conteúdo. Pode ser uma pausa, uma imagem ou uma animação recorrente. Não deve ser usado para transições que possuam informação</string>
     <string name="category_outro">Ecrã final e créditos</string>
-    <string name="color_accent">Destaque</string>
     <string name="app_icon">Ícone</string>
     <string name="playOnBackground">Reproduzir em segundo plano</string>
     <string name="shareTo">Partilhar URL</string>
@@ -102,13 +98,11 @@
     <string name="sponsorblock_notifications">Notificações</string>
     <string name="enabled">Ligado</string>
     <string name="license">Licença</string>
-    <string name="material_you">Material You</string>
     <string name="disabled">Desligado</string>
     <string name="appearance">Aparência</string>
     <string name="update_summary">Procurar atualizações</string>
     <string name="app_uptodate">A sua versão está atualizada.</string>
     <string name="shapedIcon">Forma</string>
-    <string name="instance_summary">Piped, sessão e conta</string>
     <string name="customInstance_summary">Adicionar…</string>
     <string name="instance_name">Nome da instância</string>
     <string name="update_available">Atualização disponível</string>
@@ -136,7 +130,6 @@
     <string name="auth_instance">Instância de autenticação</string>
     <string name="auth_instance_summary">Utilize outra instância para invocações autenticadas</string>
     <string name="auth_instances">Escolha uma instância</string>
-    <string name="github">GitHub</string>
     <string name="buffering_goal">Pré-carregamento</string>
     <string name="buffering_goal_summary">Número máximo de segundos para colocar em memória</string>
     <string name="audio_video">Áudio e vídeo</string>
@@ -153,14 +146,12 @@
     <string name="turnInternetOn">Ative uma ligação Wi-Fi ou de dados móveis para estabelecer ligação à Internet.</string>
     <string name="instance_frontend_url">URL para a instância (opcional)</string>
     <string name="quality">Qualidade</string>
-    <string name="player_summary">Predefinições e comportamento</string>
     <string name="seek_increment">Incremento de avanço/recuo</string>
     <string name="downloading">A descarregar…</string>
     <string name="empty_instance">Preencha o nome e a URL da API.</string>
     <string name="category_music_offtopic">Música: secção não musical</string>
     <string name="category_preview">Pré-visualização/Resumo</string>
     <string name="invalid_url">Por favor, digite um URL funcional</string>
-    <string name="version">Versão %1$s</string>
     <string name="never">Nunca</string>
     <string name="autoRotatePlayer">Ecrã completo automático</string>
     <string name="always">Sempre</string>
@@ -186,20 +177,17 @@
     <string name="required_network">Requer uma ligação</string>
     <string name="network_metered">Móvel</string>
     <string name="network_wifi">Apenas Wi-Fi</string>
-    <string name="no_search_result">Não há resultados.</string>
     <string name="copied">Copiado</string>
     <string name="data_saver_mode">Poupança de dados</string>
     <string name="data_saver_mode_summary">Ignorar miniaturas e outras imagens</string>
     <string name="search_history_summary">Memorizar pesquisas</string>
     <string name="watch_history_summary">Guardar registo de vídeos localmente</string>
-    <string name="history_summary">Histórico de pesquisas e de visualizações</string>
     <string name="watch_positions_title">Memorizar posição de reprodução</string>
     <string name="reset_watch_positions">Repor</string>
     <string name="system_caption_style">Estilo do sistema</string>
     <string name="captions">Legendas</string>
     <string name="none">Nada</string>
     <string name="general">Geral</string>
-    <string name="general_summary">Descargas e poupança de dados</string>
     <string name="caption_settings">Legendas</string>
     <string name="playerAudioQuality">Qualidade de som</string>
     <string name="worst_quality">Pior</string>
@@ -222,7 +210,6 @@
     <string name="copied_to_clipboard">Copiado para a área de transferência</string>
     <string name="open_copied">Abrir</string>
     <string name="device_info">Informações do dispositivo</string>
-    <string name="audio_video_summary">Qualidade e formato</string>
     <string name="delete">Eliminar das descargas</string>
     <string name="new_videos_badge">Indicador para novos vídeos</string>
     <string name="new_videos_badge_summary">Mostrar indicador com o número de novos vídeos, se existentes</string>
@@ -311,7 +298,6 @@
     <string name="download_completed">Descarga terminada</string>
     <string name="concurrent_downloads_limit_reached">Atingiu o limite máximo de descargas em simultâneo.</string>
     <string name="help">Ajuda</string>
-    <string name="faq">FAQ</string>
     <string name="sleep_timer">Temporizador</string>
     <string name="skip_silence">Ignorar silêncio</string>
     <string name="replies">Respostas</string>
@@ -418,7 +404,6 @@
     <string name="group_name_error_exists">Escolha um nome que seja único</string>
     <string name="sponsorblock_user_id">ID de utilizador SponsorBlock</string>
     <string name="contribute_to_sponsorblock">Contribuir para SponsorBlock</string>
-    <string name="donate">Doar</string>
     <string name="no_fullscreen_resolution">Resolução sem ecrã completo</string>
     <string name="music_artists">Artistas do YT Music</string>
     <string name="same_as_fullscreen">Igual a ecrã completo</string>
@@ -539,11 +524,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

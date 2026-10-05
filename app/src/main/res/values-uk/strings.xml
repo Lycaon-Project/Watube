@@ -8,7 +8,6 @@
     <string name="empty">Вам необхідно ввести ім\'я користувача та пароль.</string>
     <string name="clear_history">Очистити історію</string>
     <string name="category_selfpromo_summary">Схоже до категорії \"Спонсор\", але стосується безплатних оголошень або самореклами. Це включає розділи про свої товари, фінансові внески або інформацію про тих з ким вони співпрацювали</string>
-    <string name="color_accent">Акценти</string>
     <string name="startpage">Головна</string>
     <string name="subscriptions">Підписки</string>
     <string name="library">Бібліотека</string>
@@ -61,8 +60,6 @@
     <string name="settings">Налаштування</string>
     <string name="location">Розташування</string>
     <string name="instance">Сервер</string>
-    <string name="customization">Коригування</string>
-    <string name="website">Вебсайт</string>
     <string name="videoCount">%1$d відео</string>
     <string name="noInternet">Спочатку під\'єднайтеся до інтернету.</string>
     <string name="retry">Повторити</string>
@@ -78,7 +75,6 @@
     <string name="music_albums">Альбоми YT Music</string>
     <string name="music_playlists">Списки відтворення YT Music</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Використовує АРІ https://sponsor.ajay.app</string>
     <string name="segment_skipped">Пропущений сегмент</string>
     <string name="category_segments">Сегменти</string>
     <string name="category_sponsor">Спонсор</string>
@@ -91,7 +87,6 @@
     <string name="category_outro">Кінцеві карти та титри</string>
     <string name="category_outro_summary">Інформація після закінчення. Не для висновків з інформацією</string>
     <string name="license">Ліцензія</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Сповіщення</string>
     <string name="enabled">Увім.</string>
     <string name="disabled">Вимк.</string>
@@ -120,10 +115,8 @@
     <string name="category_music_offtopic_summary">Тільки для використання у музичних кліпах. Він повинен охоплювати частини відео, а не частину офіційних міксів. Зрештою, відео має максимально нагадувати Spotify або будь-яку іншу версію або зменшувати розмови чи інші відволікання</string>
     <string name="category_preview_summary">Для сегментів із детальним описом майбутнього вмісту без додаткової інформації. Якщо вона включає кліпи, які з’являються лише тут, це, швидше за все, неправильна категорія</string>
     <string name="appearance">Зовнішній вигляд</string>
-    <string name="instance_summary">Piped, автентифікація та обліковий запис</string>
     <string name="quality">Якість</string>
     <string name="behavior">Поведінка</string>
-    <string name="version">Версія %1$s</string>
     <string name="empty_instance">Заповніть назву та посилання до API.</string>
     <string name="invalid_url">Будь ласка, введіть URL що працює</string>
     <string name="related_streams">Пов\'язані матеріали</string>
@@ -142,7 +135,6 @@
     <string name="deleteAccount_summary">Видалити ваш обліковий запис Piped</string>
     <string name="restore">Відновити</string>
     <string name="require_restart_message">Перезапустіть застосунок, щоб застосувати нові зміни.</string>
-    <string name="player_summary">Значення за замовчуванням та поведінка</string>
     <string name="pauseOnScreenOff">Автопауза</string>
     <string name="pauseOnScreenOff_summary">Призупиняти відтворення, коли екран вимкнено</string>
     <string name="customInstance_summary">Додати…</string>
@@ -150,7 +142,6 @@
     <string name="watch_history">Історія переглядів</string>
     <string name="watch_positions">Пам\'ятати позицію</string>
     <string name="auth_instances">Обрати сервер автентифікації</string>
-    <string name="github">GitHub</string>
     <string name="instance_api_url">Посилання до API сервера</string>
     <string name="audio_video">Аудіо та відео</string>
     <string name="fullscreen_orientation">Повноекранна орієнтація</string>
@@ -207,14 +198,12 @@
     <string name="error_occurred">Помилка</string>
     <string name="change_region">Здається, тренди недоступні для поточного регіону. Виберіть інший у налаштуваннях.</string>
     <string name="device_info">Відомості про пристрій</string>
-    <string name="general_summary">Завантаження та економія даних</string>
     <string name="most_recent">Найновіші</string>
     <string name="least_recent">Найдавніші</string>
     <string name="network_all">Усі</string>
     <string name="network_wifi">Лише через Wi-Fi</string>
     <string name="translate">Переклад</string>
     <string name="share_with_time">Поділитися з часовим кодом</string>
-    <string name="no_search_result">Результатів немає.</string>
     <string name="export_subscriptions">Експорт підписок</string>
     <string name="push_channel_description">Показує сповіщення, коли доступні нові трансляції.</string>
     <string name="add_to_queue">Додати в чергу</string>
@@ -233,7 +222,6 @@
     <string name="copied_to_clipboard">Скопійовано в буфер обміну</string>
     <string name="open_copied">Відкрити</string>
     <string name="watch_history_summary">Запам\'ятовувати локально переглянуті відео</string>
-    <string name="history_summary">Історія переглядів та пошуку</string>
     <string name="watch_positions_title">Запам\'ятовування позицій відтворення</string>
     <string name="reset_watch_positions">Скинути</string>
     <string name="system_caption_style">Системний стиль субтитрів</string>
@@ -241,7 +229,6 @@
     <string name="none">Відсутня</string>
     <string name="general">Загальні</string>
     <string name="instance_frontend_url">Посилання до сервера (необов\'язково)</string>
-    <string name="audio_video_summary">Якість і формат</string>
     <string name="caption_settings">Субтитри</string>
     <string name="worst_quality">Найнижча</string>
     <string name="renamePlaylist">Перейменувати добірку</string>
@@ -311,7 +298,6 @@
     <string name="download_completed">Завантаження завершено</string>
     <string name="resume">Продовжити</string>
     <string name="help">Довідка</string>
-    <string name="faq">ЧаПи</string>
     <string name="sleep_timer">Таймер сну</string>
     <string name="skip_silence">Пропускати тишу</string>
     <string name="replies">Відповіді</string>
@@ -419,7 +405,6 @@
     <string name="sb_invalid_segment">Недійсний початок або кінець сегмента</string>
     <string name="contribute_to_sponsorblock">Зробити внесок до SponsorBlock</string>
     <string name="sponsorblock_user_id">UserID у SponsorBlock</string>
-    <string name="donate">Підтримати</string>
     <string name="music_artists">Виконавці YT Music</string>
     <string name="no_fullscreen_resolution">Роздільність для не повноекранного режиму</string>
     <string name="same_as_fullscreen">Така ж як для повноекранного режиму</string>
@@ -543,11 +528,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

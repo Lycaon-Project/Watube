@@ -9,7 +9,9 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
@@ -41,6 +43,7 @@ import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.UncontainedCarouselStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.Hold
 
 
 /** Left inset of a feed row (trending_row / ItemRow), so card edges land on the gutter */
@@ -105,8 +108,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         // Solar search pill: opens the search screen, shows the LOCAL badge in local mode
-        binding.searchPill.setOnClickListener {
-            findNavController().navigate(R.id.openSearch)
+        binding.searchPill.setOnClickListener { pill ->
+            // the pill grows into the search field (container transform) instead of the
+            // default fade: home stays visible underneath until the transform ends
+            exitTransition = Hold()
+            findNavController().navigate(
+                R.id.openSearch,
+                null,
+                navOptions { popUpTo(R.id.homeFragment) { saveState = true } },
+                FragmentNavigatorExtras(pill to pill.transitionName)
+            )
         }
         binding.localBadge.isGone = !PlayerHelper.fullLocalMode
 
@@ -331,6 +342,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onResume() {
         super.onResume()
+        // the Hold only serves the search transform: other destinations keep their animations
+        exitTransition = null
         // on resume: the setting may have changed while this screen stayed alive
         placeHeader()
         applyFeedDensity()

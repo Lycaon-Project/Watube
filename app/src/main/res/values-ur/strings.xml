@@ -51,11 +51,9 @@
     <string name="emptyList">یہاں کچھ بھی نہیں ہے.</string>
     <string name="instance">انسٹنش</string>
     <string name="location">مقام</string>
-    <string name="website">ویب سائٹ</string>
     <string name="changeLanguage">زبان</string>
     <string name="about">ہمارے بارے میں</string>
     <string name="systemLanguage">سسٹم</string>
-    <string name="customization">موافقت</string>
     <string name="retry">دوبارہ کوشش کریںدوبارہ کوشش کریں</string>
     <string name="videoCount">%1$d ویڈیو</string>
     <string name="noInternet">پہلے انٹرنیٹ سے جڑیں۔</string>
@@ -75,7 +73,6 @@
     <string name="customInstance">حسب ضرورت</string>
     <string name="importsuccess">سبسکرائب کیا</string>
     <string name="sponsorblock">اسپانسر بلاک</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API استعمال کرتا ہے</string>
     <string name="segment_skipped">چھوڑا ہوا طبقہ</string>
     <string name="category_segments">طبقات</string>
     <string name="category_sponsor">سپانسر</string>
@@ -88,8 +85,6 @@
     <string name="category_filler">فلر ٹینجنٹ/مذاق</string>
     <string name="category_music_offtopic">موسیقی: غیر موسیق سیکشن</string>
     <string name="license">لائسنس</string>
-    <string name="color_accent">لہجے</string>
-    <string name="material_you">میٹریل یو</string>
     <string name="sponsorblock_notifications">اطلاعات</string>
     <string name="app_icon">آئیکن</string>
     <string name="enabled">چالو</string>
@@ -102,7 +97,6 @@
     <string name="instance_frontend_url">انسٹانس فرنٹ اینڈ کا URL</string>
     <string name="quality">معیار</string>
     <string name="behavior">رویہ</string>
-    <string name="player_summary">ڈیفالٹس اور رویہ</string>
     <string name="seek_increment">سیک اضافہ</string>
     <string name="pauseOnScreenOff_summary">اسکرین آف ہونے پر پلے بیک کو روک دیں</string>
     <string name="clonePlaylist">پلے لسٹ کلون کریں</string>
@@ -152,12 +146,10 @@
     <string name="flameIcon">اڑتا ہوا شعلہ</string>
     <string name="customInstance_summary">شامل کریں…</string>
     <string name="appearance_summary">ایپ کو اپنی پسند کے مطابق ایڈجسٹ کریں</string>
-    <string name="instance_summary">پائپ، لاگ ان، اور سبسکرپشنز</string>
     <string name="birdIcon">بڑھا ہوا پرندہ</string>
     <string name="instance_name">انسٹنش کا نام</string>
     <string name="instance_api_url">انسٹنش API کی URL</string>
     <string name="addInstance">انسٹنش شامل کریں</string>
-    <string name="version">ورژن %1$s</string>
     <string name="related_streams">متعلقہ مواد</string>
     <string name="related_streams_summary">آپ جو دیکھتے ہیں اس کے ساتھ ملتے جلتے سلسلے دکھائیں</string>
     <string name="buffering_goal">پہلے سے لوڈ</string>
@@ -176,7 +168,6 @@
     <string name="watch_positions">پوزیشن یاد رکھیں</string>
     <string name="auth_instance">توثیق کی انسٹنش</string>
     <string name="auth_instances">ایک توثیق انسٹنش منتخب کریں</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">آڈیو اور ویڈیو</string>
     <string name="fullscreen_orientation">پوری اسکرین کی سمت بندی</string>
     <string name="aspect_ratio">ویڈیو کا پہلو تناسب</string>
@@ -192,11 +183,9 @@
     <string name="buffering_goal_summary">زیادہ سے زیادہ بفر کرنے کے لیے ویڈیو کے سیکنڈ کی مقدار</string>
     <string name="require_restart">ایپ کو دوبارہ شروع کرنے کی ضرورت ہے</string>
     <string name="notifications">اطلاعات</string>
-    <string name="general_summary">زبان، اور علاقہ</string>
     <string name="history_empty">ابھی تک کوئی ہسٹری نہیں۔</string>
     <string name="network_wifi">صرف Wi-Fi پر</string>
     <string name="translate">ترجمہ</string>
-    <string name="no_search_result">کوئی نتیجہ نہیں۔</string>
     <string name="caption_settings">کیپشنز</string>
     <string name="playerAudioQuality">آڈیو کوالٹی</string>
     <string name="most_recent">تازہ ترین</string>
@@ -217,7 +206,6 @@
     <string name="data_saver_mode_summary">تھمب نیلز اور دیگر تصاویر کو چھوڑ دیں</string>
     <string name="search_history_summary">تلاشیں یاد رکھیں</string>
     <string name="watch_history_summary">مقامی طور پر دیکھے گئے ویڈیوز پر نظر رکھیں</string>
-    <string name="history_summary">دیکھنے اور تلاش کی سرگزشت</string>
     <string name="watch_positions_title">یاد کردہ پلے بیک پوزیشنز</string>
     <string name="reset_watch_positions">ری سیٹ کریں</string>
     <string name="system_caption_style">سسٹم کیپشن اسٹائل</string>
@@ -231,11 +219,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

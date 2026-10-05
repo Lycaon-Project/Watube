@@ -3,7 +3,7 @@
     <!--
       Cleartext (http://) traffic is only allowed towards the local machine, so that
       self-hosted instances running on the emulator or on localhost keep working.
-      Everything else must be encrypted, which also protects the PoToken WebView
+      Everything else must be encrypted, which protects the streams, the local pages
       and all API calls from man-in-the-middle injection.
     -->
     <base-config

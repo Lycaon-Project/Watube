@@ -26,7 +26,6 @@
     <string name="settings">Indstillinger</string>
     <string name="location">Lokation</string>
     <string name="instance">Instans</string>
-    <string name="website">Hjemmeside</string>
     <string name="videoCount">%1$d videoer</string>
     <string name="noInternet">Opret forbindelse til internettet først.</string>
     <string name="retry">Prøv igen</string>
@@ -43,7 +42,6 @@
     <string name="music_albums">YT Musik Album</string>
     <string name="music_playlists">YT Musik Playlister</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">Bruger https://sponsor.ajay.app API</string>
     <string name="segment_skipped">Sprang segment over</string>
     <string name="category_segments">Segmenter</string>
     <string name="category_sponsor">Sponsor</string>
@@ -56,7 +54,6 @@
     <string name="appearance">Udseende</string>
     <string name="downloads">Downloads</string>
     <string name="license">Licens</string>
-    <string name="color_accent">Accentfarve</string>
     <string name="playback_speed">Afspilningshastighed</string>
     <string name="advanced">Avanceret</string>
     <string name="appearance_summary">Tilpas appen efter din smag</string>
@@ -99,9 +96,7 @@
     <string name="systemLanguage">System</string>
     <string name="disabled">Fra</string>
     <string name="systemDefault">System</string>
-    <string name="customization">Justeringer</string>
     <string name="enabled">Til</string>
-    <string name="material_you">Material You</string>
     <string name="update_summary">Tjek for opdatering</string>
     <string name="app_uptodate">Kører den seneste version.</string>
     <string name="player">Afspiller</string>
@@ -114,14 +109,12 @@
     <string name="category_interaction_summary">Når der er en kort påmindelse om at synes godt om, abonnere eller følge midt i indhold. Hvis det er langt eller specifikt, skal det i stedet gå som selvpromovering</string>
     <string name="category_outro">Slutinfo og rulletekst</string>
     <string name="category_outro_summary">Info efter afslutningen. Ikke til konklusioner med info</string>
-    <string name="instance_summary">Piped, login og konto</string>
     <string name="customInstance_summary">Tilføj…</string>
     <string name="instance_name">Instansnavn</string>
     <string name="instance_api_url">URL til instans-API</string>
     <string name="addInstance">Tilføj instans</string>
     <string name="invalid_url">Indtast venligst en URL, der virker</string>
     <string name="related_streams">Relateret indhold</string>
-    <string name="version">Version %1$s</string>
     <string name="related_streams_summary">Vis lignende indhold ved siden af det, du ser</string>
     <string name="empty_instance">Udfyld navnet og API-URL\'en.</string>
     <string name="category_filler">Fylde Indhold/Jokes</string>
@@ -149,7 +142,6 @@
     <string name="auth_instance">Godkendelsesinstans</string>
     <string name="auth_instance_summary">Brug en anden instans til godkendte opkald</string>
     <string name="auth_instances">Vælg en godkendelsesinstans</string>
-    <string name="github">GitHub</string>
     <string name="category_filler_summary">For tangentielle scener, der kun er tilføjet som fyld eller humor, der ikke er nødvendig for at forstå videoens hovedindhold</string>
     <string name="buffering_goal_summary">Maks. antal sekunder af video som buffer</string>
     <string name="audio_video">Lyd og video</string>
@@ -174,18 +166,15 @@
     <string name="data_saver_mode_summary">Spring over miniaturebilleder og andre billeder</string>
     <string name="search_history_summary">Husk søgninger</string>
     <string name="watch_history_summary">Hold styr på sete videoer lokalt</string>
-    <string name="history_summary">Visnings- og søgehistorik</string>
     <string name="watch_positions_title">Huskede afspilningspositioner</string>
     <string name="reset_watch_positions">Nulstil</string>
     <string name="system_caption_style">Systemets undertekststil</string>
     <string name="captions">Undertekster</string>
     <string name="none">Ingen</string>
     <string name="general">Generel</string>
-    <string name="general_summary">Sprog og region</string>
     <string name="instance_frontend_url">URL til instans-frontend (valgfrit)</string>
     <string name="quality">Kvalitet</string>
     <string name="behavior">Adfærd</string>
-    <string name="player_summary">Standarder og adfærd</string>
     <string name="clonePlaylist">Klon playliste</string>
     <string name="caption_settings">Undertekster</string>
     <string name="playerAudioQuality">Lydkvalitet</string>
@@ -203,7 +192,6 @@
     <string name="network_all">Alle</string>
     <string name="network_metered">Forbrugsbaseret</string>
     <string name="translate">Oversættelse</string>
-    <string name="no_search_result">Ingen resultater.</string>
     <string name="network_wifi">Kun på Wi-Fi</string>
     <string name="required_network">Påkrævet forbindelse</string>
     <string name="error_occurred">Fejl</string>
@@ -227,7 +215,6 @@
     <string name="copied_to_clipboard">Kopieret til udklipsholder</string>
     <string name="open_copied">Åbn</string>
     <string name="device_info">Enhedsoplysninger</string>
-    <string name="audio_video_summary">Kvalitet og format</string>
     <string name="invalid_input">Ugyldigt input</string>
     <string name="shorts_notifications">Notifikationer om shorts</string>
     <string name="creation_date">Oprettelsesdato</string>
@@ -235,7 +222,6 @@
     <string name="mark_as_unwatched">Markér som ikke set</string>
     <string name="app_backup">App-sikkerhedskopiering</string>
     <string name="audio_only_mode_summary">Gør LibreTube til en musikafspiller</string>
-    <string name="faq">FAQ</string>
     <string name="manual">Manuelt</string>
     <string name="fullscreen_gestures">Gå ind i/ud af fuldskærms-bevægelser</string>
     <string name="sort_by">Sortér efter</string>
@@ -348,7 +334,6 @@
     <string name="help">Hjælp</string>
     <string name="grid_landscape">Gitterkolonner (landskab)</string>
     <string name="play_automatically_summary">Start afspilning af video automatisk, når du vælger</string>
-    <string name="donate">Donér</string>
     <string name="subscriberAndVideoCounts">%1$s abonnenter • %2$d videoer</string>
     <string name="music_artists">YT Musik Kunstnere</string>
     <string name="normal_views">%1$s visninger%2$s</string>
@@ -494,11 +479,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

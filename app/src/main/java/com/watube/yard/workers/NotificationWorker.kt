@@ -27,6 +27,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.views.TimePickerPreference
+import com.watube.yard.util.DataSaverMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -315,8 +316,9 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
             return cached
         }
 
-        // Only download if NOT in data saver mode (FIXED: inverted logic)
-        val shouldDownload = !PreferenceHelper.getBoolean(PreferenceKeys.DATA_SAVER_MODE, false)
+        // Only download if NOT in data saver mode. The setting is a list (disabled / metered /
+        // enabled): reading it as a boolean threw a ClassCastException once it had been changed
+        val shouldDownload = !DataSaverMode.isEnabled(applicationContext)
 
         return if (shouldDownload) {
             try {

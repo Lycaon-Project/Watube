@@ -46,7 +46,6 @@
     <string name="library">लायब्रेरी</string>
     <string name="videos">वीडियो</string>
     <string name="import_from_yt_summary">यूट्यूब या न्यूपाइप से</string>
-    <string name="customization">समायोजन</string>
     <string name="noInternet">पहले इंटरनेट से कनेक्ट करें।</string>
     <string name="emptyPlaylistName">प्लेलिस्ट का नाम खाली नहीं छोड़ा जा सकता</string>
     <string name="changeLanguage">भाषा</string>
@@ -58,7 +57,6 @@
     <string name="settings">सेटिंग्स</string>
     <string name="location">स्थान</string>
     <string name="instance">इंस्टेंस</string>
-    <string name="website">वैबसाइट</string>
     <string name="videoCount">%1$d वीडियोज</string>
     <string name="retry">फिर से कोशिश करें</string>
     <string name="comments">टिॅपणीयां</string>
@@ -92,9 +90,7 @@
     <string name="category_segments">खंड</string>
     <string name="category_intro_summary">वास्तविक सामग्री के बिना एक अंतराल। एक ठहराव, स्थिर फ्रेम, दोहराए जाने वाला एनीमेशन हो सकता है। जानकारी वाले संक्रमणों के लिए उपयोग नहीं किया जाना चाहिए</string>
     <string name="defaultIcon">डिफॉल्ट</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API का उपयोग करता है</string>
     <string name="category_outro">अंत कार्ड और क्रेडिट</string>
-    <string name="color_accent">लहजे</string>
     <string name="app_uptodate">नवीनतम संस्करण चला रहा है।</string>
     <string name="flameIcon">उड़ती हुई लौ</string>
     <string name="shapedIcon">सिली आकार की</string>
@@ -124,7 +120,6 @@
     <string name="player_resize_mode">आकार बदलें मोड</string>
     <string name="copied_to_clipboard">क्लिपबोर्ड पर कापी हुआ</string>
     <string name="open_copied">खोलें</string>
-    <string name="audio_video_summary">गुणवत्ता और प्रारूप</string>
     <string name="delete">डाउनलोडस से डिलीट करें</string>
     <string name="renamePlaylist">प्लेलिस्ट का नाम बदलें</string>
     <string name="wifi">वाई - फाई</string>
@@ -148,7 +143,6 @@
     <string name="category_music_offtopic">संगीत: गैर-संगीत अनुभाग</string>
     <string name="category_preview">पूर्वावलोकन/रिकैप</string>
     <string name="license">लाइसेंस</string>
-    <string name="material_you">मैटेरियल यू</string>
     <string name="sponsorblock_notifications">सूचनाएं</string>
     <string name="app_icon">आइकन</string>
     <string name="playOnBackground">पृष्ठभूमि में चलाएं</string>
@@ -174,7 +168,6 @@
     <string name="network_all">सभी</string>
     <string name="network_wifi">केवल वाई-फाई पर</string>
     <string name="translate">अनुवाद</string>
-    <string name="no_search_result">कोई परिणाम नहीं।</string>
     <string name="auto_quality">ऑटो</string>
     <string name="trends">चलन में</string>
     <string name="featured">फीचर्ड</string>
@@ -198,8 +191,6 @@
     <string name="invalid_url">कृपया वह URL दर्ज करें जो काम करता हो</string>
     <string name="buffering_goal">प्रीलोडिंग</string>
     <string name="buffering_goal_summary">बफ़र करने के लिए वीडियो की सेकंडस में उच्चतम मात्रा</string>
-    <string name="instance_summary">पाइप्ड, लॉगिन और खाता</string>
-    <string name="version">वर्शन %1$s</string>
     <string name="customInstance_summary">जोड़ें…</string>
     <string name="instance_name">इंस्टेंस का नाम</string>
     <string name="instance_api_url">इंस्टेंस API के लिए URL</string>
@@ -218,7 +209,6 @@
     <string name="player_autoplay">आटो-प्ले</string>
     <string name="quality">गुणवत्ता</string>
     <string name="behavior">व्‍यवहार</string>
-    <string name="player_summary">डिफ़ॉल्टस और व्यवहार</string>
     <string name="instance_frontend_url">इंस्टेंस फ्रंटएंड का URL</string>
     <string name="seek_increment">सीक में वृद्धि</string>
     <string name="pauseOnScreenOff">ऑटो ठहराव</string>
@@ -233,7 +223,6 @@
     <string name="auth_instance_summary">प्रमाणीकृत कॉल के लिए एक अलग इंस्टेंस का उपयोग करें</string>
     <string name="auth_instances">एक प्रमाणीकरण इंस्टेंस चुनें</string>
     <string name="audio_video">ऑडियो और वीडियो</string>
-    <string name="github">गिटहब</string>
     <string name="fullscreen_orientation">फुलस्क्रीन ओरिएंटेशन</string>
     <string name="open">खोलें…</string>
     <string name="chapters">अध्याय</string>
@@ -244,13 +233,11 @@
     <string name="data_saver_mode_summary">थंमनेल और अन्य छवियों को छोड़ें</string>
     <string name="search_history_summary">खोजें याद रखें</string>
     <string name="watch_history_summary">देखे गए वीडियो की स्थानीय रूप से सूची रखें</string>
-    <string name="history_summary">खोज और देखा इतिहास</string>
     <string name="watch_positions_title">याद प्लेबैक स्थितियां</string>
     <string name="reset_watch_positions">रीसेट</string>
     <string name="system_caption_style">सिस्टम कैप्शन शैली</string>
     <string name="captions">कैप्शनज</string>
     <string name="none">कोई भी नहीं</string>
-    <string name="general_summary">डाउनलोड्स और डेटा-सेवर</string>
     <string name="caption_settings">कैप्शनज</string>
     <string name="notifications">सूचनाएं</string>
     <string name="notify_new_streams">नई स्ट्रीमों के लिए सूचनाएं दिखाएं</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">सलीप टाइम्र</string>
     <string name="skip_silence">चुप्पी छोड़ें</string>
     <string name="help">सहायता</string>
-    <string name="faq">आम सवाल</string>
     <string name="replies">जवाब</string>
     <string name="unsupported_file_format">असमर्थित फाइल फॉर्मेट: %1$s</string>
     <string name="mark_as_watched">देखा गया चिह्नित करें</string>
@@ -417,7 +403,6 @@
     <string name="segment_type">सेगमेंट प्रकार</string>
     <string name="automatic_once">एक बार स्वचालित</string>
     <string name="contribute_to_sponsorblock">स्पांसर-ब्लॉक में योगदान करें</string>
-    <string name="donate">दान करें</string>
     <string name="music_artists">YT म्युजिक कलाकार</string>
     <string name="no_fullscreen_resolution">बगैर-फ़ुलस्क्रीन रिज़ॉल्यूशन</string>
     <string name="same_as_fullscreen">फ़ुलस्क्रीन के समान</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

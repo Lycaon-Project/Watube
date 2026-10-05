@@ -53,7 +53,6 @@
     <string name="category_intro">अन्तर्वार्ता / परिचय एनिमेसन</string>
     <string name="category_outro_summary">अन्त पछि जानकारी। जानकारीको साथ निष्कर्षको लागि होइन</string>
     <string name="category_highlight">भिडियो हाइलाइट देखाउनुहोस्</string>
-    <string name="material_you">सामग्री तपाईंको</string>
     <string name="sponsorblock_notifications">सूचनाहरू</string>
     <string name="disabled">बन्द</string>
     <string name="playOnBackground">पृष्ठभूमिमा प्ले गर्नुहोस्</string>
@@ -62,7 +61,6 @@
     <string name="empty">तपाईंले प्रयोगकर्ता नाम र पासवर्ड प्रविष्ट गर्नुपर्छ।</string>
     <string name="server_error">...चयन गरिएको सर्भरमा समस्या भएको जस्तो देखिन्छ। अर्को उदाहरण प्रयास गर्नुहोस्।...</string>
     <string name="emptyPlaylistName">प्लेलिस्टको नाम खाली हुन सक्दैन</string>
-    <string name="website">वेबसाइट</string>
     <string name="noInternet">पहिले इन्टरनेटमा जडान गर्नुहोस्।</string>
     <string name="clear_history">इतिहास खाली गर्नुहोस्</string>
     <string name="music_songs">YT music गीतहरू</string>
@@ -84,7 +82,6 @@
     <string name="enabled">प्रक्रिया चलिरहेको छ</string>
     <string name="search_history">किबोर्डखोज इतिहास</string>
     <string name="success">सकियो।</string>
-    <string name="color_accent">एक्सेन्टहरू</string>
     <string name="subscribers">%1$s सदस्यहरू</string>
     <string name="downloads">डाउनलोडहरू</string>
     <string name="app_icon">आइकन</string>
@@ -97,7 +94,6 @@
     <string name="playback_speed">प्लेब्याक गति</string>
     <string name="category_preview">पूर्वावलोकन/रिक्याप</string>
     <string name="category_music_offtopic">संगीत: गैर-संगीत खण्ड</string>
-    <string name="customization">समायोजनहरू</string>
     <string name="areYouSure">प्लेलिस्ट मेटाउने हो ?</string>
     <string name="license">इजाजतपत्र</string>
     <string name="playlistName">प्लेलिस्टको नाम</string>
@@ -109,10 +105,8 @@
     <string name="history">इतिहास</string>
     <string name="category_selfpromo">भुक्तान नगरिएको/स्व पदोन्नति</string>
     <string name="finished">समाप्त भयो</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API प्रयोग गर्दछ</string>
     <string name="replies">जवाफहरू</string>
     <string name="fail">असफल भयो :(</string>
-    <string name="donate">दान गर्नुहोस्</string>
     <string name="music_artists">YT संगीत कलाकारहरू</string>
     <string name="settings">सेटिङ</string>
     <string name="playlistCreated">प्लेलिस्ट सिर्जना गरियो।</string>
@@ -122,11 +116,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

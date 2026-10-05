@@ -53,7 +53,6 @@
     <string name="music_albums">YT संगीत अल्बम</string>
     <string name="music_playlists">YT संगीत प्लेलिस्ट</string>
     <string name="sponsorblock">SponsorBlock</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app हे API वापरते</string>
     <string name="segment_skipped">विभाग वगळला</string>
     <string name="category_segments">विभाग</string>
     <string name="category_sponsor">प्रायोजक</string>
@@ -82,8 +81,6 @@
     <string name="settings">सेटिंग्ज</string>
     <string name="location">स्थान</string>
     <string name="instance">उदाहरण</string>
-    <string name="customization">समायोजन</string>
-    <string name="website">संकेतस्थळ</string>
     <string name="videoCount">%1$d व्हिडिओस</string>
     <string name="noInternet">इंटरनेट कनेक्शन नाही.</string>
     <string name="retry">पुन्हा प्रयत्न करा</string>
@@ -106,7 +103,6 @@
     <string name="most_recent">सर्वात नवीन</string>
     <string name="least_recent">सर्वात जुनी</string>
     <string name="shapedIcon">मूर्ख आकाराचा</string>
-    <string name="color_accent">उच्चार</string>
     <string name="shareTo">URL शेअर करा</string>
     <string name="pause">थांबवा</string>
     <string name="reset">पुर्वासपांदित करा</string>
@@ -119,11 +115,9 @@
     <string name="advanced">अडवांस</string>
     <string name="player">प्लेअर</string>
     <string name="appearance_summary">आपल्या आवडीनुसार ॲप ॲडजेस्ट करा</string>
-    <string name="instance_summary">Piped, लॉगिन, व अकाउंट</string>
     <string name="customInstance_summary">ॲड…</string>
     <string name="instance_name">Instance चे नाव</string>
     <string name="torchIcon">ट्रेंडी टॉर्च</string>
-    <string name="version">व्हर्जन %1$s</string>
     <string name="category_preview_summary">अतिरिक्त माहितीशिवाय भविष्यातील सामग्री तपशीलवार विभागांसाठी. त्यात फक्त येथे दिसणार्‍या क्लिपचा समावेश असल्यास, ही बहुधा चुकीची श्रेणी आहे</string>
     <string name="replies">प्रत्युत्तरे</string>
     <string name="watch_positions">प्लेबॅक स्थिती लक्षात ठेवा</string>
@@ -134,12 +128,10 @@
     <string name="open">उघडा…</string>
     <string name="pure_theme">शुद्ध थीम</string>
     <string name="autoRotatePlayer_summary">डिव्हाइस फिरवल्यास पूर्णस्क्रीन प्लेबॅक</string>
-    <string name="history_summary">पाहिलेल्या आणि शोध घेतलेल्या व्हिडिओजचा इतिहास</string>
     <string name="watch_positions_title">लक्षात ठेवलेल्या प्लेबॅक पोझिशन्स</string>
     <string name="defaultIcon">डीफॉल्ट</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d व्हिडिओस</string>
     <string name="sponsorblock_notifications">सूचना</string>
-    <string name="material_you">मटेरियल यू</string>
     <string name="update_available">%1$s आवृत्ती उपलब्ध आहे</string>
     <string name="appearance">अपेअरंस</string>
     <string name="downloads">डाउनलोड</string>
@@ -171,7 +163,6 @@
     <string name="never">कधीच नाही</string>
     <string name="autoRotatePlayer">ऑटो-फुलस्क्रीन</string>
     <string name="pure_theme_summary">शुद्ध पांढरी/काळी थीम</string>
-    <string name="general_summary">भाषा आणि प्रदेश</string>
     <string name="caption_settings">मथळे</string>
     <string name="checking_frequency">प्रत्येक तपासत आहे…</string>
     <string name="most_views">सर्वाधिक जास्त पाहीलेला</string>
@@ -199,10 +190,8 @@
     <string name="instance_frontend_url">Instance फ्रंटएंडसाठी URL</string>
     <string name="quality">क्वालिटी</string>
     <string name="behavior">वागणूक</string>
-    <string name="player_summary">डिफॉल्ट आणि वर्तन</string>
     <string name="seek_increment">क्रमाने पुढे सरकवा</string>
     <string name="pauseOnScreenOff">स्वयं-थांबवा</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">ऑडिओ आणि व्हिडिओ</string>
     <string name="fullscreen_orientation">पूर्णस्क्रीन अभिमुखता</string>
     <string name="aspect_ratio">व्हिडिओ आस्पेक्ट रेशो</string>
@@ -242,7 +231,6 @@
     <string name="network_metered">मीटर केलेले नेटवर्क</string>
     <string name="network_wifi">फक्त Wi-Fi वर</string>
     <string name="translate">भाषांतर</string>
-    <string name="no_search_result">कोणतेही परिणाम नाहीत.</string>
     <string name="error_occurred">त्रुटी</string>
     <string name="copied">कॉपी केले</string>
     <string name="share_with_time">टाइम कोडसह शेअर करा</string>
@@ -305,7 +293,6 @@
     <string name="autoplay_countdown">ऑटोप्ले काउंटडाउन</string>
     <string name="autoplay_countdown_summary">पुढील व्हिडिओ ऑटो-प्ले करण्यापूर्वी 5 सेकंदचा काउंटडाउन दर्शवा</string>
     <string name="playing_next">पुढील %1$s मध्ये प्ले होईल</string>
-    <string name="audio_video_summary">गुणवत्ता आणि स्वरूप</string>
     <string name="playlistUrl">प्लेलिस्ट URL</string>
     <string name="trends">ट्रेंड्स</string>
     <string name="featured">वैशिष्ट्यपूर्ण</string>
@@ -325,7 +312,6 @@
     <string name="clear_bookmarks">बुकमार्क साफ करा</string>
     <string name="sleep_timer">स्लीप टाइमर</string>
     <string name="help">मदत</string>
-    <string name="faq">वारंवार विचारले जाणारे प्रश्न</string>
     <string name="unsupported_file_format">अनसपोर्टेड फाइल फॉर्मेट: %1$s</string>
     <string name="pip">PiP</string>
     <string name="finished">पूर्ण झाले</string>
@@ -338,17 +324,13 @@
     <string name="category_highlight">व्हिडिओ हायलाइट दाखवा</string>
     <string name="stop">थांबा</string>
     <string name="repeat_mode_all">सर्व पुन्हा करा</string>
-    <string name="donate">दान</string>
     <string name="comments_count">कंमेन्ट्स %1$s</string>
     <string name="change_instance">इन्स्टन्स बदला</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

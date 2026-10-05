@@ -59,9 +59,7 @@
     <string name="retry">Riprova</string>
     <string name="instance">Istanza</string>
     <string name="settings">Impostazioni</string>
-    <string name="website">Sito web</string>
     <string name="location">Posizione</string>
-    <string name="customization">Regolazioni</string>
     <string name="sponsorblock">SponsorBlock</string>
     <string name="channels">Canali</string>
     <string name="all">Tutto</string>
@@ -73,7 +71,6 @@
     <string name="music_videos">Video YT Music</string>
     <string name="music_albums">Album YT Music</string>
     <string name="music_playlists">Playlist YT Music</string>
-    <string name="sponsorblock_summary">Usa l\'API https://sponsor.ajay.app</string>
     <string name="category_sponsor">Sponsor</string>
     <string name="segment_skipped">Segmento saltato</string>
     <string name="category_segments">Segmenti</string>
@@ -85,9 +82,7 @@
     <string name="category_interaction">Promemoria di interazione</string>
     <string name="category_interaction_summary">Quando c\'è un breve promemoria per mettere mi piace, iscriversi o seguire nel mezzo del contenuto. Se è lungo o riguarda qualcosa di specifico, dovrebbe essere invece autopromozione</string>
     <string name="license">Licenza</string>
-    <string name="color_accent">Accenti</string>
     <string name="clear_history">Cancella la cronologia</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Notifiche</string>
     <string name="enabled">Attivo</string>
     <string name="disabled">Disattivato</string>
@@ -117,11 +112,9 @@
     <string name="instance_name">Nome istanza</string>
     <string name="addInstance">Aggiungi istanza</string>
     <string name="empty_instance">Compila il nome e l\'URL dell\'API.</string>
-    <string name="instance_summary">Piped, accesso e account</string>
     <string name="customInstance_summary">Aggiungi…</string>
     <string name="instance_api_url">URL API dell\'istanza</string>
     <string name="invalid_url">Si prega di inserire un URL che funzioni</string>
-    <string name="version">Versione %1$s</string>
     <string name="related_streams_summary">Mostra video simili a fianco di ciò che guardi</string>
     <string name="related_streams">Contenuti correlati</string>
     <string name="category_filler">Riempitivi/Scherzi</string>
@@ -141,7 +134,6 @@
     <string name="instance_frontend_url">URL verso il frontend dell\'istanza (opzionale)</string>
     <string name="quality">Qualità</string>
     <string name="behavior">Comportamento</string>
-    <string name="player_summary">Predefiniti e comportamento</string>
     <string name="seek_increment">Incremento di ricerca</string>
     <string name="pauseOnScreenOff">Pausa automatica</string>
     <string name="pauseOnScreenOff_summary">Metti in pausa la riproduzione quando lo schermo è spento</string>
@@ -156,7 +148,6 @@
     <string name="auth_instance">Istanza di autenticazione</string>
     <string name="auth_instance_summary">Usa un\'istanza diversa per le chiamate di autenticazione</string>
     <string name="auth_instances">Scegli un\'istanza di autenticazione</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">Audio e video</string>
     <string name="fullscreen_orientation">Orientamento a schermo intero</string>
     <string name="auto_rotation">Rotazione automatica</string>
@@ -178,8 +169,6 @@
     <string name="search_history_summary">Ricorda le ricerche</string>
     <string name="watch_history_summary">Cronologia locale delle visualizzazioni</string>
     <string name="data_saver_mode_summary">Salta miniature ed altre immagini</string>
-    <string name="history_summary">Cronologia ricerche e visualizzazioni</string>
-    <string name="general_summary">Scaricamenti e risparmio dati</string>
     <string name="copied_to_clipboard">Copiato negli appunti</string>
     <string name="watch_positions_title">Posizioni di riproduzione memorizzate</string>
     <string name="captions">Sottotitoli</string>
@@ -202,7 +191,6 @@
     <string name="least_recent">Meno recenti</string>
     <string name="required_network">Connessione richiesta</string>
     <string name="translate">Traduzione</string>
-    <string name="no_search_result">Nessun risultato.</string>
     <string name="share_with_time">Condividi con marca temporale</string>
     <string name="background_mode">Modalità di sottofondo</string>
     <string name="repeat_mode">Modalità ripetizione</string>
@@ -227,7 +215,6 @@
     <string name="repeat_mode_none">Disattivata</string>
     <string name="misc">Varie</string>
     <string name="device_info">Info sul dispositivo</string>
-    <string name="audio_video_summary">Qualità e formato</string>
     <string name="delete">Elimina dagli scaricati</string>
     <string name="renamePlaylist">Rinomina la playlist</string>
     <string name="new_videos_badge">Indicatore per i nuovi video</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Promemoria per dormire</string>
     <string name="skip_silence">Salta il silenzio</string>
     <string name="help">Aiuto</string>
-    <string name="faq">Domande frequenti</string>
     <string name="replies">Risposte</string>
     <string name="mark_as_watched">Segna come visto</string>
     <string name="unsupported_file_format">Formato di file non supportato: %1$s</string>
@@ -418,7 +404,6 @@
     <string name="segment_type">Tipo di segmento</string>
     <string name="contribute_to_sponsorblock">Contribuisci a SponsorBlock</string>
     <string name="sponsorblock_user_id">ID utente SponsorBlock</string>
-    <string name="donate">Dona</string>
     <string name="no_fullscreen_resolution">Nessuna risoluzione a schermo intero</string>
     <string name="music_artists">Artisti YT Music</string>
     <string name="same_as_fullscreen">Uguale allo schermo intero</string>
@@ -539,11 +524,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

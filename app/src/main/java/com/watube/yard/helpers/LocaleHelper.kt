@@ -23,15 +23,12 @@ object LocaleHelper {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     }
 
-    fun getLocaleFromAndroidCode(code: String): Locale {
-        val normalizedCode = code.replace("-r", "-")
-        return if (normalizedCode.contains("-")) {
-            val parts = normalizedCode.split("-", limit = 2)
-            Locale(parts[0], parts[1].uppercase())
-        } else {
-            Locale(normalizedCode)
-        }
-    }
+    /**
+     * Android resource qualifiers (pt-rBR, b+es+419) as BCP 47 tags (pt-BR, es-419). The Locale
+     * constructors are deprecated, and they read b+es+419 or b+en+Shaw as a language of its own.
+     */
+    fun getLocaleFromAndroidCode(code: String): Locale =
+        Locale.forLanguageTag(code.removePrefix("b+").replace('+', '-').replace("-r", "-"))
 
     /**
      * Watube anti-fingerprinting (inspired by Mullvad Browser / Tor Browser policies):
@@ -63,7 +60,7 @@ object LocaleHelper {
 
     fun getAvailableCountries(): List<Country> {
         return Locale.getISOCountries()
-            .map { Country(Locale("", it).displayCountry, it) }
+            .map { Country(Locale.Builder().setRegion(it).build().displayCountry, it) }
             .sortedBy { it.name }
     }
 

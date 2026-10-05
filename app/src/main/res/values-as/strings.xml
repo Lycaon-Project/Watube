@@ -58,9 +58,6 @@
     <string name="settings">ছেটিং</string>
     <string name="location">অৱস্থান</string>
     <string name="instance">ইনষ্টেন্স</string>
-    <string name="customization">সালসলনি</string>
-    <string name="website">ৱেবছাইট</string>
-    <string name="donate">দান কৰক</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d ভিডিঅ’</string>
     <string name="subscriberAndVideoCounts">%1$s জন চাবস্ক্ৰাইবাৰ • %2$d ভিডিঅ’</string>
     <string name="videoCount">%1$d ভিডিঅ’</string>
@@ -84,7 +81,6 @@
     <string name="music_playlists">ইউটি মিউজিক প্লেলিষ্ট</string>
     <string name="music_artists">ইউটি মিউজিক শিল্পী</string>
     <string name="sponsorblock">স্পনছৰব্লক</string>
-    <string name="sponsorblock_summary">https://sponsor.ajay.app API ব্যৱহাৰ কৰে</string>
     <string name="segment_skipped">খণ্ড এৰাই গৈছে</string>
     <string name="category_segments">খণ্ডসমুহ</string>
     <string name="category_sponsor">স্পনছৰ</string>
@@ -107,8 +103,6 @@
     <string name="category_highlight_summary">বিজ্ঞাপিত শিৰোনাম, থাম্বনেইল বা ভিডিঅ’ৰ আকৰ্ষণীয় অংশ। চেপ্টাৰ অংশত টেপ কৰি তালৈ যাব পাৰে</string>
     <string name="category_exclusive_access">এক্সক্লুছিভ প্ৰৱেশ</string>
     <string name="license">লাইচেন্স</string>
-    <string name="color_accent">এক্সেণ্ট</string>
-    <string name="material_you">মেটেৰিয়েল ইউ</string>
     <string name="sponsorblock_notifications">জাননী</string>
     <string name="app_icon">আইকন</string>
     <string name="enabled">চালু</string>
@@ -135,14 +129,12 @@
     <string name="shapedIcon">চিলি শ্বেপড</string>
     <string name="flameIcon">ফ্লাইং ফ্লেম</string>
     <string name="birdIcon">বুষ্টেড বাৰ্ড</string>
-    <string name="instance_summary">পাইপড, প্ৰৱেশ, আৰু একাউণ্ট</string>
     <string name="customInstance_summary">যোগ কৰক…</string>
     <string name="instance_name">ইনষ্টেন্সৰ নাম</string>
     <string name="instance_api_url">ইনষ্টেন্স APIৰ URL</string>
     <string name="addInstance">ইনষ্টেন্স যোগ কৰক</string>
     <string name="empty_instance">নাম আৰু API URL পূৰণ কৰক।</string>
     <string name="invalid_url">বৈধ URL দিয়ক</string>
-    <string name="version">সংস্কৰণ %1$s</string>
     <string name="show_updates">আপডেট স্বয়ংক্ৰিয়ভাৱে পৰীক্ষা কৰক</string>
     <string name="related_streams">সম্পৰ্কিত সামগ্ৰী</string>
     <string name="related_streams_summary">আপুনি চোৱাৰ লগত সামঞ্জস্যপূৰ্ণ ষ্ট্ৰীম দেখুৱাওক</string>
@@ -165,7 +157,6 @@
     <string name="instance_frontend_url">ইনষ্টেন্স ফ্ৰন্টএণ্ডৰ URL (ঐচ্ছিক)</string>
     <string name="quality">গুণমান</string>
     <string name="behavior">আচৰণ</string>
-    <string name="player_summary">মূল আৰু আচৰণ</string>
     <string name="seek_increment">সন্ধানৰ বৃদ্ধি</string>
     <string name="pauseOnScreenOff">স্বয়ংক্ৰিয় ৰখা</string>
     <string name="pauseOnScreenOff_summary">পৰ্দা বন্ধ হ’লে প্লেবেক ৰখক</string>
@@ -180,7 +171,6 @@
     <string name="auth_instance">প্ৰমাণীকৰণ ইনষ্টেন্স</string>
     <string name="auth_instance_summary">প্ৰমাণীকৰণৰ বাবে বেলেগ ইনষ্টেন্স ব্যৱহাৰ কৰক</string>
     <string name="auth_instances">প্ৰমাণীকৰণ ইনষ্টেন্স বাছনি কৰক</string>
-    <string name="github">GitHub</string>
     <string name="audio_video">অডিঅ’ আৰু ভিডিঅ’</string>
     <string name="fullscreen_orientation">পূৰ্ণপৰ্দা অভিমুখীকৰণ</string>
     <string name="aspect_ratio">ভিডিঅ’ৰ আনুপাতিক অনুপাত</string>
@@ -202,7 +192,6 @@
     <string name="data_saver_mode_summary">থাম্বনেইল আৰু অন্য চিত্ৰ এৰাই চলক</string>
     <string name="search_history_summary">সন্ধান মনত ৰাখক</string>
     <string name="watch_history_summary">চোৱা ভিডিঅ’ৰ স্থানীয় ট্ৰেক ৰাখক</string>
-    <string name="history_summary">চোৱা আৰু সন্ধানৰ ইতিহাস</string>
     <string name="watch_positions_title">মনত ৰখা প্লেবেক অৱস্থান</string>
     <string name="reset_watch_positions">ৰিছেট</string>
     <string name="system_caption_style">চিষ্টেম কেপচন ষ্টাইল</string>
@@ -211,7 +200,6 @@
     <string name="captions">কেপচন</string>
     <string name="none">কোনো নাই</string>
     <string name="general">সাধাৰণ</string>
-    <string name="general_summary">ভাষা আৰু অঞ্চল</string>
     <string name="caption_settings">কেপচন</string>
     <string name="playerAudioQuality">অডিঅ’ গুণমান</string>
     <string name="worst_quality">নিম্নতম</string>
@@ -232,7 +220,6 @@
     <string name="network_metered">মিটাৰড</string>
     <string name="network_wifi">কেৱল ৱাই-ফাইত</string>
     <string name="translate">অনুবাদ</string>
-    <string name="no_search_result">কোনো ফলাফল নাই।</string>
     <string name="error_occurred">ত্ৰুটি</string>
     <string name="copied">কপি কৰা হৈছে</string>
     <string name="share_with_time">টাইম ক’ডৰ সৈতে ভাগ-বতৰা</string>
@@ -255,7 +242,6 @@
     <string name="copied_to_clipboard">ক্লিপব’ৰ্ডত কপি কৰা হৈছে</string>
     <string name="open_copied">খোলক</string>
     <string name="device_info">ডিভাইচৰ তথ্য</string>
-    <string name="audio_video_summary">গুণমান আৰু ফৰ্মেট</string>
     <string name="delete">ডাউনলোডৰ পৰা মচক</string>
     <string name="delete_all">সকলো ডাউনলোড মচা হ’ব!</string>
     <string name="renamePlaylist">প্লেলিষ্টৰ নাম সলনি কৰক</string>
@@ -341,7 +327,6 @@
     <string name="sleep_timer">ঘুমৰ টাইমাৰ</string>
     <string name="skip_silence">নীৰৱতা এৰাই চলক</string>
     <string name="help">সহায়</string>
-    <string name="faq">FAQ</string>
     <string name="mark_as_watched">চোৱা বুলি চিহ্নিত কৰক</string>
     <string name="category">শ্ৰেণী</string>
     <string name="stats_for_nerds">নাৰ্ডৰ বাবে পৰিসংখ্যা</string>
@@ -499,11 +484,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

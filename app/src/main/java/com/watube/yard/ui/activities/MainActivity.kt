@@ -441,13 +441,8 @@ class MainActivity : AbstractPlayerHostActivity() {
      * Initialize the notification badge showing the amount of new videos
      */
     private fun setupSubscriptionsBadge() {
-        if (!PreferenceHelper.getBoolean(
-                PreferenceKeys.NEW_VIDEOS_BADGE,
-                false
-            )
-        ) {
-            return
-        }
+        // on by default (same default as the switch in general_settings.xml)
+        if (!PreferenceHelper.getBoolean(PreferenceKeys.NEW_VIDEOS_BADGE, true)) return
 
         // the badge counts new videos: the feed is what has to be loaded, not the channels
         subscriptionsViewModel.fetchFeed(this, forceRefresh = false)

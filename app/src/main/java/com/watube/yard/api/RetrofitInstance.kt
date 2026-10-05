@@ -5,6 +5,7 @@ import com.watube.yard.WatubeApp
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
+import com.watube.yard.util.SharedHttpClient
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -95,7 +96,7 @@ object RetrofitInstance {
      * `okhttp/x.y.z`.
      */
     private fun buildClient(): OkHttpClient {
-        val httpClient = OkHttpClient().newBuilder()
+        val httpClient = SharedHttpClient.base.newBuilder()
             .cache(httpCache())
             .addInterceptor(GenericUserAgentInterceptor())
 

@@ -27,9 +27,9 @@ import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toAndroidUri
 import com.watube.yard.util.DataSaverMode
+import com.watube.yard.util.SharedHttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.nio.file.Path
@@ -51,7 +51,7 @@ object ImageHelper {
      * all share the very same memory and disk caches as well as one shared OkHttp client.
      */
     fun buildImageLoader(context: Context): ImageLoader {
-        val httpClient = OkHttpClient.Builder()
+        val httpClient = SharedHttpClient.base.newBuilder()
             // thumbnails must not leak `okhttp/x.y.z` either: same UA as the API calls
             .addInterceptor(com.watube.yard.api.GenericUserAgentInterceptor())
 
@@ -144,7 +144,10 @@ object ImageHelper {
                 onError = { _, _ ->
                     // allow a later rebind to retry the request
                     target.tag = null
-                }
+                },
+                // same for a request dropped before it finished: with the tag left in place the
+                // next bind of that url returned early and the view stayed blank for good
+                onCancel = { target.tag = null }
             )
         }
     }

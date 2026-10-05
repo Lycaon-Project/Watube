@@ -21,6 +21,13 @@
         <exclude
             domain="database"
             path="." />
+        <!-- Cast analytics state (session ids, application id, feature usage counters) -->
+        <exclude
+            domain="sharedpref"
+            path="com.watube.yard.client_cast_analytics_data.xml" />
+        <exclude
+            domain="sharedpref"
+            path="com.watube.yard.debug.client_cast_analytics_data.xml" />
         <exclude
             domain="root"
             path="cache" />
@@ -32,5 +39,15 @@
         <exclude
             domain="sharedpref"
             path="errors.xml" />
+        <!-- Cast analytics state, and the telemetry queue of its datatransport library -->
+        <exclude
+            domain="sharedpref"
+            path="com.watube.yard.client_cast_analytics_data.xml" />
+        <exclude
+            domain="sharedpref"
+            path="com.watube.yard.debug.client_cast_analytics_data.xml" />
+        <exclude
+            domain="database"
+            path="com.google.android.datatransport.events" />
     </device-transfer>
 </data-extraction-rules>

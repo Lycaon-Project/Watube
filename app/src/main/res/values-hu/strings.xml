@@ -67,7 +67,6 @@
     <string name="search_history">Keresési előzmények</string>
     <string name="clear_history">Előzmények törlése</string>
     <string name="music_songs">YT Music zenék</string>
-    <string name="sponsorblock_summary">A https://sponsor.ajay.app API-t használja</string>
     <string name="segment_skipped">Kihagyott szakasz</string>
     <string name="category_segments">Szakaszok</string>
     <string name="music_videos">YT Music videók</string>
@@ -85,14 +84,10 @@
     <string name="category_outro">Végső kártyák és köszönet</string>
     <string name="category_outro_summary">Köszönetnyilvánítás vagy a videóvégi kártyák megjelenése. Nem a videó informatív összefoglalása</string>
     <string name="license">Licenc</string>
-    <string name="color_accent">Kiemelés</string>
-    <string name="material_you">Material You</string>
     <string name="sponsorblock_notifications">Értesítések</string>
     <string name="enabled">Be</string>
     <string name="disabled">Ki</string>
-    <string name="customization">Kiigazítások</string>
     <string name="instance">Példány</string>
-    <string name="website">Weboldal</string>
     <string name="open">Megnyitás…</string>
     <string name="reset">Alapértelmezések visszaállítása</string>
     <string name="deleteAccount">Fiók törlése</string>
@@ -111,11 +106,9 @@
     <string name="fireIcon">Divatos tűz</string>
     <string name="torchIcon">Trendi fáklya</string>
     <string name="network_metered">Forgalomkorlátos</string>
-    <string name="version">Verzió: %1$s</string>
     <string name="error_occurred">Hiba</string>
     <string name="copied">Másolva</string>
     <string name="device_info">Eszközinformáció</string>
-    <string name="general_summary">Letöltések és adatforgalom-csökkentés</string>
     <string name="worst_quality">Legrosszabb</string>
     <string name="default_subtitle_language">Feliratok nyelve</string>
     <string name="notify_new_streams">Értesítések megjelenítése az új közvetítésekről</string>
@@ -151,7 +144,6 @@
     <string name="player_autoplay">Automatikus lejátszás</string>
     <string name="quality">Minőség</string>
     <string name="behavior">Viselkedés</string>
-    <string name="github">GitHub</string>
     <string name="chapters">Fejezetek</string>
     <string name="require_restart">Alkalmazás újraindítása szükséges</string>
     <string name="reset_message">Visszaállítja az összes beállítást és kijelentkezik\?</string>
@@ -175,7 +167,6 @@
     <string name="history_empty">Nincsenek még előzmények.</string>
     <string name="autoRotatePlayer_summary">Teljes képernyős lejátszás, amikor az eszközt elforgatják</string>
     <string name="data_saver_mode_summary">Bélyegképek és egyéb képek kihagyása</string>
-    <string name="no_search_result">Nincs eredmény.</string>
     <string name="export_subscriptions">Feliratkozások exportálása</string>
     <string name="take_a_break">Itt az idő szünetet tartani</string>
     <string name="resize_mode_fit">Illeszkedés</string>
@@ -201,8 +192,6 @@
     <string name="general">Általános</string>
     <string name="pauseOnScreenOff">Automatikus szüneteltetés</string>
     <string name="pauseOnScreenOff_summary">A lejátszás szüneteltetése, ha a képernyő ki van kapcsolva</string>
-    <string name="player_summary">Alapértelmezett értékek és viselkedés</string>
-    <string name="audio_video_summary">Minőség és formátum</string>
     <string name="caption_settings">Feliratok</string>
     <string name="playerAudioQuality">Hangminőség</string>
     <string name="update_available">Frissítés érhető el</string>
@@ -212,7 +201,6 @@
     <string name="update_summary">Frissítések ellenőrzése</string>
     <string name="translate">Fordítás</string>
     <string name="network_all">Összes</string>
-    <string name="instance_summary">Piped, bejelentkezés, és fiók</string>
     <string name="no_audio">Nincs hang</string>
     <string name="audio">Hang</string>
     <string name="downloading">Letöltés…</string>
@@ -225,7 +213,6 @@
     <string name="addInstance">Példány hozzáadása</string>
     <string name="invalid_url">Adjon meg egy működő webcímet</string>
     <string name="auth_instances">Hitelesítési példány kiválasztása</string>
-    <string name="history_summary">Megtekintési és keresési előzmények</string>
     <string name="repeat_mode">Ismétlés mód</string>
     <string name="system_caption_style">Rendszerfeliratok stílusa</string>
     <string name="wifi">Wi-Fi</string>
@@ -313,7 +300,6 @@
     <string name="sleep_timer">Elalvási időzítő</string>
     <string name="skip_silence">Csend átugrása</string>
     <string name="help">Súgó</string>
-    <string name="faq">GYIK</string>
     <string name="replies">Válaszok</string>
     <string name="mark_as_watched">Megjelölés megtekintettnek</string>
     <string name="unsupported_file_format">Nem támogatott fájlformátum: %1$s</string>
@@ -417,7 +403,6 @@
     <string name="group_name_error_exists">Válasszon egyedi nevet</string>
     <string name="contribute_to_sponsorblock">Hozzájárulás a SponsorBlock-hoz</string>
     <string name="sponsorblock_user_id">SponsorBlock felhasználói azonosító</string>
-    <string name="donate">Adakozás</string>
     <string name="music_artists">YT Music előadók</string>
     <string name="vote_for_segment">Szavazás szakaszra</string>
     <string name="upvote">Fel</string>
@@ -536,11 +521,8 @@
 
     <!-- TODO: translate (Watube privacy settings) -->
     <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_summary" translatable="true">Anti-fingerprinting protections and identifier management</string>
     <string name="privacy_hardening" translatable="true">Privacy hardening</string>
     <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="reset_sb_uuid_daily" translatable="true">Rotate SponsorBlock ID daily</string>
-    <string name="reset_sb_uuid_daily_summary" translatable="true">Generate a new random SponsorBlock submission ID every day (inspired by Tor/Mullvad rotation)</string>
     <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
     <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
     <string name="privacy_identifiers" translatable="true">Identifiers</string>

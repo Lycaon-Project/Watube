@@ -6,10 +6,12 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.watube.yard.R
+import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.helpers.PrivacyHelper
+import com.watube.yard.util.SharedHttpClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -219,6 +221,12 @@ class PrivacySettings : InstanceSettings() {
     private fun resetIdentifiers() {
         PrivacyHelper.rotateAllIdentifiers()
         PrivacyHelper.clearWebViewData()
+        // a clean break, like Tor Browser's "new identity": no open connection and no cached
+        // response (ETag / Last-Modified revalidation) carries over to the new identifiers
+        lifecycleScope.launch(Dispatchers.IO) {
+            SharedHttpClient.dropIdleConnections()
+            RetrofitInstance.clearHttpCache()
+        }
 
         refreshIdentifierSummary(getString(R.string.sponsorblock_id_rotated))
 
