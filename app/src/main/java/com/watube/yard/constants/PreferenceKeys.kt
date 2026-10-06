@@ -36,9 +36,8 @@ object PreferenceKeys {
     // Cycle stamps of the rotating identifiers (not user facing)
     /** SponsorBlock user id: "user id" half + "cycle stamp" half. */
     const val SB_USER_ID_CYCLE = "sb_user_id_cycle"
-    /** Neutral region currently in use and the cycle stamp it was picked for. */
-    const val NEUTRAL_REGION_ACTIVE = "privacy_neutral_region_active"
-    const val NEUTRAL_REGION_CYCLE = "privacy_neutral_region_cycle"
+    /** Country of the neutral region picked by the user, used while the rotation is manual. */
+    const val NEUTRAL_REGION_COUNTRY = "privacy_neutral_region_country"
 
     // General
     const val LANGUAGE = "language"

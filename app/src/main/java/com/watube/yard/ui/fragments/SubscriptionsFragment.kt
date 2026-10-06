@@ -131,30 +131,30 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
             // Every update invalidates a hide animation that is still in flight: its
             // end action is still scheduled (it also runs after cancel()) and used to
             // hide the bar again one frame after a new progress had re-shown it.
-            val loading = progress != null && progress.currentProgress < progress.total
-            if (loading) {
+            val shown = binding.feedProgressContainer.isVisible
+            // the last "n/n" too, so the bar fades out full and not one channel short
+            if (progress != null && progress.total > 0) {
+                binding.feedProgressText.text = "${progress.currentProgress}/${progress.total}"
+                binding.feedProgressBar.max = progress.total
+                // one load at a time: the progress only grows and glides, except when the bar
+                // appears (it must not sweep back from the previous load)
+                binding.feedProgressBar.setProgressCompat(progress.currentProgress, shown)
+            }
+            if (progress != null && progress.currentProgress < progress.total) {
                 feedProgressAnimToken++
                 binding.feedProgressContainer.animate().cancel()
                 binding.feedProgressContainer.isVisible = true
                 binding.feedProgressContainer.alpha = 1f
-                binding.feedProgressContainer.scaleY = 1f
-                binding.feedProgressText.text = "${progress.currentProgress}/${progress.total}"
-                if (progress.total > 0) {
-                    binding.feedProgressBar.max = progress.total
-                    binding.feedProgressBar.progress = progress.currentProgress
-                }
             } else {
                 if (!binding.feedProgressContainer.isVisible) return@observe
 
                 val token = ++feedProgressAnimToken
                 binding.feedProgressContainer.animate()
-                    .alpha(0.5f)
-                    .scaleY(0.5f)
+                    .alpha(0f)
                     .withEndAction {
                         val binding = _binding ?: return@withEndAction
                         if (token != feedProgressAnimToken) return@withEndAction
                         binding.feedProgressContainer.isGone = true
-                        binding.feedProgressContainer.scaleY = 1f
                         binding.feedProgressContainer.alpha = 1f
                     }
                     .setDuration(200)

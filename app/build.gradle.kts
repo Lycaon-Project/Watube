@@ -23,11 +23,11 @@ android {
 
     defaultConfig {
         applicationId = "com.watube.yard"
-        minSdk = 28
+        minSdk = 33
         targetSdk = 37
 
-        versionCode = 6210
-        versionName = "26.10.4"
+        versionCode = 6211
+        versionName = "26.11"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

@@ -26,6 +26,14 @@
             app:summary="@string/privacy_neutral_region_summary"
             app:title="@string/privacy_neutral_region" />
 
+        <!-- countries filled and shown by PrivacySettings while the rotation is manual -->
+        <ListPreference
+            app:defaultValue="GB"
+            app:dependency="privacy_neutral_region"
+            app:isPreferenceVisible="false"
+            app:key="privacy_neutral_region_country"
+            app:title="@string/privacy_neutral_region_country" />
+
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="tourist_mode"

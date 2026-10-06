@@ -12,7 +12,7 @@ Please note that for the process to work, the following requirements must be met
 - Additionally, GitHub actions workflows must be configured to have "Read and write permissions" in the repository's settings.
 
 ## Release process
-1. Increment the `versionNumber` and `versionCode` in `build.gradle.kts`.
+1. Increment the `versionName` and `versionCode` in `app/build.gradle.kts`.
 2. Create a file `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt` and write a short summary about the release into this file.
-3. Push the changes you made to the `master` branch.
-4. Create a new tag from the `master` branch, e.g. via `git tag v0.0 && git push --tags`.
+3. Push the changes you made to the `main` branch.
+4. Create a new tag from the `main` branch, e.g. via `git tag v0.0 && git push --tags` (the release workflow only starts on `v*.*` tags).

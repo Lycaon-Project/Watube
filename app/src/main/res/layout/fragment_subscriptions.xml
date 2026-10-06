@@ -161,10 +161,12 @@
                                         style="@style/Watube.Chip.Subs"
                                         android:text="@string/all" />
 
+                                    <!-- shown by the feed observer only when ungrouped videos exist -->
                                     <com.google.android.material.chip.Chip
                                         android:id="@+id/chip_ungrouped"
                                         style="@style/Watube.Chip.Subs"
-                                        android:text="@string/ungrouped_channels" />
+                                        android:text="@string/ungrouped_channels"
+                                        android:visibility="gone" />
 
                                 </com.google.android.material.chip.ChipGroup>
 

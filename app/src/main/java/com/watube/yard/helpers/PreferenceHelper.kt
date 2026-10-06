@@ -213,6 +213,12 @@ object PreferenceHelper {
             )
             val stored = getString(PreferenceKeys.ACCENT_COLOR, "")
             legacyAccents[stored]?.let { putString(PreferenceKeys.ACCENT_COLOR, it) }
+        },
+        PreferenceMigration(13, 14) {
+            // Watube: the neutral region is a fixed country now, the random one drawn per
+            // user and its rotation stamp are dropped
+            remove("privacy_neutral_region_active")
+            remove("privacy_neutral_region_cycle")
         }
     )
 
@@ -503,11 +509,9 @@ object PreferenceHelper {
 
         // get the system default country if auto region selected
         return if (regionPref == "sys") {
-            // Watube anti-fingerprinting: optional neutral region so the backend never
-            // learns the real locale country of the device (off by default). The neutral
-            // region itself rotates on the shared rotation frequency.
+            // Watube anti-fingerprinting: a neutral country instead of the device one
             if (PrivacyHelper.isNeutralRegionEnabled()) {
-                PrivacyHelper.getNeutralRegion()
+                PrivacyHelper.neutralRegion()
             } else {
                 getDetectedCountry(context).uppercase()
             }

@@ -28,7 +28,7 @@
   <p>
     <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-2EA043?style=for-the-badge&logo=gnu&logoColor=white" alt="GPL-v3"></a>
     <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
-    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.10.2-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Latest release 26.10.2"></a>
+    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.10.4-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Latest release 26.10.4"></a>
   </p>
 
   <br>
@@ -122,6 +122,10 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 
 | Area | What changed |
 | :--- | :--- |
+| 🛡️ **Telemetry deleted, not disabled** | The Google telemetry bundled in the Cast and Media3 libraries (usage reports, client analytics, playback metrics) is **cut out of the release build**, and the build **fails** if any of it comes back. |
+| ▶️ **Steadier playback** | A video no longer stops with a *source error* about a minute in: the streaming session is renewed with a single player request — no integrity token, no Google code running on the device. |
+| 🌍 **Neutral region** | With the Trends region on *Automatic*, trending is requested for the **United Kingdom** — the same country for every user — instead of your device's country. Another country can be picked by hand. |
+| 🖐️ **Fullscreen & feed** | Swipe up or down on the player to enter or leave fullscreen (on by default). The subscription feed loads each channel once, so its progress bar no longer jumps backwards. |
 | 🎚️ **True quality ladder** | The resolution picker now mirrors YouTube's real tiers — **2160p 4K · 1440p · 1080p HD · 720p · 480p · 360p · 240p · 144p** — and **only offers tiers the source stream actually provides** (no more phantom values like "2026p"). *Automatique* stays on top and adapts to your connection. |
 | 🔁 **No more playback loops** | A stream error no longer traps the player in an endless "source error → restart" cycle. Watube now **re-extracts a fresh stream once per video**, then surfaces the error cleanly instead of spinning forever. |
 | 🔇 **Clean video switching** | Jumping to another video no longer lets the **previous audio bleed over the new one** — the old track is stopped and cleared before the next begins. |
@@ -178,7 +182,7 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 - **Strict network security** — cleartext traffic fully disabled (only local dev hosts are exempt).
 - **Secure backups** — encrypted backups explicitly exclude the account token to prevent session hijacking.
 - **Smaller attack surface** — the unused boot receiver was removed.
-- **Smart updates** — checks against [Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest) at most once every 12 h, plus an on-demand check in settings.
+- **Update check** — looks for new [Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest) releases at every launch (on by default); *Settings → General* can space it out (6 h, 12 h, daily, weekly) or turn it off, and an on-demand check is available.
 - **One-tap maintenance** — *Settings → Maintenance → Clear cache* wipes the image, HTTP and leftover app caches at once.
 - **Resilient error handling** — the SABR data source, picture-in-picture, media-service connection and feed notifications use **bounded** retry loops, never infinite ones.
 - **Unified loaders** — a single Coil image loader and a shared HTTP cache are created once for the whole app lifecycle.
@@ -248,20 +252,28 @@ Think of it as the same promise, tuned for *daily comfort*.
 
 ## 🤝 Contributing
 
-Ideas, bug reports, design, code cleanup or deep changes — all welcome.
+Ideas, bug reports, design, code cleanup or deep changes — all welcome. Read the **[contribution guide](CONTRIBUTING.md)** before you start.
+
+> [!IMPORTANT]
+> **🤖 AI policy — AI-assisted contributions are accepted.**
+> - ✅ **Recommended models:** **Claude Opus 5.5** (Anthropic) and **MiMo-V2.6-Flash** (Xiaomi, with [OpenCode](https://opencode.ai)).
+> - ⚠️ **Any other model:** not recommended.
+> - 🧑‍💻 **A human stays in charge:** read, understand and test everything the AI wrote, and state in your pull request which model you used.
+>
+> Why, and how the maintainer works with AI: **[AI policy](CONTRIBUTING.md#ai-policy)**.
 
 ```text
 1.  Open an issue        → discuss before you build
 2.  Fork & branch        → git checkout -b feature/your-feature-name
 3.  Follow the style     → Kotlin official coding conventions
 4.  Test thoroughly      → make sure it actually works
-5.  Open a pull request  → with a clear description
+5.  Open a pull request  → clear description + AI model used, if any
 ```
 
 **Commit style** — [conventional commits](https://www.conventionalcommits.org/) (`feat`, `fix`, `refactor`, `ci`, `chore`), e.g. `feat: add support for 120Hz displays`. Code follows the [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html).
 
 > [!WARNING]
-> Issues that bypass the template are closed. **AI-generated issue text or pull requests are not accepted.**
+> Issues that bypass the template are closed.
 
 <br>
 
