@@ -738,7 +738,7 @@
           "N'envoyer que la quantité minimale de données nécessaire au fonctionnement de l'application, par exemple charger uniquement la vidéo demandée sans suivre le comportement d'utilisation.",
           "Optimiser l'interface et la lecture pour réduire la consommation de batterie, les pics de garbage collection et les traitements inutiles.",
           "Durcir la sécurité en désactivant le trafic en clair, en excluant le token de compte des sauvegardes chiffrées et en retirant un récepteur de démarrage inutilisé.",
-          "Prendre en charge Android 15 et les exigences des versions Android récentes.",
+          "Prendre en charge Android 13 à 17 (Android 13 minimum) et les exigences des versions Android récentes.",
           "Améliorer la stabilité et corriger des bug grâce à des tests complets et à des améliorations de fiabilité.",
           "Fournir des builds Nightly contenant fonctionnalités et correctifs avant la sortie officielle, avec un avertissement explicite sur leur stabilité réduite.",
           "Proposer une maintenance en un geste pour vider le cache d'images, le cache HTTP et le cache résiduel de l'application.",
@@ -851,7 +851,7 @@
           "Send only the minimum amount of data required for the app to work, for example loading only the requested video without tracking usage behavior.",
           "Optimize interface and playback to reduce battery consumption, garbage collection spikes and unnecessary processing.",
           "Harden security by disabling cleartext traffic, excluding the account token from encrypted backups and removing an unused boot receiver.",
-          "Support Android 15 and the requirements of recent Android versions.",
+          "Support Android 13 to 17 (Android 13 minimum) and the requirements of recent Android versions.",
           "Improve stability and fix bugs through comprehensive testing and reliability improvements.",
           "Provide nightly builds containing features and fixes before the official release, with an explicit warning about reduced stability.",
           "Offer one-tap maintenance to clear the image cache, HTTP cache and leftover app cache.",
@@ -964,7 +964,7 @@
           "Alleen de minimale hoeveelheid gegevens versturen die nodig is om de app te laten werken, bijvoorbeeld alleen de gevraagde video laden zonder gebruiksgedrag te volgen.",
           "De interface en het afspelen optimaliseren om batterijverbruik, garbage-collection-pieken en onnodige bewerkingen te verminderen.",
           "Beveiliging versterken door cleartext-verkeer uit te schakelen, het accounttoken uit versleutelde back-ups te halen en een ongebruikte boot receiver te verwijderen.",
-          "Android 15 en de vereisten van recente Android-versies ondersteunen.",
+          "Android 13 tot en met 17 (minimaal Android 13) en de vereisten van recente Android-versies ondersteunen.",
           "Stabiliteit verbeteren en bugs oplossen door uitgebreid testen en betrouwbaarheidsverbeteringen.",
           "Nightly-builds leveren met functies en fixes vóór de officiële release, met een expliciete waarschuwing over de lagere stabiliteit.",
           "Een onderhoudsfunctie met één tik aanbieden om de imagecache, HTTP-cache en restanten van de app-cache te wissen.",
@@ -1077,7 +1077,7 @@
           "Enviar solo la cantidad mínima de datos necesaria para que la aplicación funcione, por ejemplo cargar únicamente el vídeo solicitado sin seguir el comportamiento de uso.",
           "Optimizar la interfaz y la reproducción para reducir el consumo de batería, los picos de garbage collection y los procesos innecesarios.",
           "Endurecer la seguridad desactivando el tráfico en texto plano, excluyendo el token de cuenta de las copias de seguridad cifradas y eliminando un receptor de arranque sin uso.",
-          "Compatibilizar Android 15 y los requisitos de versiones recientes de Android.",
+          "Compatibilizar Android 13 a 17 (mínimo Android 13) y los requisitos de versiones recientes de Android.",
           "Mejorar la estabilidad y corregir errores mediante pruebas exhaustivas y mejoras de fiabilidad.",
           "Ofrecer compilaciones Nightly con funciones y correcciones antes del lanzamiento oficial, con una advertencia explícita sobre su menor estabilidad.",
           "Ofrecer un mantenimiento en un toque para borrar la caché de imágenes, la caché HTTP y la caché residual de la aplicación.",
@@ -1190,7 +1190,7 @@
           "Nur die minimale Datenmenge senden, die für den Betrieb der App nötig ist, zum Beispiel nur das angeforderte Video laden, ohne das Nutzungsverhalten zu verfolgen.",
           "Oberfläche und Wiedergabe optimieren, um Batterieverbrauch, Garbage-Collection-Spitzen und unnötige Verarbeitung zu reduzieren.",
           "Die Sicherheit härten, indem Klartextverkehr deaktiviert, der Konto-Token aus verschlüsselten Backups ausgeschlossen und ein ungenutzter Boot-Receiver entfernt wird.",
-          "Android 15 und Anforderungen aktueller Android-Versionen unterstützen.",
+          "Android 13 bis 17 (mindestens Android 13) und Anforderungen aktueller Android-Versionen unterstützen.",
           "Stabilität verbessern und Fehler beheben durch umfassendes Testen und Zuverlässigkeitsverbesserungen.",
           "Nightly-Builds mit Funktionen und Korrekturen vor der offiziellen Veröffentlichung bereitstellen, mit ausdrücklichem Hinweis auf geringere Stabilität.",
           "Eine Ein-Tipp-Wartung anbieten, um Bildercache, HTTP-Cache und Rest-Cache der App zu leeren.",
@@ -1274,7 +1274,7 @@
       });
 
       document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
-        const key = el.dataset.i18mAria;
+        const key = el.dataset.i18nAria;
         const value = dict[key] !== undefined ? dict[key] : translations.en[key];
         if (value != null) {
           el.setAttribute('aria-label', value);

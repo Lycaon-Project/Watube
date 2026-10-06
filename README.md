@@ -21,7 +21,7 @@
 
   <!-- ░░░ TECH / STATUS BADGES ░░░ -->
   <p>
-    <img src="https://img.shields.io/badge/Platform-Android%209%E2%80%9316-00C9A7?style=for-the-badge&logo=android&logoColor=white" alt="Android 9 to 16">
+    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-00C9A7?style=for-the-badge&logo=android&logoColor=white" alt="Android 13 to 17">
     <img src="https://img.shields.io/badge/Kotlin-100%25-00C9A7?style=for-the-badge&logo=kotlin&logoColor=white" alt="100% Kotlin">
     <img src="https://img.shields.io/badge/Material_3-Expressive-00C9A7?style=for-the-badge&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
   </p>
@@ -122,7 +122,8 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 
 | Area | What changed |
 | :--- | :--- |
-| 🛡️ **Telemetry deleted, not disabled** | The Google telemetry bundled in the Cast and Media3 libraries (usage reports, client analytics, playback metrics) is **cut out of the release build**, and the build **fails** if any of it comes back. |
+| 📱 **Android 13 or newer** | Watube now requires **Android 13** (API 33); older versions are no longer supported. Cast finds receivers with the *Nearby devices* permission alone: no location permission is declared or requested. |
+| 🛡️ **Telemetry deleted, not disabled** | The telemetry code shipped in Google's Cast and Media3 libraries (usage reports, client analytics, platform playback metrics) is **cut out of the release build**, and the build **fails** if any of it comes back. |
 | ▶️ **Steadier playback** | A video no longer stops with a *source error* about a minute in: the streaming session is renewed with a single player request — no integrity token, no Google code running on the device. |
 | 🌍 **Neutral region** | With the Trends region on *Automatic*, trending is requested for the **United Kingdom** — the same country for every user — instead of your device's country. Another country can be picked by hand. |
 | 🖐️ **Fullscreen & feed** | Swipe up or down on the player to enter or leave fullscreen (on by default). The subscription feed loads each channel once, so its progress bar no longer jumps backwards. |
@@ -209,7 +210,7 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 | **UI** | Material 3 Expressive, View system |
 | **Playback** | AndroidX Media3 / ExoPlayer |
 | **Build** | Gradle 9.8.0 · AGP 9.4.1 · JDK 21 |
-| **SDK** | minSdk 28 (Android 9) · compile/target SDK 37 (Android 16) |
+| **SDK** | minSdk 33 (Android 13) · compile/target SDK 37 (Android 17) |
 
 </details>
 
