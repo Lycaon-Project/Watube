@@ -25,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Home
 class HomeViewModel : ViewModel() {
     private val hideWatched
         get() = PreferenceHelper.getBoolean(
@@ -161,3 +162,4 @@ class HomeViewModel : ViewModel() {
         private const val PLAYLISTS = "playlists"
     }
 }
+// endregion

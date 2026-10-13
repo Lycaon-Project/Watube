@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Video Details
 @Serializable
 @Parcelize
 data class MetaInfo(
@@ -12,3 +13,4 @@ data class MetaInfo(
     val urls: List<String>,
     val urlTexts: List<String>
 ): Parcelable
+// endregion

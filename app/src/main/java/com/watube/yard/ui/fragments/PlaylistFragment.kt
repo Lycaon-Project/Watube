@@ -59,6 +59,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Playlists
 class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist) {
     private var _binding: FragmentPlaylistBinding? = null
     private val binding get() = _binding!!
@@ -613,3 +614,4 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
         binding.playlistRecView.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
+// endregion

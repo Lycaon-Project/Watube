@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.watube.yard.db.obj.WatchPosition
 
+// region Watch Positions
 @Dao
 interface WatchPositionDao {
     @Query("SELECT * FROM watchPosition")
@@ -26,3 +27,4 @@ interface WatchPositionDao {
     @Query("DELETE FROM watchPosition")
     suspend fun deleteAll()
 }
+// endregion

@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
+// region Chapters
 @Serializable
 @Parcelize
 data class ChapterSegment(
@@ -25,3 +26,4 @@ data class ChapterSegment(
         const val HIGHLIGHT_LENGTH = 10L
     }
 }
+// endregion

@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
+// region Playlists
 class PlaylistOptionsBottomSheet : BaseBottomSheet() {
     private lateinit var playlistName: String
     private lateinit var playlistId: String
@@ -192,3 +193,4 @@ class PlaylistOptionsBottomSheet : BaseBottomSheet() {
         const val PLAYLIST_OPTIONS_REQUEST_KEY = "playlist_options_request_key"
     }
 }
+// endregion

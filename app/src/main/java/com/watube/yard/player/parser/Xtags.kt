@@ -3,6 +3,7 @@ package com.watube.yard.player.parser
 import android.util.Base64
 import misc.Common.XTags
 
+// region SABR Streaming
 /**
  * Extra tags about a format.
  */
@@ -36,3 +37,4 @@ class Xtags {
      */
     fun isVoiceBoosted() = isEnabled("vb")
 }
+// endregion

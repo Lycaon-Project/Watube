@@ -6,12 +6,13 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.watube.yard.R
 import com.watube.yard.helpers.NavigationHelper
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Settings
 class RequireRestartDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.require_restart)
             .setMessage(R.string.require_restart_message)
             .setPositiveButton(R.string.okay) { _, _ ->
@@ -22,3 +23,4 @@ class RequireRestartDialog : DialogFragment() {
             .show()
     }
 }
+// endregion

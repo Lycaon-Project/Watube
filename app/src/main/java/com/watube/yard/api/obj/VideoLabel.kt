@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region SponsorBlock
 @Serializable
 data class VideoLabelData(
     val videoID: String,
@@ -12,3 +13,4 @@ data class VideoLabelData(
 data class VideoLabel(
     val category: String
 )
+// endregion

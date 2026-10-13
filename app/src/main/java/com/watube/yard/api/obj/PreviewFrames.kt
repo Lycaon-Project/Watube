@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Seekbar Preview
 @Serializable
 @Parcelize
 data class PreviewFrames(
@@ -15,3 +16,4 @@ data class PreviewFrames(
     val framesPerPageX: Int,
     val framesPerPageY: Int
 ): Parcelable
+// endregion

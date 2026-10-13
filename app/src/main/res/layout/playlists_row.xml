@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Playlists -->
 <!-- Shared list row (library playlists, library bookmarks, search playlists,
      downloaded playlists). Metrics follow the mockup .nrow list row
      (.5rem .15rem padding, 8.6rem 16:9 thumb, .85rem/650 title, .73rem t3 meta)
@@ -122,3 +123,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/RoundedImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+<!-- endregion -->

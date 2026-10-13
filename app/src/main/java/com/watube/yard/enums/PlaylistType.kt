@@ -1,5 +1,6 @@
 package com.watube.yard.enums
 
+// region Playlists
 enum class PlaylistType {
     /**
      * Local playlist
@@ -16,3 +17,4 @@ enum class PlaylistType {
      */
     PUBLIC
 }
+// endregion

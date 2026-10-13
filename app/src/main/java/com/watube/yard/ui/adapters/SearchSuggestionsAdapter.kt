@@ -13,6 +13,7 @@ import com.watube.yard.enums.SearchDataType
 import com.watube.yard.obj.SearchDataItem
 import kotlin.collections.plus
 
+// region Search
 class SearchSuggestionsAdapter(
     private val onRootClickListener: (String) -> Unit,
     private val onArrowClickListener: (String) -> Unit,
@@ -93,3 +94,4 @@ class SearchSuggestionsAdapter(
         }
     }
 }
+// endregion

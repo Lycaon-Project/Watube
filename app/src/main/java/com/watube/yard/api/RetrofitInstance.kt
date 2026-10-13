@@ -18,11 +18,24 @@ import retrofit2.create
 import java.io.File
 
 object RetrofitInstance {
-    const val PIPED_API_URL = "https://pipedapi.kavin.rocks"
+    // region Networking
+    val apiLazyMgr = resettableManager()
+    val kotlinxConverterFactory = JsonHelper.json
+        .asConverterFactory("application/json".toMediaType())
 
-    /** Shared http cache: avoids re-downloading trending feeds, configs, suggestions, ... */
-    const val HTTP_CACHE_DIR = "http_cache"
-    private const val HTTP_CACHE_MAX_BYTES = 20L * 1024 * 1024
+    private val cacheLock = Any()
+
+    @Volatile
+    private var httpCache: Cache? = null
+
+    @Volatile
+    private var httpClientInstance: OkHttpClient? = null
+    // endregion
+
+    // region Piped Account
+    val authApi by resettableLazy(apiLazyMgr) {
+        buildRetrofitInstance<PipedAuthApi>(authUrl)
+    }
 
     val authUrl
         get() = if (
@@ -38,18 +51,17 @@ object RetrofitInstance {
         } else {
             PipedMediaServiceRepository.apiUrl
         }
+    // endregion
 
-    val apiLazyMgr = resettableManager()
-    val kotlinxConverterFactory = JsonHelper.json
-        .asConverterFactory("application/json".toMediaType())
+    // region Networking
+    // the url provided here isn't actually used anywhere in the external api
+    val externalApi by resettableLazy(apiLazyMgr) {
+        buildRetrofitInstance<ExternalApi>(PIPED_API_URL)
+    }
 
-    private val cacheLock = Any()
-
-    @Volatile
-    private var httpCache: Cache? = null
-
-    @Volatile
-    private var httpClientInstance: OkHttpClient? = null
+    /** Shared http cache: avoids re-downloading trending feeds, configs, suggestions, ... */
+    const val HTTP_CACHE_DIR = "http_cache"
+    private const val HTTP_CACHE_MAX_BYTES = 20L * 1024 * 1024
 
     val httpClient: OkHttpClient
         get() = httpClientInstance ?: synchronized(cacheLock) {
@@ -81,15 +93,6 @@ object RetrofitInstance {
         }
     }
 
-    val authApi by resettableLazy(apiLazyMgr) {
-        buildRetrofitInstance<PipedAuthApi>(authUrl)
-    }
-
-    // the url provided here isn't actually used anywhere in the external api
-    val externalApi by resettableLazy(apiLazyMgr) {
-        buildRetrofitInstance<ExternalApi>(PIPED_API_URL)
-    }
-
     /**
      * Watube anti-fingerprinting: see [GenericUserAgentInterceptor], installed on every
      * client of the app (API, images, raw downloads) so no request ever leaks
@@ -117,4 +120,9 @@ object RetrofitInstance {
         .addConverterFactory(kotlinxConverterFactory)
         .build()
         .create<T>()
+    // endregion
+
+    // region Piped Instances
+    const val PIPED_API_URL = "https://pipedapi.kavin.rocks"
+    // endregion
 }

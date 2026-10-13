@@ -14,6 +14,7 @@ import androidx.media3.exoplayer.upstream.ParsingLoadable
 import com.watube.yard.helpers.PlayerHelper
 import java.io.InputStream
 
+// region Live Streams
 /**
  * A YouTube HLS playlist parser which adds role flags to audio formats with track types.
  *
@@ -104,7 +105,10 @@ class YoutubeHlsPlaylistParser : ParsingLoadable.Parser<HlsPlaylist> {
             hlsMultivariantPlaylist.muxedCaptionFormats,
             hlsMultivariantPlaylist.hasIndependentSegments,
             hlsMultivariantPlaylist.variableDefinitions,
-            hlsMultivariantPlaylist.sessionKeyDrmInitData
+            hlsMultivariantPlaylist.sessionKeyDrmInitData,
+            // no HLS content steering: it would make the player poll a steering server named by
+            // the playlist (an extra request); without it the default pathway is used
+            null
         )
     }
 
@@ -156,6 +160,7 @@ class YoutubeHlsPlaylistParser : ParsingLoadable.Parser<HlsPlaylist> {
                 ),
                 it.groupId,
                 it.name,
+                it.stableRenditionId,
             )
         }
     }
@@ -218,3 +223,4 @@ class YoutubeHlsPlaylistParser : ParsingLoadable.Parser<HlsPlaylist> {
         private val XTAGS_ACONT_VALUE_REGEX = Regex("xtags=.*acont=(.[^:]+)")
     }
 }
+// endregion

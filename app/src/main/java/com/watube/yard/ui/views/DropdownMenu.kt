@@ -10,6 +10,7 @@ import androidx.core.content.res.use
 import com.watube.yard.R
 import com.watube.yard.databinding.DropdownMenuBinding
 
+// region UI Components
 /**
  * Exposed Dropdown Menu
  */
@@ -81,3 +82,4 @@ class DropdownMenu(
         }
     }
 }
+// endregion

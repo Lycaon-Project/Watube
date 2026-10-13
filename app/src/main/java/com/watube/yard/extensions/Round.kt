@@ -3,9 +3,11 @@ package com.watube.yard.extensions
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+// region Common Utilities
 fun Float.round(decimalPlaces: Int): Float {
     return (this * 10.0.pow(decimalPlaces.toDouble())).roundToInt() / 10.0.pow(
         decimalPlaces.toDouble()
     )
         .toFloat()
 }
+// endregion

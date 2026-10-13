@@ -7,6 +7,7 @@ import kotlinx.serialization.encodeToString
 import java.nio.file.Path
 import kotlin.io.path.Path
 
+// region Database
 object Converters {
     @TypeConverter
     fun localDateToString(localDate: LocalDate?) = localDate?.toString()
@@ -26,3 +27,4 @@ object Converters {
     @TypeConverter
     fun jsonToStringList(value: String) = JsonHelper.json.decodeFromString<List<String>>(value)
 }
+// endregion

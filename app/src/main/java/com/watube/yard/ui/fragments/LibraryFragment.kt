@@ -38,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Library
 class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
@@ -255,3 +256,4 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
         playlistsAdapter.submitList(playlists)
     }
 }
+// endregion

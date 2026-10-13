@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Settings -->
 <!--
   Solar settings hub row (.catrow): accent icon tile, title + summary, chevron.
 -->
@@ -63,3 +64,4 @@
         android:src="@drawable/ic_arrow_right"
         android:tint="?attr/colorOutline" />
 </LinearLayout>
+<!-- endregion -->

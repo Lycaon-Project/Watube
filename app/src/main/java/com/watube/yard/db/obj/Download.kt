@@ -8,6 +8,7 @@ import com.watube.yard.extensions.toMillis
 import kotlinx.datetime.LocalDate
 import java.nio.file.Path
 
+// region Downloads
 @Entity(tableName = "download")
 data class Download(
     @PrimaryKey(autoGenerate = false)
@@ -37,3 +38,4 @@ data class Download(
         views = views,
     )
 }
+// endregion

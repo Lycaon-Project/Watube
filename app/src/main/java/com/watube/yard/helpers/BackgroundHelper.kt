@@ -29,6 +29,7 @@ import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
 
+// region Background Playback
 /**
  * Helper for starting a new Instance of the [OnlinePlayerService]
  */
@@ -158,21 +159,5 @@ object BackgroundHelper {
     ) {
         startMediaService(context, getCurrentPlayerServiceClass(), arguments, onController)
     }
-
-
-    /**
-     * Set the volume of the currently active player
-     *
-     * @param context the current context
-     * @param volume the volume level to set (0.0 to 1.0)
-     */
-    fun setVolume(context: Context, volume: Float) {
-        startCurrentMediaService(context, Bundle.EMPTY) { controller ->
-            try {
-                controller.volume = volume.coerceIn(0f, 1f)
-            } finally {
-                controller.release()
-            }
-        }
-    }
 }
+// endregion

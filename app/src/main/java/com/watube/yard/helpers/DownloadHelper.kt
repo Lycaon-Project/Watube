@@ -31,6 +31,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.div
 
+// region Downloads
 object DownloadHelper {
     const val VIDEO_DIR = "video"
     const val AUDIO_DIR = "audio"
@@ -189,3 +190,4 @@ object DownloadHelper {
         }
     }
 }
+// endregion

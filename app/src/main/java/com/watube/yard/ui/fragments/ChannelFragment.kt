@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Channels
 class ChannelFragment : Fragment(R.layout.fragment_channel) {
     private var _binding: FragmentChannelBinding? = null
     private val binding get() = _binding!!
@@ -270,3 +271,4 @@ class ChannelContentAdapter(
         )
     }
 }
+// endregion

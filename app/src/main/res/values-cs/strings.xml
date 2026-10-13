@@ -51,16 +51,13 @@
     <string name="subscriptions">Odběry</string>
     <string name="systemDefault">Systém</string>
     <string name="changeLanguage">Jazyk</string>
-    <string name="systemLanguage">Systém</string>
     <string name="subscribers">%1$s odběratelů</string>
     <string name="settings">Nastavení</string>
     <string name="retry">Zkusit znovu</string>
     <string name="location">Lokace</string>
-    <string name="instance">Instance</string>
     <string name="videoCount">%1$d videí</string>
     <string name="noInternet">Nejprve se připojte k internetu.</string>
     <string name="comments">Komentáře</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">Segment přeskočen</string>
     <string name="category_segments">Segmenty</string>
     <string name="category_sponsor">Sponzor</string>
@@ -76,7 +73,6 @@
     <string name="channels">Kanály</string>
     <string name="all">Vše</string>
     <string name="playlists">Playlisty</string>
-    <string name="okay">OK</string>
     <string name="history">Historie</string>
     <string name="search_history">Historie hledání</string>
     <string name="clear_history">Vymazat historii</string>
@@ -130,7 +126,6 @@
     <string name="related_streams_summary">Zobrazit podobný obsah vedle toho, co sledujete</string>
     <string name="buffering_goal">Předběžné načítání</string>
     <string name="buffering_goal_summary">Maximální počet sekund videa ve vyrovnávací paměti</string>
-    <string name="audio_video">Zvuk a video</string>
     <string name="aspect_ratio">Poměr stran videa</string>
     <string name="fullscreen_orientation">Orientace na celou obrazovku</string>
     <string name="auto_rotation">Automatické otáčení</string>
@@ -156,11 +151,9 @@
     <string name="player_autoplay">Automatické přehrávání</string>
     <string name="instance_frontend_url">Adresa frontendu instance (volitelná)</string>
     <string name="no_video">Žádné video</string>
-    <string name="video">Video</string>
     <string name="watch_history_summary">Ponechat historii sledování lokálně</string>
     <string name="watch_positions_title">Zapamatované pozice přehrávání</string>
     <string name="reset_watch_positions">Obnovit</string>
-    <string name="general">Obecné</string>
     <string name="never">Nikdy</string>
     <string name="autoRotatePlayer">Automaticky na celou obrazovku</string>
     <string name="autoRotatePlayer_summary">Při otočení přepnout přehrávání na celou obrazovku</string>
@@ -202,7 +195,6 @@
     <string name="add_to_queue">Přidat do fronty</string>
     <string name="misc">Různé</string>
     <string name="take_a_break">Čas na přestávku</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="repeat_mode_current">Aktuální</string>
     <string name="repeat_mode_none">Žádný</string>
     <string name="resize_mode_fit">Vejít se</string>
@@ -219,7 +211,6 @@
     <string name="renamePlaylist">Přejmenovat playlist</string>
     <string name="new_videos_badge">Značka u nových videí</string>
     <string name="new_videos_badge_summary">Zobrazit značku s počtem nových videí, pokud nějaké jsou</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobilní data</string>
     <string name="push_channel_name">Pracovník oznámení</string>
     <string name="download_channel_name">Služba stahování</string>
@@ -247,7 +238,6 @@
     <string name="notification_time_summary">Omezit časové rozmezí, ve kterém budou zobrazována upozornění o videích</string>
     <string name="layout">Rozložení</string>
     <string name="audio_track">Zvuková stopa</string>
-    <string name="auto_quality">Auto</string>
     <string name="trends">Trendy</string>
     <string name="featured">Doporučené</string>
     <string name="trending">Co je právě v trendech</string>
@@ -256,7 +246,6 @@
     <string name="clear_bookmarks">Vymazat záložky</string>
     <string name="local_playlists">Místní playlisty</string>
     <string name="brightness">Jas</string>
-    <string name="auto">Auto</string>
     <string name="swipe_controls">Ovládání přejetím prstem</string>
     <string name="volume">Hlasitost</string>
     <string name="swipe_controls_summary">Přejeďte prstem pro upravení jasu a hlasitosti v režimu celé obrazovky</string>
@@ -362,7 +351,6 @@
     <string name="dearrow_summary">Zobrazit přesnější a méně senzační názvy a náhledy. Zvyšuje dobu načítání</string>
     <string name="default_or_unknown_audio_track">Výchozí</string>
     <string name="unknown_or_no_audio">neznámý nebo bez zvuku</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Neznámý jazyk zvuku</string>
     <string name="unknown_audio_track_type">Neznámý typ zvukové stopy</string>
     <string name="visibility_public">Veřejná</string>
@@ -410,7 +398,6 @@
     <string name="segment_submitted">Segment odeslán</string>
     <string name="vote_for_segment">Hlasovat pro segment</string>
     <string name="upvote">Pro</string>
-    <string name="segment">Segment</string>
     <string name="undo">Zrušit</string>
     <string name="downvote">Proti</string>
     <string name="repeat_mode_all">Opakovat vše</string>
@@ -452,7 +439,6 @@
     <string name="external_download_provider">Externí poskytovatel stahování</string>
     <string name="external_download_provider_summary">Zadejte název balíčku aplikace, kterou chcete použít pro stahování videí. Ponechte prázdné pro použití vestavěné služby stahování LibreTube.</string>
     <string name="screenshot">Snímek obrazovky</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction">Lokální extrakce streamu</string>
     <string name="local_stream_extraction_summary">Přímo načítá informace o přehrávání videa z YouTube bez použití služby Piped.</string>
     <string name="local_ryd">Lokální extraktor Return YouTube Dislike</string>
@@ -525,18 +511,6 @@
     <string name="courses">Kurzy</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

@@ -8,13 +8,11 @@ import androidx.room.Query
 import com.watube.yard.db.obj.SearchHistoryItem
 import kotlinx.coroutines.flow.Flow
 
+// region Search
 @Dao
 interface SearchHistoryDao {
     @Query("SELECT * FROM searchHistoryItem ORDER BY rowid ASC")
     suspend fun getAll(): List<SearchHistoryItem>
-
-    @Query("SELECT * FROM searchHistoryItem ORDER BY rowid ASC")
-    fun getAllFlow(): Flow<List<SearchHistoryItem>>
 
     @Query("SELECT * FROM searchHistoryItem ORDER BY rowid DESC")
     fun getAllNewestFirstFlow(): Flow<List<SearchHistoryItem>>
@@ -39,3 +37,4 @@ interface SearchHistoryDao {
     @Query("DELETE FROM searchHistoryItem")
     suspend fun deleteAll()
 }
+// endregion

@@ -1,6 +1,7 @@
 package com.watube.yard.ui.models
 
 import android.util.Log
+import android.util.LruCache
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.watube.yard.api.MediaServiceRepository
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 import kotlin.collections.map
 
+// region Search
 class SearchViewModel : ViewModel() {
     data class Result(
         val historyList: List<SearchDataItem>? = null,
@@ -32,12 +34,14 @@ class SearchViewModel : ViewModel() {
     )
 
     private val searchQuery = MutableStateFlow<String?>(null)
+    private val suggestionCache = LruCache<String, List<String>>(MAX_CACHED_SUGGESTIONS)
     private val sharingStarted = SharingStarted.WhileSubscribed(replayExpirationMillis = 0L)
 
+    // online suggestions are opt-in: by default nothing typed leaves the device
     private val isSearchSuggestionEnabled = flow {
-        emit(PreferenceHelper.getBoolean(PreferenceKeys.SEARCH_SUGGESTIONS, true))
+        emit(PreferenceHelper.getBoolean(PreferenceKeys.SEARCH_SUGGESTIONS, false))
     }
-        .stateIn(viewModelScope, sharingStarted, true)
+        .stateIn(viewModelScope, sharingStarted, false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val searchHistoryList = DatabaseHolder.Database.searchHistoryDao()
@@ -69,11 +73,14 @@ class SearchViewModel : ViewModel() {
             searchQuery.debounce(SUGGESTIONS_DEBOUNCE_MS).distinctUntilChanged(),
             isSearchSuggestionEnabled
         ) { query, suggestionsEnabled ->
-            if (!suggestionsEnabled || query.isNullOrBlank()) {
+            if (!suggestionsEnabled || query == null || !isSafeForOnlineSuggestions(query)) {
                 return@combine emptyList<String>()
             }
+            // going back to a text already typed (fixing a typo) asks nothing again
+            suggestionCache.get(query)?.let { return@combine it }
             try {
                 MediaServiceRepository.instance.getSuggestions(query)
+                    .also { suggestionCache.put(query, it) }
             } catch (e: Exception) {
                 Log.e("search", "failed to fetch search suggestions", e)
                 emptyList<String>()
@@ -128,5 +135,31 @@ class SearchViewModel : ViewModel() {
 
         /** Delay before an online suggestion request is actually fired. */
         private const val SUGGESTIONS_DEBOUNCE_MS = 300L
+
+        private const val MAX_CACHED_SUGGESTIONS = 32
+
+        private const val MIN_ONLINE_QUERY_LENGTH = 2
+
+        /** A phone, card or account number has more digits than any search for a title. */
+        private const val MAX_ONLINE_QUERY_DIGITS = 5
+
+        /** One word with a dot inside: a domain, a file name or an address. */
+        private val DOMAIN_LIKE = Regex("""\S+\.\p{L}{2,}\S*""")
+
+        /**
+         * Online suggestions send what is typed as it is typed, before the user decides to search
+         * for it: never a fragment that could identify or locate them (a pasted link, an e-mail
+         * address, a phone or account number).
+         */
+        fun isSafeForOnlineSuggestions(query: String): Boolean {
+            val text = query.trim()
+            return text.length >= MIN_ONLINE_QUERY_LENGTH &&
+                '@' !in text &&
+                "://" !in text &&
+                !text.startsWith("www.", ignoreCase = true) &&
+                !DOMAIN_LIKE.containsMatchIn(text) &&
+                text.count(Char::isDigit) <= MAX_ONLINE_QUERY_DIGITS
+        }
     }
 }
+// endregion

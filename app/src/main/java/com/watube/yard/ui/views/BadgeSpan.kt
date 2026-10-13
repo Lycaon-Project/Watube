@@ -10,6 +10,7 @@ import android.text.style.ReplacementSpan
 import com.watube.yard.R
 import kotlin.math.ceil
 
+// region UI Components
 /**
  * Draws its text as a small rounded pill (e.g. the HD / FHD / 2K / 4K quality marker), vertically
  * centred on the surrounding line.
@@ -74,3 +75,4 @@ class BadgeSpan(context: Context) : ReplacementSpan() {
         const val TEXT_SCALE = 0.68f
     }
 }
+// endregion

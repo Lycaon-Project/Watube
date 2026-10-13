@@ -13,6 +13,7 @@ import androidx.preference.PreferenceViewHolder
 import com.watube.yard.R
 import com.watube.yard.helpers.PreferenceHelper
 
+// region SponsorBlock
 class SbSpinnerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private lateinit var adapter: ArrayAdapter<CharSequence>
     private lateinit var initialValue: String
@@ -70,3 +71,4 @@ class SbSpinnerPreference(context: Context, attrs: AttributeSet) : Preference(co
 
     private fun getEntryValues() = context.resources.getStringArray(R.array.sb_skip_options_values)
 }
+// endregion

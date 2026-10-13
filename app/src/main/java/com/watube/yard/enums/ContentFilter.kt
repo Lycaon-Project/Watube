@@ -3,6 +3,7 @@ package com.watube.yard.enums
 import com.watube.yard.constants.PreferenceKeys.SELECTED_FEED_FILTERS
 import com.watube.yard.helpers.PreferenceHelper
 
+// region Feed
 enum class ContentFilter {
     VIDEOS,
     SHORTS,
@@ -37,3 +38,4 @@ enum class ContentFilter {
         }
     }
 }
+// endregion

@@ -12,6 +12,7 @@ import com.watube.yard.util.PlayingQueue.queueMode
 import kotlinx.coroutines.Job
 import java.util.Collections
 
+// region Playing Queue
 object PlayingQueue {
     // queue is a synchronized list to be safely accessible from different coroutine threads
     private val queue = Collections.synchronizedList(mutableListOf<StreamItem>())
@@ -237,3 +238,4 @@ enum class PlayingQueueMode {
     ONLINE,
     OFFLINE
 }
+// endregion

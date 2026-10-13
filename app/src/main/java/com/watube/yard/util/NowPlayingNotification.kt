@@ -16,6 +16,7 @@ import com.watube.yard.enums.PlayerEvent
 import com.watube.yard.helpers.PlayerHelper
 import com.google.common.collect.ImmutableList
 
+// region Media Notification
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class NowPlayingNotification(
     private val context: Context,
@@ -67,4 +68,7 @@ class NowPlayingNotification(
         runCatching { handlePlayerAction(PlayerEvent.valueOf(action)) }
         return true
     }
+
+    override fun getNotificationChannelInfo() = nProvider.notificationChannelInfo
 }
+// endregion

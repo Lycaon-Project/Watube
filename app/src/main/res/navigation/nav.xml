@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Navigation -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav"
     app:startDestination="@id/homeFragment">
+    <!-- region Home -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.watube.yard.ui.fragments.HomeFragment"
@@ -23,10 +25,10 @@
         <action
             android:id="@+id/action_homeFragment_to_watchHistoryFragment"
             app:destination="@id/watchHistoryFragment"
-            app:enterAnim="@animator/nav_default_enter_anim"
-            app:exitAnim="@animator/nav_default_exit_anim"
-            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-            app:popExitAnim="@animator/nav_default_pop_exit_anim"
+            app:enterAnim="@animator/watube_axis_enter"
+            app:exitAnim="@animator/watube_axis_exit"
+            app:popEnterAnim="@animator/watube_axis_pop_enter"
+            app:popExitAnim="@animator/watube_axis_pop_exit"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="false"
             app:popUpToSaveState="true"
@@ -54,16 +56,22 @@
             app:popUpToSaveState="true"
             app:restoreState="true" />
     </fragment>
+    <!-- endregion -->
+    <!-- region Trends -->
     <fragment
         android:id="@+id/trendsFragment"
         android:name="com.watube.yard.ui.fragments.TrendsFragment"
         android:label="fragment_trends"
         tools:layout="@layout/fragment_trends_content" />
+    <!-- endregion -->
+    <!-- region Feed -->
     <fragment
         android:id="@+id/subscriptionsFragment"
         android:name="com.watube.yard.ui.fragments.SubscriptionsFragment"
         android:label="fragment_subscriptions"
         tools:layout="@layout/fragment_subscriptions" />
+    <!-- endregion -->
+    <!-- region Library -->
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.watube.yard.ui.fragments.LibraryFragment"
@@ -72,23 +80,27 @@
         <action
             android:id="@+id/action_libraryFragment_to_watchHistoryFragment"
             app:destination="@id/watchHistoryFragment"
-            app:enterAnim="@animator/nav_default_enter_anim"
-            app:exitAnim="@animator/nav_default_exit_anim"
-            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/watube_axis_enter"
+            app:exitAnim="@animator/watube_axis_exit"
+            app:popEnterAnim="@animator/watube_axis_pop_enter"
+            app:popExitAnim="@animator/watube_axis_pop_exit" />
         <action
             android:id="@+id/action_libraryFragment_to_downloadsFragment"
             app:destination="@id/downloadsFragment"
-            app:enterAnim="@animator/nav_default_enter_anim"
-            app:exitAnim="@animator/nav_default_exit_anim"
-            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/watube_axis_enter"
+            app:exitAnim="@animator/watube_axis_exit"
+            app:popEnterAnim="@animator/watube_axis_pop_enter"
+            app:popExitAnim="@animator/watube_axis_pop_exit" />
     </fragment>
+    <!-- endregion -->
+    <!-- region Search -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.watube.yard.ui.fragments.SearchSuggestionsFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search_suggestions" />
+    <!-- endregion -->
+    <!-- region Search -->
     <fragment
         android:id="@+id/searchResultFragment"
         android:name="com.watube.yard.ui.fragments.SearchResultFragment"
@@ -99,6 +111,8 @@
             app:argType="string"
             app:nullable="false" />
     </fragment>
+    <!-- endregion -->
+    <!-- region Channels -->
     <fragment
         android:id="@+id/channelFragment"
         android:name="com.watube.yard.ui.fragments.ChannelFragment"
@@ -115,6 +129,8 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <!-- endregion -->
+    <!-- region Playlists -->
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.watube.yard.ui.fragments.PlaylistFragment"
@@ -130,38 +146,50 @@
             app:argType="com.watube.yard.enums.PlaylistType"
             app:nullable="false" />
     </fragment>
+    <!-- endregion -->
+    <!-- region Watch History -->
     <fragment
         android:id="@+id/watchHistoryFragment"
         android:name="com.watube.yard.ui.fragments.WatchHistoryFragment"
         android:label="@string/watch_history"
         tools:layout="@layout/fragment_watch_history" />
+    <!-- endregion -->
+    <!-- region Downloads -->
     <fragment
         android:id="@+id/downloadsFragment"
         android:name="com.watube.yard.ui.fragments.DownloadsFragment"
         android:label="@string/downloads"
         tools:layout="@layout/fragment_downloads" />
+    <!-- endregion -->
 
+    <!-- region Channels -->
     <action
         android:id="@+id/openChannel"
         app:destination="@id/channelFragment"
-        app:enterAnim="@animator/nav_default_enter_anim"
-        app:exitAnim="@animator/nav_default_exit_anim"
-        app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-        app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+        app:enterAnim="@animator/watube_axis_enter"
+        app:exitAnim="@animator/watube_axis_exit"
+        app:popEnterAnim="@animator/watube_axis_pop_enter"
+        app:popExitAnim="@animator/watube_axis_pop_exit" />
+    <!-- endregion -->
+    <!-- region Playlists -->
     <action
         android:id="@+id/openPlaylist"
         app:destination="@id/playlistFragment"
-        app:enterAnim="@animator/nav_default_enter_anim"
-        app:exitAnim="@animator/nav_default_exit_anim"
-        app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-        app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+        app:enterAnim="@animator/watube_axis_enter"
+        app:exitAnim="@animator/watube_axis_exit"
+        app:popEnterAnim="@animator/watube_axis_pop_enter"
+        app:popExitAnim="@animator/watube_axis_pop_exit" />
+    <!-- endregion -->
+    <!-- region Search -->
     <action
         android:id="@+id/showSearchResults"
         app:destination="@id/searchResultFragment"
-        app:enterAnim="@animator/nav_default_enter_anim"
-        app:exitAnim="@animator/nav_default_exit_anim"
-        app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-        app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+        app:enterAnim="@animator/watube_axis_enter"
+        app:exitAnim="@animator/watube_axis_exit"
+        app:popEnterAnim="@animator/watube_axis_pop_enter"
+        app:popExitAnim="@animator/watube_axis_pop_exit" />
+    <!-- endregion -->
+    <!-- region Search -->
     <action
         android:id="@+id/openSearch"
         app:destination="@id/searchFragment"
@@ -172,4 +200,6 @@
         app:popUpTo="@id/homeFragment"
         app:popUpToSaveState="true"
         app:restoreState="false" />
+    <!-- endregion -->
 </navigation>
+<!-- endregion -->

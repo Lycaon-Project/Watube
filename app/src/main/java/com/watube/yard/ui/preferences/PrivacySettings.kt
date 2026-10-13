@@ -12,8 +12,9 @@ import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.helpers.LocaleHelper
 import com.watube.yard.helpers.PrivacyHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.util.SharedHttpClient
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
  * merged into the same screen.
  */
 class PrivacySettings : InstanceSettings() {
-
+    // region Privacy
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.privacy_settings, rootKey)
 
@@ -43,10 +44,17 @@ class PrivacySettings : InstanceSettings() {
 
         setupRotationFrequency()
         setupTouristMode()
+
+        // takes effect at once on this screen; the others pick it up when they come back
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.BLOCK_SCREENSHOTS)
+            ?.setOnPreferenceChangeListener { _, _ ->
+                view?.post { activity?.window?.let(ScreenPrivacy::applyTo) }
+                true
+            }
         refreshIdentifierSummary()
 
         findPreference<Preference>("reset_identifiers")?.setOnPreferenceClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.reset_identifiers)
                 .setMessage(R.string.reset_identifiers_dialog_message)
                 .setNegativeButton(R.string.cancel, null)
@@ -54,69 +62,6 @@ class PrivacySettings : InstanceSettings() {
                 .show()
             true
         }
-    }
-
-    /**
-     * Local history controls (search history, watch history, positions, bookmarks),
-     * identical to the ones of [HistorySettings] but bound to the merged hub.
-     */
-    private fun bindHistoryPreferences() {
-        // search history is not recorded anymore once the toggle is off, so the entries
-        // already stored have no reason to stay on the device
-        findPreference<SwitchPreferenceCompat>(PreferenceKeys.SEARCH_HISTORY_TOGGLE)
-            ?.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue == false) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        Database.searchHistoryDao().deleteAll()
-                    }
-                }
-                true
-            }
-
-        findPreference<Preference>(PreferenceKeys.CLEAR_SEARCH_HISTORY)
-            ?.setOnPreferenceClickListener {
-                showClearDialog(R.string.clear_history) {
-                    Database.searchHistoryDao().deleteAll()
-                }
-                true
-            }
-
-        findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_HISTORY)
-            ?.setOnPreferenceClickListener {
-                showClearDialog(R.string.clear_history) {
-                    Database.watchHistoryDao().deleteAll()
-                }
-                true
-            }
-
-        findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_POSITIONS)
-            ?.setOnPreferenceClickListener {
-                showClearDialog(R.string.reset_watch_positions) {
-                    DatabaseHelper.clearWatchPositions()
-                }
-                true
-            }
-
-        findPreference<Preference>(PreferenceKeys.CLEAR_BOOKMARKS)
-            ?.setOnPreferenceClickListener {
-                showClearDialog(R.string.clear_bookmarks) {
-                    Database.playlistBookmarkDao().deleteAll()
-                }
-                true
-            }
-    }
-
-    private fun showClearDialog(title: Int, actionOnConfirm: suspend () -> Unit) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(title)
-            .setMessage(R.string.irreversible)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.okay) { _, _ ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    actionOnConfirm.invoke()
-                }
-            }
-            .show()
     }
 
     /**
@@ -159,7 +104,7 @@ class PrivacySettings : InstanceSettings() {
         touristMode.setOnPreferenceChangeListener { _, newValue ->
             if (newValue != true) return@setOnPreferenceChangeListener true
 
-            MaterialAlertDialogBuilder(requireContext())
+            SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.tourist_mode)
                 .setMessage(R.string.tourist_mode_clear_dialog)
                 .setNegativeButton(R.string.cancel, null)
@@ -211,4 +156,70 @@ class PrivacySettings : InstanceSettings() {
 
         refreshIdentifierSummary(getString(R.string.sponsorblock_id_rotated))
     }
+    // endregion
+
+    // region Watch History
+    /**
+     * Local history controls (search history, watch history, positions, bookmarks) of
+     * R.xml.history_settings, merged into this hub.
+     */
+    private fun bindHistoryPreferences() {
+        // search history is not recorded anymore once the toggle is off, so the entries
+        // already stored have no reason to stay on the device
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.SEARCH_HISTORY_TOGGLE)
+            ?.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue == false) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        Database.searchHistoryDao().deleteAll()
+                    }
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_SEARCH_HISTORY)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.clear_history) {
+                    Database.searchHistoryDao().deleteAll()
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_HISTORY)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.clear_history) {
+                    Database.watchHistoryDao().deleteAll()
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_WATCH_POSITIONS)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.reset_watch_positions) {
+                    DatabaseHelper.clearWatchPositions()
+                }
+                true
+            }
+
+        findPreference<Preference>(PreferenceKeys.CLEAR_BOOKMARKS)
+            ?.setOnPreferenceClickListener {
+                showClearDialog(R.string.clear_bookmarks) {
+                    Database.playlistBookmarkDao().deleteAll()
+                }
+                true
+            }
+    }
+
+    private fun showClearDialog(title: Int, actionOnConfirm: suspend () -> Unit) {
+        SecureAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(R.string.irreversible)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.okay) { _, _ ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    actionOnConfirm.invoke()
+                }
+            }
+            .show()
+    }
+    // endregion
 }

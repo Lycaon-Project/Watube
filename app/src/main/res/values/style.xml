@@ -60,37 +60,6 @@
 
     </style>
 
-    <style name="AboutCard" parent="Widget.Material3.CardView.Elevated">
-
-        <item name="android:layout_marginStart">@dimen/watube_gutter</item>
-        <item name="android:layout_marginEnd">@dimen/watube_gutter</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:layout_marginTop">14dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">?attr/colorOutlineVariant</item>
-        <item name="cardBackgroundColor">?attr/colorSurfaceContainerLow</item>
-        <item name="cardCornerRadius">@dimen/watube_card_radius</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="cardElevation">0dp</item>
-
-    </style>
-
-    <style name="AboutItem">
-
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:paddingStart">15dp</item>
-        <item name="android:paddingEnd">15dp</item>
-        <item name="android:paddingTop">15dp</item>
-        <item name="android:paddingBottom">15dp</item>
-    </style>
-
     <!-- Solar sheet heading: compact bold title over a divider -->
     <style name="WatubeSheetTitle">
 
@@ -167,7 +136,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:background">@drawable/watube_player_control_ripple</item>
         <item name="android:textColor">@android:color/white</item>
 
     </style>
@@ -403,12 +372,6 @@
         <item name="textEndPadding">@dimen/watube_chip_h_padding</item>
         <item name="chipEndPadding">0dp</item>
         <item name="android:textAppearance">@style/WatubeChipLabel</item>
-    </style>
-
-    <style name="Widget.Material3.Button.IconButton.Elevated" parent="Widget.Material3.Button.IconButton">
-        <item name="android:stateListAnimator">@animator/m3_btn_elevated_btn_state_list_anim</item>
-        <item name="elevation">@dimen/m3_comp_button_elevated_container_elevation</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3Expressive.Button.Elevated</item>
     </style>
 
     <style name="AlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">

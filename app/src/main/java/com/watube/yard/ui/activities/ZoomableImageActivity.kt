@@ -9,10 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.ActivityZoomableImageBinding
 import com.watube.yard.helpers.ImageHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Image Loading
 /**
  * An activity that allows you to zoom and rotate an image
  */
@@ -20,6 +22,7 @@ class ZoomableImageActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ScreenPrivacy.applyTo(window)
 
         val binding = ActivityZoomableImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -36,3 +39,4 @@ class ZoomableImageActivity : AppCompatActivity() {
         }
     }
 }
+// endregion

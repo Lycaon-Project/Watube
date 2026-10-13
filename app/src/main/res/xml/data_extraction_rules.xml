@@ -1,36 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Privacy -->
+<!--
   Android 12+ backup / device-to-device transfer rules.
 
-  Privacy line of this app: browsing data (watch history, watch positions,
-  search history, subscriptions, playlists, feed cache) must not be uploaded to
-  a cloud backup service. It is still carried over by a local device-to-device
-  transfer, and the in-app export (Settings -> Backup) remains the supported way
-  to save a copy of everything.
+  Privacy line of this app: nothing is uploaded to a cloud backup service (allowBackup is off
+  in the manifest, and every domain is excluded here as well, since some devices still read
+  these rules). A local device-to-device transfer keeps the settings and the library, and the
+  in-app export (Settings -> Backup) remains the supported way to save a copy of everything.
 
-  Credentials (Piped auth token, login data) never leave the device at all.
-  Crash logs (own preference file, can contain video ids and urls) are excluded too.
+  Credentials (Piped auth token, login data) and crash logs (they can contain video ids and
+  urls) never leave the device at all.
 -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude
-            domain="sharedpref"
-            path="auth.xml" />
+            domain="root"
+            path="." />
         <exclude
-            domain="sharedpref"
-            path="errors.xml" />
+            domain="file"
+            path="." />
         <exclude
             domain="database"
             path="." />
-        <!-- Cast analytics state (session ids, application id, feature usage counters) -->
         <exclude
             domain="sharedpref"
-            path="com.watube.yard.client_cast_analytics_data.xml" />
+            path="." />
         <exclude
-            domain="sharedpref"
-            path="com.watube.yard.debug.client_cast_analytics_data.xml" />
-        <exclude
-            domain="root"
-            path="cache" />
+            domain="external"
+            path="." />
     </cloud-backup>
     <device-transfer>
         <exclude
@@ -39,15 +36,6 @@
         <exclude
             domain="sharedpref"
             path="errors.xml" />
-        <!-- Cast analytics state, and the telemetry queue of its datatransport library -->
-        <exclude
-            domain="sharedpref"
-            path="com.watube.yard.client_cast_analytics_data.xml" />
-        <exclude
-            domain="sharedpref"
-            path="com.watube.yard.debug.client_cast_analytics_data.xml" />
-        <exclude
-            domain="database"
-            path="com.google.android.datatransport.events" />
     </device-transfer>
 </data-extraction-rules>
+<!-- endregion -->

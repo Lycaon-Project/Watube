@@ -20,10 +20,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+// region Feed
 class SubscriptionsViewModel : ViewModel() {
-    var videoFeed = MutableLiveData<List<StreamItem>?>()
+    val videoFeed = MutableLiveData<List<StreamItem>?>()
 
-    var subscriptions = MutableLiveData<List<Subscription>?>()
+    val subscriptions = MutableLiveData<List<Subscription>?>()
     val feedProgress = MutableLiveData<FeedProgress?>()
 
     var subFeedRecyclerViewState: Parcelable? = null
@@ -76,3 +77,4 @@ class SubscriptionsViewModel : ViewModel() {
         }
     }
 }
+// endregion

@@ -50,7 +50,6 @@
     <string name="fail">বিফল হৈছে :/</string>
     <string name="about">সম্পৰ্কে</string>
     <string name="changeLanguage">ভাষা</string>
-    <string name="systemLanguage">চিষ্টেম</string>
     <string name="systemDefault">চিষ্টেম</string>
     <string name="lightTheme">পোহৰ</string>
     <string name="darkTheme">অন্ধকাৰ</string>
@@ -171,7 +170,6 @@
     <string name="auth_instance">প্ৰমাণীকৰণ ইনষ্টেন্স</string>
     <string name="auth_instance_summary">প্ৰমাণীকৰণৰ বাবে বেলেগ ইনষ্টেন্স ব্যৱহাৰ কৰক</string>
     <string name="auth_instances">প্ৰমাণীকৰণ ইনষ্টেন্স বাছনি কৰক</string>
-    <string name="audio_video">অডিঅ’ আৰু ভিডিঅ’</string>
     <string name="fullscreen_orientation">পূৰ্ণপৰ্দা অভিমুখীকৰণ</string>
     <string name="aspect_ratio">ভিডিঅ’ৰ আনুপাতিক অনুপাত</string>
     <string name="auto_rotation">স্বয়ংক্ৰিয় ঘূৰণ</string>
@@ -199,7 +197,6 @@
     <string name="rich_caption_rendering_summary">অধিক সমৃদ্ধ আৰু কাষ্টমাইজড অভিজ্ঞতাৰ বাবে ৱেব কেপচন ৰেণ্ডাৰ কৰক</string>
     <string name="captions">কেপচন</string>
     <string name="none">কোনো নাই</string>
-    <string name="general">সাধাৰণ</string>
     <string name="caption_settings">কেপচন</string>
     <string name="playerAudioQuality">অডিঅ’ গুণমান</string>
     <string name="worst_quality">নিম্নতম</string>
@@ -399,7 +396,6 @@
     <string name="import_format_list_of_urls">URL বা ভিডিঅ’ আইডিৰ তালিকা</string>
     <string name="home_tab_content">মুখ্যপৃষ্ঠাৰ টেবৰ সামগ্ৰী</string>
     <string name="show_search_suggestions">সন্ধানৰ পৰামৰ্শ দেখুৱাওক</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">অজ্ঞাত অডিঅ’ ভাষা</string>
     <string name="unknown_audio_track_type">অজ্ঞাত অডিঅ’ ট্ৰেকৰ প্ৰকাৰ</string>
     <string name="original_or_main_audio_track">মূল বা প্ৰধান</string>
@@ -483,18 +479,6 @@
     <string name="import_temp_playlist_summary">আপুনি ‘%1$s’ নামৰ নতুন প্লেলিষ্ট সৃষ্টি কৰিব বিচাৰে নেকি? প্লেলিষ্টত %2$d ভিডিঅ’ থাকিব।</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

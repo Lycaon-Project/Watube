@@ -12,10 +12,11 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogCustomIntancesListBinding
 import com.watube.yard.ui.adapters.CustomInstancesAdapter
 import com.watube.yard.ui.models.InstancesModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+// region Piped Instances
 class CustomInstancesListDialog: DialogFragment() {
     val viewModel: InstancesModel by activityViewModels()
 
@@ -41,7 +42,7 @@ class CustomInstancesListDialog: DialogFragment() {
             }
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.customInstance))
             .setView(binding.root)
             .setPositiveButton(getString(R.string.okay), null)
@@ -55,3 +56,4 @@ class CustomInstancesListDialog: DialogFragment() {
             }
     }
 }
+// endregion

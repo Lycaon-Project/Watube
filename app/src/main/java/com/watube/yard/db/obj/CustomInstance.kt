@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Piped Instances
 @Serializable
 @Entity(tableName = "customInstance")
 @Parcelize
@@ -15,3 +16,4 @@ class CustomInstance(
     @ColumnInfo var apiUrl: String = "",
     @ColumnInfo var frontendUrl: String = ""
 ) : Parcelable
+// endregion

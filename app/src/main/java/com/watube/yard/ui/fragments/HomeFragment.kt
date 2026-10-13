@@ -18,10 +18,12 @@ import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.TrendingCategory
 import com.watube.yard.api.obj.Playlists
 import com.watube.yard.api.obj.StreamItem
+import com.watube.yard.constants.IntentData
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.constants.PreferenceKeys.HOME_TAB_CONTENT
 import com.watube.yard.databinding.FragmentHomeBinding
 import com.watube.yard.db.obj.PlaylistBookmark
+import com.watube.yard.extensions.bundleOf
 import com.watube.yard.extensions.dpToPx
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.FeedDensity
@@ -37,15 +39,16 @@ import com.watube.yard.ui.adapters.VideoCardsAdapter
 import com.watube.yard.ui.models.HomeViewModel
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.models.TrendsViewModel
+import com.watube.yard.ui.models.WatchHistoryModel
 import com.watube.yard.util.TextUtils
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.UncontainedCarouselStrategy
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.Hold
 
-
+// region Home
 /** Left inset of a feed row (trending_row / ItemRow), so card edges land on the gutter */
 private const val CARD_INSET_DP = 8f
 
@@ -122,7 +125,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.localBadge.isGone = !PlayerHelper.fullLocalMode
 
         binding.watchingTV.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_watchHistoryFragment)
+            // the header promises the videos to resume, whatever filter the history page keeps
+            findNavController().navigate(
+                R.id.action_homeFragment_to_watchHistoryFragment,
+                bundleOf(IntentData.historyStatusFilter to WatchHistoryModel.STATUS_CONTINUE_WATCHING)
+            )
         }
 
         binding.trendingTV.setOnClickListener {
@@ -161,7 +168,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
 
             var selected = trendingCategories.indexOf(currentTrendingCategoryPref)
-            MaterialAlertDialogBuilder(requireContext())
+            SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.category)
                 .setSingleChoiceItems(
                     categories.map { it.second }.toTypedArray(),
@@ -564,3 +571,4 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         views.forEach { it.isVisible = true }
     }
 }
+// endregion

@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Watch History
 class WatchHistoryModel : ViewModel() {
     private val watchHistory = MutableLiveData<List<WatchHistoryItem>>()
 
@@ -39,6 +40,11 @@ class WatchHistoryModel : ViewModel() {
             PreferenceHelper.putInt(PreferenceKeys.SELECTED_HISTORY_STATUS_FILTER, value)
             selectedStatus.value = value
         }
+
+    /** Shows one status on this screen only: the filter saved for the history stays as it is. */
+    fun showOnly(status: Int) {
+        selectedStatus.value = status
+    }
 
     private suspend fun WatchHistoryItem.shouldIncludeByFilters(): Boolean {
         // no watch position filter
@@ -80,5 +86,7 @@ class WatchHistoryModel : ViewModel() {
 
     companion object {
         private const val HISTORY_PAGE_SIZE = 10
+        const val STATUS_CONTINUE_WATCHING = 1
     }
 }
+// endregion

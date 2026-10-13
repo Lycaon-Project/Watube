@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region UI Components
 class VideosAdapter(
     private val showChannelInfo: Boolean = true
 ) : ListAdapter<StreamItem, VideosViewHolder>(
@@ -142,3 +143,4 @@ class VideosAdapter(
         super.onViewRecycled(holder)
     }
 }
+// endregion

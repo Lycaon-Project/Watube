@@ -6,6 +6,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 import com.google.android.material.button.MaterialButton
 
+// region New Video Notifications
 fun MaterialButton.setupNotificationBell(channelId: String) {
     if (!PreferenceHelper.getBoolean(PreferenceKeys.NOTIFICATION_ENABLED, true)) {
         isGone = true
@@ -24,3 +25,4 @@ fun MaterialButton.setupNotificationBell(channelId: String) {
 
 private fun iconResource(isIgnorable: Boolean) =
     if (isIgnorable) R.drawable.ic_bell else R.drawable.ic_notification
+// endregion

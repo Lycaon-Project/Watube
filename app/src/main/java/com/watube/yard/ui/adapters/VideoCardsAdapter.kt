@@ -34,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region UI Components
 class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
     ListAdapter<StreamItem, VideoCardsViewHolder>(
         // identity is the video url so that only changed contents get rebound
@@ -206,3 +207,4 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
         const val CAUGHT_UP_STREAM_TYPE = "caught"
     }
 }
+// endregion

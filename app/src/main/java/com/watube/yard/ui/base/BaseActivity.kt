@@ -3,7 +3,6 @@ package com.watube.yard.ui.base
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -14,14 +13,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
-import com.watube.yard.helpers.LocaleHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.helpers.ThemeHelper.getThemeMode
 import com.watube.yard.helpers.WindowHelper
 import com.watube.yard.ui.tools.RestMode
-import java.util.Locale
 
+// region UI Components
 /**
  * Activity that applies the Watube theme and the in-app language
  */
@@ -68,6 +67,8 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
+        ScreenPrivacy.applyTo(window)
+        supportFragmentManager.registerFragmentLifecycleCallbacks(ScreenPrivacy.dialogWatcher, true)
 
         if (!isDialogActivity) keepContentClearOfSideInsets()
     }
@@ -134,15 +135,6 @@ open class BaseActivity : AppCompatActivity() {
             needsConfig = true
         }
 
-        // Gestion de la locale pour les versions antérieures à Android 13 (Tiramisu)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            @Suppress("DEPRECATION")
-            val locale = LocaleHelper.getAppLocale()
-            Locale.setDefault(locale)
-            configuration.setLocale(locale)
-            needsConfig = true
-        }
-
         if (needsConfig) {
             applyOverrideConfiguration(configuration)
         }
@@ -150,6 +142,8 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // the setting may have changed on another screen
+        ScreenPrivacy.applyTo(window)
         // the scheduled rest mode covers whichever screen is in front
         RestMode.onResume(this)
     }
@@ -177,3 +171,4 @@ open class BaseActivity : AppCompatActivity() {
         requestedOrientation = screenOrientationPref
     }
 }
+// endregion

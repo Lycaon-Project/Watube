@@ -2,6 +2,7 @@ package com.watube.yard.player.parser
 
 import kotlin.math.min
 
+// region SABR Streaming
 /**
  * A buffer that wraps multiple smaller contiguous buffers,
  * allowing to treat them, as if they were a single buffer.
@@ -62,3 +63,4 @@ class CompositeBuffer(
         }
     }
 }
+// endregion

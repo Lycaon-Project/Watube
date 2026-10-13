@@ -9,7 +9,6 @@ import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
@@ -48,7 +47,6 @@ import com.watube.yard.helpers.DownloadHelper.getNotificationId
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NetworkHelper
 import com.watube.yard.helpers.PlayerHelper
-import com.watube.yard.helpers.ProxyHelper
 import com.watube.yard.obj.DownloadStatus
 import com.watube.yard.parcelable.DownloadData
 import com.watube.yard.receivers.NotificationReceiver
@@ -84,6 +82,7 @@ import kotlin.io.path.deleteIfExists
 import kotlin.io.path.div
 import kotlin.io.path.fileSize
 
+// region Downloads
 /**
  * Download service with custom implementation of downloading using [HttpURLConnection].
  */
@@ -257,7 +256,7 @@ class DownloadService : LifecycleService() {
                 try {
                     ImageHelper.downloadImage(
                         this@DownloadService,
-                        ProxyHelper.rewriteUrlUsingProxyPreference(thumbnailUrl),
+                        thumbnailUrl,
                         thumbnailTargetPath
                     )
                 } catch (e: Exception) {
@@ -574,11 +573,7 @@ class DownloadService : LifecycleService() {
 
         ServiceCompat.startForeground(
             this, NotificationId.DOWNLOAD_IN_PROGRESS.id, summaryNotificationBuilder.build(),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            } else {
-                0
-            }
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
     }
 
@@ -717,5 +712,7 @@ class DownloadService : LifecycleService() {
         /** minimal delay between two progress notifications of the same download */
         private const val MIN_NOTIFICATION_UPDATE_INTERVAL = 500L
         var IS_DOWNLOAD_RUNNING = false
+            private set
     }
 }
+// endregion

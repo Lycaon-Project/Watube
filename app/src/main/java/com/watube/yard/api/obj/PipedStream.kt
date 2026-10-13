@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlin.io.path.Path
 
+// region Stream Sources
 @Serializable
 @Parcelize
 data class PipedStream(
@@ -51,3 +52,4 @@ data class PipedStream(
         downloadSize = contentLength
     )
 }
+// endregion

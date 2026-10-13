@@ -7,6 +7,7 @@ import android.widget.Toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// region UI Components
 fun Context.toastFromMainThread(text: String) {
     Handler(Looper.getMainLooper()).post {
         Toast.makeText(
@@ -30,3 +31,4 @@ suspend fun Context.toastFromMainDispatcher(text: String, length: Int = Toast.LE
 suspend fun Context.toastFromMainDispatcher(stringId: Int, length: Int = Toast.LENGTH_SHORT) {
     toastFromMainDispatcher(getString(stringId), length)
 }
+// endregion

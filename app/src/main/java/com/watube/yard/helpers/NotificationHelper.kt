@@ -10,6 +10,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.workers.NotificationWorker
 import java.util.concurrent.TimeUnit
 
+// region New Video Notifications
 object NotificationHelper {
     private const val NOTIFICATION_WORK_NAME = "NotificationService"
 
@@ -47,10 +48,11 @@ object NotificationHelper {
             else -> NetworkType.CONNECTED
         }
 
-        // requirements for the work
-        // here: network needed to run the task
+        // requirements for the work: the network, and (battery) not when the battery is low,
+        // since a check fetches the feed of every subscribed channel
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(networkType)
+            .setRequiresBatteryNotLow(true)
             .build()
 
         // create the worker
@@ -68,15 +70,6 @@ object NotificationHelper {
                 existingPeriodicWorkPolicy,
                 notificationWorker
             )
-
-        // for testing the notifications by the work manager
-        /*
-        WorkManager.getInstance(context)
-            .enqueue(
-                OneTimeWorkRequest.Builder(NotificationWorker::class.java)
-                    .setConstraints(constraints)
-                    .build()
-            )
-         */
     }
 }
+// endregion

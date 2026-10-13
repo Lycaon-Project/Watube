@@ -55,7 +55,7 @@ import org.schabi.newpipe.extractor.stream.StreamType
 import org.schabi.newpipe.extractor.stream.VideoStream
 import kotlin.time.toKotlinInstant
 
-
+// region Local Extraction
 private fun VideoStream.toPipedStream() = PipedStream(
     url = content,
     codec = codec,
@@ -176,49 +176,6 @@ fun InfoItem.toContentItem() = when (this) {
     else -> null
 }
 
-fun ChannelInfo.toChannel() = Channel(
-    id = id,
-    name = name,
-    description = description,
-    verified = isVerified,
-    avatarUrl = avatars.maxByOrNull { it.height }?.url,
-    bannerUrl = banners.maxByOrNull { it.height }?.url,
-    tabs = tabs.filterNot { it.contentFilters.contains(ChannelTabs.VIDEOS) }
-        .map { ChannelTab(it.contentFilters.first().lowercase(), it.toTabDataString()) },
-    subscriberCount = subscriberCount
-)
-
-fun PlaylistInfo.toPlaylist() = Playlist(
-    name = name,
-    description = description?.content,
-    thumbnailUrl = thumbnails.maxByOrNull { it.height }?.url,
-    uploaderUrl = uploaderUrl.toID(),
-    bannerUrl = banners.maxByOrNull { it.height }?.url,
-    uploader = uploaderName,
-    uploaderAvatar = uploaderAvatars.maxByOrNull { it.height }?.url,
-    videos = streamCount.toInt(),
-    relatedStreams = relatedItems.map { it.toStreamItem() },
-    nextpage = nextPage?.toNextPageString()
-)
-
-fun CommentsInfoItem.toComment() = Comment(
-    author = uploaderName,
-    commentId = commentId,
-    commentText = commentText.content,
-    commentedTime = textualUploadDate,
-    commentedTimeMillis = uploadDate?.offsetDateTime()?.toEpochSecond()?.times(1000),
-    commentorUrl = uploaderUrl.toID(),
-    hearted = isHeartedByUploader,
-    creatorReplied = hasCreatorReply(),
-    likeCount = likeCount.toLong(),
-    pinned = isPinned,
-    verified = isUploaderVerified,
-    replyCount = replyCount.toLong(),
-    repliesPage = replies?.toNextPageString(),
-    thumbnail = thumbnails.maxByOrNull { it.height }?.url.orEmpty(),
-    channelOwner = isChannelOwner
-)
-
 // the following classes are necessary because kotlinx can't deserialize
 // classes from external libraries as they're not annotated
 @Serializable
@@ -254,8 +211,59 @@ fun ListLinkHandler.toTabDataString() = JsonHelper.json.encodeToString(
 fun String.toListLinkHandler() = with(JsonHelper.json.decodeFromString<TabData>(this)) {
     ListLinkHandler(originalUrl, url, id, contentFilters, sortFilter)
 }
+// endregion
+
+// region Channels
+fun ChannelInfo.toChannel() = Channel(
+    id = id,
+    name = name,
+    description = description,
+    verified = isVerified,
+    avatarUrl = avatars.maxByOrNull { it.height }?.url,
+    bannerUrl = banners.maxByOrNull { it.height }?.url,
+    tabs = tabs.filterNot { it.contentFilters.contains(ChannelTabs.VIDEOS) }
+        .map { ChannelTab(it.contentFilters.first().lowercase(), it.toTabDataString()) },
+    subscriberCount = subscriberCount
+)
+// endregion
+
+// region Playlists
+fun PlaylistInfo.toPlaylist() = Playlist(
+    name = name,
+    description = description?.content,
+    thumbnailUrl = thumbnails.maxByOrNull { it.height }?.url,
+    uploaderUrl = uploaderUrl.toID(),
+    bannerUrl = banners.maxByOrNull { it.height }?.url,
+    uploader = uploaderName,
+    uploaderAvatar = uploaderAvatars.maxByOrNull { it.height }?.url,
+    videos = streamCount.toInt(),
+    relatedStreams = relatedItems.map { it.toStreamItem() },
+    nextpage = nextPage?.toNextPageString()
+)
+// endregion
+
+// region Comments
+fun CommentsInfoItem.toComment() = Comment(
+    author = uploaderName,
+    commentId = commentId,
+    commentText = commentText.content,
+    commentedTime = textualUploadDate,
+    commentedTimeMillis = uploadDate?.offsetDateTime()?.toEpochSecond()?.times(1000),
+    commentorUrl = uploaderUrl.toID(),
+    hearted = isHeartedByUploader,
+    creatorReplied = hasCreatorReply(),
+    likeCount = likeCount.toLong(),
+    pinned = isPinned,
+    verified = isUploaderVerified,
+    replyCount = replyCount.toLong(),
+    repliesPage = replies?.toNextPageString(),
+    thumbnail = thumbnails.maxByOrNull { it.height }?.url.orEmpty(),
+    channelOwner = isChannelOwner
+)
+// endregion
 
 class NewPipeMediaServiceRepository : MediaServiceRepository {
+    // region Trends
     // see https://github.com/TeamNewPipe/NewPipeExtractor/tree/dev/extractor/src/main/java/org/schabi/newpipe/extractor/services/youtube/extractors/kiosk
     private val trendingCategories = TrendingCategory.entries.associate {
         when (it) {
@@ -281,7 +289,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
         val info = KioskInfo.getInfo(extractor)
         return info.relatedItems.filterIsInstance<StreamInfoItem>().map { it.toStreamItem() }
     }
+    // endregion
 
+    // region Local Extraction
     override suspend fun getStreams(videoId: String): Streams = withContext(Dispatchers.IO) {
         val respAsync = async {
             StreamInfo.getInfo("$YOUTUBE_FRONTEND_URL/watch?v=$videoId")
@@ -359,7 +369,8 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
                 Subtitle(
                     it.content,
                     it.format?.mimeType,
-                    it.displayLanguageName,
+                    // YouTube's own track label tells same-language tracks apart (CC1, DTVCC1...)
+                    it.name?.takeIf { name -> name.isNotBlank() } ?: it.displayLanguageName,
                     it.languageTag,
                     it.isAutoGenerated
                 )
@@ -371,7 +382,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             videoPlaybackUstreamerConfig = resp.ustreamerConfig,
         )
     }
+    // endregion
 
+    // region SABR Streaming
     /**
      * Two requests to YouTube only: a fresh visitor id, then the visionOS player the stream comes
      * from. A full extraction also loaded the watch page data again and asked Return YouTube
@@ -391,7 +404,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             if (url == null || config == null) return@withContext null
             streams.copy(serverAbrStreamingUrl = "$url&cpn=$cpn", videoPlaybackUstreamerConfig = config)
         }
+    // endregion
 
+    // region SponsorBlock
     override suspend fun getSegments(
         videoId: String, category: List<String>, actionType: List<String>?
     ): SegmentData = RetrofitInstance.externalApi.getSegments(
@@ -399,7 +414,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
         // https://wiki.sponsor.ajay.app/w/API_Docs#GET_/api/skipSegments/:sha256HashPrefix
         videoId.sha256Sum().substring(0, 4), category, actionType
     ).first { it.videoID == videoId }
+    // endregion
 
+    // region DeArrow
     override suspend fun getDeArrowContent(videoId: String): DeArrowContent? =
         runCatching {
             RetrofitInstance.externalApi.getDeArrowContent(
@@ -415,7 +432,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
                     )
                 })
         }
+    // endregion
 
+    // region Search
     override suspend fun getSearchResults(searchQuery: String, filter: String): SearchResult {
         val queryHandler = NewPipeExtractorInstance.extractor.searchQHFactory.fromQuery(
             searchQuery,
@@ -456,7 +475,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
     override suspend fun getSuggestions(query: String): List<String> {
         return NewPipeExtractorInstance.extractor.suggestionExtractor.suggestionList(query)
     }
+    // endregion
 
+    // region Channels
     private suspend fun getLatestVideos(channelInfo: ChannelInfo): Pair<List<StreamItem>, String?> {
         val relatedTab = channelInfo.tabs.find { it.contentFilters.contains(ChannelTabs.VIDEOS) }
             ?: return emptyList<StreamItem>() to null
@@ -521,7 +542,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             nextpage = tab.nextpage
         )
     }
+    // endregion
 
+    // region Playlists
     override suspend fun getPlaylist(playlistId: String): Playlist {
         val playlistUrl = "${YOUTUBE_FRONTEND_URL}/playlist?list=${playlistId}"
         val playlistInfo = PlaylistInfo.getInfo(playlistUrl)
@@ -542,7 +565,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             nextpage = playlistInfo.nextPage?.toNextPageString()
         )
     }
+    // endregion
 
+    // region Comments
     override suspend fun getComments(videoId: String): CommentsPage {
         val url = "${YOUTUBE_FRONTEND_URL}/watch?v=$videoId"
         val commentsInfo = CommentsInfo.getInfo(url)
@@ -568,11 +593,10 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             comments = commentsInfo.items.map { it.toComment() }
         )
     }
+    // endregion
 
     companion object {
-        private const val DEARROW_THUMBNAIL_URL =
-            "https://dearrow-thumb.ajay.app/api/v1/getThumbnail"
-
+        // region Local Extraction
         // Watube 27A1: exhaustive set of "currently live" stream types exposed by the
         // NewPipe extractor (the fork pinned here has no LIVE_PREMIERE constant; a premiere
         // is reported as POST_LIVE_STREAM until it starts, then as LIVE_STREAM).
@@ -588,5 +612,11 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             StreamType.VIDEO_STREAM,
             StreamType.AUDIO_STREAM,
         )
+        // endregion
+
+        // region DeArrow
+        private const val DEARROW_THUMBNAIL_URL =
+            "https://dearrow-thumb.ajay.app/api/v1/getThumbnail"
+        // endregion
     }
 }

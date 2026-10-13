@@ -27,6 +27,7 @@ import com.watube.yard.ui.fragments.PlayerFragment
 import com.watube.yard.util.PlayingQueue
 
 object NavigationHelper {
+    // region Channels
     fun navigateChannel(context: Context, channelUrlOrId: String?) {
         if (channelUrlOrId == null) return
 
@@ -45,7 +46,9 @@ object NavigationHelper {
             Log.e(TAG(), "Failed to minimize player while navigating to channel", e)
         }
     }
+    // endregion
 
+    // region Video Player
     /**
      * Navigate to the given video using the other provided parameters as well
      * If the audio only mode is enabled, play it in the background, else as a normal video
@@ -124,33 +127,6 @@ object NavigationHelper {
         }
     }
 
-    fun navigatePlaylist(context: Context, playlistUrlOrId: String?, playlistType: PlaylistType) {
-        if (playlistUrlOrId == null) return
-
-        val activity = ContextHelper.unwrapActivity<MainActivity>(context)
-        activity.navController.navigate(
-            NavDirections.openPlaylist(playlistUrlOrId.toID(), playlistType)
-        )
-    }
-
-    /**
-     * Start the audio player fragment
-     */
-    fun openAudioPlayerFragment(
-        context: Context,
-        offlinePlayer: Boolean = false,
-        minimizeByDefault: Boolean = false
-    ) {
-        val activity = ContextHelper.unwrapActivity<BaseActivity>(context)
-        activity.supportFragmentManager.commitNow {
-            val args = Bundle().apply {
-                putBoolean(IntentData.minimizeByDefault, minimizeByDefault)
-                putBoolean(IntentData.offlinePlayer, offlinePlayer)
-            }
-            replace<AudioPlayerFragment>(R.id.container, args = args)
-        }
-    }
-
     /**
      * Starts the video player fragment for an already existing media session
      */
@@ -169,7 +145,40 @@ object NavigationHelper {
             replace<PlayerFragment>(R.id.container, args = bundle)
         }
     }
+    // endregion
 
+    // region Playlists
+    fun navigatePlaylist(context: Context, playlistUrlOrId: String?, playlistType: PlaylistType) {
+        if (playlistUrlOrId == null) return
+
+        val activity = ContextHelper.unwrapActivity<MainActivity>(context)
+        activity.navController.navigate(
+            NavDirections.openPlaylist(playlistUrlOrId.toID(), playlistType)
+        )
+    }
+    // endregion
+
+    // region Background Playback
+    /**
+     * Start the audio player fragment
+     */
+    fun openAudioPlayerFragment(
+        context: Context,
+        offlinePlayer: Boolean = false,
+        minimizeByDefault: Boolean = false
+    ) {
+        val activity = ContextHelper.unwrapActivity<BaseActivity>(context)
+        activity.supportFragmentManager.commitNow {
+            val args = Bundle().apply {
+                putBoolean(IntentData.minimizeByDefault, minimizeByDefault)
+                putBoolean(IntentData.offlinePlayer, offlinePlayer)
+            }
+            replace<AudioPlayerFragment>(R.id.container, args = args)
+        }
+    }
+    // endregion
+
+    // region Image Loading
     /**
      * Open a large, zoomable image preview
      */
@@ -178,7 +187,9 @@ object NavigationHelper {
         intent.putExtra(IntentData.bitmapUrl, url)
         context.startActivity(intent)
     }
+    // endregion
 
+    // region Navigation
     /**
      * Needed due to different MainActivity Aliases because of the app icons
      */
@@ -193,4 +204,5 @@ object NavigationHelper {
         // kill the old application
         Process.killProcess(Process.myPid())
     }
+    // endregion
 }

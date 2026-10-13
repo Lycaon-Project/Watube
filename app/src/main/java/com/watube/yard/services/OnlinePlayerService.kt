@@ -3,6 +3,7 @@ package com.watube.yard.services
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.Format
@@ -11,7 +12,6 @@ import androidx.media3.common.MediaItem.SubtitleConfiguration
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
-import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
@@ -24,8 +24,13 @@ import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.SubscriptionHelper
 import com.watube.yard.api.obj.Segment
 import com.watube.yard.api.obj.Streams
+import com.watube.yard.cast.CastTarget
+import com.watube.yard.cast.Stolm
+import com.watube.yard.cast.StolmCast
+import com.watube.yard.cast.StolmException
 import com.watube.yard.constants.IntentData
 import com.watube.yard.db.DatabaseHelper
+import com.watube.yard.enums.PlayerCommand
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.setMetadata
@@ -49,17 +54,24 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 
 /**
  * Loads the selected videos audio in background mode with a notification area.
  */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 open class OnlinePlayerService : AbstractPlayerService() {
+    // region Video Player
     override val isOfflinePlayer: Boolean = false
+    // endregion
 
+    // region Playing Queue
     // PlaylistId/ChannelId for autoplay
     private var playlistId: String? = null
     private var channelId: String? = null
+    // endregion
+
+    // region Video Player
     private var startTimestampSeconds: Long? = null
 
     /**
@@ -89,7 +101,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
                     // sans erreur) juste avant d'extraire la vidéo suivante ; détruire le service
                     // ici couperait la navigation (chargement en boucle sur la nouvelle vidéo).
                     if (!isTransitioning && shouldStopOnlinePlayerService(exoPlayer, playbackState)) {
-                        onDestroy()
+                        releaseAndStop()
                     }
                 }
 
@@ -174,7 +186,14 @@ open class OnlinePlayerService : AbstractPlayerService() {
 
             withContext(Dispatchers.Main) {
                 setStreamSource()
-                configurePlayer(timestampMs)
+                val cast = stolm
+                if (cast == null) {
+                    configurePlayer(timestampMs)
+                } else {
+                    // the next video goes to the TV; the phone keeps it ready, unprepared
+                    exoPlayer?.playWhenReady = false
+                    streams?.let { loadOnCast(cast, it, startPositionMs(timestampMs) ?: 0) }
+                }
             }
         }
 
@@ -194,6 +213,149 @@ open class OnlinePlayerService : AbstractPlayerService() {
         }
     }
 
+    private fun configurePlayer(seekToPositionMs: Long) {
+        startPositionMs(seekToPositionMs)?.let { exoPlayer?.seekTo(it) }
+
+        exoPlayer?.apply {
+            // automatically start playback when using the audio player
+            playWhenReady = PlayerHelper.playAutomatically || isAudioOnlyPlayer
+            prepare()
+        }
+    }
+
+    override fun navigateVideo(videoId: String) {
+        this.streams = null
+
+        super.navigateVideo(videoId)
+    }
+    // endregion
+
+    // region Stolm
+    /** The running cast, null when the video plays on the phone. */
+    private var stolm: StolmCast? = null
+    private var castJob: Job? = null
+
+    private val castListener = object : Player.Listener {
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            if (playbackState == Player.STATE_ENDED) playNextVideo(relatedStreams = streams?.relatedStreams)
+        }
+
+        override fun onPlayerError(error: PlaybackException) = stopCast(R.string.stolm_playback_failed)
+    }
+
+    override val activePlayer: Player? get() = stolm?.player ?: exoPlayer
+
+    override fun watchPositionSource(): Player? {
+        val cast = stolm ?: return super.watchPositionSource()
+        // between two videos the TV still plays the previous one
+        return cast.player.takeIf { cast.player.currentItem?.videoId == videoId }
+    }
+
+    override fun runPlayerCommand(args: Bundle) {
+        when {
+            args.containsKey(PlayerCommand.CAST_TO.name) -> {
+                val target = args.getBundle(PlayerCommand.CAST_TO.name)?.let(CastTarget::fromBundle) ?: return
+                startCast(target)
+            }
+
+            args.containsKey(PlayerCommand.STOP_CAST.name) -> stopCast()
+            else -> super.runPlayerCommand(args)
+        }
+    }
+
+    /** Moves the current video to [target], from where the phone is. */
+    private fun startCast(target: CastTarget) {
+        val current = streams ?: return toastFromMainThread(R.string.stolm_wait_for_video)
+        stopCast(endState = Stolm.State.Connecting(target.name))
+        castJob = scope.launch {
+            val cast = try {
+                StolmCast.connect(this@OnlinePlayerService, target, mainLooper, PlayerHelper.seekIncrement) {
+                    handler.post { stopCast() }
+                }
+            } catch (e: StolmException) {
+                Stolm.update(Stolm.State.Idle)
+                toastFromMainDispatcher(e.messageRes)
+                return@launch
+            }
+            val position = withContext(Dispatchers.Main) {
+                val exo = exoPlayer
+                // the player was closed or another video started meanwhile
+                if (exo == null || streams !== current) {
+                    cast.close()
+                    Stolm.update(Stolm.State.Idle)
+                    return@withContext null
+                }
+                val position = if (current.isLive) 0 else exo.currentPosition
+                exo.pause()
+                stolm = cast
+                cast.player.playlistMetadata = exo.playlistMetadata
+                cast.player.addListener(servicePlayerListener)
+                cast.player.addListener(castListener)
+                useSessionPlayer(cast.player)
+                Stolm.update(Stolm.State.Casting(target.name))
+                position
+            } ?: return@launch
+
+            launch {
+                cast.finished.await()
+                // ended from the TV side (a stop from here has already let go of it)
+                withContext(Dispatchers.Main) { if (stolm === cast) stopCast(R.string.stolm_ended) }
+            }
+            withContext(Dispatchers.Main) { loadOnCast(cast, current, position) }
+        }
+    }
+
+    /** Main thread. A video the TV cannot play ends the cast, with the reason. */
+    private fun loadOnCast(cast: StolmCast, streams: Streams, positionMs: Long) {
+        val mediaItem = MediaItem.Builder().setMediaId(videoId).setMetadata(streams, videoId).build()
+        castJob = scope.launch(Dispatchers.Main) {
+            try {
+                cast.play(videoId, streams, mediaItem, positionMs)
+            } catch (e: StolmException) {
+                if (stolm === cast) stopCast(e.messageRes)
+            } catch (e: IOException) {
+                if (stolm !== cast) return@launch
+                // the TV never asked the phone for the video: it cannot reach it
+                if (cast.receiverReached) {
+                    stopCast(R.string.stolm_playback_failed)
+                } else {
+                    stopCast(R.string.stolm_tv_cannot_reach_phone, Stolm.State.Unreachable(cast.target))
+                }
+            }
+        }
+    }
+
+    /**
+     * Main thread. Ends the cast: the video goes back to the phone, paused where the TV was,
+     * and the TV quits the receiver app.
+     */
+    private fun stopCast(@StringRes message: Int? = null, endState: Stolm.State = Stolm.State.Idle) {
+        castJob?.cancel()
+        castJob = null
+        val cast = stolm
+        stolm = null
+        if (cast != null) {
+            val castItem = cast.player.currentItem
+            val position = cast.player.currentPosition
+            cast.player.removeListener(servicePlayerListener)
+            cast.player.removeListener(castListener)
+            exoPlayer?.let { exo ->
+                useSessionPlayer(exo)
+                exo.playWhenReady = false
+                if (castItem?.videoId == videoId && !castItem.isLive) exo.seekTo(position)
+                // a video started during the cast was never prepared on the phone
+                if (exo.playbackState == Player.STATE_IDLE && exo.mediaItemCount > 0) exo.prepare()
+            }
+            cast.close()
+        }
+        Stolm.update(endState)
+        message?.let { toastFromMainThread(it) }
+    }
+
+    override fun onRelease() = stopCast()
+    // endregion
+
+    // region SABR Streaming
     /**
      * A streaming session flagged by YouTube stops after about a minute (see
      * [SabrAttestationException]): a new session is played on from the same position, without
@@ -238,24 +400,19 @@ open class OnlinePlayerService : AbstractPlayerService() {
         }
         return true
     }
+    // endregion
 
-    private fun configurePlayer(seekToPositionMs: Long) {
-        // seek to the previous position if available
-        if (seekToPositionMs != 0L) {
-            exoPlayer?.seekTo(seekToPositionMs)
-        } else if (watchPositionsEnabled) {
-            DatabaseHelper.getWatchPositionBlocking(videoId)?.let {
-                if (!DatabaseHelper.isVideoWatched(it, streams?.duration)) exoPlayer?.seekTo(it)
-            }
-        }
-
-        exoPlayer?.apply {
-            // automatically start playback when using the audio player
-            playWhenReady = PlayerHelper.playAutomatically || isAudioOnlyPlayer
-            prepare()
-        }
+    // region Watch Positions
+    /** Where the video starts: the link's timestamp, or the saved position of an unfinished video. */
+    private fun startPositionMs(timestampMs: Long): Long? = when {
+        timestampMs != 0L -> timestampMs
+        watchPositionsEnabled -> DatabaseHelper.getWatchPositionBlocking(videoId)
+            ?.takeUnless { DatabaseHelper.isVideoWatched(it, streams?.duration) }
+        else -> null
     }
+    // endregion
 
+    // region SponsorBlock
     private suspend fun getSponsorBlockSegments(): List<Segment> {
         return runCatching {
             MediaServiceRepository.instance.getSegments(
@@ -265,13 +422,9 @@ open class OnlinePlayerService : AbstractPlayerService() {
             ).segments
         }.getOrElse { emptyList() }
     }
+    // endregion
 
-    override fun navigateVideo(videoId: String) {
-        this.streams = null
-
-        super.navigateVideo(videoId)
-    }
-
+    // region Stream Sources
     /**
      * Sets the [MediaItem] with the [streams] into the [exoPlayer]
      */
@@ -304,6 +457,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
                         val format = Format.Builder()
                             .setSampleMimeType(it.mimeType)
                             .setLanguage(it.code)
+                            .setLabel(it.name)
                             .setRoleFlags(getSubtitleRoleFlags(it))
                             .build()
                         val subtitleParserFactory = DefaultSubtitleParserFactory()
@@ -315,7 +469,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
                             )
                         }
                         val progressiveMediaSourceFactory = ProgressiveMediaSource.Factory(
-                            DefaultDataSource.Factory(this), extractorsFactory
+                            PlayerHelper.mediaDataSourceFactory(this), extractorsFactory
                         ).setLoadOnlySelectedTracks(true)
                         try {
                             // `enableLazyLoadingWithSingleTrack` is private
@@ -348,7 +502,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
             // LIVE : HLS en priorité. Les manifests ne passent PAS par le proxy d'images
             // de l'instance (il ne relaie ni playlist ni MPD -> le live ne démarrait pas).
             streams.isLive && hlsUrl != null -> {
-                val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))
+                val hlsMediaSourceFactory = HlsMediaSource.Factory(PlayerHelper.mediaDataSourceFactory(this))
                     .setPlaylistParserFactory(YoutubeHlsPlaylistParser.Factory())
 
                 val mediaItem = createMediaItem(hlsUrl.toUri(), MimeTypes.APPLICATION_M3U8, streams)
@@ -379,7 +533,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
             }
             // HLS en dernier recours
             hlsUrl != null -> {
-                val hlsMediaSourceFactory = HlsMediaSource.Factory(DefaultDataSource.Factory(this))
+                val hlsMediaSourceFactory = HlsMediaSource.Factory(PlayerHelper.mediaDataSourceFactory(this))
                     .setPlaylistParserFactory(YoutubeHlsPlaylistParser.Factory())
 
                 val mediaItem = createMediaItem(hlsUrl.toUri(), MimeTypes.APPLICATION_M3U8, streams)
@@ -394,6 +548,16 @@ open class OnlinePlayerService : AbstractPlayerService() {
         }
     }
 
+    private fun createMediaItem(uri: Uri, mimeType: String, streams: Streams) =
+        MediaItem.Builder()
+            .setUri(uri)
+            .setMimeType(mimeType)
+            .setSubtitleConfigurations(getSubtitleConfigs())
+            .setMetadata(streams, videoId)
+            .build()
+    // endregion
+
+    // region Captions
     private fun getSubtitleConfigs(): List<SubtitleConfiguration> = streams?.subtitles
         ?.mapNotNull {
             val subtitleUrl = it.url
@@ -402,18 +566,13 @@ open class OnlinePlayerService : AbstractPlayerService() {
             SubtitleConfiguration.Builder(subtitleUrl.toUri())
                 .setRoleFlags(roleFlags)
                 .setLanguage(it.code)
+                .setLabel(it.name)
                 .setMimeType(it.mimeType).build()
         }.orEmpty()
-
-    private fun createMediaItem(uri: Uri, mimeType: String, streams: Streams) =
-        MediaItem.Builder()
-            .setUri(uri)
-            .setMimeType(mimeType)
-            .setSubtitleConfigurations(getSubtitleConfigs())
-            .setMetadata(streams, videoId)
-            .build()
+    // endregion
 }
 
+// region Video Player
 /**
  * The player goes idle both when playback is over and when it failed. Only the first case
  * means the service has nothing left to do, otherwise the error could not be recovered.
@@ -421,3 +580,4 @@ open class OnlinePlayerService : AbstractPlayerService() {
 internal fun shouldStopOnlinePlayerService(player: Player?, playbackState: Int): Boolean {
     return playbackState == Player.STATE_IDLE && player?.playerError == null
 }
+// endregion

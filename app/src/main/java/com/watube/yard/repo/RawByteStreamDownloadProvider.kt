@@ -19,10 +19,11 @@ import java.time.Duration
 import kotlin.io.path.fileSize
 import kotlin.math.min
 
+// region Downloads
 /**
  * Download from RAW HTTP stream.
  */
-class RawByteStreamDownloadProvider(val url: HttpUrl) : DownloadProvider {
+class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider {
     private val httpClient: OkHttpClient by lazy {
         SharedHttpClient.base.newBuilder()
             .connectTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
@@ -113,3 +114,4 @@ class RawByteStreamDownloadProvider(val url: HttpUrl) : DownloadProvider {
         private const val BYTES_PER_REQUEST = 512 * 1024L
     }
 }
+// endregion

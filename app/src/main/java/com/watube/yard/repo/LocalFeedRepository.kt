@@ -28,6 +28,7 @@ import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.atomic.AtomicInteger
 
+// region Feed
 class LocalFeedRepository : FeedRepository {
     private val relevantTabs =
         listOf(
@@ -200,3 +201,4 @@ class LocalFeedRepository : FeedRepository {
         private const val MAX_FEED_AGE_DAYS = 30L // 30 days
     }
 }
+// endregion

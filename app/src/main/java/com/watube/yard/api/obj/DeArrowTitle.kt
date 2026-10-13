@@ -3,6 +3,7 @@ package com.watube.yard.api.obj
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// region DeArrow
 @Serializable
 data class DeArrowTitle(
     @SerialName("UUID") val uuid: String,
@@ -11,3 +12,4 @@ data class DeArrowTitle(
     val title: String,
     val votes: Int
 )
+// endregion

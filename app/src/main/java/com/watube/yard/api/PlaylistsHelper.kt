@@ -16,6 +16,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
+// region Playlists
 object PlaylistsHelper {
     private val pipedPlaylistRegex =
         "[\\da-fA-F]{8}-[\\da-fA-F]{4}-[\\da-fA-F]{4}-[\\da-fA-F]{4}-[\\da-fA-F]{12}".toRegex()
@@ -101,3 +102,4 @@ object PlaylistsHelper {
         }
     }
 }
+// endregion

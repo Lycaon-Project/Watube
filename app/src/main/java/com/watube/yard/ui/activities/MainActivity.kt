@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.LinearGradient
 import android.graphics.Shader
-import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
@@ -52,7 +51,6 @@ import com.watube.yard.helpers.NetworkHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.parcelable.PlayerData
-import com.watube.yard.ui.dialogs.ErrorDialog
 import com.watube.yard.ui.dialogs.ImportTempPlaylistDialog
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.extensions.onSystemInsets
@@ -61,12 +59,13 @@ import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.preferences.BackupRestoreSettings
 import com.watube.yard.ui.preferences.BackupRestoreSettings.Companion.FILETYPE_ANY
 import com.watube.yard.util.UpdateChecker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
+// region Navigation
 /** Tablets (smallest width >= 600dp) use a navigation rail; phones keep the bottom bar in landscape */
 private const val EXPANDED_WIDTH_DP = 600
 
@@ -78,55 +77,126 @@ private const val BAR_HIDDEN_PROGRESS = 0.01f
 
 /** Player progress from which the mini player starts lifting above the bottom bar */
 private const val CONTAINER_LIFT_START = 0.35f
+// endregion
 
 class MainActivity : AbstractPlayerHostActivity() {
-    private lateinit var binding: ActivityMainBinding
-
-    lateinit var navController: NavController
+    // region Navigation
     private var startFragmentId = R.id.homeFragment
 
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
+    // endregion
 
+    // region Appearance
     /** Night state the views were inflated with, see [onConfigurationChanged] */
     private var inflatedNightUiMode = false
 
+    /** True while the resources resolve against the night uiMode. */
+    private fun isNightUiMode(): Boolean =
+        resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
+
+    /**
+     * values-night sits outside the editable resource set, so the bottom bar styling is
+     * resolved here instead: the night scrim fill and the selected tab ink (values-night
+     * ships #35E08C for watube_nav_active, while the mockup uses its night --acc-text,
+     * watube_acc_text, on the pill). The day branch restores the drawable and the tint
+     * selector declared in activity_main.xml, so the method is idempotent in both
+     * directions and can follow a system uiMode flip.
+     *
+     * The theme's own outline attribute keeps the unselected tabs correct in both modes,
+     * so it is resolved instead of hard-coded.
+     */
+    private fun applyBottomBarNightStyle() {
+        val nightMode = isNightUiMode()
+
+        binding.bottomNav.setBackgroundResource(
+            if (nightMode) R.drawable.watube_bottom_nav_background_night
+            else R.drawable.watube_bottom_nav_background
+        )
+
+        val tint = if (nightMode) {
+            ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(
+                    getColor(R.color.watube_acc_text),
+                    ThemeHelper.getThemeColor(this, com.google.android.material.R.attr.colorOutline)
+                )
+            )
+        } else {
+            AppCompatResources.getColorStateList(this, R.color.watube_bottom_nav_item_tint)
+        }
+        binding.bottomNav.itemIconTintList = tint
+        binding.bottomNav.itemTextColor = tint
+    }
+
+    /**
+     * Header brand of the mockup: the theme button offers the mode that is not rendered
+     * (sun while the UI is dark, moon while it is light) and the word gets its day/night
+     * colour. Deliberately kept out of the brandWord layout listener: setTextColor and
+     * setImageResource can trigger a relayout, and a listener that feeds requestLayout
+     * back into itself would spin.
+     *
+     * values-night is outside the editable resource set, so the day/night pair of
+     * --acc-text is selected here: watube_nav_active (#2C674A) by day, watube_acc_text
+     * (#59E6A1) at night.
+     */
+    private fun applyBrandHeader() {
+        binding.themeToggle.setImageResource(
+            if (isNightUiMode()) R.drawable.watube_sun else R.drawable.watube_moon
+        )
+        binding.brandWord.setTextColor(
+            getColor(
+                if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+            )
+        )
+        applyBrandWordGradient()
+    }
+
+    /**
+     * Paints the mockup .word gradient, linear-gradient(95deg, --acc-text, --acc 75%)
+     * clipped to the text box (wrap_content makes the view bounds the text bounds). Only
+     * the paint shader changes here, so it is safe to re-run from the layout listener.
+     * The gradient end stays on colorPrimary so every accent follows.
+     */
+    private fun applyBrandWordGradient() {
+        val word = binding.brandWord
+        val width = word.width
+        val height = word.height
+        if (width == 0 || height == 0) return
+
+        val start = getColor(
+            if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+        )
+        // CSS 95deg points right, tilted five degrees down; the length below is the
+        // "cover the box corners" axis of a two point gradient, and the 0.75f stop is
+        // the mockup's "--acc at 75%".
+        val radians = Math.toRadians(95.0)
+        val dx = Math.sin(radians)
+        val dy = -Math.cos(radians)
+        val length = Math.abs(width * dx) + Math.abs(height * dy)
+        val x0 = width / 2.0 - dx * length / 2.0
+        val y0 = height / 2.0 - dy * length / 2.0
+        word.paint.shader = LinearGradient(
+            x0.toFloat(),
+            y0.toFloat(),
+            (x0 + dx * length).toFloat(),
+            (y0 + dy * length).toFloat(),
+            intArrayOf(start, ThemeHelper.getThemeColor(this, androidx.appcompat.R.attr.colorPrimary)),
+            floatArrayOf(0f, 0.75f),
+            Shader.TileMode.CLAMP
+        )
+        word.invalidate()
+    }
+    // endregion
+
+    // region Navigation
     /** Resolved bottom gap for the floating nav bar (max of system inset and the design inset). */
     private var navBarBottomInset = 0
 
-    /**
-     * Progress of the player container: 0 = player maximized, 1 = mini player docked above
-     * the bottom bar. It drives plain translations (see [applyPlayerContainerProgress]) and
-     * not a root MotionLayout anymore: a MotionLayout re-evaluates its scene on every layout
-     * pass, so navigating to a heavy tab made it drift for ~2 frames and the bar jumped behind
-     * the mini player. A translation is never touched by a layout pass, so it cannot drift.
-     */
-    private var playerContainerProgress = 1f
+    private lateinit var binding: ActivityMainBinding
 
-    private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
-
-    // registering for activity results is only possible, this here should have been part of
-    // PlaylistOptionsBottomSheet instead if Android allowed us to
-    private var playlistExportFormat: ImportFormat = ImportFormat.NEWPIPE
-    private var exportPlaylistId: String? = null
-
-    /** garde one-shot : loadIntentData() peut être ré-entré par onNewIntent() suite à la
-     *  relance auto PiP, et une boucle d'intents fait pin/unpin de la fenêtre PiP. */
-    private var pipRelaunchPending = false
-    private val createPlaylistsFile = registerForActivityResult(
-        ActivityResultContracts.CreateDocument(FILETYPE_ANY)
-    ) { uri ->
-        if (uri == null) return@registerForActivityResult
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            ImportHelper.exportPlaylists(
-                this@MainActivity,
-                uri,
-                playlistExportFormat,
-                selectedPlaylistIds = listOf(exportPlaylistId!!)
-            )
-        }
-    }
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -279,12 +349,6 @@ class MainActivity : AbstractPlayerHostActivity() {
             NavController.OnDestinationChangedListener { _, _, _ -> syncBottomBarSelection() }
         )
 
-        // handle error logs
-        PreferenceHelper.getErrorLog().ifBlank { null }?.let {
-            if (!BuildConfig.DEBUG)
-                ErrorDialog().show(supportFragmentManager, null)
-        }
-
         setupSubscriptionsBadge()
 
         // a recreation (rotation with the mini player, theme change...) keeps the launch intent:
@@ -379,27 +443,6 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
     }
 
-    /**
-     * Places the bottom bar and the player container for [progress] (0 = player maximized,
-     * 1 = mini player). As soon as the player leaves the maximized state the bar is pushed off
-     * screen, then slides back in while the mini player is lifted by the same amount to dock
-     * right above it. Only translations change, so this never triggers a layout pass.
-     */
-    private fun applyPlayerContainerProgress(progress: Float = playerContainerProgress) {
-        playerContainerProgress = progress
-        if (!::binding.isInitialized) return
-        val bar = binding.bottomNav
-        // the bar floats above the system inset, so the shift has to cover both
-        val shift = (if (bar.isVisible) bar.height else 0) + navBarBottomInset
-        bar.translationY = shift * when {
-            progress <= 0f -> 0f
-            progress < BAR_HIDDEN_PROGRESS -> progress / BAR_HIDDEN_PROGRESS
-            else -> (1f - progress) / (1f - BAR_HIDDEN_PROGRESS)
-        }
-        binding.container.translationY = -shift *
-            ((progress - CONTAINER_LIFT_START) / (1f - CONTAINER_LIFT_START)).coerceIn(0f, 1f)
-    }
-
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (!::binding.isInitialized) return
@@ -436,6 +479,140 @@ class MainActivity : AbstractPlayerHostActivity() {
             is RecyclerView -> scrollView.smoothScrollToPosition(0)
         }
     }
+
+    /**
+     * Reselecting the lit tab: on its root, scroll to the top; deeper in its stack
+     * (channel, playlist... opened from it), go back to its root like YouTube does.
+     */
+    private fun onBottomItemReselected(item: MenuItem) {
+        if (item.itemId == navController.currentDestination?.id) {
+            tryScrollToTop(binding.fragment.getFragment<NavHostFragment>()
+                .childFragmentManager.fragments.firstOrNull()?.view)
+        } else if (!navController.popBackStack(item.itemId, false)) {
+            navigateToBottomSelectedItem(item)
+        }
+    }
+
+    private fun navigateToBottomSelectedItem(item: MenuItem): Boolean {
+        if (item.itemId == R.id.subscriptionsFragment) {
+            binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
+            binding.navRail.removeBadge(R.id.subscriptionsFragment)
+        }
+
+        // settings are hosted by their own activity, not by this nav graph
+        if (item.itemId == R.id.settingsFragment) {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            return true
+        }
+
+        // NavigationUI reports false when the restored tab stack ends on a destination
+        // outside the menu (home -> channel), which made the bar keep the previous tab
+        return item.onNavDestinationSelected(navController) ||
+            currentTab(binding.bottomNav.menu)?.itemId == item.itemId
+    }
+
+    /** The tab owning the current back stack: the closest destination below it in [menu] */
+    private fun currentTab(menu: Menu): MenuItem? = navController.currentBackStack.value
+        .asReversed().firstNotNullOfOrNull { menu.findItem(it.destination.id) }
+
+    /**
+     * The settings tab opens a separate activity, so the checked item no longer matches
+     * the current destination when coming back. Re-sync both bars, without triggering
+     * [setOnItemSelectedListener] (a plain [MenuItem.isChecked] never does).
+     *
+     * Destinations missing from the menu (search, channel, playlist...) light the tab
+     * owning their back stack, i.e. the closest tab below them: restoring a saved tab
+     * stack (home -> channel) otherwise kept the previously selected tab lit.
+     * Hidden destinations (trends, downloads) leave no visible tab lit.
+     */
+    private fun syncBottomBarSelection() {
+        if (!::binding.isInitialized || !this::navController.isInitialized) return
+        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+            val item = currentTab(bar.menu) ?: return@forEach
+            val destinationId = item.itemId
+            if (!item.isVisible) {
+                if (bar.menu.children.any { it.isChecked }) forceExclusiveCheck(bar, null)
+                return@forEach
+            }
+            // already the unique checked item with Material's internal id in sync
+            if (item.isChecked && bar.selectedItemId == destinationId) return@forEach
+            forceExclusiveCheck(bar, item)
+            // if the menu already matched, no flag changed, nothing was dispatched and
+            // NavigationBarView kept its stale selectedItemId: toggle once to force the
+            // dispatch that re-reads it (no frame is drawn between the two calls)
+            if (bar.selectedItemId != destinationId) {
+                bar.menu.setGroupCheckable(0, true, false)
+                item.isChecked = false
+                item.isChecked = true
+                bar.menu.setGroupCheckable(0, true, true)
+            }
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // the view hierarchy restore re-selects NavigationBarView's saved item, which
+        // can disagree with the destination the NavController restored in onCreate()
+        syncBottomBarSelection()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pipRelaunchPending = false
+        syncBottomBarSelection()
+    }
+    // endregion
+
+    // region Mini Player
+    /**
+     * Progress of the player container: 0 = player maximized, 1 = mini player docked above
+     * the bottom bar. It drives plain translations (see [applyPlayerContainerProgress]) and
+     * not a root MotionLayout anymore: a MotionLayout re-evaluates its scene on every layout
+     * pass, so navigating to a heavy tab made it drift for ~2 frames and the bar jumped behind
+     * the mini player. A translation is never touched by a layout pass, so it cannot drift.
+     */
+    private var playerContainerProgress = 1f
+
+    /**
+     * Places the bottom bar and the player container for [progress] (0 = player maximized,
+     * 1 = mini player). As soon as the player leaves the maximized state the bar is pushed off
+     * screen, then slides back in while the mini player is lifted by the same amount to dock
+     * right above it. Only translations change, so this never triggers a layout pass.
+     */
+    private fun applyPlayerContainerProgress(progress: Float = playerContainerProgress) {
+        playerContainerProgress = progress
+        if (!::binding.isInitialized) return
+        val bar = binding.bottomNav
+        // the bar floats above the system inset, so the shift has to cover both
+        val shift = (if (bar.isVisible) bar.height else 0) + navBarBottomInset
+        bar.translationY = shift * when {
+            progress <= 0f -> 0f
+            progress < BAR_HIDDEN_PROGRESS -> progress / BAR_HIDDEN_PROGRESS
+            else -> (1f - progress) / (1f - BAR_HIDDEN_PROGRESS)
+        }
+        binding.container.translationY = -shift *
+            ((progress - CONTAINER_LIFT_START) / (1f - CONTAINER_LIFT_START)).coerceIn(0f, 1f)
+    }
+
+    override fun minimizePlayerContainerLayout() {
+        applyPlayerContainerProgress(1f)
+        // predictive-back / channel navigation closes the player without a resume and
+        // without a destination change: re-check the highlight the player covered
+        syncBottomBarSelection()
+    }
+
+    override fun maximizePlayerContainerLayout() = applyPlayerContainerProgress(0f)
+
+    override fun setPlayerContainerProgress(progress: Float) {
+        applyPlayerContainerProgress(progress.coerceIn(0f, 1f))
+        // 1f is only reported once the player container finished closing, which is the
+        // one signal fired on that path (PlayerFragment reports it on transition end)
+        if (progress >= 1f) syncBottomBarSelection()
+    }
+    // endregion
+
+    // region Feed
+    private val subscriptionsViewModel: SubscriptionsViewModel by viewModels()
 
     /**
      * Initialize the notification badge showing the amount of new videos
@@ -475,105 +652,62 @@ class MainActivity : AbstractPlayerHostActivity() {
             }
         }
     }
+    // endregion
 
-    /** True while the resources resolve against the night uiMode. */
-    private fun isNightUiMode(): Boolean =
-        resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
-            Configuration.UI_MODE_NIGHT_YES
+    // region Playlists
+    // registering for activity results is only possible, this here should have been part of
+    // PlaylistOptionsBottomSheet instead if Android allowed us to
+    private var playlistExportFormat: ImportFormat = ImportFormat.NEWPIPE
+    private var exportPlaylistId: String? = null
+    // endregion
 
-    /**
-     * values-night sits outside the editable resource set, so the bottom bar styling is
-     * resolved here instead: the night scrim fill and the selected tab ink (values-night
-     * ships #35E08C for watube_nav_active, while the mockup uses its night --acc-text,
-     * watube_acc_text, on the pill). The day branch restores the drawable and the tint
-     * selector declared in activity_main.xml, so the method is idempotent in both
-     * directions and can follow a system uiMode flip.
-     *
-     * The theme's own outline attribute keeps the unselected tabs correct in both modes,
-     * so it is resolved instead of hard-coded.
-     */
-    private fun applyBottomBarNightStyle() {
-        val nightMode = isNightUiMode()
+    // region Picture-in-Picture
+    /** garde one-shot : loadIntentData() peut être ré-entré par onNewIntent() suite à la
+     *  relance auto PiP, et une boucle d'intents fait pin/unpin de la fenêtre PiP. */
+    private var pipRelaunchPending = false
 
-        binding.bottomNav.setBackgroundResource(
-            if (nightMode) R.drawable.watube_bottom_nav_background_night
-            else R.drawable.watube_bottom_nav_background
-        )
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
 
-        val tint = if (nightMode) {
-            ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(
-                    getColor(R.color.watube_acc_text),
-                    ThemeHelper.getThemeColor(this, com.google.android.material.R.attr.colorOutline)
-                )
-            )
-        } else {
-            AppCompatResources.getColorStateList(this, R.color.watube_bottom_nav_item_tint)
+        runOnPlayerFragment {
+            onUserLeaveHint()
+            true
         }
-        binding.bottomNav.itemIconTintList = tint
-        binding.bottomNav.itemTextColor = tint
     }
+    // endregion
 
-    /**
-     * Header brand of the mockup: the theme button offers the mode that is not rendered
-     * (sun while the UI is dark, moon while it is light) and the word gets its day/night
-     * colour. Deliberately kept out of the brandWord layout listener: setTextColor and
-     * setImageResource can trigger a relayout, and a listener that feeds requestLayout
-     * back into itself would spin.
-     *
-     * values-night is outside the editable resource set, so the day/night pair of
-     * --acc-text is selected here: watube_nav_active (#2C674A) by day, watube_acc_text
-     * (#59E6A1) at night.
-     */
-    private fun applyBrandHeader() {
-        binding.themeToggle.setImageResource(
-            if (isNightUiMode()) R.drawable.watube_sun else R.drawable.watube_moon
-        )
-        binding.brandWord.setTextColor(
-            getColor(
-                if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
+    // region Playlists
+    private val createPlaylistsFile = registerForActivityResult(
+        ActivityResultContracts.CreateDocument(FILETYPE_ANY)
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            ImportHelper.exportPlaylists(
+                this@MainActivity,
+                uri,
+                playlistExportFormat,
+                selectedPlaylistIds = listOf(exportPlaylistId!!)
             )
-        )
-        applyBrandWordGradient()
+        }
     }
 
-    /**
-     * Paints the mockup .word gradient, linear-gradient(95deg, --acc-text, --acc 75%)
-     * clipped to the text box (wrap_content makes the view bounds the text bounds). Only
-     * the paint shader changes here, so it is safe to re-run from the layout listener.
-     * The gradient end stays on colorPrimary so every accent follows.
-     */
-    private fun applyBrandWordGradient() {
-        val word = binding.brandWord
-        val width = word.width
-        val height = word.height
-        if (width == 0 || height == 0) return
+    fun startPlaylistExport(
+        playlistId: String,
+        playlistName: String,
+        format: ImportFormat,
+        includeTimestamp: Boolean
+    ) {
+        playlistExportFormat = format
+        exportPlaylistId = playlistId
 
-        val start = getColor(
-            if (isNightUiMode()) R.color.watube_acc_text else R.color.watube_nav_active
-        )
-        // CSS 95deg points right, tilted five degrees down; the length below is the
-        // "cover the box corners" axis of a two point gradient, and the 0.75f stop is
-        // the mockup's "--acc at 75%".
-        val radians = Math.toRadians(95.0)
-        val dx = Math.sin(radians)
-        val dy = -Math.cos(radians)
-        val length = Math.abs(width * dx) + Math.abs(height * dy)
-        val x0 = width / 2.0 - dx * length / 2.0
-        val y0 = height / 2.0 - dy * length / 2.0
-        word.paint.shader = LinearGradient(
-            x0.toFloat(),
-            y0.toFloat(),
-            (x0 + dx * length).toFloat(),
-            (y0 + dy * length).toFloat(),
-            intArrayOf(start, ThemeHelper.getThemeColor(this, androidx.appcompat.R.attr.colorPrimary)),
-            floatArrayOf(0f, 0.75f),
-            Shader.TileMode.CLAMP
-        )
-        word.invalidate()
+        val fileName =
+            BackupRestoreSettings.getExportFileName(this, format, playlistName, includeTimestamp)
+        createPlaylistsFile.launch(fileName)
     }
+    // endregion
 
+    // region Search
     private fun addSearchQueryToHistory(query: String) {
         val searchHistoryEnabled =
             PreferenceHelper.getBoolean(PreferenceKeys.SEARCH_HISTORY_TOGGLE, true)
@@ -612,6 +746,24 @@ class MainActivity : AbstractPlayerHostActivity() {
         addSearchQueryToHistory(trimmed)
     }
 
+    /**
+     * Clears the focus of the in-content search input when one currently holds it
+     *
+     * @return whether an input was focused and has been cleared
+     */
+    override fun clearSearchViewFocus(): Boolean {
+        val focused = currentFocus
+        if (focused !is EditText) return false
+
+        focused.clearFocus()
+        // an EditText does not dismiss the IME on clearFocus() by itself
+        getSystemService(InputMethodManager::class.java)
+            ?.hideSoftInputFromWindow(focused.windowToken, 0)
+        return true
+    }
+    // endregion
+
+    // region Deep Links
     private fun loadIntentData() {
         // If activity is running in PiP mode, then start it in front.
         // one-shot : sans cette garde, onNewIntent() rappelle cette méthode et la
@@ -716,8 +868,7 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
 
         intent.getStringExtra(IntentData.videoId)?.let {
-            // the below explained work around only seems to work on Android 11 and above
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && binding.bottomNav.menu.isNotEmpty()) {
+            if (binding.bottomNav.menu.isNotEmpty()) {
                 // the bottom navigation bar has to be created before opening the video
                 // otherwise the player layout measures aren't calculated properly
                 // and the miniplayer is opened at a closed state and overlapping the navigation bar
@@ -749,105 +900,15 @@ class MainActivity : AbstractPlayerHostActivity() {
         )
     }
 
-    /**
-     * Reselecting the lit tab: on its root, scroll to the top; deeper in its stack
-     * (channel, playlist... opened from it), go back to its root like YouTube does.
-     */
-    private fun onBottomItemReselected(item: MenuItem) {
-        if (item.itemId == navController.currentDestination?.id) {
-            tryScrollToTop(binding.fragment.getFragment<NavHostFragment>()
-                .childFragmentManager.fragments.firstOrNull()?.view)
-        } else if (!navController.popBackStack(item.itemId, false)) {
-            navigateToBottomSelectedItem(item)
-        }
-    }
-
-    private fun navigateToBottomSelectedItem(item: MenuItem): Boolean {
-        if (item.itemId == R.id.subscriptionsFragment) {
-            binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
-            binding.navRail.removeBadge(R.id.subscriptionsFragment)
-        }
-
-        // settings are hosted by their own activity, not by this nav graph
-        if (item.itemId == R.id.settingsFragment) {
-            startActivity(Intent(this, SettingsActivity::class.java))
-            return true
-        }
-
-        // NavigationUI reports false when the restored tab stack ends on a destination
-        // outside the menu (home -> channel), which made the bar keep the previous tab
-        return item.onNavDestinationSelected(navController) ||
-            currentTab(binding.bottomNav.menu)?.itemId == item.itemId
-    }
-
-    /** The tab owning the current back stack: the closest destination below it in [menu] */
-    private fun currentTab(menu: Menu): MenuItem? = navController.currentBackStack.value
-        .asReversed().firstNotNullOfOrNull { menu.findItem(it.destination.id) }
-
-    /**
-     * The settings tab opens a separate activity, so the checked item no longer matches
-     * the current destination when coming back. Re-sync both bars, without triggering
-     * [setOnItemSelectedListener] (a plain [MenuItem.isChecked] never does).
-     *
-     * Destinations missing from the menu (search, channel, playlist...) light the tab
-     * owning their back stack, i.e. the closest tab below them: restoring a saved tab
-     * stack (home -> channel) otherwise kept the previously selected tab lit.
-     * Hidden destinations (trends, downloads) leave no visible tab lit.
-     */
-    private fun syncBottomBarSelection() {
-        if (!::binding.isInitialized || !this::navController.isInitialized) return
-        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
-            val item = currentTab(bar.menu) ?: return@forEach
-            val destinationId = item.itemId
-            if (!item.isVisible) {
-                if (bar.menu.children.any { it.isChecked }) forceExclusiveCheck(bar, null)
-                return@forEach
-            }
-            // already the unique checked item with Material's internal id in sync
-            if (item.isChecked && bar.selectedItemId == destinationId) return@forEach
-            forceExclusiveCheck(bar, item)
-            // if the menu already matched, no flag changed, nothing was dispatched and
-            // NavigationBarView kept its stale selectedItemId: toggle once to force the
-            // dispatch that re-reads it (no frame is drawn between the two calls)
-            if (bar.selectedItemId != destinationId) {
-                bar.menu.setGroupCheckable(0, true, false)
-                item.isChecked = false
-                item.isChecked = true
-                bar.menu.setGroupCheckable(0, true, true)
-            }
-        }
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        // the view hierarchy restore re-selects NavigationBarView's saved item, which
-        // can disagree with the destination the NavController restored in onCreate()
-        syncBottomBarSelection()
-    }
-
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-
-        runOnPlayerFragment {
-            onUserLeaveHint()
-            true
-        }
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
         if (!::binding.isInitialized) return
         loadIntentData()
     }
+    // endregion
 
-    override fun onResume() {
-        super.onResume()
-        pipRelaunchPending = false
-        syncBottomBarSelection()
-    }
-
-
+    // region Video Player
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         // onCreate() peut avoir quitté avant d'initialiser binding (pas de réseau)
         if (!::binding.isInitialized) return super.onKeyUp(keyCode, event)
@@ -862,21 +923,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         return super.onKeyUp(keyCode, event)
     }
+    // endregion
 
-    fun startPlaylistExport(
-        playlistId: String,
-        playlistName: String,
-        format: ImportFormat,
-        includeTimestamp: Boolean
-    ) {
-        playlistExportFormat = format
-        exportPlaylistId = playlistId
-
-        val fileName =
-            BackupRestoreSettings.getExportFileName(this, format, playlistName, includeTimestamp)
-        createPlaylistsFile.launch(fileName)
-    }
-
+    // region Updates
     private fun showUserInfoDialogIfNeeded() {
         // don't show the update information dialog for debug builds
         if (BuildConfig.DEBUG) return
@@ -891,7 +940,7 @@ class MainActivity : AbstractPlayerHostActivity() {
             infoMessages.lastOrNull { (versionCode, _) -> versionCode > lastShownVersionCode }?.second
                 ?: return
 
-        MaterialAlertDialogBuilder(this)
+        SecureAlertDialogBuilder(this)
             .setTitle(R.string.update_information)
             .setMessage(message)
             .setNegativeButton(R.string.okay, null)
@@ -903,36 +952,5 @@ class MainActivity : AbstractPlayerHostActivity() {
             }
             .show()
     }
-
-    override fun minimizePlayerContainerLayout() {
-        applyPlayerContainerProgress(1f)
-        // predictive-back / channel navigation closes the player without a resume and
-        // without a destination change: re-check the highlight the player covered
-        syncBottomBarSelection()
-    }
-
-    override fun maximizePlayerContainerLayout() = applyPlayerContainerProgress(0f)
-
-    override fun setPlayerContainerProgress(progress: Float) {
-        applyPlayerContainerProgress(progress.coerceIn(0f, 1f))
-        // 1f is only reported once the player container finished closing, which is the
-        // one signal fired on that path (PlayerFragment reports it on transition end)
-        if (progress >= 1f) syncBottomBarSelection()
-    }
-
-    /**
-     * Clears the focus of the in-content search input when one currently holds it
-     *
-     * @return whether an input was focused and has been cleared
-     */
-    override fun clearSearchViewFocus(): Boolean {
-        val focused = currentFocus
-        if (focused !is EditText) return false
-
-        focused.clearFocus()
-        // an EditText does not dismiss the IME on clearFocus() by itself
-        getSystemService(InputMethodManager::class.java)
-            ?.hideSoftInputFromWindow(focused.windowToken, 0)
-        return true
-    }
+    // endregion
 }

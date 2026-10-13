@@ -7,6 +7,7 @@ import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.StreamingService
 
+// region Local Extraction
 object NewPipeExtractorInstance {
     private const val TAG = "NewPipeExtractor"
 
@@ -51,3 +52,4 @@ object NewPipeExtractorInstance {
         }
     }
 }
+// endregion

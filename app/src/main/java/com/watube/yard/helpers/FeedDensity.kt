@@ -4,6 +4,7 @@ import android.content.Context
 import com.watube.yard.constants.PreferenceKeys
 import kotlin.math.roundToInt
 
+// region Appearance
 /**
  * "Feed density" (Settings > Appearance) mirrors the mockup's spacing tokens:
  *  - cozy   : --pad 15dp, --cgap 15dp (default)
@@ -29,3 +30,4 @@ object FeedDensity {
     private fun dpToPx(context: Context, dp: Int): Int =
         (dp * context.resources.displayMetrics.density).roundToInt()
 }
+// endregion

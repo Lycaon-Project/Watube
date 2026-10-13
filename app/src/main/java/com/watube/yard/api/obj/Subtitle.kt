@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlin.io.path.Path
 
+// region Captions
 @Serializable
 @Parcelize
 data class Subtitle(
@@ -24,3 +25,4 @@ data class Subtitle(
         language = code
     )
 }
+// endregion

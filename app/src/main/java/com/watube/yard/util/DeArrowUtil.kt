@@ -8,6 +8,7 @@ import com.watube.yard.api.obj.Streams
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 
+// region DeArrow
 object DeArrowUtil {
     /**
      * Wrapper distinguishing "queried, no DeArrow data" from "never queried": storing a
@@ -67,3 +68,4 @@ object DeArrowUtil {
         return extractTitleAndThumbnail(data)
     }
 }
+// endregion

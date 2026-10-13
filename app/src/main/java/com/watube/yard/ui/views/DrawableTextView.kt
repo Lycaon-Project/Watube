@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.use
 import com.watube.yard.R
 
+// region UI Components
 /**
  * TextView with custom sizable drawable support.
  * It may only be used for icons as it gives same width and height to the drawable.
@@ -75,3 +76,4 @@ class DrawableTextView(
         return this
     }
 }
+// endregion

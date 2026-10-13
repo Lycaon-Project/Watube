@@ -3,8 +3,7 @@ package com.watube.yard.repo
 import com.watube.yard.db.obj.DownloadItem
 import okio.BufferedSink
 
-
-
+// region Downloads
 sealed class DownloadProgressResult {
     /**
      * Failed to download an additional chunk of data.
@@ -31,3 +30,4 @@ interface DownloadProvider {
         sink: BufferedSink,
     ): DownloadProgressResult
 }
+// endregion

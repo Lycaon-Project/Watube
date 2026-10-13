@@ -18,6 +18,7 @@ import com.watube.yard.ui.models.CommonPlayerViewModel
 import java.time.Instant
 import kotlin.math.abs
 
+// region Player Gestures
 class PlayerGestureController(activity: BaseActivity, private val listener: PlayerGestureOptions) {
 
     private val orientation get() = Resources.getSystem().configuration.orientation
@@ -32,7 +33,7 @@ class PlayerGestureController(activity: BaseActivity, private val listener: Play
     private var isFullscreen = false
     private var scaleGestureWasInProgress = false
     private var isMoving = false
-    var longPressInProgress = false
+    private var longPressInProgress = false
     var lastDoublePressTime: Instant? = null
 
     var areControlsLocked = false
@@ -119,7 +120,7 @@ class PlayerGestureController(activity: BaseActivity, private val listener: Play
     }
 
     private inner class ScaleGestureListener : ScaleGestureDetector.OnScaleGestureListener {
-        var scaleFactor = 1f
+        private var scaleFactor = 1f
 
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             scaleFactor *= detector.scaleFactor
@@ -265,3 +266,4 @@ class PlayerGestureController(activity: BaseActivity, private val listener: Play
         private const val DOUBLE_TAP_REPEAT_TIME_THRESHOLD_MILLIS = 700
     }
 }
+// endregion

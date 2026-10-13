@@ -2,6 +2,7 @@ package com.watube.yard.ui.extensions
 
 import android.view.View
 
+// region UI Components
 /**
  * This function animates a view in a downward direction by a specified amount.
  *
@@ -21,3 +22,4 @@ fun View.animateDown(
         .setDuration(duration)
         .start()
 }
+// endregion

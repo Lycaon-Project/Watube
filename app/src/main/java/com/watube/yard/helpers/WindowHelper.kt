@@ -10,6 +10,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.watube.yard.ui.extensions.toggleSystemBars
 
+// region Fullscreen
 object WindowHelper {
     private const val NAVIGATION_MODE = "navigation_mode"
 
@@ -40,3 +41,4 @@ object WindowHelper {
 
     fun hasCutout(view: View) = ViewCompat.getRootWindowInsets(view)?.displayCutout != null
 }
+// endregion

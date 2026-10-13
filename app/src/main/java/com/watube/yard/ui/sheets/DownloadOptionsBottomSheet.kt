@@ -21,6 +21,7 @@ import com.watube.yard.ui.fragments.DownloadTab
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.PlayingQueueMode
 
+// region Downloads
 class DownloadOptionsBottomSheet : BaseBottomSheet() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val streamItem = arguments?.parcelable<StreamItem>(IntentData.streamItem)!!
@@ -96,3 +97,4 @@ class DownloadOptionsBottomSheet : BaseBottomSheet() {
         const val DELETE_DOWNLOAD_REQUEST_KEY = "delete_download_request_key"
     }
 }
+// endregion

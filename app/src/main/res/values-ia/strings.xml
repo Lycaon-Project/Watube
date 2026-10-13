@@ -12,8 +12,6 @@
     <string name="password">Contrasigno</string>
     <string name="login">Initiar le session</string>
     <string name="subscribe">Subscriber se</string>
-    <string name="region">Region</string>
-    <string name="videos">Videos</string>
     <string name="search_hint">Cercar</string>
     <string name="register">Registra te</string>
     <string name="loggedIn">Session aperte.</string>
@@ -94,7 +92,6 @@
     <string name="advanced">Avantiate</string>
     <string name="deletePlaylist">Deler lista de reproduction</string>
     <string name="changeLanguage">Lingua</string>
-    <string name="audio_video">Audio e video</string>
     <string name="category_segments">Segmentos</string>
     <string name="app_uptodate">Tu ha le ultime version.</string>
     <string name="fullscreen_orientation">Orientation de schermo plen</string>
@@ -142,24 +139,18 @@
     <string name="landscape">Horizontal</string>
     <string name="shapedIcon">Forma fatue</string>
     <string name="legacyIcon">Antique</string>
-    <string name="category_sponsor">Sponsor</string>
     <string name="least_recent">Plus vetule</string>
     <string name="open">Aperir…</string>
     <string name="require_restart_message">Reinitia le application pro applicar le cambios.</string>
     <string name="importsuccess">Subscribite</string>
     <string name="lightTheme">Clar</string>
     <string name="history">Chronologia</string>
-    <string name="general">General</string>
     <string name="disabled">Disactivate</string>
-    <string name="videoCount">%1$d videos</string>
     <string name="category_selfpromo">Non pagate/Autopromotion</string>
-    <string name="okay">OK</string>
     <string name="error">Habeva qualcosa improprie.</string>
     <string name="most_views">Plus visualisate</string>
     <string name="replies">Responsas</string>
     <string name="grid">Columnas del grillia (vertical)</string>
-    <string name="sponsorblock">SponsorBlock</string>
-    <string name="video">Video</string>
     <string name="clonePlaylist">Clonar le lista de reproduction</string>
     <string name="fail">Falleva :(</string>
     <string name="music_artists">Artistas de YT Music</string>
@@ -169,7 +160,6 @@
     <string name="empty">Tu ha de introducer un nomine de usator e constrasigno.</string>
     <string name="quality">Qualitate</string>
     <string name="never">Nunquam</string>
-    <string name="systemLanguage">Systema</string>
     <string name="settings">Parametros</string>
     <string name="playlistCreated">Lista de reproduction create.</string>
     <string name="watch_positions_title">Positiones de reproduction rememorate</string>
@@ -183,9 +173,7 @@
     <string name="flameIcon">Flamma volante</string>
     <string name="playerAudioQuality">Qualitate de audio</string>
     <string name="category_interaction">Rememoration de interaction</string>
-    <string name="uploaderAndVideoCount">%1$s • %2$d videos</string>
     <string name="seek_increment">Augmento in le recerca</string>
-    <string name="audio">Audio</string>
     <string name="comments">Commentos</string>
     <string name="deleteAccount">Deler conto</string>
     <string name="pauseOnScreenOff_summary">Pausar le reproduction quando le schermo es extinguite</string>
@@ -195,14 +183,12 @@
     <string name="player_resize_mode">Modo de redimension</string>
     <string name="renamePlaylist">Renominar lista de reproduction</string>
     <string name="pure_theme_summary">Thema blanc/nigre pur</string>
-    <string name="error_occurred">Error</string>
     <string name="copied_to_clipboard">Copiate al area de transferentia</string>
     <string name="pure_theme">Thema pur</string>
     <string name="mobile_data">Datos mobile</string>
     <string name="auto_rotation">Rotation automatic</string>
     <string name="misc">Miscellanea</string>
     <string name="navigation_bar">Barra de navigation</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="open_copied">Aperir</string>
     <string name="preferences">Preferentias</string>
     <string name="repeat_mode_current">Actual</string>
@@ -222,11 +208,9 @@
     <string name="require_restart">Reinitio de application necessari</string>
     <string name="resize_mode_fill">Replenar</string>
     <string name="autoRotatePlayer_summary">Reproduction in schermo plen quando le apparato es girate</string>
-    <string name="resize_mode_zoom">Zoom</string>
     <string name="backup_customInstances">Instantias personalisate</string>
     <string name="play_next">Reproducer le sequente</string>
     <string name="new_videos_badge">Indicator de nove videos</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="resize_mode_fit">Adjustar</string>
     <string name="repeat_mode">Modo de repetition</string>
     <string name="auto_fullscreen_shorts">Shorts in schermo plen</string>
@@ -264,7 +248,6 @@
     <string name="dubbed_audio_track">duplate</string>
     <string name="skip_silence">Saltar le silentio</string>
     <string name="change_playlist_description">Cambiar description del lista de reproduction</string>
-    <string name="alphabetic">Alphabetic</string>
     <string name="comments_disabled">Le commentos es disactivate per le creator.</string>
     <string name="no_fullscreen_resolution">Resolution sin schermo plen</string>
     <string name="home_tab_content">Contento del scheda de Initio</string>
@@ -276,12 +259,10 @@
     <string name="double_tap_seek">Tocca duple pro recercar</string>
     <string name="mark_as_unwatched">Marcar como non reguardate</string>
     <string name="import_subscriptions_from">Importar subscriptiones ab</string>
-    <string name="automatic">Automatic</string>
     <string name="play_latest_videos">Reproducer le ultime videos</string>
     <string name="alternative_pip_controls">Controlos PiP alternative</string>
     <string name="registration_disabled">Registration disactivate</string>
     <string name="mark_as_watched">Marcar como reguardate</string>
-    <string name="auto_quality">Auto</string>
     <string name="group_name">Nomine de gruppo</string>
     <string name="remove_bookmark">Remover marcapagina</string>
     <string name="play_automatically_summary">Initiar le reproduction automatic del video quando es seligite</string>
@@ -294,7 +275,6 @@
     <string name="dearrow">Activar DeArrow</string>
     <string name="segment_type">Typo de segmento</string>
     <string name="defaultIconLight">Clar predefinite</string>
-    <string name="visibility_public">Public</string>
     <string name="original_or_main_audio_track">original o principal</string>
     <string name="import_playlists">Importar listas de reproduction</string>
     <string name="tooltip_repeat">Repeter</string>
@@ -306,7 +286,6 @@
     <string name="bookmark">Marcapagina</string>
     <string name="automatic_once">Automatic un vice</string>
     <string name="unsupported_file_format">Formato de file non supportate: %1$s</string>
-    <string name="manual">Manual</string>
     <string name="related_streams_summary">Monstrar fluxos similar al que tu reguarda</string>
     <string name="playlistCloned">Liste de reproduction clonate</string>
     <string name="tooltip_create_playlist">Crear lista de reproduction</string>
@@ -318,7 +297,6 @@
     <string name="creation_date">Data de creation</string>
     <string name="download_channel_description">Monstrar un notification in le discarga de medios.</string>
     <string name="segment_submitted">Segmento inviate</string>
-    <string name="auto">Auto</string>
     <string name="new_group">Nove</string>
     <string name="take_a_break">Il es hora de facer un pausa</string>
     <string name="notification_time">Limitar le tempore de notification</string>
@@ -331,7 +309,6 @@
     <string name="shorts_notifications">Notificationes del Shorts</string>
     <string name="all_caught_up_summary">Tu habeva reguardate tote le nove videos</string>
     <string name="export_playlists_to">Exportar listas a</string>
-    <string name="duration_span">Duration: %1$s</string>
     <string name="category">Categoria</string>
     <string name="play_automatically">Reproducer automaticamente</string>
     <string name="audio_only_mode_summary">Converter LibreTube in un reproductor de musica</string>
@@ -344,10 +321,8 @@
     <string name="download_channel_name">Servicio de discargamento</string>
     <string name="tooltip_sort">Assortir</string>
     <string name="time">Tempore</string>
-    <string name="duration">Duration</string>
     <string name="tooltip_watch_position">Position de reguarda</string>
     <string name="descriptive_audio_track">descriptive</string>
-    <string name="color">Color</string>
     <string name="privacy_alert">Aviso de confidentialitate</string>
     <string name="show_search_suggestions">Monstrar suggestiones de recerca</string>
     <string name="bookmarks">Marcapaginas</string>
@@ -367,7 +342,6 @@
     <string name="disable_sleep_timer">Disactivar le temporisator de somno</string>
     <string name="start_sleep_timer">Initiar temporisator de somno</string>
     <string name="player_channel_description">Monstrar un notification quando es in reproduction</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_track_type">Typo de tracia de audio incognite</string>
     <string name="push_channel_description">Monstrar un notification quando nove fluxos es disponibile.</string>
     <string name="noInternet">Connecte te primemente al Internet.</string>
@@ -452,24 +426,11 @@
     <string name="external_download_provider_summary">Insere le nomine de pacchettos del app que tu vole usar pro discargar le videos. Lassa in blanc pro usar le discargator de LibreTube.</string>
     <string name="screenshot">Captura de schermo</string>
     <string name="local_stream_extraction_summary">Obtene directemente le information de reproduction de video ab YouTube sin usar Piped.</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction">Extraction de fluxo local</string>
     <string name="local_ryd_summary">Obtener directemente le informationes del \"non me place\" ab https://returnyoutubedislikeapi.com</string>
     <string name="import_watch_history">Importar le chronologia de videos reguardate</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

@@ -20,15 +20,11 @@
     <string name="registered">Registreringen är klar. Du kan nu prenumerera på kanaler.</string>
     <string name="already_logged_in">Du är redan inloggad. Logga ut för att byta konto.</string>
     <string name="instances">Välj…</string>
-    <string name="region">Region</string>
     <string name="importsuccess">Prenumererar</string>
     <string name="defres">Videoupplösning</string>
     <string name="emptyList">Ingenting här.</string>
     <string name="changeLanguage">Språk</string>
-    <string name="systemLanguage">System</string>
-    <string name="systemDefault">System</string>
     <string name="settings">Inställningar</string>
-    <string name="okay">OK</string>
     <string name="history">Historik</string>
     <string name="search_history">Sökhistorik</string>
     <string name="app_icon">Appikon</string>
@@ -46,7 +42,6 @@
     <string name="flameIcon">Flygande flamma</string>
     <string name="birdIcon">Förstärkt fågel</string>
     <string name="advanced">Avancerat</string>
-    <string name="live">Live</string>
     <string name="legacyIcon">Förlorat arv</string>
     <string name="shareTo">Dela URL med</string>
     <string name="gradientIcon">Elegant övertoning</string>
@@ -84,10 +79,8 @@
     <string name="music_albums">YT Music-album</string>
     <string name="music_playlists">YT Music-spellistor</string>
     <string name="music_songs">YT Music-låtar</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="license">Licens</string>
     <string name="category_segments">Segment</string>
-    <string name="category_sponsor">Sponsor</string>
     <string name="category_selfpromo">Obetald reklam/självreklam</string>
     <string name="category_intro">Paus/introanimation</string>
     <string name="category_sponsor_summary">Betald reklam, betalda hänvisningar och direktreklam. Använd inte kategorin för självreklam eller genuina obetalda rekommendationer av ändamål, skapare, webbplatser eller produkter.</string>
@@ -166,7 +159,6 @@
     <string name="category_highlight_summary">Kan vara den marknadsförda titeln, förhandsbilden eller videons intressantaste del. Du kan hoppa dit genom att trycka på höjdpunkten i kapitelavsnittet.</string>
     <string name="notification_time_summary">Begränsa hur länge aviseringar om nya videor visas</string>
     <string name="instance_frontend_url">URL till instansens webbgränssnitt (valfritt)</string>
-    <string name="audio_video">Ljud och video</string>
     <string name="data_saver_mode">Datasparläge</string>
     <string name="fullscreen_orientation">Helskärmsorientering</string>
     <string name="checking_frequency">Kontrollera var …</string>
@@ -200,14 +192,12 @@
     <string name="open">Öppna…</string>
     <string name="require_restart_message">Starta om appen för att tillämpa de nya ändringarna.</string>
     <string name="irreversible">Är du säker\? Det här kan inte ångras!</string>
-    <string name="general">Allmänt</string>
     <string name="sb_custom_colors">Anpassade segmentfärger</string>
     <string name="auth_instance_summary">Använd en annan instans för autentiserade anrop</string>
     <string name="require_restart">Omstart av appen krävs</string>
     <string name="most_views">Flest visningar</string>
     <string name="replies">Svar</string>
     <string name="take_a_break">Dags för en paus</string>
-    <string name="video">Video</string>
     <string name="clonePlaylist">Klona spellista</string>
     <string name="autoRotatePlayer_summary">Uppspelning i fullskärm när enheten roteras</string>
     <string name="music_artists">YT Music-artister</string>
@@ -216,7 +206,6 @@
     <string name="quality">Kvalitet</string>
     <string name="never">Aldrig</string>
     <string name="watch_positions_title">Sparade positioner för uppspelning</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="worst_quality">Lägsta</string>
     <string name="playerAudioQuality">Ljudkvalitet</string>
     <string name="invalid_color">Ogiltigt färgvärde.</string>
@@ -263,7 +252,6 @@
     <string name="navigation_bar">Navigeringsfält</string>
     <string name="dubbed_audio_track">dubbat</string>
     <string name="hide_watched_from_feed">Dölj redan visade videor</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="skip_silence">Hoppa över tystnad</string>
     <string name="change_playlist_description">Ändra spellistans beskrivning</string>
     <string name="alphabetic">Alfabetisk</string>
@@ -309,7 +297,6 @@
     <string name="import_playlists">Importera spellistor</string>
     <string name="export_playlists">Exportera spellistor</string>
     <string name="forward">Spola framåt</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="rewind">Spola tillbaka</string>
     <string name="exportsuccess">Exporten är klar.</string>
     <string name="go_to_video">Gå till videon</string>
@@ -353,7 +340,6 @@
     <string name="unknown_audio_language">Okänt språk för ljudet</string>
     <string name="brightness">Ljusstyrka</string>
     <string name="same_as_fullscreen">Samma som fullskärm</string>
-    <string name="layout">Layout</string>
     <string name="stats_for_nerds">Statistik för nördar</string>
     <string name="alphabetic_reversed">Alfabetisk (omvänd)</string>
     <string name="time">Tid</string>
@@ -382,7 +368,6 @@
     <string name="tooltip_options">Alternativ</string>
     <string name="tooltip_locked">Lås spelaren</string>
     <string name="tooltip_play">Spela</string>
-    <string name="tooltip_filter">Filter</string>
     <string name="tooltip_unlocked">Lås upp spelaren</string>
     <string name="registration_disabled">Registrering inaktiverad</string>
     <string name="tooltip_clear_queue">Töm kö</string>
@@ -408,7 +393,6 @@
     <string name="tooltip_watch_position">Uppspelningsposition</string>
     <string name="vote_for_segment">Rösta på segment</string>
     <string name="upvote">Rösta upp</string>
-    <string name="segment">Segment</string>
     <string name="undo">Ångra</string>
     <string name="segment_submitted">Segmentet har skickats in</string>
     <string name="downvote">Rösta ned</string>
@@ -495,18 +479,6 @@
     <string name="comment_pinned">Fäst</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.core.os.postDelayed
 import com.watube.yard.ui.interfaces.AudioPlayerOptions
 import kotlin.math.abs
 
+// region Background Playback
 class AudioPlayerThumbnailListener(context: Context, private val listener: AudioPlayerOptions) :
     View.OnTouchListener {
 
@@ -80,3 +81,4 @@ class AudioPlayerThumbnailListener(context: Context, private val listener: Audio
         private const val SINGLE_PRESS_TOKEN = "singlePress"
     }
 }
+// endregion

@@ -11,6 +11,7 @@ import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.obj.PipedImportPlaylist
 
+// region Playlists
 class PipedPlaylistRepository: PlaylistRepository {
     private fun Message.isOk() = this.message == "ok"
     private val token get() = PreferenceHelper.getToken()
@@ -79,3 +80,4 @@ class PipedPlaylistRepository: PlaylistRepository {
         }.getOrDefault(false)
     }
 }
+// endregion

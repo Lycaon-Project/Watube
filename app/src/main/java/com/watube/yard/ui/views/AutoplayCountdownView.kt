@@ -17,6 +17,7 @@ import com.watube.yard.helpers.ContextHelper
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.models.CommonPlayerViewModel
 
+// region Autoplay
 class AutoplayCountdownView(
     context: Context,
     attributeSet: AttributeSet?
@@ -87,3 +88,4 @@ class AutoplayCountdownView(
         private const val TIMER_RUNNABLE_TOKEN = "timer_runnable"
     }
 }
+// endregion

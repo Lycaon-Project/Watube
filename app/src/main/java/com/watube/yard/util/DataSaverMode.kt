@@ -5,6 +5,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.NetworkHelper
 import com.watube.yard.helpers.PreferenceHelper
 
+// region Data Saver
 object DataSaverMode {
     fun isEnabled(context: Context): Boolean {
         val pref = PreferenceHelper.getString(PreferenceKeys.DATA_SAVER_MODE, "disabled")
@@ -16,3 +17,4 @@ object DataSaverMode {
         }
     }
 }
+// endregion

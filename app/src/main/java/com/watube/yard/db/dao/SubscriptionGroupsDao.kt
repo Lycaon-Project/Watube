@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.watube.yard.db.obj.SubscriptionGroup
 
+// region Subscriptions
 @Dao()
 interface SubscriptionGroupsDao {
     @Query("SELECT * FROM subscriptionGroups ORDER BY `index` ASC")
@@ -27,3 +28,4 @@ interface SubscriptionGroupsDao {
     @Query("DELETE FROM subscriptionGroups WHERE name = :name")
     suspend fun deleteGroup(name: String)
 }
+// endregion

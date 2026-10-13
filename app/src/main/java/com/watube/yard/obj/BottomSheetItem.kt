@@ -1,5 +1,6 @@
 package com.watube.yard.obj
 
+// region UI Components
 data class BottomSheetItem(
     val title: String,
     val drawable: Int? = null,
@@ -9,3 +10,4 @@ data class BottomSheetItem(
     val badge: String? = null,
     val onClick: () -> Unit = {},
 )
+// endregion

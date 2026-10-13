@@ -10,6 +10,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.helpers.NetworkHelper
 import com.google.android.material.snackbar.Snackbar
 
+// region No Internet Screen
 class NoInternetFragment: Fragment(R.layout.fragment_nointernet) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,3 +30,4 @@ class NoInternetFragment: Fragment(R.layout.fragment_nointernet) {
         }
     }
 }
+// endregion

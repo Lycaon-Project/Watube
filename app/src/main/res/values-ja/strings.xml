@@ -14,8 +14,6 @@
     <string name="emptyPlaylistName">再生リスト名は空白にできません</string>
     <string name="success">完了。</string>
     <string name="fail">失敗 :(</string>
-    <string name="systemLanguage">システム</string>
-    <string name="okay">OK</string>
     <string name="clear_history">履歴を削除</string>
     <string name="music_songs">YT Musicの曲</string>
     <string name="category_selfpromo">無償/自己宣伝</string>
@@ -77,7 +75,6 @@
     <string name="search_history">検索履歴</string>
     <string name="music_albums">YT Musicアルバム</string>
     <string name="music_playlists">YT Music再生リスト</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">不要シーンを飛ばしました</string>
     <string name="category_sponsor_summary">報酬のあるプロモーションや紹介、直接の広告です。以下は含みません。自己宣伝、またクリエイターやサイト、製品への純粋な無償の賞賛は含みません</string>
     <string name="category_selfpromo_summary">無報酬や自己宣伝という以外は「スポンサー」に似ています。商品、寄付、協力者の情報が含まれます</string>
@@ -137,7 +134,6 @@
     <string name="category_music_offtopic_summary">ミュージックビデオ専用です。公式の音楽には含まれないシーン。ここがないと、その動画はSpotifyやその他のリミックス版になるべく近くなったり、話し声など邪魔なものが減ります</string>
     <string name="category_preview_summary">追加情報なく将来の内容を詳述する部分です。ここにしかないシーンが含まれていれば、分類を間違えている可能性が高いです</string>
     <string name="buffering_goal">事前読み込み</string>
-    <string name="audio_video">音声と映像</string>
     <string name="fullscreen_orientation">全画面時の向き</string>
     <string name="aspect_ratio">動画の縦横比</string>
     <string name="auto_rotation">自動回転</string>
@@ -168,7 +164,6 @@
     <string name="system_caption_style">システムの字幕 (キャプション) のスタイル</string>
     <string name="captions">字幕</string>
     <string name="none">なし</string>
-    <string name="general">一般</string>
     <string name="instance_frontend_url">インスタンスのフロントエンドのURL (任意)</string>
     <string name="quality">画質</string>
     <string name="behavior">動作</string>
@@ -193,7 +188,6 @@
     <string name="export_subscriptions">登録チャンネルをエクスポート</string>
     <string name="resize_mode_fit">フィット</string>
     <string name="resize_mode_fill">フィル</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="navigation_bar">ナビゲーションバー</string>
     <string name="local_subscriptions">端末内の登録チャンネル</string>
     <string name="backup_customInstances">カスタムインスタンス</string>
@@ -357,7 +351,6 @@
     <string name="original_or_main_audio_track">そのまま、または主音声</string>
     <string name="unknown_audio_track_type">音声トラックの種類は不明</string>
     <string name="unknown_audio_language">音声の言語は不明</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="dubbed_audio_track">吹き替え</string>
     <string name="descriptive_audio_track">解説</string>
     <string name="continue_watching">続きから再生</string>
@@ -450,7 +443,6 @@
     <string name="external_download_provider_summary">動画のダウンロードに使うアプリのパッケージ名を入力します。LibreTube 内蔵のダウンローダーを使うには空欄のままにします。</string>
     <string name="external_download_provider">外部のダウンロード機能を使用</string>
     <string name="screenshot">スクリーンショット</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction_summary">Pipedを経由せず、直接 YouTube から動画再生情報を取得。</string>
     <string name="local_stream_extraction">ローカルストリームの抽出</string>
     <string name="local_ryd_summary">以下から低評価を直接取得 https://returnyoutubedislikeapi.com</string>
@@ -501,18 +493,6 @@
     <string name="delete_playlist_include_vidoes">プレイリストからすべての動画も削除しますか？</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

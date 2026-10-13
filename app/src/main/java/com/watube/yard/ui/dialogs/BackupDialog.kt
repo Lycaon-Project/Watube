@@ -15,13 +15,14 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.obj.PipedImportPlaylist
 import com.watube.yard.obj.PreferenceItem
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 
+// region Backup & Restore
 class BackupDialog : DialogFragment() {
     sealed class BackupOption(
         @param:StringRes val name: Int,
@@ -102,7 +103,7 @@ class BackupDialog : DialogFragment() {
 
         val selected = BooleanArray(backupOptions.size) { true }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.backup)
             .setMultiChoiceItems(backupItems, selected) { _, index, newValue ->
                 selected[index] = newValue
@@ -139,3 +140,4 @@ class BackupDialog : DialogFragment() {
         const val BACKUP_DIALOG_REQUEST_KEY = "backup_dialog_request_key"
     }
 }
+// endregion

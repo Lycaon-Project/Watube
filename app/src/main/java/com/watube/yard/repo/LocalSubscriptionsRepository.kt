@@ -14,6 +14,7 @@ import kotlinx.coroutines.delay
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import java.util.concurrent.atomic.AtomicInteger
 
+// region Subscriptions
 class LocalSubscriptionsRepository : SubscriptionsRepository {
     override suspend fun subscribe(
         channelId: String, name: String, uploaderAvatar: String?, verified: Boolean
@@ -104,3 +105,4 @@ class LocalSubscriptionsRepository : SubscriptionsRepository {
         })
     }
 }
+// endregion

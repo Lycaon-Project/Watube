@@ -6,18 +6,28 @@ import androidx.annotation.StringRes
 import com.watube.yard.R
 import com.watube.yard.api.obj.VideoLabelData
 import com.watube.yard.extensions.sha256Sum
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import retrofit2.HttpException
 import java.net.HttpURLConnection.HTTP_NOT_FOUND
 
+// region SponsorBlock
 object SponsorBlockLabelHelper {
     /**
-     * Wrapper distinguishing "queried, this video has no label" from "never queried":
-     * a plain `null` cache entry would be indistinguishable from a cache miss and the
-     * same video would be re-fetched on every single rebind while scrolling.
+     * Answers of the API by hash prefix: one answer lists every labelled video under its prefix,
+     * so it serves all of them. An empty list is "no labelled video there", a cached answer too.
      */
-    private class CachedLabels(val value: VideoLabelData?)
+    private val cache = LruCache<String, List<VideoLabelData>>(256)
 
-    private val cache = LruCache<String, CachedLabels>(256)
+    /** Lookups on the way: rows bound at the same time share a single request per prefix. */
+    private val inFlight = HashMap<String, Deferred<List<VideoLabelData>?>>()
+    private val inFlightLock = Mutex()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /**
      * Returns the full video labels for a video.
@@ -30,28 +40,35 @@ object SponsorBlockLabelHelper {
     suspend fun getVideoLabels(
         videoId: String,
     ): VideoLabelData? {
-        // if we have the response cached, return it (including "no label")
-        cache.get(videoId)?.let { return it.value }
-
-        val result = runCatching {
-            RetrofitInstance.externalApi.getVideoLabels(
-                // use hashed video id for privacy
-                // https://wiki.sponsor.ajay.app/w/API_Docs/Draft#GET_/api/videoLabels/:sha256HashPrefix
-                videoId.sha256Sum().substring(0, 5),
-            ).firstOrNull { it.videoID == videoId }
-        }.recoverCatching {
-            // 404 is the API's "no labelled video under this prefix", the answer for most videos:
-            // taken as a failure, it was never cached and every rebind asked again (battery, data)
-            if ((it as? HttpException)?.code() == HTTP_NOT_FOUND) null else throw it
-        }
-
-        // cache every completed lookup, including "this video has no label": otherwise
-        // the same video would hit the API again on each rebind while scrolling.
-        // A failed call is not cached so that a network error stays retryable.
-        if (result.isSuccess) cache.put(videoId, CachedLabels(result.getOrNull()))
-
-        return result.getOrNull()
+        // use hashed video id for privacy
+        // https://wiki.sponsor.ajay.app/w/API_Docs/Draft#GET_/api/videoLabels/:sha256HashPrefix
+        val prefix = videoId.sha256Sum().substring(0, 5)
+        return labelsUnder(prefix)?.firstOrNull { it.videoID == videoId }
     }
+
+    /** The labelled videos under [prefix], or null when the lookup failed (it stays retryable). */
+    private suspend fun labelsUnder(prefix: String): List<VideoLabelData>? {
+        val lookup = inFlightLock.withLock {
+            cache.get(prefix)?.let { return it }
+            inFlight.getOrPut(prefix) { scope.async { fetchLabels(prefix) } }
+        }
+        val labels = lookup.await()
+        inFlightLock.withLock {
+            if (inFlight[prefix] === lookup) {
+                inFlight.remove(prefix)
+                if (labels != null) cache.put(prefix, labels)
+            }
+        }
+        return labels
+    }
+
+    private suspend fun fetchLabels(prefix: String): List<VideoLabelData>? = runCatching {
+        RetrofitInstance.externalApi.getVideoLabels(prefix)
+    }.recoverCatching {
+        // 404 is the API's "no labelled video under this prefix", the answer for most videos:
+        // taken as a failure, it was never cached and every rebind asked again (battery, data)
+        if ((it as? HttpException)?.code() == HTTP_NOT_FOUND) emptyList() else throw it
+    }.getOrNull()
 
     /**
      * Returns a suitable drawable to display the category.
@@ -79,3 +96,4 @@ object SponsorBlockLabelHelper {
         else -> null
     }
 }
+// endregion

@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
+// region Video Menu
 /**
  * Dialog with different options for a selected video.
  *
@@ -174,3 +175,4 @@ class VideoOptionsBottomSheet : BaseBottomSheet() {
         const val VIDEO_OPTIONS_SHEET_REQUEST_KEY = "video_options_sheet_request_key"
     }
 }
+// endregion

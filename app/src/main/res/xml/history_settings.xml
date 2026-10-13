@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Watch History -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/search_history">
 
+        <!-- region Search -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_history_filled"
             android:summary="@string/search_history_summary"
             app:key="search_history_toggle"
             app:title="@string/search_history" />
+        <!-- endregion -->
 
+        <!-- region Search -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:dependency="search_history_toggle"
             android:icon="@drawable/ic_search"
             app:key="unlimited_search_history"
             app:title="@string/unlimited_search_history" />
+        <!-- endregion -->
 
+        <!-- region Search -->
         <Preference
             android:icon="@drawable/ic_trash"
             app:key="clear_search_history"
             app:title="@string/clear_history" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
@@ -43,6 +50,7 @@
 
     <PreferenceCategory app:title="@string/watch_positions_title">
 
+        <!-- region Watch Positions -->
         <ListPreference
             android:defaultValue="always"
             android:entries="@array/watchPosition"
@@ -51,21 +59,27 @@
             app:key="watch_positions"
             app:title="@string/watch_positions"
             app:useSimpleSummaryProvider="true" />
+        <!-- endregion -->
 
+        <!-- region Watch Positions -->
         <Preference
             android:icon="@drawable/ic_reset"
             app:key="clear_watch_positions"
             app:title="@string/reset_watch_positions" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/bookmarks">
 
+        <!-- region Playlist Bookmarks -->
         <Preference
             android:title="@string/clear_bookmarks"
             app:icon="@drawable/ic_bookmark"
             app:key="clear_bookmarks" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
 </PreferenceScreen>
+<!-- endregion -->

@@ -10,6 +10,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
+// region Piped Account
 /**
  * Watube: encrypts the authentication token with AES-256-GCM using a key that never leaves
  * the Android Keystore, so the token stays unreadable if the preferences file is extracted.
@@ -108,3 +109,4 @@ object TokenCipher {
         return generator.generateKey()
     }
 }
+// endregion

@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Channels
 class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_channel_content) {
     private var _binding: FragmentChannelContentBinding? = null
     private val binding get() = _binding!!
@@ -126,3 +127,4 @@ class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_ch
         _binding = null
     }
 }
+// endregion

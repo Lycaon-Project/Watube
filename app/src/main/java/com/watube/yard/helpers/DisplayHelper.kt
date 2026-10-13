@@ -4,6 +4,7 @@ import android.content.Context
 import android.hardware.display.DisplayManager
 import android.view.Display
 
+// region Playback Options
 object DisplayHelper {
     @Volatile
     private var hdrSupport: Boolean? = null
@@ -20,3 +21,4 @@ object DisplayHelper {
             ?.getDisplay(Display.DEFAULT_DISPLAY)?.isHdr == true)
             .also { hdrSupport = it }
 }
+// endregion

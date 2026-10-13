@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
+// region Updates
 class UpdateChecker(private val context: Context) {
 
     companion object {
@@ -28,6 +29,13 @@ class UpdateChecker(private val context: Context) {
          * ListPreference default in res/xml/general_settings.xml.
          */
         private const val DEFAULT_CHECK_INTERVAL_HOURS = "0"
+
+        /**
+         * "Every launch" means once per start of the app: MainActivity is also created again by a
+         * shared link or after being destroyed in the background, which re-queried GitHub.
+         */
+        @Volatile
+        private var checkedSinceAppStart = false
     }
 
     /**
@@ -43,13 +51,14 @@ class UpdateChecker(private val context: Context) {
 
     private fun isCheckThrottled(): Boolean {
         val interval = autoCheckIntervalMs()
-        // "every launch" disables throttling entirely
-        if (interval <= 0L) return false
+        // "every launch": once per start of the app
+        if (interval <= 0L) return checkedSinceAppStart
         val lastCheck = PreferenceHelper.getLong(PreferenceKeys.LAST_UPDATE_CHECK_TIME, 0L)
         return System.currentTimeMillis() - lastCheck < interval
     }
 
     private fun recordCheckAttempt() {
+        checkedSinceAppStart = true
         PreferenceHelper.putLong(PreferenceKeys.LAST_UPDATE_CHECK_TIME, System.currentTimeMillis())
     }
 
@@ -302,3 +311,4 @@ class UpdateChecker(private val context: Context) {
             .trim()
     }
 }
+// endregion

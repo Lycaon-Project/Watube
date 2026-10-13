@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.R
 import com.watube.yard.helpers.ThemeHelper
 
+// region UI Components
 fun RecyclerView.setOnDismissListener(onDismissedListener: (position: Int) -> Unit) {
     setActionListener(
         allowSwipe = true,
@@ -124,3 +125,4 @@ fun RecyclerView.setActionListener(
 
     ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
 }
+// endregion

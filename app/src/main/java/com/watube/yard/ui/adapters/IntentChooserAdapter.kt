@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.databinding.IntentChooserItemBinding
 import com.watube.yard.ui.viewholders.IntentChooserViewHolder
 
+// region Share
 /**
  * An adapter for opening an intent chooser inside the app, example-wise for urls
  * @param packages A list of resolved packages found by a package query
@@ -42,3 +43,4 @@ class IntentChooserAdapter(
         }
     }
 }
+// endregion

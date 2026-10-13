@@ -44,7 +44,6 @@
     <string name="app_theme">Tema</string>
     <string name="changeLanguage">Bahasa</string>
     <string name="systemDefault">Sistem</string>
-    <string name="systemLanguage">Sistem</string>
     <string name="lightTheme">Terang</string>
     <string name="darkTheme">Gelap</string>
     <string name="success">Berhasil.</string>
@@ -63,7 +62,6 @@
     <string name="channels">Saluran</string>
     <string name="all">Semua</string>
     <string name="playlists">Daftar Putar</string>
-    <string name="okay">OK</string>
     <string name="history">Riwayat</string>
     <string name="search_history">Riwayat penelusuran</string>
     <string name="clear_history">Hapus riwayat</string>
@@ -71,9 +69,7 @@
     <string name="music_videos">Video YT Music</string>
     <string name="music_albums">Album YT Music</string>
     <string name="music_playlists">Daftar Putar YT Music</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">Segmen dilewati</string>
-    <string name="category_sponsor">Sponsor</string>
     <string name="category_segments">Segmen</string>
     <string name="category_sponsor_summary">Promosi dibayar, tautan dibayar dan iklan langsung. Tidak untuk promosi diri sendiri atau dukungan gratis untuk gerakan, kreator, situs</string>
     <string name="category_selfpromo">Promosi Diri Sendiri/Tidak Dibayar</string>
@@ -102,8 +98,6 @@
     <string name="player_autoplay">Mainkan secara otomatis</string>
     <string name="reset">Atur ulang ke bawaan</string>
     <string name="watch_history">Riwayat tontonan</string>
-    <string name="audio">Audio</string>
-    <string name="video">Video</string>
     <string name="watch_positions">Ingat posisi</string>
     <string name="auth_instances">Gunakan sebuah instansi otentikasi</string>
     <string name="data_saver_mode_summary">Melewati gambar mini dan gambar lainnya</string>
@@ -156,7 +150,6 @@
     <string name="category_preview_summary">Untuk segmen yang merinci konten mendatang tanpa info tambahan. Jika termasuk klip yang hanya muncul di sini, kemungkinan besar ini adalah kategori yang salah</string>
     <string name="background_mode">Mode latar belakang</string>
     <string name="landscape">Lanskap</string>
-    <string name="audio_video">Audio dan video</string>
     <string name="fullscreen_orientation">Orientasi layar penuh</string>
     <string name="portrait">Potret</string>
     <string name="aspect_ratio">Rasio aspek video</string>
@@ -193,7 +186,6 @@
     <string name="system_caption_style">Gaya takarir sistem</string>
     <string name="captions">Takarir</string>
     <string name="none">Tidak ada</string>
-    <string name="general">Umum</string>
     <string name="default_subtitle_language">Bahasa takarir</string>
     <string name="notify_new_streams">Tampilkan notifikasi untuk saluran baru</string>
     <string name="notify_new_streams_summary">Tampilkan notifikasi untuk saluran baru dari kreator yang Anda ikuti</string>
@@ -201,7 +193,6 @@
     <string name="required_network">Dibutuhkan koneksi</string>
     <string name="export_subscriptions">Ekspor langganan</string>
     <string name="add_to_queue">Tambahkan ke antrean</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="repeat_mode">Mode ulang</string>
     <string name="resize_mode_fit">Pas</string>
     <string name="resize_mode_fill">Penuh</string>
@@ -220,7 +211,6 @@
     <string name="playerAudioQuality">Kualitas audio</string>
     <string name="renamePlaylist">Ubah nama daftar putar</string>
     <string name="mobile_data">Data seluler</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="skip_segment">Lewati segmen</string>
     <string name="local_subscriptions">Langganan lokal</string>
     <string name="backup_customInstances">Server kustom</string>
@@ -255,7 +245,6 @@
     <string name="bookmark">Markah</string>
     <string name="clear_bookmarks">Hapus markah</string>
     <string name="local_playlists">Daftar putar lokal</string>
-    <string name="volume">Volume</string>
     <string name="auto">Otomatis</string>
     <string name="swipe_controls">Kendali usap</string>
     <string name="swipe_controls_summary">Usap untuk mengatur kecerahan dan volume saat dalam mode layar penuh</string>
@@ -341,7 +330,6 @@
     <string name="emptyPlaylistDescription">Deskripsi daftar putar tidak bisa kosong</string>
     <string name="change_playlist_description">Ubah deskripsi daftar putar</string>
     <string name="show_search_suggestions">Tampilkan saran pencarian</string>
-    <string name="manual">Manual</string>
     <string name="off">Mati</string>
     <string name="automatic">Otomatis</string>
     <string name="sb_custom_colors_summary">Mengaktifkan segmen warna kustom untuk segmen pemblokiran sponsor</string>
@@ -353,7 +341,6 @@
     <string name="stop">Berhenti</string>
     <string name="chapters_videoHighlight">Sorotan Video</string>
     <string name="unknown_audio_track_type">Jenis trek audio tidak diketahui</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="original_or_main_audio_track">Asli</string>
     <string name="unknown_audio_language">Bahasa audio tidak diketahui</string>
     <string name="dubbed_audio_track">Disulih suara</string>
@@ -517,18 +504,6 @@
     <string name="comment_verified">Terverifikasi</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

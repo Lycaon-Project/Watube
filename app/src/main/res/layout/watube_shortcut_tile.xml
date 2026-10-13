@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Library -->
 <!--
   Solar .qtile shortcut cell of the library screen: accent icon tile plus a
   two line label. One grid column is sized by the row that includes it.
@@ -54,3 +55,4 @@
             tools:text="@string/watube_shortcut_downloads" />
     </LinearLayout>
 </LinearLayout>
+<!-- endregion -->

@@ -3,6 +3,7 @@ package com.watube.yard.ui.models
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
+// region Downloads
 class DownloadsViewModel: ViewModel() {
     val searchQuery = MutableLiveData<String?>(null)
 
@@ -10,3 +11,4 @@ class DownloadsViewModel: ViewModel() {
         searchQuery.value = query
     }
 }
+// endregion

@@ -23,7 +23,6 @@ import androidx.media3.exoplayer.source.TrackGroupArray
 import androidx.media3.exoplayer.source.chunk.ChunkSampleStream
 import androidx.media3.exoplayer.trackselection.ExoTrackSelection
 import androidx.media3.exoplayer.upstream.Allocator
-import androidx.media3.exoplayer.upstream.CmcdConfiguration
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import com.watube.yard.player.manifest.AdaptationSet
 import com.watube.yard.player.manifest.Representation
@@ -32,6 +31,7 @@ import com.watube.yard.player.parser.SabrClient
 import java.time.Instant
 import java.util.Arrays
 
+// region SABR Streaming
 /** A Sabr [MediaPeriod].  */
 @UnstableApi
 class SabrMediaPeriod(
@@ -40,7 +40,6 @@ class SabrMediaPeriod(
     private val periodIndex: Int,
     private val chunkSourceFactory: SabrChunkSource.Factory,
     private val transferListener: TransferListener?,
-    private val cmcdConfiguration: CmcdConfiguration?,
     private val drmSessionManager: DrmSessionManager,
     private val drmEventDispatcher: DrmSessionEventListener.EventDispatcher,
     private val loadErrorHandlingPolicy: LoadErrorHandlingPolicy,
@@ -280,8 +279,7 @@ class SabrMediaPeriod(
                 trackGroupInfo.trackType,
                 elapsedRealtimeOffsetMs,
                 transferListener,
-                playerId,
-                cmcdConfiguration
+                playerId
             )
         val stream =
             ChunkSampleStream<SabrChunkSource?>(
@@ -297,6 +295,8 @@ class SabrMediaPeriod(
                 loadErrorHandlingPolicy,
                 mediaSourceEventDispatcher,
                 canReportInitialDiscontinuity,
+                // first chunk start unknown: the discontinuity is evaluated on the first chunk
+                C.TIME_UNSET,
                 null
             )
         return stream
@@ -304,8 +304,7 @@ class SabrMediaPeriod(
 
     private data class TrackGroupInfo(
         val trackType: @TrackType Int,
-        val adaptationSetIndices: IntArray,
-        val primaryTrackGroupIndex: Int
+        val adaptationSetIndices: IntArray
     )
 
     companion object {
@@ -391,8 +390,7 @@ class SabrMediaPeriod(
                 trackGroupInfos[primaryTrackGroupIndex] =
                     TrackGroupInfo(
                         firstAdaptationSet.type,
-                        adaptationSetIndices,
-                        primaryTrackGroupIndex
+                        adaptationSetIndices
                     )
             }
             return trackGroupCount
@@ -411,3 +409,4 @@ class SabrMediaPeriod(
         }
     }
 }
+// endregion

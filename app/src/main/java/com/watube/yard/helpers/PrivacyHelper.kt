@@ -11,6 +11,7 @@ import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
+// region Privacy
 private const val HOUR_MILLIS = 60L * 60 * 1000
 
 /**
@@ -250,3 +251,4 @@ object PrivacyHelper {
         runCatching { WebStorage.getInstance().deleteAllData() }
     }
 }
+// endregion

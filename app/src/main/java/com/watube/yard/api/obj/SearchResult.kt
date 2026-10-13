@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region Search
 @Serializable
 data class SearchResult(
     var items: List<ContentItem> = emptyList(),
@@ -9,3 +10,4 @@ data class SearchResult(
     val suggestion: String? = null,
     val corrected: Boolean = false
 )
+// endregion

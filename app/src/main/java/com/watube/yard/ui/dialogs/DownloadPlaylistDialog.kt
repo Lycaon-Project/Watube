@@ -16,8 +16,9 @@ import com.watube.yard.helpers.LocaleHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.services.PlaylistDownloadEnqueueService
 import com.watube.yard.util.TextUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Downloads
 class DownloadPlaylistDialog : DialogFragment() {
     private lateinit var playlistId: String
     private lateinit var playlistName: String
@@ -54,7 +55,7 @@ class DownloadPlaylistDialog : DialogFragment() {
 
         restoreSelections(binding)
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.download_playlist))
             .setView(binding.root)
             .setPositiveButton(R.string.download) { _, _ ->
@@ -129,3 +130,4 @@ class DownloadPlaylistDialog : DialogFragment() {
         private const val PLAYLIST_DOWNLOAD_CAPTION_LANGUAGE = "playlist_download_caption_language"
     }
 }
+// endregion

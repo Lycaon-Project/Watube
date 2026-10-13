@@ -4,29 +4,47 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
+import android.os.SystemClock
 import android.text.format.DateUtils
+import androidx.media3.session.MediaController
 import com.watube.yard.R
 import com.watube.yard.helpers.BackgroundHelper
 import com.watube.yard.helpers.ContextHelper
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.ui.base.BaseActivity
 import com.google.android.material.snackbar.Snackbar
-import java.util.Timer
-import kotlin.concurrent.scheduleAtFixedRate
 import kotlin.math.pow
 
+// region Sleep Timer
+/**
+ * Closes the app at a deadline, after fading the player's volume out.
+ *
+ * Battery: nothing runs until the fade starts (one delayed message), then a step every
+ * [FADE_STEP_MILLIS] for the last [FADE_OUT_MILLIS]. A single connection to the player
+ * carries the whole fade; nothing connects (or starts the player service) otherwise.
+ */
 object SleepTimer {
-    private const val TIMER_DELAY = 500L // 500ms for smoother fade out
-    private const val FADE_OUT_START_SECONDS = 10L
+    private const val FADE_STEP_MILLIS = 500L
+    private const val FADE_OUT_MILLIS = 10 * DateUtils.SECOND_IN_MILLIS
     private const val SNACKBAR_START_SECONDS = 5L
     private const val MAX_VOLUME = 1.0f
     private const val CLOSE_DELAY = 500L // Pause before closing
 
-    var timeLeftMillis: Long = 0L
-        private set
-    private var timer: Timer? = null
+    /** [SystemClock.elapsedRealtime] of the end, 0 when no timer runs. */
+    private var endRealtime = 0L
+
+    val timeLeftMillis: Long
+        get() = if (endRealtime == 0L) 0L
+        else (endRealtime - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
+
     private var snackBar: Snackbar? = null
+    private var shownSecond = 0L
     private val handler = Handler(Looper.getMainLooper())
+
+    /** The player the fade is applied to, connected when the fade starts. */
+    private var fadeController: MediaController? = null
+    private var isConnecting = false
+    private var fadeVolume = MAX_VOLUME
 
     /** Video the automatic timer last started for: once per video, a cancel holds until the next. */
     private var autoStartedFor: String? = null
@@ -41,7 +59,6 @@ object SleepTimer {
         start(context, PlayerHelper.sleepTimerMinutes)
     }
 
-
     /**
      * Start the sleep timer that will close the app after the specified delay
      *
@@ -55,68 +72,75 @@ object SleepTimer {
         stop(context)
 
         PlayerHelper.sleepTimerMinutes = delayInMinutes
-        timeLeftMillis = delayInMinutes * DateUtils.MINUTE_IN_MILLIS
-
-        timer = Timer()
-        timer?.scheduleAtFixedRate(TIMER_DELAY, TIMER_DELAY) {
-            onTimerTick(context)
-        }
+        endRealtime = SystemClock.elapsedRealtime() + delayInMinutes * DateUtils.MINUTE_IN_MILLIS
+        step(context)
     }
 
     /**
-     * Stop the sleep timer and restore volume to maximum
+     * Stop the sleep timer and restore the volume a fade had lowered
      */
     fun stop(context: Context) {
-        cleanup()
-        handler.post {
-            BackgroundHelper.setVolume(context, MAX_VOLUME)
+        handler.removeCallbacksAndMessages(null)
+        snackBar?.dismiss()
+        snackBar = null
+        shownSecond = 0L
+        endRealtime = 0L
+        if (fadeController != null || isConnecting) fadeTo(context, MAX_VOLUME)
+    }
+
+    private fun step(context: Context) {
+        val left = timeLeftMillis
+        when {
+            // sleep until the fade
+            left > FADE_OUT_MILLIS -> handler.postDelayed({ step(context) }, left - FADE_OUT_MILLIS)
+
+            // Smooth quadratic fade out during the last seconds
+            left > 0 -> {
+                fadeTo(context, (left / FADE_OUT_MILLIS.toFloat()).pow(2))
+                updateSnackBar(context, left)
+                handler.postDelayed({ step(context) }, FADE_STEP_MILLIS)
+            }
+
+            // Close app with a pause after fade out completes
+            else -> {
+                fadeTo(context, 0f)
+                handler.postDelayed({ closeApp(context) }, CLOSE_DELAY)
+            }
         }
     }
 
-
-    private fun onTimerTick(context: Context) {
-        timeLeftMillis -= TIMER_DELAY
-        val secondsLeft = timeLeftMillis / DateUtils.SECOND_IN_MILLIS
-        val fadeOutDuration = FADE_OUT_START_SECONDS * DateUtils.SECOND_IN_MILLIS
-
-        // Smooth exponential fade out during last 10 seconds
-        if (timeLeftMillis in 1..fadeOutDuration) {
-            val progress = (timeLeftMillis / fadeOutDuration.toFloat()).coerceIn(0f, 1f)
-            val volume = progress.pow(2.0f) // Quadratic curve for natural fade
-            handler.post {
-                BackgroundHelper.setVolume(context, volume)
-            }
+    private fun fadeTo(context: Context, volume: Float) {
+        fadeVolume = volume
+        fadeController?.let { controller ->
+            controller.volume = volume
+            if (volume == MAX_VOLUME) releaseFadeController()
+            return
         }
+        if (isConnecting) return
 
-        // Update snackbar only on whole seconds to avoid excessive UI updates
-        val isWholeSecond = timeLeftMillis % DateUtils.SECOND_IN_MILLIS == 0L
-        if (secondsLeft in 1..SNACKBAR_START_SECONDS && isWholeSecond) {
-            val activity = ContextHelper.tryUnwrapActivity<BaseActivity>(context)?.takeIf {
-                !it.isFinishing && !it.isDestroyed
-            }
-            if (activity != null) {
-                handler.post {
-                    showOrUpdateSnackBar(activity)
-                }
-            }
-        }
-
-        // Close app with a pause after fade out completes
-        if (timeLeftMillis <= 0) {
-            handler.post {
-                BackgroundHelper.setVolume(context, 0.0f)
-            }
-            handler.postDelayed({
-                closeApp(context)
-            }, CLOSE_DELAY)
+        isConnecting = true
+        BackgroundHelper.startCurrentMediaService(context) { controller ->
+            isConnecting = false
+            fadeController = controller
+            // the latest volume asked while connecting, which may already be the restored one
+            fadeTo(context, fadeVolume)
         }
     }
 
+    private fun releaseFadeController() {
+        fadeController?.release()
+        fadeController = null
+    }
 
-    private fun showOrUpdateSnackBar(activity: BaseActivity) {
-        val secondsLeft = timeLeftMillis / DateUtils.SECOND_IN_MILLIS
+    /** Countdown on the last seconds, written once per second. */
+    private fun updateSnackBar(context: Context, left: Long) {
+        val secondsLeft = (left + DateUtils.SECOND_IN_MILLIS - 1) / DateUtils.SECOND_IN_MILLIS
+        if (secondsLeft > SNACKBAR_START_SECONDS || secondsLeft == shownSecond) return
+        val activity = ContextHelper.tryUnwrapActivity<BaseActivity>(context)
+            ?.takeIf { !it.isFinishing && !it.isDestroyed } ?: return
+        shownSecond = secondsLeft
+
         val message = "${activity.getString(R.string.take_a_break)}: $secondsLeft"
-
         if (snackBar?.isShownOrQueued == true) {
             snackBar?.setText(message)
         } else {
@@ -138,16 +162,5 @@ object SleepTimer {
         activity?.finish()
         Process.killProcess(Process.myPid())
     }
-
-    private fun cleanup() {
-        handler.removeCallbacksAndMessages(null)
-        handler.post {
-            snackBar?.dismiss()
-            snackBar = null
-        }
-
-        timer?.cancel()
-        timer = null
-        timeLeftMillis = 0L
-    }
 }
+// endregion

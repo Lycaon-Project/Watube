@@ -6,6 +6,7 @@ import androidx.media3.session.MediaController
 import com.watube.yard.enums.PlayerCommand
 import com.watube.yard.services.AbstractPlayerService
 
+// region Video Player
 @OptIn(UnstableApi::class)
 fun MediaController.navigateVideo(videoId: String) {
     sendCustomCommand(
@@ -13,3 +14,4 @@ fun MediaController.navigateVideo(videoId: String) {
         bundleOf(PlayerCommand.PLAY_VIDEO_BY_ID.name to videoId)
     )
 }
+// endregion

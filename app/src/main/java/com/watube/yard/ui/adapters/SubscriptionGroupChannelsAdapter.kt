@@ -12,6 +12,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.viewholders.SubscriptionGroupChannelRowViewHolder
 
+// region Subscriptions
 class SubscriptionGroupChannelsAdapter(
     private val group: SubscriptionGroup,
     private val onGroupChanged: (SubscriptionGroup) -> Unit
@@ -49,3 +50,4 @@ class SubscriptionGroupChannelsAdapter(
         }
     }
 }
+// endregion

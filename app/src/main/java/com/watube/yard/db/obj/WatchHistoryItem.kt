@@ -8,6 +8,7 @@ import com.watube.yard.extensions.toMillis
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
+// region Watch History
 @Serializable
 @Entity(tableName = "watchHistoryItem")
 data class WatchHistoryItem(
@@ -39,3 +40,4 @@ data class WatchHistoryItem(
         isShort = isShort
     )
 }
+// endregion

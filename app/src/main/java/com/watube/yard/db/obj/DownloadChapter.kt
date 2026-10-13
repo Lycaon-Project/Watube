@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.watube.yard.api.obj.ChapterSegment
 
+// region Downloads
 @Entity(tableName = "downloadChapters")
 data class DownloadChapter(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -16,3 +17,4 @@ data class DownloadChapter(
         return ChapterSegment(name, thumbnailUrl, start)
     }
 }
+// endregion

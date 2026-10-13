@@ -1,56 +1,48 @@
 [versions]
-appcompat = "1.7.1"
-core = "1.18.0"
+appcompat = "1.8.0"
+core = "1.19.1"
 documentfile = "1.1.0"
 gradle = "9.4.1"
 junit = "4.13.2"
-# NOTE: la version de KSP doit correspondre exactement à la version de Kotlin
-# (format "<kotlin>-<ksp patch>"). Kotlin 2.3.21 n'a aucun build KSP correspondant ;
-# on épingle donc le couple supporté le plus récent : Kotlin 2.3.20 + KSP 2.3.20.2.
-# Doit correspondre EXACTEMENT à la version du compilateur Kotlin
-# embarquée dans AGP 9.4.1 (sinon : "plugin already on the classpath with an
-# unknown version" sous Android Studio). À réaligner à chaque montée d'AGP.
-kotlin = "2.3.20"
-ksp = "2.3.6"
-lifecycle = "2.10.0"
-constraintlayout = "2.2.1"
-loggingInterceptor = "5.3.2"
+# AGP 9.4.1 asks for KGP 2.2.10; the serialization plugin declared at the root raises the
+# whole build classpath to this version (check with `gradlew buildEnvironment`).
+# KSP 2.3.x is versioned on its own, no longer "<kotlin>-<ksp>".
+kotlin = "2.4.21"
+ksp = "2.3.12"
+lifecycle = "2.11.0"
+constraintlayout = "2.2.2"
+loggingInterceptor = "5.5.0"
 material = "1.14.0"
-navigation = "2.9.8"
-newpipeextractor = "3e863d7"
+navigation = "2.10.2"
+# Watube fork (branch watube-26.11): LibreTube's SABR fork 3e863d7 + upstream fixes of 2026-10-05
+# (65cabc2 caption track names, d050168 Gradle wrapper 9.8.0) + ab984a8 jsoup 1.23.2 (CVE-2026-75140)
+newpipeextractor = "190dae5f12"
 # same JSON library as the extractor ships (its runtime dependency), for the player response
 nanojson = "e9d656ddb49a412a5a0a5d5ef20ca7ef09549996"
 preference = "1.2.1"
 extJunit = "1.3.0"
 espresso = "3.7.0"
-workRuntime = "2.11.2"
+workRuntime = "2.12.0"
 retrofit = "3.0.0"
 desugaring = "2.1.5"
-coil = "3.4.0"
-room = "2.8.4"
+coil = "3.6.3"
+room = "2.8.5"
 kotlinxSerialization = "1.11.0"
 kotlinxDatetime = "0.8.0"
 media = "1.8.0"
-media3 = "1.9.2"
+media3 = "1.11.1"
 activity = "1.13.0"
-fragment = "1.8.9"
-uiautomator = "2.3.0"
-benchmarkMacroJunit4 = "1.4.1"
-baselineprofile = "1.5.0-alpha06"
+fragment = "1.9.1"
+uiautomator = "2.4.0"
+benchmarkMacroJunit4 = "1.5.0"
+baselineprofile = "1.5.0"
 profileinstaller = "1.4.1"
-paging = "3.5.0"
-collection = "1.6.0"
+paging = "3.5.3"
+collection = "1.7.0"
 swiperefreshlayout = "1.2.0"
 splashscreen = "1.2.0"
-protobuf = "4.33.5"
+protobuf = "4.36.2"
 protobufPlugin = "0.10.0"
-# Cast SDK: derniere version stable relevee sur l'index Maven officiel Google
-# (https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-cast-framework/maven-metadata.xml,
-#  lastUpdated 2026-04-07) et identique a celle montreee par le guide officiel
-# https://developers.google.com/cast/docs/android_sender/integrate
-playServicesCast = "22.3.1"
-# mediarouter: derniere version stable (1.9.0 est encore en beta)
-mediarouter = "1.8.1"
 
 [libraries]
 androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
@@ -75,7 +67,7 @@ androidx-media3-exoplayer-hls = { group = "androidx.media3", name="media3-exopla
 androidx-media3-exoplayer-dash = { group = "androidx.media3", name="media3-exoplayer-dash", version.ref="media3" }
 androidx-media3-session = { group="androidx.media3", name="media3-session", version.ref="media3" }
 androidx-media3-ui = { group="androidx.media3", name="media3-ui", version.ref="media3" }
-newpipeextractor = { module = "com.github.libre-tube:NewPipeExtractor", version.ref = "newpipeextractor" }
+newpipeextractor = { module = "com.github.Lycaon-Project:NewPipeExtractor", version.ref = "newpipeextractor" }
 nanojson = { module = "com.github.TeamNewPipe:nanojson", version.ref = "nanojson" }
 square-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
@@ -96,8 +88,6 @@ androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profi
 androidx-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 androidx-collection = { group = "androidx.collection", name = "collection", version.ref = "collection" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
-androidx-mediarouter = { module = "androidx.mediarouter:mediarouter", version.ref = "mediarouter" }
-google-play-services-cast-framework = { module = "com.google.android.gms:play-services-cast-framework", version.ref = "playServicesCast" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
 google-protobuf-javalite = { module = 'com.google.protobuf:protobuf-javalite', version.ref = 'protobuf' }
 google-protobuf-kotlin-lite = { module = 'com.google.protobuf:protobuf-kotlin-lite', version.ref = 'protobuf' }

@@ -37,6 +37,7 @@ import java.time.LocalTime
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.seconds
 
+// region New Video Notifications
 /**
  * The notification worker which checks for new streams in a certain frequency
  */
@@ -370,3 +371,4 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
 }
+// endregion

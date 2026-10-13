@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// region Piped Instances
 @Serializable
 @Parcelize
 data class PipedInstance(
@@ -25,3 +26,4 @@ data class PipedInstance(
     @SerialName("uptime_30d") val uptimeMonth: Float? = null,
     val isCurrentlyDown: Boolean = false
 ) : Parcelable
+// endregion

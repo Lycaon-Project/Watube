@@ -11,11 +11,12 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.obj.PipedImportPlaylist
 import com.watube.yard.util.TextUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// region Playlists
 class ImportTempPlaylistDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val title = arguments?.getString(IntentData.playlistName)
@@ -23,7 +24,7 @@ class ImportTempPlaylistDialog : DialogFragment() {
             ?: TextUtils.getFileSafeTimeStampNow()
         val videoIds = arguments?.getStringArray(IntentData.videoIds).orEmpty()
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.import_temp_playlist)
             .setMessage(
                 requireContext()
@@ -53,3 +54,4 @@ class ImportTempPlaylistDialog : DialogFragment() {
             .create()
     }
 }
+// endregion

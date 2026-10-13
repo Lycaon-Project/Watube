@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 
+// region UI Components
 fun View.onSystemInsets(callback: (v: View, systemBarInsets: Insets) -> Unit) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
         // systemBars() alone misses the camera cutout on the sides/top in landscape
@@ -38,3 +39,4 @@ fun View.padBottomForSystemBars() {
         insets
     }
 }
+// endregion

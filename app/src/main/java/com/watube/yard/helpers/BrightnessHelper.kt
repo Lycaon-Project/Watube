@@ -5,6 +5,7 @@ import android.view.WindowManager
 import kotlin.math.exp
 import kotlin.math.ln
 
+// region Player Gestures
 class BrightnessHelper(activity: Activity) {
     private val window = activity.window
 
@@ -72,3 +73,4 @@ class BrightnessHelper(activity: Activity) {
         private const val SCALING_FACTOR = 19.9
     }
 }
+// endregion

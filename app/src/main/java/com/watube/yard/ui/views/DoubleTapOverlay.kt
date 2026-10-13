@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.watube.yard.databinding.DoubleTapOverlayBinding
 
+// region Player Gestures
 class DoubleTapOverlay(
     context: Context,
     attrs: AttributeSet? = null
 ) : LinearLayout(context, attrs) {
     val binding = DoubleTapOverlayBinding.inflate(LayoutInflater.from(context), this, true)
 }
+// endregion

@@ -51,7 +51,6 @@
     <string name="music_songs">YT Music песме</string>
     <string name="music_videos">YT Music видео снимци</string>
     <string name="music_albums">YT Music албуми</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">Прескочени сегмент</string>
     <string name="category_segments">Сегменти</string>
     <string name="category_sponsor">Спонзор</string>
@@ -147,7 +146,6 @@
     <string name="areYouSure">Избрисати плејлисту\?</string>
     <string name="channels">Канали</string>
     <string name="playlistName">Назив плејлисте</string>
-    <string name="systemLanguage">Системски</string>
     <string name="success">Готово.</string>
     <string name="music_playlists">YT Music плејлисте</string>
     <string name="systemDefault">Системски</string>
@@ -171,10 +169,8 @@
     <string name="downloading">Преузимање…</string>
     <string name="player_autoplay">Аутоплеј</string>
     <string name="reset_message">Ресетовати сва подешавања и одјавити се\?</string>
-    <string name="audio_video">Аудио и видео снимци</string>
     <string name="data_saver_mode_summary">Прескакање сличица и других слика</string>
     <string name="system_caption_style">Системски стил титлова</string>
-    <string name="general">Опште</string>
     <string name="default_subtitle_language">Језик титлова</string>
     <string name="notifications">Обавештења</string>
     <string name="history_empty">Још нема историје.</string>
@@ -202,7 +198,6 @@
     <string name="add_to_queue">Додај у редослед</string>
     <string name="misc">Остало</string>
     <string name="take_a_break">Време је за паузу</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="repeat_mode">Режим понављања</string>
     <string name="resize_mode_zoom">Зумирано</string>
     <string name="repeat_mode_none">Ниједно</string>
@@ -221,7 +216,6 @@
     <string name="push_channel_name">Радник обавештења</string>
     <string name="device_info">Информације о уређају</string>
     <string name="delete">Избриши из преузимања</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Мобилни подаци</string>
     <string name="new_videos_badge">Индикатор за нове видео снимке</string>
     <string name="new_videos_badge_summary">Прикажите значку са количином нових видео снимака, ако их има</string>
@@ -365,14 +359,12 @@
     <string name="sort_by">Сортирање по</string>
     <string name="player_channel_description">Приказује обавештење током пуштања</string>
     <string name="tooltip_scroll_to_top">Иди на врх</string>
-    <string name="sponsorblock_user_id">SponsorBlock UserID</string>
     <string name="unlimited_search_history">Неограничена историја претраге</string>
     <string name="dearrow">Омогући DeArrow</string>
     <string name="segment_type">Врста сегмента</string>
     <string name="visibility_public">Јавно</string>
     <string name="original_or_main_audio_track">оригинално или главно</string>
     <string name="tooltip_repeat">Понављање</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="tooltip_fullscreen">Цео екран</string>
     <string name="go_to_video">Иди на видео снимак</string>
     <string name="tooltip_sponsorblock">Укључи SponsorBlock</string>
@@ -452,7 +444,6 @@
     <string name="external_download_provider">Пружалац спољног програма за преузимање</string>
     <string name="external_download_provider_summary">Унесите назив пакета апликације коју желите да користите за преузимање видео записа. Оставите празно да бисте користили уграђени програм за преузимање LibreTube-а.</string>
     <string name="screenshot">Снимак екрана</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction_summary">Директно прикупљање информација о репродукцији видео снимака са YouTube-а без коришћења Piped-а.</string>
     <string name="local_stream_extraction">Прикупљање локалног стрима</string>
     <string name="local_ryd">Локални издвајач Return YouTube Dislike</string>
@@ -485,18 +476,6 @@
     <string name="music">Музика</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

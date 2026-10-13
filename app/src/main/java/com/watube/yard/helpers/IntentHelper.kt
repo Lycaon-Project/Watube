@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
-import android.os.Build
 import android.util.Patterns
 import androidx.core.net.toUri
 import com.watube.yard.extensions.bundleOf
@@ -16,6 +15,7 @@ import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.ui.sheets.IntentChooserSheet
 import com.watube.yard.util.TextUtils.toTimeInSeconds
 
+// region Share
 object IntentHelper {
     /**
      * Schemes an in-app link is allowed to open. Anything else (javascript:, intent:,
@@ -36,16 +36,10 @@ object IntentHelper {
         if (!isAllowedLink(link)) return emptyList()
         val intent = getResolveIntent(link)
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.packageManager
-                .queryIntentActivities(
-                    intent,
-                    PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_ALL.toLong())
-                )
-        } else {
-            context.packageManager
-                .queryIntentActivities(intent, PackageManager.MATCH_ALL)
-        }
+        return context.packageManager.queryIntentActivities(
+            intent,
+            PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_ALL.toLong())
+        )
     }
 
     fun openLinkFromHref(context: Context, fragmentManager: FragmentManager, link: String, forceDefaultOpen: Boolean = false) {
@@ -110,3 +104,4 @@ object IntentHelper {
         }
     }
 }
+// endregion

@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.watube.yard.R
 
+// region Navigation
 enum class TopLevelDestination(
     val route: String,
     @param:StringRes val label: Int,
@@ -14,3 +15,4 @@ enum class TopLevelDestination(
     Subscriptions("subscriptions", R.string.subscriptions, R.drawable.ic_subscriptions),
     Library("library", R.string.library, R.drawable.ic_library)
 }
+// endregion

@@ -12,7 +12,6 @@ import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.extensions.toastFromMainThread
-import com.watube.yard.helpers.LocaleHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.adapters.IconsSheetAdapter
 import com.watube.yard.ui.base.BasePreferenceFragment
@@ -21,6 +20,7 @@ import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.sheets.IconsBottomSheet
 import java.util.Locale
 
+// region Appearance
 class AppearanceSettings : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.appearance_settings, rootKey)
@@ -86,56 +86,36 @@ class AppearanceSettings : BasePreferenceFragment() {
      * choice, so it belongs to the "Apparence" category of the settings hub).
      */
     private fun setupLanguagePref() {
-        val language = findPreference<ListPreference>("language")
-        if (!LocaleHelper.isPerAppLocaleSettingSupported()) {
-            language?.setOnPreferenceChangeListener { _, _ ->
-                RequireRestartDialog().show(
-                    childFragmentManager,
-                    RequireRestartDialog::class.java.name
+        val language = findPreference<ListPreference>("language") ?: return
+        // the language is set through Android's per-app language settings (Android 13+)
+
+        // set displayed current settings value (i.e. current app language)
+        val currentLocale = Locale.getDefault()
+        // Préférence de LANGUE : utiliser le code de langue (jamais le code pays isO3Country,
+        // sémantiquement faux et susceptible de lever MissingResourceException). `language`
+        // (ISO 639) ne lève jamais d'exception.
+        language.entries = arrayOf(currentLocale.displayLanguage)
+        language.entryValues = arrayOf(currentLocale.language)
+        language.value = currentLocale.language
+
+        // open Android settings for per-app language preference for the app
+        language.setOnPreferenceClickListener { _ ->
+            try {
+                startActivity(
+                    Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                        .setData(Uri.fromParts("package", BuildConfig.APPLICATION_ID, null))
                 )
-                true
+            } catch (e: Exception) {
+                context?.toastFromMainThread("Failed to open per-app language settings: ${e.message}")
             }
-            val languages = requireContext().resources.getStringArray(R.array.languageCodes)
-                .map { code ->
-                    val locale = LocaleHelper.getLocaleFromAndroidCode(code)
-
-                    // each language's name is displayed in its own language,
-                    // e.g. 'de': 'Deutsch', FR: 'Francais', ...
-                    locale.toString() to locale.getDisplayName(locale)
-                }.sortedBy { it.second.lowercase() }
-            language?.entries =
-                arrayOf(requireContext().getString(R.string.systemLanguage)) + languages.map { it.second }
-            language?.entryValues = arrayOf("sys") + languages.map { it.first }
-        } else {
-            // on newer Android versions, the language is set through Android settings
-
-            // set displayed current settings value (i.e. current app language)
-            val currentLocale = Locale.getDefault()
-            // Préférence de LANGUE : utiliser le code de langue (jamais le code pays isO3Country,
-            // sémantiquement faux et susceptible de lever MissingResourceException). `language`
-            // (ISO 639) ne lève jamais d'exception.
-            language?.entries = arrayOf(currentLocale.displayLanguage)
-            language?.entryValues = arrayOf(currentLocale.language)
-            language?.value = currentLocale.language
-
-            // open Android settings for per-app language preference for the app
-            language?.setOnPreferenceClickListener { _ ->
-                try {
-                    startActivity(
-                        Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
-                            .setData(Uri.fromParts("package", BuildConfig.APPLICATION_ID, null))
-                    )
-                } catch (e: Exception) {
-                    context?.toastFromMainThread("Failed to open per-app language settings: ${e.message}")
-                }
-                true
-            }
+            true
         }
     }
 
     override fun onDisplayPreferenceDialog(preference: Preference) {
-        if (preference.key == "language" && LocaleHelper.isPerAppLocaleSettingSupported()) return
+        if (preference.key == "language") return
 
         super.onDisplayPreferenceDialog(preference)
     }
 }
+// endregion

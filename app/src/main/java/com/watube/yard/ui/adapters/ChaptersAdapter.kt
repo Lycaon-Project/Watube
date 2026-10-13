@@ -12,6 +12,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.ui.viewholders.ChaptersViewHolder
 
+// region Chapters
 class ChaptersAdapter(
     var chapters: List<ChapterSegment>,
     private val videoDurationSeconds: Long,
@@ -76,3 +77,4 @@ class ChaptersAdapter(
 
     override fun getItemViewType(position: Int) = position
 }
+// endregion

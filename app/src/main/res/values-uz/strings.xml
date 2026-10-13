@@ -50,7 +50,6 @@
     <string name="success">Tayyor.</string>
     <string name="fail">Xatolik :(</string>
     <string name="changeLanguage">Til</string>
-    <string name="systemLanguage">Tizim</string>
     <string name="systemDefault">Tizim</string>
     <string name="lightTheme">Yorug‘</string>
     <string name="darkTheme">Qorong‘i</string>
@@ -70,7 +69,6 @@
     <string name="albums">Albomlar</string>
     <string name="all">Barchasi</string>
     <string name="playlists">Pleylistlar</string>
-    <string name="okay">OK</string>
     <string name="finished">Yakunlandi</string>
     <string name="history">Tarix</string>
     <string name="search_history">Tarixni qidirish</string>
@@ -80,7 +78,6 @@
     <string name="music_albums">YT Music Albomlari</string>
     <string name="music_playlists">YT Music Pleylistlari</string>
     <string name="music_artists">YT Music Ijrochilari</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">O‘tkazib yuborilgan bo‘lim</string>
     <string name="category_segments">Bo‘limlar</string>
     <string name="category_sponsor">Homiy</string>
@@ -114,7 +111,6 @@
     <string name="rich_caption_rendering_summary">Boyroq va moslashtirilgan tajriba uchun veb-subtitrlar</string>
     <string name="captions">Subtitrlar</string>
     <string name="none">Yo‘q</string>
-    <string name="general">Umumiy</string>
     <string name="caption_settings">Subtitrlar</string>
     <string name="playerAudioQuality">Audio sifati</string>
     <string name="worst_quality">Eng yomon</string>
@@ -182,7 +178,6 @@
     <string name="no_video">Video yo‘q</string>
     <string name="no_subtitle">Subtitr yo‘q</string>
     <string name="audio">Ovoz</string>
-    <string name="video">Video</string>
     <string name="downloading">Yuklab olinmoqda…</string>
     <string name="download_paused">Yuklab olish to‘xtatildi</string>
     <string name="download_completed">Yuklab olish yakunlandi</string>
@@ -209,7 +204,6 @@
     <string name="auth_instance">Autentifikatsiya instansiyasi</string>
     <string name="auth_instance_summary">Autentifikatsiya talab qilinadigan chaqiruvlar uchun boshqa instansiyadan foydalanish</string>
     <string name="auth_instances">Autentifikatsiya instansiyasini tanlash</string>
-    <string name="audio_video">Audio va video</string>
     <string name="fullscreen_orientation">To‘liq ekran rejimidagi orientatsiya</string>
     <string name="aspect_ratio">Video tomonlar nisbati</string>
     <string name="auto_rotation">Avtomatik aylantirish</string>
@@ -237,7 +231,6 @@
     <string name="add_to_queue">Navbatga qo‘shish</string>
     <string name="misc">Boshqa</string>
     <string name="take_a_break">Tanaffus qilish vaqti keldi</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="repeat_mode">Takrorlash rejimi</string>
     <string name="resize_mode_fit">Moslashtirish</string>
     <string name="resize_mode_fill">To‘ldirish</string>
@@ -247,7 +240,6 @@
     <string name="repeat_mode_all">Barchasini takrorlash</string>
     <string name="backup_restore">Zaxiralash va tiklash</string>
     <string name="backup">Zaxiralash</string>
-    <string name="pip">PiP</string>
     <string name="player_resize_mode">O‘lchamni o‘zgartirish rejimi</string>
     <string name="copied_to_clipboard">Buferga nusxalandi</string>
     <string name="open_copied">Ochish</string>
@@ -255,7 +247,6 @@
     <string name="delete">Yuklab olinganlardan o‘chirish</string>
     <string name="delete_all">Barcha yuklab olinganlar o‘chiriladi!</string>
     <string name="renamePlaylist">Pleylist nomini o‘zgartirish</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobil trafik</string>
     <string name="new_videos_badge">Yangi videolar uchun ko‘rsatkich</string>
     <string name="new_videos_badge_summary">Agar mavjud bo‘lsa, yangi videolar soni bilan belgi ko‘rsatiladi</string>
@@ -340,7 +331,6 @@
     <string name="mark_as_watched">Ko‘rilgan deb belgilash</string>
     <string name="category">Kategoriya</string>
     <string name="stats_for_nerds">Texnik ma’lumotlar</string>
-    <string name="video_id">Video ID</string>
     <string name="copy_tooltip">Nusxa olish</string>
     <string name="autoplay_countdown">Avtoijro hisoblagichi</string>
     <string name="autoplay_countdown_summary">Keyingi videoni avtomatik ijro etishdan oldin 5 soniyalik hisoblagichni ko‘rsatish</string>
@@ -414,7 +404,6 @@
     <string name="import_format_list_of_urls">URL manzillari yoki video ID’lar ro‘yxati</string>
     <string name="home_tab_content">Bosh sahifa yorlig‘i mazmuni</string>
     <string name="show_search_suggestions">Qidiruv takliflarini ko‘rsatish</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Noma’lum audio tili</string>
     <string name="unknown_audio_track_type">Noma’lum audio trek turi</string>
     <string name="original_or_main_audio_track">Asl yoki asosiy</string>
@@ -443,7 +432,6 @@
     <string name="time_in_minutes">Vaqt (daqiqalarda)</string>
     <string name="invalid_input">Noto‘g‘ri kiritish</string>
     <string name="add_to_group">Guruhga qo‘shish</string>
-    <string name="uptime">%.2f%% uptime</string>
     <string name="change">O‘zgartirish</string>
     <string name="gestures">Imo-ishoralar</string>
     <string name="external_download_provider">Tashqi yuklab olish provayderi</string>
@@ -509,18 +497,6 @@
     </plurals>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

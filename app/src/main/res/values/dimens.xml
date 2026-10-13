@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <integer name="grid_items">1</integer>
     <integer name="grid_items_landscape">2</integer>
 
@@ -30,8 +30,13 @@
     <!-- Fullscreen player: offset between the bottom edge of the player controls and the
          bottom control cluster (seekbar row). Declared as a dimen so the value is resolved
          through the app Resources configuration of the current screen instead of being
-         converted from dp in code. -->
+         converted from dp in code. The camera cutout is kept clear by the side margins
+         (CustomExoPlayerView.updateMarginsByFullscreenMode), not by this offset. -->
     <dimen name="watube_player_controls_fullscreen_bottom_margin">10dp</dimen>
+    <!-- Media3's PlayerControlViewLayoutManager gives the time bar this bottom margin (52dp in
+         Media3) whenever the player is large enough, i.e. in fullscreen landscape: the whole
+         bottom cluster then floated far above the edge. The layout spaces it itself. -->
+    <dimen name="exo_styled_progress_margin_bottom" tools:override="true" tools:ignore="UnusedResources">0dp</dimen>
 
     <item name="landscape_player_constraint_width_percentage" type="dimen" format="float">0.55</item>
 </resources>

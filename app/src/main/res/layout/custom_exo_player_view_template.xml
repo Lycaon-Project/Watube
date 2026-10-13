@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Video Player -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -84,32 +85,34 @@
         android:layout_gravity="center"
         android:gravity="center" />
 
-    <com.google.android.material.card.MaterialCardView
+    <!-- SponsorBlock skip: a compact pill on the side, clear of the centre play button. It shows
+         for a few seconds when a segment starts, then only with the player controls. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sb_skip_btn"
+        style="@style/Widget.Material3.Button.UnelevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="-10dp"
-        android:paddingEnd="20dp"
-        app:cardBackgroundColor="#88000000"
-        app:strokeWidth="1dp"
-        tools:ignore="RtlSymmetry">
-
-        <com.watube.yard.ui.views.DrawableTextView
-            android:id="@+id/sb_skip_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="20dp"
-            android:padding="10dp"
-            android:text="@string/skip_segment"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:visibility="gone"
-            app:drawableEndCompat="@drawable/ic_next"
-            app:drawableEndDimen="20dp"
-            app:drawableTint="@android:color/white" />
-
-    </com.google.android.material.card.MaterialCardView>
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="12dp"
+        android:insetTop="6dp"
+        android:insetBottom="6dp"
+        android:minHeight="48dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="10dp"
+        android:contentDescription="@string/skip_segment"
+        android:text="@string/skip_segment_short"
+        android:textColor="@android:color/white"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:backgroundTint="#99000000"
+        app:icon="@drawable/ic_next"
+        app:iconGravity="end"
+        app:iconPadding="6dp"
+        app:iconSize="16dp"
+        app:iconTint="@android:color/white"
+        app:rippleColor="#33FFFFFF"
+        app:strokeColor="#40FFFFFF"
+        app:strokeWidth="1dp" />
 
     <com.watube.yard.ui.views.AutoplayCountdownView
         android:id="@+id/autoplay_countdown"
@@ -134,3 +137,4 @@
         android:gravity="center_horizontal"/>
 
 </merge>
+<!-- endregion -->

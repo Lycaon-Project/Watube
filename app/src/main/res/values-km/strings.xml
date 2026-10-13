@@ -81,7 +81,6 @@
     <string name="login">បញ្ជាប់ចូល</string>
     <string name="update_summary">ពិនិត្យអាប់ដេត</string>
     <string name="empty">អ្នកត្រូវវាយបញ្ចូលអត្ថនាម និងពាក្យសម្ងាត់។</string>
-    <string name="systemLanguage">ប្រព័ន្ធ</string>
     <string name="settings">ការកំណត់</string>
     <string name="playlistCreated">កម្រងវីដេអូបានបង្កើត។</string>
     <string name="registered">បានចុះឈ្មោះ។ ឥឡូវ អ្នកអាចជាវឆាណែលនេះបាន។</string>
@@ -140,7 +139,6 @@
     <string name="resume">ចាក់បន្ត</string>
     <string name="instance_frontend_url">URL ទៅឧបមាផ្នែកខាងមុខ</string>
     <string name="advanced">កម្រិតខ្ពស់</string>
-    <string name="audio_video">អូឌីយោ និងវីដេអូ</string>
     <string name="data_saver_mode">របៀបសន្សំទិន្នន័យ</string>
     <string name="fullscreen_orientation">ការតម្រង់អេក្រង់ពេញ</string>
     <string name="checking_frequency">កំពុងពិនិត្យរាល់…</string>
@@ -182,7 +180,6 @@
     <string name="open">បើក…</string>
     <string name="require_restart_message">រីស្តាតកម្មវិធី ដើម្បីប្រើការផ្លាស់ប្តូរថ្មីនេះ។</string>
     <string name="irreversible">តើអ្នកប្រាកដឬអត់\? នេះមិនអាចត្រឡប់វិញបានទេ!</string>
-    <string name="general">ជាទូទៅ</string>
     <string name="auth_instance_summary">ប្រើតាមឧបមាផ្សេងសម្រាប់ហៅយថាភូតកម្ម។</string>
     <string name="require_restart">តម្រូវឱ្យរីស្តាតកម្មវិធី</string>
     <string name="gradientIcon">ជម្រាល</string>
@@ -238,18 +235,6 @@
     <string name="createNewPlaylist">បង្កើតកម្រងវីដេអូថ្មី</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

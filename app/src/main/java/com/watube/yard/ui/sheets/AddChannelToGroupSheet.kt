@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import androidx.fragment.app.activityViewModels
 import com.watube.yard.ui.models.SubscriptionsViewModel
 
+// region Subscriptions
 class AddChannelToGroupSheet : ExpandedBottomSheet(R.layout.dialog_add_channel_to_group) {
     private lateinit var channelId: String
 
@@ -63,3 +64,4 @@ class AddChannelToGroupSheet : ExpandedBottomSheet(R.layout.dialog_add_channel_t
         }
     }
 }
+// endregion

@@ -17,6 +17,7 @@ import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet.Companion.PLAYLIST_OPTIONS_REQUEST_KEY
 import com.watube.yard.ui.viewholders.PlaylistsViewHolder
 
+// region Playlists
 class PlaylistsAdapter(
     private val playlistType: PlaylistType
 ) : ListAdapter<Playlists, PlaylistsViewHolder>(
@@ -100,3 +101,4 @@ class PlaylistsAdapter(
         submitList(newList)
     }
 }
+// endregion

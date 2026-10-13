@@ -73,7 +73,6 @@
     <string name="addToPlaylist">Afegeix a la llista de reproducció</string>
     <string name="about">Sobre</string>
     <string name="changeLanguage">Idioma</string>
-    <string name="systemLanguage">Sistema</string>
     <string name="subscribers">%1$s subscripcions</string>
     <string name="settings">Configuració</string>
     <string name="videoCount">%1$d vídeos</string>
@@ -91,9 +90,7 @@
     <string name="music_videos">Vídeos de YT Music</string>
     <string name="music_albums">Àlbums musicals de YT</string>
     <string name="music_playlists">Llistes de reproducció de YT Music</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">Segment omès</string>
-    <string name="category_segments">Segments</string>
     <string name="category_sponsor">Patrocinador</string>
     <string name="category_sponsor_summary">Promoció de pagament, referències de pagament i anuncis directes. No per a l\'autopromoció o els crits genuïns gratuïts a causes, creadors, llocs web i productes</string>
     <string name="category_selfpromo">Promoció no remunerada/autopromoció</string>
@@ -143,7 +140,6 @@
     <string name="network_wifi">Només amb Wi-Fi</string>
     <string name="normal_views">%1$s visualitzacions%2$s</string>
     <string name="reset">Restaurar els valors predeterminats</string>
-    <string name="error_occurred">Error</string>
     <string name="copied_to_clipboard">S\'ha copiat al porta-retalls</string>
     <string name="default_subtitle_language">Idioma dels subtítols</string>
     <string name="network_metered">Mesurat</string>
@@ -168,7 +164,6 @@
     <string name="rich_caption_rendering_summary">Renderitza subtítols web per a obtenir una experiència més rica i personalitzada</string>
     <string name="chapters">Capítols</string>
     <string name="resume">Continua</string>
-    <string name="audio_video">Àudio i vídeo</string>
     <string name="repeat_mode_current">Actual</string>
     <string name="data_saver_mode">Mode d\'estalvi de dades</string>
     <string name="fullscreen_orientation">Orientació a pantalla completa</string>
@@ -205,7 +200,6 @@
     <string name="open">Obre…</string>
     <string name="require_restart_message">Reinicieu l\'aplicació per a utilitzar els canvis nous.</string>
     <string name="irreversible">N\'esteu segur? Això no es pot desfer!</string>
-    <string name="general">General</string>
     <string name="repeat_mode_none">Cap</string>
     <string name="auth_instance_summary">Utilitzeu una instància diferent per a les sol·licituds autenticades</string>
     <string name="require_restart">Cal reiniciar l\'aplicació</string>
@@ -258,7 +252,6 @@
     <string name="tooltip_filter">Filtra</string>
     <string name="delete_all">Se suprimiran totes les descàrregues</string>
     <string name="new_videos_badge_summary">Mostra una insígnia amb la quantitat de vídeos nous si n\'hi ha</string>
-    <string name="color">Color</string>
     <string name="notification_time_summary">Limita el lapse de temps en què es mostren les notificacions de transmissió</string>
     <string name="trending">El que és tendència ara</string>
     <string name="bookmarks">Marcadors</string>
@@ -328,11 +321,9 @@
     <string name="downvote">Negatiu</string>
     <string name="vote_for_segment">Vota pel segment</string>
     <string name="undo">Desfés</string>
-    <string name="segment">Segment</string>
     <string name="export_subscriptions_to">Exporta subscripcions a</string>
     <string name="export_playlists_to">Exporta llistes de reproducció a</string>
     <string name="show_search_suggestions">Mostra suggeriments de cerca</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Idioma d\'àudio desconegut</string>
     <string name="screen_orientation">Orientació de la pantalla</string>
     <string name="resolution_limited">limitat</string>
@@ -433,8 +424,6 @@
     <string name="pinch_control">Controls del pinçament</string>
     <string name="automatic">Automàtic</string>
     <string name="invalid_color">El color introduït no és vàlid</string>
-    <string name="manual">Manual</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="exportsuccess">Exportat.</string>
     <string name="tooltip_reverse">Inverteix</string>
     <string name="descriptive_audio_track">descriptiu</string>
@@ -481,7 +470,6 @@
     <string name="music">Música</string>
     <string name="include_timestamp_in_filename">Inclou la marca de temps al nom del fitxer</string>
     <string name="import_temp_playlist">Importar la llista de reproducció temporal?</string>
-    <string name="pip">PiP</string>
     <string name="crashlog">Registre d\'errors</string>
     <string name="local_feed_extraction">Extracció local del canal</string>
     <string name="show_updates_summary">Comprova si hi ha actualitzacions automàticament cada vegada que s\'inicia l\'aplicació.</string>
@@ -523,18 +511,6 @@
     <string name="long_press_fast_forward_summary">Reprodueix vídeo a doble velocitat mentre toqueu i manteniu premuda la pantalla.</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

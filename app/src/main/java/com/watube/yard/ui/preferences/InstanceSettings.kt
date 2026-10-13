@@ -1,6 +1,5 @@
 package com.watube.yard.ui.preferences
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -18,6 +17,7 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.databinding.SimpleOptionsRecyclerBinding
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.ProxyHelper
 import com.watube.yard.ui.adapters.InstancesAdapter
 import com.watube.yard.ui.base.BasePreferenceFragment
 import com.watube.yard.ui.dialogs.CreateCustomInstanceDialog
@@ -26,26 +26,25 @@ import com.watube.yard.ui.dialogs.DeleteAccountDialog
 import com.watube.yard.ui.dialogs.LoginDialog
 import com.watube.yard.ui.dialogs.LogoutDialog
 import com.watube.yard.ui.models.InstancesModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.common.collect.ImmutableList
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
-open class InstanceSettings : BasePreferenceFragment() {
+// region Piped Instances
+/**
+ * Behaviour of the instance / authentication / account rows (R.xml.instance_settings), shared
+ * with the screen that shows them: [PrivacySettings] merges that XML into its hub. It is no
+ * screen of its own anymore.
+ */
+abstract class InstanceSettings : BasePreferenceFragment() {
     private val token get() = PreferenceHelper.getToken()
     private var instances = mutableListOf<PipedInstance>()
     private val customInstancesModel: InstancesModel by activityViewModels()
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.instance_settings, rootKey)
-        bindInstancePreferences()
-    }
-
     /**
-     * Binds the instance / authentication / account rows. Extracted from
-     * [onCreatePreferences] so [PrivacySettings], which merges the very same preference
-     * XML into its hub, can reuse the whole behaviour (dialogs included, see
-     * [onDisplayPreferenceDialog]) without duplicating the logic.
+     * Binds the instance / authentication / account rows, dialogs included (see
+     * [onDisplayPreferenceDialog]).
      */
     protected fun bindInstancePreferences() {
         val instancePref = findPreference<ListPreference>(PreferenceKeys.FETCH_INSTANCE)!!
@@ -131,6 +130,9 @@ open class InstanceSettings : BasePreferenceFragment() {
             // when the full local mode gets enabled, the fetch instance is no longer used and replaced
             // fully by local extraction. thus, the user has to be logged out from the fetch instance
             if (newValue == true && !authInstanceToggle.isChecked) logoutAndUpdateUI()
+            // leaving the full local mode: the media proxy of the instance is needed at once
+            // (posted, the new value is only saved once this listener returns)
+            if (newValue == false) view?.post { ProxyHelper.refreshProxyUrl(force = true) }
             true
         }
     }
@@ -187,7 +189,7 @@ open class InstanceSettings : BasePreferenceFragment() {
             selectedInstance = instances[it].apiUrl
         }.also { it.submitList(instances) }
 
-        MaterialAlertDialogBuilder(requireContext())
+        SecureAlertDialogBuilder(requireContext())
             .setTitle(preference.title)
             .setView(binding.root)
             .setNeutralButton(R.string.addInstance) { _, _ ->
@@ -220,6 +222,8 @@ open class InstanceSettings : BasePreferenceFragment() {
         if (!authInstanceToggle.isChecked) {
             logoutAndUpdateUI()
         }
+        // the proxy of the former instance is never used for this one: fetch its own now
+        ProxyHelper.refreshProxyUrl(force = true)
         RetrofitInstance.apiLazyMgr.reset()
         ActivityCompat.recreate(requireActivity())
     }
@@ -228,3 +232,4 @@ open class InstanceSettings : BasePreferenceFragment() {
         const val INSTANCE_DIALOG_REQUEST_KEY = "instance_dialog_request_key"
     }
 }
+// endregion

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Downloads -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -26,7 +27,6 @@
                 app:icon="@drawable/ic_play"
                 android:tooltipText="@string/resume_all"
                 android:visibility="gone"
-                tools:targetApi="o"
                 tools:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
@@ -108,7 +108,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/shuffle_all"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:targetApi="o"
         tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -123,7 +122,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:targetApi="o"
         tools:visibility="visible" />
 
     <androidx.fragment.app.FragmentContainerView
@@ -132,3 +130,4 @@
         android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+<!-- endregion -->

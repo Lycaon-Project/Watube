@@ -3,6 +3,7 @@ package com.watube.yard.ui.extensions
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 
+// region Navigation
 fun Fragment.setOnBackPressed(action: OnBackPressedCallback.() -> Unit): OnBackPressedCallback {
     val callback =  object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -21,3 +22,4 @@ fun Fragment.setOnBackPressed(callback: OnBackPressedCallback): OnBackPressedCal
 
     return callback
 }
+// endregion

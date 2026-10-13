@@ -58,7 +58,7 @@ import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.DownloadsViewModel
 import com.watube.yard.ui.sheets.BaseBottomSheet
 import com.watube.yard.ui.viewholders.DownloadsViewHolder
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -67,6 +67,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.io.path.fileSize
 
+// region Downloads
 enum class DownloadTab {
     VIDEO,
     AUDIO,
@@ -412,7 +413,7 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
     private fun showDeleteAllDialog(context: Context, adapter: DownloadsAdapter) {
         var onlyDeleteWatchedVideos = false
 
-        MaterialAlertDialogBuilder(context)
+        SecureAlertDialogBuilder(context)
             .setTitle(R.string.delete_all)
             .setMultiChoiceItems(
                 arrayOf(getString(R.string.delete_only_watched_videos)),
@@ -662,3 +663,4 @@ class PlaylistDownloadsFragmentPage : Fragment(R.layout.fragment_download_conten
         }
     }
 }
+// endregion

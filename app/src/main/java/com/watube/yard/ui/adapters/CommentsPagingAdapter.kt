@@ -22,6 +22,7 @@ import com.watube.yard.util.HtmlParser
 import com.watube.yard.util.LinkHandler
 import com.watube.yard.util.TextUtils
 
+// region Comments
 class CommentsPagingAdapter(
     private val isReplies: Boolean,
     private val channelAvatar: String?,
@@ -119,3 +120,4 @@ class CommentsPagingAdapter(
         }
     }
 }
+// endregion

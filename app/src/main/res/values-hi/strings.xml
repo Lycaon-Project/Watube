@@ -49,7 +49,6 @@
     <string name="noInternet">पहले इंटरनेट से कनेक्ट करें।</string>
     <string name="emptyPlaylistName">प्लेलिस्ट का नाम खाली नहीं छोड़ा जा सकता</string>
     <string name="changeLanguage">भाषा</string>
-    <string name="systemLanguage">सिस्टम</string>
     <string name="systemDefault">सिस्टम डिफ़ॉल्ट</string>
     <string name="lightTheme">सफेद</string>
     <string name="darkTheme">गहरा</string>
@@ -222,7 +221,6 @@
     <string name="auth_instance">प्रमाणीकरण इंस्टेंस</string>
     <string name="auth_instance_summary">प्रमाणीकृत कॉल के लिए एक अलग इंस्टेंस का उपयोग करें</string>
     <string name="auth_instances">एक प्रमाणीकरण इंस्टेंस चुनें</string>
-    <string name="audio_video">ऑडियो और वीडियो</string>
     <string name="fullscreen_orientation">फुलस्क्रीन ओरिएंटेशन</string>
     <string name="open">खोलें…</string>
     <string name="chapters">अध्याय</string>
@@ -257,7 +255,6 @@
     <string name="pure_theme">शुद्ध थीम</string>
     <string name="pure_theme_summary">शुद्ध सफेद / काला थीम</string>
     <string name="autoRotatePlayer">ऑटो-फुलस्क्रीन</string>
-    <string name="general">सामान्य</string>
     <string name="playerAudioQuality">ऑडियो गुणवत्ता</string>
     <string name="worst_quality">न्यूनतम</string>
     <string name="no_comments_available">इस वीडियो पे कोई टिप्पणी नहीं है।</string>
@@ -359,7 +356,6 @@
     <string name="default_or_unknown_audio_track">डिफ़ॉल्ट</string>
     <string name="unknown_or_no_audio">अज्ञात या कोई ऑडियो नहीं</string>
     <string name="descriptive_audio_track">ऑडियो विवरण</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">अज्ञात ऑडियो भाषा</string>
     <string name="unknown_audio_track_type">अज्ञात ऑडियो ट्रैक प्रकार</string>
     <string name="original_or_main_audio_track">मूल</string>
@@ -451,7 +447,6 @@
     <string name="external_download_provider">बाहरी डाउनलोड प्रदाता</string>
     <string name="external_download_provider_summary">उस ऐप का पैकेज नाम दर्ज करें जिसका उपयोग आप वीडियो डाउनलोड करने के लिए करना चाहते हैं। लिब्रेट्यूब के अंतर्निर्मित डाउनलोडर का उपयोग करने के लिए खाली छोड़ दें।</string>
     <string name="screenshot">स्क्रीनशॉट</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction">स्थानीय स्ट्रीम प्राप्ती</string>
     <string name="local_stream_extraction_summary">Piped का उपयोग किए बिना YouTube से सीधे वीडियो प्लेबैक जानकारी प्राप्त करें।</string>
     <string name="local_ryd">Return Youtube Dislike की स्थानीय प्राप्ती</string>
@@ -520,18 +515,6 @@
     <string name="comment_pinned">पिन की गई</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

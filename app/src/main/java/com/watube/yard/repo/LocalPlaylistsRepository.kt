@@ -11,6 +11,7 @@ import com.watube.yard.db.obj.LocalPlaylist
 import com.watube.yard.extensions.parallelMap
 import com.watube.yard.obj.PipedImportPlaylist
 
+// region Playlists
 class LocalPlaylistsRepository: PlaylistRepository {
     override suspend fun getPlaylist(playlistId: String): Playlist {
         val relation = DatabaseHolder.Database.localPlaylistsDao().getAll()
@@ -152,3 +153,4 @@ class LocalPlaylistsRepository: PlaylistRepository {
         return true
     }
 }
+// endregion

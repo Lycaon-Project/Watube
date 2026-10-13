@@ -8,6 +8,7 @@ import androidx.room.Query
 import com.watube.yard.db.obj.CustomInstance
 import kotlinx.coroutines.flow.Flow
 
+// region Piped Instances
 @Dao
 interface CustomInstanceDao {
     @Query("SELECT * FROM customInstance ORDER BY name")
@@ -22,12 +23,7 @@ interface CustomInstanceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(customInstances: List<CustomInstance>)
 
-    @Query("SELECT * FROM customInstance WHERE apiUrl = :apiUrl")
-    suspend fun getByApiUrl(apiUrl: String): CustomInstance?
-
     @Delete
     suspend fun deleteCustomInstance(customInstance: CustomInstance)
-
-    @Query("DELETE FROM customInstance")
-    suspend fun deleteAll()
 }
+// endregion

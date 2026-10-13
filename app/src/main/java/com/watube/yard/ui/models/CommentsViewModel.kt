@@ -16,6 +16,7 @@ import com.watube.yard.extensions.updateIfChanged
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.ui.models.sources.CommentPagingSource
 
+// region Comments
 class CommentsViewModel : ViewModel() {
 
     private var lastOpenedCommentRepliesId: String? = null
@@ -66,8 +67,8 @@ class CommentsViewModel : ViewModel() {
     fun saveToClipboard(context: Context, comment: Comment) {
         ClipboardHelper.save(
             context,
-            text = comment.commentText.orEmpty().parseAsHtml().toString(),
-            notify = true
+            text = comment.commentText.orEmpty().parseAsHtml().toString()
         )
     }
 }
+// endregion

@@ -2,6 +2,7 @@
 # Watube ProGuard/R8 Rules - Ubdated
 # ----------------------------------------------------------------------------
 
+# region Build
 # Enable aggressive optimizations for smaller APK size
 -optimizationpasses 5
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
@@ -21,14 +22,18 @@
 -dontwarn javax.annotation.**
 -dontwarn kotlin.Unit
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+# endregion
 
+# region Build
 # ----------------------------------------------------------------------------
 # KOTLIN COROUTINES
 
 # Keep coroutine dispatcher factories (loaded via ServiceLoader)
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+# endregion
 
+# region Build
 # ----------------------------------------------------------------------------
 # KOTLINX SERIALIZATION
 
@@ -52,7 +57,9 @@
     public static <1> INSTANCE;
     kotlinx.serialization.KSerializer serializer(...);
 }
+# endregion
 
+# region Build
 # ----------------------------------------------------------------------------
 # APP-SPECIFIC DATA CLASSES
 
@@ -66,20 +73,26 @@
 -keepclassmembers class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator CREATOR;
 }
+# endregion
 
+# region Settings
 # ----------------------------------------------------------------------------
 # SETTINGS FRAGMENTS (loaded via reflection)
 
 # Keep preference fragments loaded dynamically
 -keep class com.watube.yard.ui.preferences.** { *; }
+# endregion
 
+# region Mini Player
 # ----------------------------------------------------------------------------
 # CONSTRAINTLAYOUT MOTIONLAYOUT (Fix for miniplayer issue)
 
 # Only keep MotionLayout classes (specific fix for miniplayer)
 -keep class androidx.constraintlayout.motion.widget.MotionLayout { *; }
 -keep class androidx.constraintlayout.motion.widget.TransitionAdapter { *; }
+# endregion
 
+# region Local Extraction
 # ----------------------------------------------------------------------------
 # NEWPIPE EXTRACTOR (No built-in ProGuard rules)
 
@@ -96,7 +109,9 @@
 -dontwarn javax.script.**
 -dontwarn jdk.dynalink.**
 -dontwarn com.google.re2j.**
+# endregion
 
+# region Build
 # ----------------------------------------------------------------------------
 # CRYPTOGRAPHY LIBRARIES
 
@@ -104,18 +119,17 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
+# endregion
 
+# region Build
 # ----------------------------------------------------------------------------
 # PROTOBUF
 
 # Optimise protobuf classes
 -shrinkunusedprotofields
+# endregion
 
-# ----------------------------------------------------------------------------
-# GOOGLE PLAY SERVICES
-
--dontwarn com.google.android.gms.**
-
+# region Build
 # ----------------------------------------------------------------------------
 # R8 OPTIMIZATION HINTS
 
@@ -143,16 +157,18 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+# endregion
 
+# region Privacy
 # ----------------------------------------------------------------------------
 # LOGGING (release builds)
 
 # Nothing is written to logcat in release: logcat is readable by anyone holding the
 # device with USB debugging (or from a bug report), and lines in this codebase carry
-# video ids, channel ids, request URLs and exception messages. User visible errors go
-# through the in-app crash log (ExceptionHandler -> ErrorDialog) instead, and debug
-# builds are unaffected (they are not minified). R8 only removes calls whose return
-# value is unused, so existing call sites stay valid.
+# video ids, channel ids, request URLs and exception messages. Crash traces are kept for
+# the developer in debug builds only (ExceptionHandler -> crash log in the maintenance
+# settings), and debug builds are unaffected (they are not minified). R8 only removes calls
+# whose return value is unused, so existing call sites stay valid.
 -assumenosideeffects class android.util.Log {
     public static int v(...);
     public static int d(...);
@@ -168,39 +184,16 @@
     public void printStackTrace(java.io.PrintStream);
     public void printStackTrace(java.io.PrintWriter);
 }
+# endregion
 
+# region Privacy
 # ----------------------------------------------------------------------------
-# PRIVACY: Google telemetry removal (audited 2026-10-05: play-services-cast-framework 22.3.1,
-# play-services-base 18.7.2, media3 1.9.2).
-#
-# Google's datatransport libraries (Firelog uploads) are not shipped at all, see the Cast
-# dependency in build.gradle.kts. The rules below cut the entry points of the telemetry that
-# lives inside the libraries we do ship, so R8 deletes all the code only they reach. Names made
-# of "za"/"zz" are obfuscated and only valid for the versions above: after an update the release
-# build fails (see the guard in build.gradle.kts) until they are verified again.
+# PRIVACY: telemetry removal (audited 2026-10-09: media3 1.11.1). No proprietary Google library
+# is shipped at all (build.gradle.kts refuses them); this cuts what lives in the open source ones.
 
-# 1. Cast analytics: Play Services answers CastContext with a flags bundle that starts the whole
-#    analytics stack (session, application and feature usage analytics, usage reporting consent).
--assumenosideeffects class com.google.android.gms.cast.framework.CastContext {
-    void zzf(android.os.Bundle);
-}
-#    feature usage counters, called by the Cast UI widgets
--assumenosideeffects class com.google.android.gms.internal.cast.zzr {
-    static void zzb(com.google.android.gms.internal.cast.zzpm);
-}
-
-# 2. Play Services client telemetry: a collector attached to every Google API call (counts,
-#    timings, results) and the client that reports the batches to Play Services.
--assumenosideeffects class com.google.android.gms.common.api.internal.GoogleApiManager {
-    private void zaI(com.google.android.gms.tasks.TaskCompletionSource, int, com.google.android.gms.common.api.GoogleApi);
-    private com.google.android.gms.common.internal.TelemetryLoggingClient zaL() return _NONNULL_;
-}
--assumenosideeffects interface com.google.android.gms.common.internal.TelemetryLoggingClient {
-    com.google.android.gms.tasks.Task log(com.google.android.gms.common.internal.TelemetryData);
-}
-
-# 3. Media3 platform diagnostics: even with setUsePlatformDiagnostics(false), every player opens
-#    a MediaMetricsManager playback session whose id tags its codecs and audio track.
+# Media3 platform diagnostics: even with setUsePlatformDiagnostics(false), every player opens
+# a MediaMetricsManager playback session whose id tags its codecs and audio track.
 -assumenosideeffects class androidx.media3.exoplayer.ExoPlayerImpl$Api31 {
     static void registerMediaMetricsListener(android.content.Context, androidx.media3.exoplayer.ExoPlayerImpl, boolean, androidx.media3.exoplayer.analytics.PlayerId);
 }
+# endregion

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="login">Zaloguj się</string>
-    <string name="region">Region</string>
     <string name="yes">Tak</string>
     <string name="download">Pobierz</string>
     <string name="search_hint">Szukaj</string>
@@ -45,18 +44,14 @@
     <string name="import_from_yt_summary">Z YouTube lub NewPipe</string>
     <string name="videos">Filmy</string>
     <string name="changeLanguage">Język</string>
-    <string name="systemLanguage">System</string>
-    <string name="systemDefault">System</string>
     <string name="lightTheme">Jasny</string>
     <string name="subscribers">%1$s subskrypcji</string>
     <string name="darkTheme">Ciemny</string>
     <string name="subscriptions">Subskrypcje</string>
     <string name="library">Biblioteka</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="channels">Kanały</string>
     <string name="all">Wszystko</string>
     <string name="playlists">Playlisty</string>
-    <string name="okay">OK</string>
     <string name="history">Historia</string>
     <string name="search_history">Historia wyszukiwania</string>
     <string name="clear_history">Wyczyść historię</string>
@@ -163,7 +158,6 @@
     <string name="auth_instance">Instancja uwierzytelniająca</string>
     <string name="auth_instance_summary">Użyj innej instancji do obsługi konta Piped</string>
     <string name="auth_instances">Wybierz instancję autoryzacyjną</string>
-    <string name="audio_video">Dźwięk i wideo</string>
     <string name="fullscreen_orientation">Wyświetlanie pełnoekranowe</string>
     <string name="portrait">Wymuś tryb pionowy</string>
     <string name="chapters">Rozdziały</string>
@@ -176,7 +170,6 @@
     <string name="reset_watch_positions">Zresetuj</string>
     <string name="system_caption_style">Styl napisów systemowych</string>
     <string name="captions">Napisy</string>
-    <string name="general">Ogólne</string>
     <string name="caption_settings">Ustawienia napisów</string>
     <string name="default_subtitle_language">Język napisów</string>
     <string name="most_recent">Najnowsze</string>
@@ -216,7 +209,6 @@
     <string name="background_mode">Działanie w tle</string>
     <string name="share_with_time">Udostępnij z uwzględnieniem czasu</string>
     <string name="renamePlaylist">Zmień nazwę playlisty</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Dane mobilne</string>
     <string name="new_videos_badge">Oznaczenie nowych filmów</string>
     <string name="new_videos_badge_summary">Wyświetlaj plakietkę z ilością nowych filmów</string>
@@ -256,7 +248,6 @@
     <string name="local_playlists">Lokalne playlisty</string>
     <string name="brightness">Jasność</string>
     <string name="volume">Głośność</string>
-    <string name="auto">Auto</string>
     <string name="swipe_controls">Sterowanie gestami</string>
     <string name="swipe_controls_summary">Steruj jasnością i głośnością za pomocą gestów w trybie pełnoekranowym</string>
     <string name="no_comments_available">Nie skomentowano jeszcze tego materiału.</string>
@@ -338,7 +329,6 @@
     <string name="mark_as_unwatched">Oznacz jako nieobejrzane</string>
     <string name="dearrow">Włącz DeArrow</string>
     <string name="dearrow_summary">Pokaż dokładniejsze i mniej sensacyjne tytuły i miniatury. Wydłuża czas ładowania</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Nieznany język ścieżki dźwiękowej</string>
     <string name="color">Kolor</string>
     <string name="invalid_color">Wprowadzono nieprawidłową wartość koloru!</string>
@@ -409,7 +399,6 @@
     <string name="same_as_fullscreen">Taka sama jak w trybie pełnoekranowym</string>
     <string name="vote_for_segment">Zagłosuj na segment</string>
     <string name="upvote">W górę</string>
-    <string name="segment">Segment</string>
     <string name="undo">Cofnij</string>
     <string name="repeat_mode_all">Powtarzaj wszystkie</string>
     <string name="segment_submitted">Przesłano segment</string>
@@ -509,18 +498,6 @@
     </plurals>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

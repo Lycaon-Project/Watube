@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.watube.yard.databinding.PlayerGestureControlsViewBinding
 import com.watube.yard.extensions.normalize
 
+// region Player Gestures
 class PlayerGestureControlsView(
     context: Context,
     attrs: AttributeSet? = null
@@ -34,3 +35,4 @@ class PlayerGestureControlsView(
         }
     }
 }
+// endregion

@@ -4,9 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.watube.yard.api.obj.ChapterSegment
 
+// region Chapters
 class ChaptersViewModel: ViewModel() {
     val chaptersLiveData = MutableLiveData<List<ChapterSegment>>()
     val chapters get() = chaptersLiveData.value.orEmpty()
     val currentChapterIndex = MutableLiveData<Int>()
     var maxSheetHeightPx = 0
 }
+// endregion

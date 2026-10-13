@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Comments
 @Serializable
 @Parcelize
 data class Comment(
@@ -24,3 +25,4 @@ data class Comment(
     val creatorReplied: Boolean = false,
     val channelOwner: Boolean = false
 ) : Parcelable
+// endregion

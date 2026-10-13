@@ -7,6 +7,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.watube.yard.WatubeApp
 
+// region Database
 object DatabaseHolder {
     private const val DATABASE_NAME = "LibreTubeDatabase"
 
@@ -116,3 +117,4 @@ object DatabaseHolder {
             .build()
     }
 }
+// endregion

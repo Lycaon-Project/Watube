@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.watube.yard.R
 import com.watube.yard.helpers.ClipboardHelper
 
+// region UI Components
 class ExpandableTextView(context: Context, attributeSet: AttributeSet? = null) :
     AppCompatTextView(context, attributeSet) {
 
@@ -30,3 +31,4 @@ class ExpandableTextView(context: Context, attributeSet: AttributeSet? = null) :
         private const val DEFAULT_MAX_LINES = 2
     }
 }
+// endregion

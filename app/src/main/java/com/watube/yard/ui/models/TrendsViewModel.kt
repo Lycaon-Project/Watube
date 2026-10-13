@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Trends
 class TrendsViewModel : ViewModel() {
     data class TrendingStreams(val region: String, val streams: List<StreamItem>)
 
@@ -53,3 +54,4 @@ class TrendsViewModel : ViewModel() {
         trendingVideos.postValue(newState)
     }
 }
+// endregion

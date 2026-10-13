@@ -762,7 +762,10 @@
         securityTitle: "Durcissement de la sécurité",
         security: [
           "Sécurité réseau stricte : le trafic en clair est complètement désactivé, seuls des hôtes de développement locaux sont exemptés.",
-          "Sauvegardes sécurisées : les sauvegardes d'application chiffrées excluent explicitement le token de compte pour prévenir une usurpation de session.",
+          "Aucune sauvegarde cloud : rien n'est envoyé vers un service de sauvegarde en ligne ; le transfert local entre appareils et l'export manuel restent possibles, sans le token de compte.",
+          "Aucun code propriétaire Google : Google Play Services et son SDK Cast sont retirés, et la compilation échoue si l'un d'eux revient, même par une dépendance indirecte.",
+          "Connexions chiffrées strictes : TLS 1.2 et 1.3 uniquement, avec des suites de chiffrement modernes à confidentialité persistante.",
+          "Captures d'écran : une option masque l'application des captures, des enregistrements d'écran et de l'aperçu des applications récentes.",
           "Réduction de la surface d'attaque : suppression du récepteur de démarrage inutilisé.",
           "Mises à jour : vérification automatique des nouvelles versions publiées sur Lycaon-Project/Watube (GitHub), activée par défaut à chaque lancement ; les paramètres permettent de l'espacer (6 h, 12 h, un jour, une semaine) ou de la désactiver, et proposent une vérification manuelle.",
           "Gestion d'erreurs résiliente : fiabilité dans la source de données SABR et le picture-in-picture, avec des boucles de nouvelle tentative bornées pour la connexion au service média et les notifications de flux, au lieu de boucles infinies."
@@ -771,7 +774,7 @@
         performance: [
           "Polling intelligent de l'UI : les boucles de position, boutons de file, nom de chapitre, barre de progression et index de chapitre ne travaillent que si leur valeur change, ralentissent en pause et s'arrêtent quand le lecteur est détaché.",
           "Rendu sans allocation : les barres de temps SponsorBlock/chapitres n'allouent plus d'objets Paint/Rect à chaque image, éliminant les pics de garbage collection pendant la lecture.",
-          "Recherche amortie : les suggestions sont débouncées à 300 ms au lieu d'envoyer une requête réseau par frappe.",
+          "Suggestions de recherche locales : par défaut, elles viennent de votre historique, sur l'appareil ; en ligne seulement sur option, temporisées, mises en cache, et jamais pour un lien, une adresse e-mail ou un numéro.",
           "Persistence optimisée : la position de visionnage est enregistrée toutes les 5 secondes au lieu de chaque seconde, et immédiatement en pause ou à la fin, puis mise en cache en mémoire pour éviter des requêtes Room lors de l'affichage des listes.",
           "DiffUtil intelligent : les lignes sont identifiées par un identifiant stable, par exemple URL de vidéo ou clé primaire, afin de relier et recharger les miniatures seulement quand le contenu change réellement.",
           "Notifications limitées : les notifications de progression de téléchargement sont plafonnées à 2 mises à jour par seconde.",
@@ -875,7 +878,10 @@
         securityTitle: "Security hardening",
         security: [
           "Strict network security: cleartext traffic is completely disabled; only local development hosts are exempted.",
-          "Secure backups: encrypted app backups explicitly exclude the account token to prevent session hijacking.",
+          "No cloud backup: nothing is sent to an online backup service; the local device-to-device transfer and the manual export remain, without the account token.",
+          "No proprietary Google code: Google Play Services and its Cast SDK are removed, and the build fails if one of them comes back, even through an indirect dependency.",
+          "Strict encrypted connections: TLS 1.2 and 1.3 only, with modern forward-secret cipher suites.",
+          "Screenshots: an option hides the app from screenshots, screen recordings and the recent apps preview.",
           "Attack surface reduction: removal of the unused boot receiver.",
           "Updates: automatic check for new releases published on Lycaon-Project/Watube (GitHub), on by default at every launch; the settings can space it out (6 h, 12 h, daily, weekly) or turn it off, and offer a manual check.",
           "Resilient error handling: reliable handling in the SABR data source and picture-in-picture, using bounded retry loops for media service connection and feed notifications instead of infinite loops."
@@ -884,7 +890,7 @@
         performance: [
           "Smart UI polling: polling loops for position, queue buttons, chapter name, seek bar and chapter index only do work when their value changes, slow down while paused and stop when the player is detached.",
           "Zero-allocation rendering: SponsorBlock/chapter time bars no longer allocate Paint/Rect objects on every frame, eliminating GC spikes during playback.",
-          "Debounced search: suggestions are debounced by 300 ms instead of firing one network request per keystroke.",
+          "Local search suggestions: by default they come from your own history, on the device; online only when you turn it on, debounced, cached, and never for a link, an e-mail address or a number.",
           "Optimized persistence: watch position is saved every 5 seconds instead of every second, and immediately on pause or end, then cached in memory so list rows do not query Room while binding.",
           "Smart DiffUtil: rows are identified by a stable id, for example video URL or primary key, so lists rebind and thumbnails reload only when content actually changes.",
           "Throttled notifications: download progress notifications are limited to 2 updates per second.",
@@ -988,7 +994,10 @@
         securityTitle: "Beveiligingshardening",
         security: [
           "Strikte netwerkbeveiliging: cleartext-verkeer is volledig uitgeschakeld; alleen lokale ontwikkelhosts zijn vrijgesteld.",
-          "Beveiligde back-ups: versleutelde app-back-ups sluiten het accounttoken expliciet uit om session hijacking te voorkomen.",
+          "Geen cloudback-up: er gaat niets naar een online back-updienst; de lokale overdracht tussen apparaten en de handmatige export blijven, zonder het accounttoken.",
+          "Geen propriëtaire Google-code: Google Play Services en de Cast-SDK zijn verwijderd, en de build faalt als een ervan terugkomt, ook via een indirecte afhankelijkheid.",
+          "Strikte versleutelde verbindingen: alleen TLS 1.2 en 1.3, met moderne cipher suites met forward secrecy.",
+          "Schermafbeeldingen: een optie verbergt de app voor schermafbeeldingen, schermopnames en het overzicht van recente apps.",
           "Kleiner aanvalsoppervlak: verwijdering van de ongebruikte boot receiver.",
           "Updates: automatische controle op nieuwe releases van Lycaon-Project/Watube (GitHub), standaard ingeschakeld bij elke start; in de instellingen kun je het interval vergroten (6 uur, 12 uur, dagelijks, wekelijks) of de controle uitschakelen, en handmatig controleren.",
           "Veerkrachtige foutafhandeling: betrouwbare afhandeling in de SABR-gegevensbron en picture-in-picture, met begrensde retry-lussen voor verbinding met de mediaservice en feedmeldingen in plaats van oneindige lussen."
@@ -997,7 +1006,7 @@
         performance: [
           "Slimme UI-polling: polling-lussen voor positie, wachtrijknoppen, hoofdstuknaam, seekbar en hoofdstukindex doen alleen werk wanneer hun waarde verandert, vertragen bij pauze en stoppen wanneer de speler is losgekoppeld.",
           "Zero-allocation rendering: tijdlijnen voor SponsorBlock/hoofdstukken alloceren niet langer Paint-/Rect-objecten bij elk frame, wat GC-pieken tijdens afspelen elimineert.",
-          "Debounce zoekfunctie: suggesties worden met 300 ms gedebounced in plaats van één netwerkverzoek per toetsaanslag.",
+          "Lokale zoeksuggesties: standaard komen ze uit je eigen geschiedenis, op het apparaat; online alleen als je dat inschakelt, vertraagd, gecachet en nooit voor een link, e-mailadres of nummer.",
           "Geoptimaliseerde persistentie: kijkpositie wordt elke 5 seconden opgeslagen in plaats van elke seconde, en onmiddellijk bij pauze of einde, en in geheugen gecached zodat lijstrijen geen Room-query hoeven uit te voeren tijdens binding.",
           "Slimme DiffUtil: rijen worden geïdentificeerd via een stabiele id, bijvoorbeeld video-URL of primaire sleutel, zodat lijsten alleen opnieuw worden gebonden en thumbnails alleen opnieuw worden geladen als de inhoud echt verandert.",
           "Gesnelde meldingen: voortgangsmeldingen van downloads zijn beperkt tot 2 updates per seconde.",
@@ -1101,7 +1110,10 @@
         securityTitle: "Endurecimiento de la seguridad",
         security: [
           "Seguridad de red estricta: el tráfico en texto plano está completamente desactivado; solo están exentos hosts de desarrollo locales.",
-          "Copias de seguridad seguras: las copias de seguridad cifradas de la aplicación excluyen explícitamente el token de cuenta para evitar secuestros de sesión.",
+          "Sin copia de seguridad en la nube: nada se envía a un servicio de copias en línea; la transferencia local entre dispositivos y la exportación manual siguen disponibles, sin el token de la cuenta.",
+          "Sin código propietario de Google: Google Play Services y su SDK de Cast se han eliminado, y la compilación falla si alguno vuelve, incluso a través de una dependencia indirecta.",
+          "Conexiones cifradas estrictas: solo TLS 1.2 y 1.3, con conjuntos de cifrado modernos con secreto perfecto hacia adelante.",
+          "Capturas de pantalla: una opción oculta la aplicación en capturas, grabaciones de pantalla y en la vista de aplicaciones recientes.",
           "Reducción de la superficie de ataque: eliminación del receptor de arranque sin uso.",
           "Actualizaciones: comprobación automática de nuevas versiones publicadas en Lycaon-Project/Watube (GitHub), activada por defecto en cada inicio; los ajustes permiten espaciarla (6 h, 12 h, a diario, cada semana) o desactivarla, y ofrecen una comprobación manual.",
           "Manejo de errores resiliente: manejo fiable en la fuente de datos SABR y en picture-in-picture, usando bucles de reintento limitados para la conexión al servicio multimedia y las notificaciones de feeds, en lugar de bucles infinitos."
@@ -1110,7 +1122,7 @@
         performance: [
           "Polling inteligente de la interfaz: los bucles de posición, botones de cola, nombre de capítulo, barra de búsqueda e índice de capítulos solo trabajan cuando cambia su valor, se ralentizan en pausa y se detienen cuando el reproductor se desconecta.",
           "Renderizado sin asignación: las barras de tiempo de SponsorBlock/capítulos ya no asignan objetos Paint/Rect en cada fotograma, eliminando picos de garbage collection durante la reproducción.",
-          "Búsqueda con debounce: las sugerencias se procesan con un retardo de 300 ms en lugar de enviar una petición de red por pulsación.",
+          "Sugerencias de búsqueda locales: por defecto vienen de tu propio historial, en el dispositivo; en línea solo si lo activas, con retardo, en caché y nunca para un enlace, un correo electrónico o un número.",
           "Persistencia optimizada: la posición de visualización se guarda cada 5 segundos en lugar de cada segundo, e inmediatamente en pausa o al final, y se almacena en caché en memoria para que las filas de listas no consulten Room durante el binding.",
           "DiffUtil inteligente: las filas se identifican mediante un id estable, por ejemplo URL de vídeo o clave primaria, de modo que las listas se vuelven a enlazar y las miniaturas se recargan solo cuando el contenido cambia realmente.",
           "Notificaciones limitadas: las notificaciones de progreso de descarga están limitadas a 2 actualizaciones por segundo.",
@@ -1214,7 +1226,10 @@
         securityTitle: "Sicherheitshärtung",
         security: [
           "Strenge Netzwerksicherheit: Klartextverkehr ist vollständig deaktiviert; nur lokale Entwicklungshosts sind ausgenommen.",
-          "Sichere Backups: Verschlüsselte App-Backups schließen den Konto-Token ausdrücklich aus, um Session-Hijacking zu verhindern.",
+          "Keine Cloud-Sicherung: Nichts wird an einen Online-Sicherungsdienst gesendet; die lokale Übertragung zwischen Geräten und der manuelle Export bleiben, ohne den Konto-Token.",
+          "Kein proprietärer Google-Code: Google Play-Dienste und ihr Cast-SDK sind entfernt, und der Build schlägt fehl, falls eines davon zurückkehrt, auch über eine indirekte Abhängigkeit.",
+          "Strikt verschlüsselte Verbindungen: nur TLS 1.2 und 1.3, mit modernen Cipher-Suites mit Forward Secrecy.",
+          "Bildschirmfotos: Eine Option verbirgt die App vor Bildschirmfotos, Bildschirmaufnahmen und der Vorschau der letzten Apps.",
           "Verkleinerte Angriffsfläche: Entfernung des ungenutzten Boot-Receivers.",
           "Updates: automatische Prüfung auf neue Releases von Lycaon-Project/Watube (GitHub), standardmäßig bei jedem Start aktiv; in den Einstellungen lässt sie sich seltener ausführen (alle 6 Std., alle 12 Std., täglich, wöchentlich) oder abschalten, außerdem gibt es eine manuelle Prüfung.",
           "Robuste Fehlerbehandlung: zuverlässige Behandlung in der SABR-Datenquelle und im Picture-in-Picture-Modus mit begrenzten Wiederholungsschleifen für die Verbindung zum Mediendienst und Feed-Benachrichtigungen statt unendlicher Schleifen."
@@ -1223,7 +1238,7 @@
         performance: [
           "Intelligentes UI-Polling: Polling-Schleifen für Position, Warteschlangen-Buttons, Kapitelname, Seek-Bar und Kapitelindex arbeiten nur, wenn sich ihr Wert ändert, werden im Pausierzustand verlangsamt und gestoppt, wenn der Player getrennt ist.",
           "Zero-Allocation-Rendering: SponsorBlock-/Kapitel-Zeitleisten alloziieren nicht mehr bei jedem Frame Paint-/Rect-Objekte, wodurch GC-Spitzen während der Wiedergabe eliminiert werden.",
-          "Entprellte Suche: Suchvorschläge werden mit 300 ms verzögert, statt pro Tastenanschlag eine Netzwerkanfrage zu senden.",
+          "Lokale Suchvorschläge: Standardmäßig stammen sie aus deinem eigenen Verlauf auf dem Gerät; online nur, wenn du es einschaltest, verzögert, zwischengespeichert und nie für einen Link, eine E-Mail-Adresse oder eine Nummer.",
           "Optimierte Persistenz: Die Wiedergabeposition wird alle 5 Sekunden statt jede Sekunde gespeichert und sofort bei Pause oder Ende, dann im Speicher gecacht, damit Listenzeilen beim Binden keine Room-Abfrage ausführen müssen.",
           "Intelligentes DiffUtil: Zeilen werden über eine stabile ID identifiziert, zum Beispiel Video-URL oder Primärschlüssel, sodass Listen nur neu gebunden und Miniaturansichten nur neu geladen werden, wenn sich der Inhalt tatsächlich ändert.",
           "Gedrosselte Benachrichtigungen: Download-Fortschrittsbenachrichtigungen sind auf 2 Aktualisierungen pro Sekunde begrenzt.",

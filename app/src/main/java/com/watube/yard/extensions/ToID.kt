@@ -4,6 +4,7 @@ import com.watube.yard.ui.dialogs.ShareDialog.Companion.YOUTUBE_FRONTEND_URL
 import com.watube.yard.ui.dialogs.ShareDialog.Companion.YOUTUBE_MUSIC_URL
 import com.watube.yard.ui.dialogs.ShareDialog.Companion.YOUTUBE_SHORT_URL
 
+// region Deep Links
 /**
  * format a full YouTube url or a path to a video/channel/playlist ID
  */
@@ -22,3 +23,4 @@ fun String.toID(): String {
         .removeSuffix("/streams")
         .removeSuffix("/videos")
 }
+// endregion

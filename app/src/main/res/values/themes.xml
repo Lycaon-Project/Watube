@@ -30,16 +30,17 @@
         <item name="chipStyle">@style/Chip</item>
     </style>
 
-    <style name="SplashScreenTheme" parent="Theme.SplashScreen">
+    <!-- Watube: use the real app logo (re-adapted for the splash screen) instead of
+         the old LibreTube play-button vector. Icon is masked into a circle by the
+         splash screen API, hence the dedicated circular drawable. Android 12+ platform
+         attributes only: the minimum is Android 13, so the former v31 copy is the theme. -->
+    <style name="SplashScreenTheme" parent="BaseTheme">
+        <item name="colorSurface">@color/watube_splash_background</item>
+        <item name="android:colorBackground">@color/watube_splash_background</item>
 
-        <!-- Watube: use the real app logo (re-adapted for the splash screen) instead of
-             the old LibreTube play-button vector. Icon is masked into a circle by the
-             splash screen API, hence the dedicated circular drawable. -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/watube_splash_logo</item>
-        <item name="windowSplashScreenIconBackgroundColor">#08140E</item>
-        <item name="android:windowBackground">@color/watube_splash_background</item>
-        <item name="postSplashScreenTheme">@style/BaseTheme</item>
-
+        <item name="android:windowSplashScreenBackground">@color/watube_splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/watube_splash_logo</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#08140E</item>
     </style>
 
     <style name="Theme.Watube" parent="BaseTheme">

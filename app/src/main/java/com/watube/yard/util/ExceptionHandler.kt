@@ -2,6 +2,7 @@ package com.watube.yard.util
 
 import com.watube.yard.helpers.PreferenceHelper
 
+// region Crash Reports
 class ExceptionHandler(
     private val defaultExceptionHandler: Thread.UncaughtExceptionHandler?
 ) : Thread.UncaughtExceptionHandler {
@@ -23,3 +24,4 @@ class ExceptionHandler(
         private const val OKHTTP_THREAD_NAME = "OkHttp Dispatcher"
     }
 }
+// endregion

@@ -52,7 +52,6 @@
     <string name="music_videos">YT संगीत व्हिडिओ</string>
     <string name="music_albums">YT संगीत अल्बम</string>
     <string name="music_playlists">YT संगीत प्लेलिस्ट</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">विभाग वगळला</string>
     <string name="category_segments">विभाग</string>
     <string name="category_sponsor">प्रायोजक</string>
@@ -73,7 +72,6 @@
     <string name="videos">व्हिडिओ</string>
     <string name="import_from_yt_summary">YouTube किंवा NewPipe वरून</string>
     <string name="changeLanguage">भाषा</string>
-    <string name="systemLanguage">सिस्टम भाषा</string>
     <string name="systemDefault">सिस्टम</string>
     <string name="lightTheme">पांढरा</string>
     <string name="darkTheme">गडद</string>
@@ -94,7 +92,6 @@
     <string name="system_caption_style">सिस्टम मथळा शैली</string>
     <string name="captions">मथळे</string>
     <string name="none">काहीही नाही</string>
-    <string name="general">सामान्य</string>
     <string name="worst_quality">सर्वात वाईट गुणवत्ता</string>
     <string name="playerAudioQuality">ऑडिओ गुणवत्ता</string>
     <string name="default_subtitle_language">उपशीर्षक भाषा</string>
@@ -192,7 +189,6 @@
     <string name="behavior">वागणूक</string>
     <string name="seek_increment">क्रमाने पुढे सरकवा</string>
     <string name="pauseOnScreenOff">स्वयं-थांबवा</string>
-    <string name="audio_video">ऑडिओ आणि व्हिडिओ</string>
     <string name="fullscreen_orientation">पूर्णस्क्रीन अभिमुखता</string>
     <string name="aspect_ratio">व्हिडिओ आस्पेक्ट रेशो</string>
     <string name="auto_rotation">स्वयं-रोटेशन</string>
@@ -254,7 +250,6 @@
     <string name="delete">डाउनलोडमधून हटवा</string>
     <string name="new_videos_badge">नवीन व्हिडिओंसाठी सूचक</string>
     <string name="new_videos_badge_summary">जर काही नवीन व्हिडिओ असतील तर त्याच्या संख्येसह बॅज दाखवा</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">मोबाइल डेटा</string>
     <string name="skip_segment">विभाग वगळा</string>
     <string name="local_subscriptions">स्थानिक सदस्यता</string>
@@ -313,7 +308,6 @@
     <string name="sleep_timer">स्लीप टाइमर</string>
     <string name="help">मदत</string>
     <string name="unsupported_file_format">अनसपोर्टेड फाइल फॉर्मेट: %1$s</string>
-    <string name="pip">PiP</string>
     <string name="finished">पूर्ण झाले</string>
     <string name="delete_all">सर्व डाउनलोड्स डिलीट होतील!</string>
     <string name="albums">अल्बम्स</string>
@@ -328,18 +322,6 @@
     <string name="change_instance">इन्स्टन्स बदला</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

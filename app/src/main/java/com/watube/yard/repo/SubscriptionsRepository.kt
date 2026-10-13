@@ -2,6 +2,7 @@ package com.watube.yard.repo
 
 import com.watube.yard.api.obj.Subscription
 
+// region Subscriptions
 interface SubscriptionsRepository {
     suspend fun subscribe(channelId: String, name: String, uploaderAvatar: String?, verified: Boolean)
     suspend fun unsubscribe(channelId: String)
@@ -11,3 +12,4 @@ interface SubscriptionsRepository {
     suspend fun getSubscriptionChannelIds(): List<String>
     suspend fun submitSubscriptionChannelInfosChanged(subscriptions: List<Subscription>) {}
 }
+// endregion

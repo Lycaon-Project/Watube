@@ -7,6 +7,7 @@ import androidx.media3.common.C
 import androidx.media3.common.audio.AudioManagerCompat
 import androidx.media3.common.util.UnstableApi
 
+// region Player Gestures
 @UnstableApi
 class AudioHelper(context: Context) {
     private val audioManager = context.getSystemService<AudioManager>()!!
@@ -31,3 +32,4 @@ class AudioHelper(context: Context) {
             )
         }
 }
+// endregion

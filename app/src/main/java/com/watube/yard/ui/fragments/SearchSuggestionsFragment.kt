@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+// region Search
 class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions) {
     private var _binding: FragmentSearchSuggestionsBinding? = null
     private val binding get() = _binding!!
@@ -193,3 +194,4 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         _binding = null
     }
 }
+// endregion

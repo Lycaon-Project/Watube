@@ -15,25 +15,44 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
+// region Updates
 private const val GITHUB_API_URL = "https://api.github.com/repos/Lycaon-Project/Watube/releases/latest"
+// endregion
+
+// region SponsorBlock
 private const val SB_API_URL = "https://sponsor.ajay.app"
+// endregion
+
+// region Return YouTube Dislike
 // Watube 26.9 fix: the former endpoint (ryd-proxy.kavin.rocks, a Piped side proxy) answers
 // 502 for every request, so the dislike counter could never load and stayed hidden.
 // returnyoutubedislikeapi.com is the official Return YouTube Dislike API and is the very
 // URL announced by the setting summary (res/values*/strings.xml "local_ryd_summary").
 private const val RYD_API_URL = "https://returnyoutubedislikeapi.com"
+// endregion
 
 interface ExternalApi {
-    @GET("config")
+    // region Piped Instances
+    /**
+     * [url]: the full `<instance>/config` address. A relative path next to @Url (the former
+     * `@GET("config")`) is refused by Retrofit before any request: the proxy was never known.
+     */
+    @GET
     suspend fun getInstanceConfig(@Url url: String): PipedConfig
+    // endregion
 
+    // region Updates
     // fetch latest version info
     @GET(GITHUB_API_URL)
     suspend fun getLatestRelease(): UpdateInfo
+    // endregion
 
+    // region Return YouTube Dislike
     @GET("$RYD_API_URL/votes")
     suspend fun getVotes(@Query("videoId") videoId: String): VoteInfo
+    // endregion
 
+    // region SponsorBlock
     @POST("$SB_API_URL/api/skipSegments")
     suspend fun submitSegment(
         @Query("videoID") videoId: String,
@@ -58,9 +77,6 @@ interface ExternalApi {
         @Path("videoId") videoId: String,
     ): List<VideoLabelData>
 
-    @POST("$SB_API_URL/api/branding")
-    suspend fun submitDeArrow(@Body body: DeArrowBody)
-
     /**
      * @param score: 0 for downvote, 1 for upvote, 20 for undoing previous vote (if existent)
      */
@@ -70,7 +86,13 @@ interface ExternalApi {
         @Query("userID") userID: String,
         @Query("type") score: Int
     )
+    // endregion
+
+    // region DeArrow
+    @POST("$SB_API_URL/api/branding")
+    suspend fun submitDeArrow(@Body body: DeArrowBody)
 
     @GET("$SB_API_URL/api/branding/{videoId}")
     suspend fun getDeArrowContent(@Path("videoId") videoId: String): Map<String, DeArrowContent>
+    // endregion
 }

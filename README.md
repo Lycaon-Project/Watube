@@ -122,8 +122,14 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 
 | Area | What changed |
 | :--- | :--- |
-| 📱 **Android 13 or newer** | Watube now requires **Android 13** (API 33); older versions are no longer supported. Cast finds receivers with the *Nearby devices* permission alone: no location permission is declared or requested. |
-| 🛡️ **Telemetry deleted, not disabled** | The telemetry code shipped in Google's Cast and Media3 libraries (usage reports, client analytics, platform playback metrics) is **cut out of the release build**, and the build **fails** if any of it comes back. |
+| 🔎 **Spelling suggestions** | Tapping *Did you mean* or *Showing results for* now runs the search with the corrected spelling (it used to do nothing), and going back skips the misspelled results. |
+| ⏭️ **Quieter SponsorBlock button** | The skip button is a small *Skip* pill on the side, clear of the play button: it shows for a few seconds when a segment starts, then only with the player controls. |
+| 📦 **Up-to-date libraries** | Media3 1.11, current AndroidX, OkHttp 5.5, Coil 3.6 and protobuf 4.36; NewPipeExtractor built from Watube's own fork with the latest caption-track names and the jsoup security fix (CVE-2026-75140). Code and resources left over from Android 12 and older are removed. |
+| 🚫 **No proprietary Google code** | Google Play Services and its Cast SDK are **removed**: nothing in Watube talks to Play Services any more, and the build **refuses** them, even as an indirect dependency. Casting uses **Stolm**, Watube's own client written from the open Cast protocol: it only talks to devices that prove they are genuine, and the video reaches the TV through your phone, never from YouTube directly. |
+| 🔒 **Privacy by default** | Search suggestions come from your own history, on the device; online suggestions are an opt-in and never sent for a link, an e-mail address or a number. Nothing goes to a cloud backup. Connections use TLS 1.2/1.3 only. An option hides the app from screenshots and recordings. |
+| 🎬 **Player polish** | In fullscreen landscape the seek bar sits back at the bottom edge, and the top buttons show their press ripple above the video instead of behind it. |
+| 📱 **Android 13 or newer** | Watube now requires **Android 13** (API 33); older versions are no longer supported. |
+| 🛡️ **Telemetry deleted, not disabled** | The platform playback metrics of Media3 are **cut out of the release build**, and the build **fails** if they come back. |
 | ▶️ **Steadier playback** | A video no longer stops with a *source error* about a minute in: the streaming session is renewed with a single player request — no integrity token, no Google code running on the device. |
 | 🌍 **Neutral region** | With the Trends region on *Automatic*, trending is requested for the **United Kingdom** — the same country for every user — instead of your device's country. Another country can be picked by hand. |
 | 🖐️ **Fullscreen & feed** | Swipe up or down on the player to enter or leave fullscreen (on by default). The subscription feed loads each channel once, so its progress bar no longer jumps backwards. |
@@ -168,7 +174,8 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 | :--- | :--- |
 | **Smart UI polling** | Player-UI loops (`position`, queue buttons, chapter name, seek bar, chapter index) only do work when a value actually changes, slow down while paused, and stop entirely once the player detaches. |
 | **Zero-allocation rendering** | SponsorBlock / chapter time-bars no longer allocate `Paint`/`Rect` every frame — no GC spikes during playback. |
-| **Debounced search** | Suggestions are debounced (300 ms) instead of one network request per keystroke. |
+| **Quiet search** | Suggestions are local by default; online ones (opt-in) are debounced (300 ms) and cached, so fixing a typo asks nothing again. |
+| **No duplicate lookups** | SponsorBlock badges are fetched once per hash prefix and shared by every row on screen; the update check runs once per start of the app. |
 | **Optimised persistence** | Watch position is saved every 5 s (and instantly on pause/end) and cached in memory, so list rows never block on Room while binding. |
 | **Smart DiffUtil** | Rows are keyed by a stable id (video url, primary key…), so lists rebind and reload thumbnails only when content truly changed. |
 | **Throttled notifications** | Download-progress notifications are capped at 2 updates/second. |
@@ -180,10 +187,10 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 <summary><b>🛡️ Quality, security & maintenance</b></summary>
 <br>
 
-- **Strict network security** — cleartext traffic fully disabled (only local dev hosts are exempt).
-- **Secure backups** — encrypted backups explicitly exclude the account token to prevent session hijacking.
+- **Strict network security** — cleartext traffic fully disabled (only local dev hosts are exempt), TLS 1.2/1.3 with forward-secret ciphers only.
+- **No cloud backup** — nothing is sent to an online backup service; the local device-to-device transfer and the in-app export remain, without the account token.
 - **Smaller attack surface** — the unused boot receiver was removed.
-- **Update check** — looks for new [Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest) releases at every launch (on by default); *Settings → General* can space it out (6 h, 12 h, daily, weekly) or turn it off, and an on-demand check is available.
+- **Update check** — looks for new [Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest) releases once per start of the app (on by default); *Settings → General* can space it out (6 h, 12 h, daily, weekly) or turn it off, and an on-demand check is available.
 - **One-tap maintenance** — *Settings → Maintenance → Clear cache* wipes the image, HTTP and leftover app caches at once.
 - **Resilient error handling** — the SABR data source, picture-in-picture, media-service connection and feed notifications use **bounded** retry loops, never infinite ones.
 - **Unified loaders** — a single Coil image loader and a shared HTTP cache are created once for the whole app lifecycle.
@@ -253,7 +260,7 @@ Think of it as the same promise, tuned for *daily comfort*.
 
 ## 🤝 Contributing
 
-Ideas, bug reports, design, code cleanup or deep changes — all welcome. Read the **[contribution guide](CONTRIBUTING.md)** before you start.
+Ideas, bug reports, design, code cleanup or deep changes — all welcome. Read the **[contribution guide](CONTRIBUTING.md)** before you start. Every feature's code is marked with its name: the **[feature index](FEATURES.md)** tells you what to search for (`region Share`, `region Stolm`…).
 
 > [!IMPORTANT]
 > **🤖 AI policy — AI-assisted contributions are accepted.**
@@ -266,7 +273,7 @@ Ideas, bug reports, design, code cleanup or deep changes — all welcome. Read t
 ```text
 1.  Open an issue        → discuss before you build
 2.  Fork & branch        → git checkout -b feature/your-feature-name
-3.  Follow the style     → Kotlin official coding conventions
+3.  Follow the style     → Kotlin conventions, code in its feature region (FEATURES.md)
 4.  Test thoroughly      → make sure it actually works
 5.  Open a pull request  → clear description + AI model used, if any
 ```

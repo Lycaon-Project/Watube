@@ -15,6 +15,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.ui.dialogs.NavBarItem
 import com.google.android.material.navigation.NavigationBarView
 
+// region Navigation
 object NavBarHelper {
 
     private const val TAG = "NavBarHelper"
@@ -186,3 +187,4 @@ object NavBarHelper {
             .split(SEPARATOR)
     }
 }
+// endregion

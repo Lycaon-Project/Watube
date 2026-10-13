@@ -11,7 +11,9 @@ import com.watube.yard.api.obj.Streams
 import com.watube.yard.constants.IntentData
 import com.watube.yard.db.obj.DownloadChapter
 import com.watube.yard.db.obj.DownloadWithItems
+import com.watube.yard.helpers.ProxyHelper
 
+// region Media Notification
 @OptIn(UnstableApi::class)
 fun MediaItem.Builder.setMetadata(streams: Streams, videoId: String) = apply {
     // Avoid reaching the max parcelable size of 1MB for binder transactions.
@@ -31,7 +33,8 @@ fun MediaItem.Builder.setMetadata(streams: Streams, videoId: String) = apply {
             // live streams have no duration (0 or less): no length must reach the session,
             // otherwise the system media controls draw a seek bar of a bogus length
             .setDurationMs(streams.duration.takeIf { it > 0 }?.times(1000))
-            .setArtworkUri(streams.thumbnailUrl.toUri())
+            // the artwork obeys the media rules of the operation mode (no Google in Piped mode)
+            .setArtworkUri(ProxyHelper.imageUrl(streams.thumbnailUrl)?.toUri())
             .setComposer(streams.uploaderUrl.orEmpty().toID())
             .setExtras(extras)
             // send a unique timestamp to notify that the metadata changed, even if playing the same video twice
@@ -65,3 +68,4 @@ fun MediaItem.Builder.setMetadata(downloadWithItems: DownloadWithItems) = apply 
             .build()
     )
 }
+// endregion

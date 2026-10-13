@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+// region Subscriptions
 fun TextView.setupSubscriptionButton(
     channelId: String?,
     channelName: String,
@@ -101,3 +101,4 @@ fun TextView.setupSubscriptionButton(
         }
     }
 }
+// endregion

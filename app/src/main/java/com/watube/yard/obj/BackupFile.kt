@@ -12,6 +12,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
+// region Backup & Restore
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 data class BackupFile(
@@ -48,3 +49,4 @@ data class BackupFile(
     var localPlaylists: List<LocalPlaylistWithVideos>? = emptyList(),
     var playlists: List<PipedImportPlaylist>? = emptyList()
 )
+// endregion

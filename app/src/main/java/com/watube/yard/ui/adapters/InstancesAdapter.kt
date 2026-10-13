@@ -10,6 +10,7 @@ import com.watube.yard.databinding.InstanceRowBinding
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.viewholders.InstancesViewHolder
 
+// region Piped Instances
 class InstancesAdapter(
     initialSelectionApiIndex: Int?,
     private val onSelectInstance: (index: Int) -> Unit
@@ -58,3 +59,4 @@ class InstancesAdapter(
         }
     }
 }
+// endregion

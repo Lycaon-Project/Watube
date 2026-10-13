@@ -12,6 +12,7 @@ import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.base.BaseActivity
 
+// region About
 /**
  * "Pourquoi Watube": renders the local `mission/Mission_Watube.html` page.
  *
@@ -96,3 +97,4 @@ class MissionActivity : BaseActivity() {
         private const val TITLE = "Pourquoi Watube"
     }
 }
+// endregion

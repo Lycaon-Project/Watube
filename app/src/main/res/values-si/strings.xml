@@ -31,7 +31,6 @@
     <string name="createPlaylist">වාදන ලැයිස්තුව සාදන්න</string>
     <string name="about">ගැන</string>
     <string name="changeLanguage">භාෂාව</string>
-    <string name="systemLanguage">පද්ධතිය</string>
     <string name="systemDefault">පද්ධතිය</string>
     <string name="lightTheme">එළිය</string>
     <string name="darkTheme">අඳුරු</string>
@@ -59,7 +58,6 @@
     <string name="category_outro">අවසන් කාඩ්පත් සහ දායක ලැයිස්තුව</string>
     <string name="category_outro_summary">අවසානයට පසුව තොරතුරු. තොරතුරු සහිත නිගමන සඳහා නොවේ</string>
     <string name="category_filler">අදාළ නොවන කොටස්/විහිළු</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="playlists">වාදන ලැයිස්තු</string>
     <string name="music_playlists">YT Music වාදන ලැයිස්තු</string>
     <string name="category_selfpromo_summary">නොගෙවූ හෝ ස්වයං ප්‍රවර්ධනය හැර \"අනුග්‍රාහකයා\" හා සමානයි. මෙයට වෙළඳ භාණ්ඩ, පරිත්‍යාග, හෝ ඔවුන් සහයෝගීව කටයුතු කළ අය පිළිබඳ තොරතුරු පිළිබඳ කොටස් ඇතුළත් වේ</string>
@@ -110,7 +108,6 @@
     <string name="watch_history">නැරඹුම් ඉතිහාසය</string>
     <string name="auth_instance">සත්‍යතාව තහවුරු කිරීමේ සේවාදායකය</string>
     <string name="auth_instances">සත්‍යතාව තහවුරු කිරීමට සේවාදායකයක් තෝරන්න</string>
-    <string name="audio_video">ශ්රව්ය සහ වීඩියෝ</string>
     <string name="fullscreen_orientation">පූර්ණ තිර නැඹුරුව</string>
     <string name="landscape">භූ දර්ශනය</string>
     <string name="turnInternetOn">කරුණාකර අන්තර්ජාලයට සම්බන්ධ වීමට Wi-Fi හෝ ජංගම දත්ත ක්‍රියාත්මක කරන්න.</string>
@@ -158,7 +155,6 @@
     <string name="open_copied">විවෘත කරන්න</string>
     <string name="device_info">උපාංග තොරතුරු</string>
     <string name="delete">බාගත කිරීම් වලින් මකන්න</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">ජංගම දත්ත</string>
     <string name="new_videos_badge_summary">අලුත් වීඩියෝ තිබේ නම් ප්‍රමාණය සමඟ ලාංඡනයක් පෙන්වන්න</string>
     <string name="skip_segment">කොටස මඟ හරින්න</string>
@@ -255,7 +251,6 @@
     <string name="auto_rotation">ස්වයංක්‍රීය භ්‍රමණය</string>
     <string name="portrait">සිරස්</string>
     <string name="always">සැමවිටම</string>
-    <string name="general">පොදු</string>
     <string name="search_history_summary">සෙවුම් මතක තබා ගන්න</string>
     <string name="captions">සිරස්තල</string>
     <string name="none">කිසිවක් නැත</string>
@@ -330,18 +325,6 @@
     <string name="shorts_notifications">Shorts සඳහා දැනුම්දීම්</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

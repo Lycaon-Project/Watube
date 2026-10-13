@@ -17,7 +17,7 @@ import com.watube.yard.ui.adapters.BottomSheetAdapter
 import kotlinx.coroutines.launch
 import com.watube.yard.ui.extensions.onSystemInsets
 
-
+// region UI Components
 open class BaseBottomSheet(@LayoutRes layoutResId: Int = R.layout.bottom_sheet) : ExpandedBottomSheet(layoutResId) {
 
     private var title: String? = null
@@ -83,3 +83,4 @@ open class BaseBottomSheet(@LayoutRes layoutResId: Int = R.layout.bottom_sheet) 
         private val titleMargin = 24f.dpToPx()
     }
 }
+// endregion

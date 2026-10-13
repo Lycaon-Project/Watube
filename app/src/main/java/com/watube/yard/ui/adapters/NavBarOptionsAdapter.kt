@@ -10,6 +10,7 @@ import com.watube.yard.helpers.NavBarHelper
 import com.watube.yard.ui.dialogs.NavBarItem
 import com.watube.yard.ui.viewholders.NavBarOptionsViewHolder
 
+// region Navigation
 class NavBarOptionsAdapter(
     val items: MutableList<NavBarItem>,
     var selectedHomeTabId: Int
@@ -56,3 +57,4 @@ class NavBarOptionsAdapter(
         }
     }
 }
+// endregion

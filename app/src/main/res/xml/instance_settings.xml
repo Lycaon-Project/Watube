@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Piped Instances -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -12,13 +13,16 @@
             android:disableDependentsState="true"
             android:summary="@string/full_local_mode_desc" />
 
+        <!-- region Local Extraction -->
+        <!-- off by default: the Piped mode keeps everything behind the instance -->
         <SwitchPreferenceCompat
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:icon="@drawable/ic_region"
             android:dependency="full_local_mode"
             android:summary="@string/local_stream_extraction_summary"
             android:title="@string/local_stream_extraction"
             app:key="local_stream_extraction" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
@@ -42,57 +46,72 @@
 
     <PreferenceCategory android:title="@string/authentication">
 
+        <!-- region Feed -->
         <SwitchPreferenceCompat
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:icon="@drawable/ic_region"
             android:summary="@string/local_feed_extraction_summary"
             android:title="@string/local_feed_extraction"
             app:key="local_feed_extraction" />
+        <!-- endregion -->
 
+        <!-- region Piped Account -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_auth"
             app:key="auth_instance_toggle"
             app:summary="@string/auth_instance_summary"
             app:title="@string/auth_instance" />
+        <!-- endregion -->
 
+        <!-- region Piped Account -->
         <ListPreference
             android:dependency="auth_instance_toggle"
             android:icon="@drawable/ic_server"
             app:defaultValue="https://pipedapi.kavin.rocks"
             app:key="selectAuthInstance"
             app:title="@string/auth_instances" />
+        <!-- endregion -->
 
+        <!-- region Piped Account -->
         <Preference
             android:icon="@drawable/ic_login_filled"
             android:summary="@string/notgmail"
             app:key="login_register"
             app:title="@string/login_register" />
+        <!-- endregion -->
 
+        <!-- region Piped Account -->
         <Preference
             android:icon="@drawable/ic_login_filled"
             android:summary="@string/notgmail"
             app:isPreferenceVisible="false"
             app:key="logout"
             app:title="@string/logout" />
+        <!-- endregion -->
 
+        <!-- region Piped Account -->
         <Preference
             android:icon="@drawable/ic_reset"
             android:summary="@string/deleteAccount_summary"
             app:key="delete_account"
             app:title="@string/deleteAccount" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/misc">
 
+        <!-- region Return YouTube Dislike -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_dislike"
             android:summary="@string/local_ryd_summary"
             android:title="@string/local_ryd"
             app:key="local_return_youtube_dislikes" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
 </PreferenceScreen>
+<!-- endregion -->

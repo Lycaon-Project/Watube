@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Watch History
 class WatchHistoryAdapter :
     ListAdapter<WatchHistoryItem, WatchHistoryViewHolder>(
         // identity is the primary key so that only changed contents get rebound
@@ -125,3 +126,4 @@ class WatchHistoryAdapter :
         super.onViewRecycled(holder)
     }
 }
+// endregion

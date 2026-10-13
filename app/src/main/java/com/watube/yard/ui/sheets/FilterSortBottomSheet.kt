@@ -13,6 +13,7 @@ import com.watube.yard.enums.ContentFilter
 import com.watube.yard.extensions.parcelableArrayList
 import com.watube.yard.obj.SelectableOption
 
+// region Feed
 class FilterSortBottomSheet : ExpandedBottomSheet(R.layout.filter_sort_sheet) {
     private var _binding: FilterSortSheetBinding? = null
     private val binding get() = _binding!!
@@ -124,3 +125,4 @@ class FilterSortBottomSheet : ExpandedBottomSheet(R.layout.filter_sort_sheet) {
         const val FILTER_SORT_REQUEST_KEY = "filter_sort_request_key"
     }
 }
+// endregion

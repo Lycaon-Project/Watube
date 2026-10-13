@@ -3,6 +3,7 @@ package com.watube.yard.extensions
 import kotlin.math.log2
 import kotlin.math.pow
 
+// region Common Utilities
 fun Int.formatAsFileSize(): String {
     return toLong().formatAsFileSize()
 }
@@ -18,3 +19,4 @@ fun Long.formatAsFileSize(): String {
         String.format("%.${precision}f ${prefix[it]}B", toDouble() / 2.0.pow(it * 10.0))
     }
 }
+// endregion

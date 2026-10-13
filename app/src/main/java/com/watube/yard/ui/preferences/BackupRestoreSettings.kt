@@ -22,13 +22,14 @@ import com.watube.yard.ui.dialogs.BackupDialog
 import com.watube.yard.ui.dialogs.BackupDialog.Companion.BACKUP_DIALOG_REQUEST_KEY
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.util.TextUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
+// region Backup & Restore
 class BackupRestoreSettings : BasePreferenceFragment() {
     private var backupFile = BackupFile()
     private var importFormat: ImportFormat = ImportFormat.NEWPIPE
@@ -246,7 +247,7 @@ class BackupRestoreSettings : BasePreferenceFragment() {
         ) {
             var selectedIndex = 0
 
-            val dialog = MaterialAlertDialogBuilder(context)
+            val dialog = SecureAlertDialogBuilder(context)
                 .setTitle(context.getString(titleStringId))
                 .setSingleChoiceItems(
                     formats.map { context.getString(it.value) }.toTypedArray(),
@@ -294,3 +295,4 @@ class BackupRestoreSettings : BasePreferenceFragment() {
         }
     }
 }
+// endregion

@@ -10,6 +10,7 @@ import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.base.BaseActivity
 
+// region Deep Links
 class RouterActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,3 +43,4 @@ class RouterActivity : BaseActivity() {
         finishAndRemoveTask()
     }
 }
+// endregion

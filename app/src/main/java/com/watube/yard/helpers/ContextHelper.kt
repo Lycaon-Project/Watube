@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 
+// region Common Utilities
 object ContextHelper {
     inline fun <reified T : Activity> tryUnwrapActivity(context: Context): T? {
         var correctContext: Context? = context
@@ -15,3 +16,4 @@ object ContextHelper {
 
     inline fun <reified T : Activity> unwrapActivity(context: Context): T = tryUnwrapActivity(context)!!
 }
+// endregion

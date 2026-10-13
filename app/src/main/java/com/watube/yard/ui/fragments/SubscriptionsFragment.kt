@@ -36,7 +36,7 @@ import com.google.android.material.chip.Chip
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+// region Feed
 class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_subscriptions) {
     private var _binding: FragmentSubscriptionsBinding? = null
     private val binding get() = _binding!!
@@ -407,3 +407,4 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         feedAdapter.removeItemById(videoId)
     }
 }
+// endregion

@@ -12,11 +12,12 @@ import com.watube.yard.api.PlaylistsHelper
 import com.watube.yard.constants.IntentData
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Playlists
 class DeletePlaylistDialog : DialogFragment() {
     private lateinit var playlistId: String
 
@@ -28,7 +29,7 @@ class DeletePlaylistDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.deletePlaylist)
             .setMessage(R.string.areYouSure)
             .setPositiveButton(R.string.yes, null)
@@ -54,3 +55,4 @@ class DeletePlaylistDialog : DialogFragment() {
             }
     }
 }
+// endregion

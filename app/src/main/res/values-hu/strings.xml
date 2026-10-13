@@ -45,7 +45,6 @@
     <string name="import_from_yt_summary">YouTube-ról vagy NewPipe-ból</string>
     <string name="systemDefault">Rendszer</string>
     <string name="subscribers">%1$s feliratkozó</string>
-    <string name="systemLanguage">Rendszer</string>
     <string name="startpage">Kezdőlap</string>
     <string name="videos">Videók</string>
     <string name="changeLanguage">Nyelv</string>
@@ -62,7 +61,6 @@
     <string name="all">Minden</string>
     <string name="playlists">Lejátszási listák</string>
     <string name="channels">Csatornák</string>
-    <string name="okay">OK</string>
     <string name="history">Előzmények</string>
     <string name="search_history">Keresési előzmények</string>
     <string name="clear_history">Előzmények törlése</string>
@@ -72,7 +70,6 @@
     <string name="music_videos">YT Music videók</string>
     <string name="music_albums">YT Music albumok</string>
     <string name="music_playlists">YT Music lejátszási listák</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="category_sponsor">Szponzor</string>
     <string name="category_sponsor_summary">Fizetett promóciók, fizetett ajánlások és közvetlen hirdetések. Nem önreklámozás, vagy ingyenes elismerés ügyek, alkotók, weboldalak, vagy termékek számára</string>
     <string name="category_selfpromo">Nem fizetett/önpromóció</string>
@@ -123,7 +120,6 @@
     <string name="category_music_offtopic_summary">Kizárólag zenei videókban való felhasználásra. A videó olyan részeit kell lefednie, amelyek nem részei a hivatalos mixeknek. Végül a videónak a lehető legjobban kell hasonlítania a Spotify vagy bármely más mix változathoz, vagy csökkenteni kell a beszédet vagy más zavaró elemeket</string>
     <string name="category_preview_summary">A jövőbeli tartalmakat részletező szakaszokhoz, melyek nem nyújtanak további információt. Ha olyan klipeket tartalmaz, amelyek csak itt jelennek meg, akkor nagyon valószínű, hogy nem ez a megfelelő kategória</string>
     <string name="background_mode">Háttér mód</string>
-    <string name="audio_video">Hang és videó</string>
     <string name="fullscreen_orientation">Teljes képernyős tájolás</string>
     <string name="auto_rotation">Automatikus elforgatás</string>
     <string name="landscape">Fekvő</string>
@@ -189,7 +185,6 @@
     <string name="watch_history_summary">A megtekintett videók nyomon követése helyben</string>
     <string name="watch_positions_title">Lejátszási pozíció megjegyzése</string>
     <string name="captions">Feliratok</string>
-    <string name="general">Általános</string>
     <string name="pauseOnScreenOff">Automatikus szüneteltetés</string>
     <string name="pauseOnScreenOff_summary">A lejátszás szüneteltetése, ha a képernyő ki van kapcsolva</string>
     <string name="caption_settings">Feliratok</string>
@@ -215,7 +210,6 @@
     <string name="auth_instances">Hitelesítési példány kiválasztása</string>
     <string name="repeat_mode">Ismétlés mód</string>
     <string name="system_caption_style">Rendszerfeliratok stílusa</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobiladat</string>
     <string name="new_videos_badge">Indikátor az új videókhoz</string>
     <string name="new_videos_badge_summary">Jelvény megjelenítése az új videók számával, ha több van</string>
@@ -355,7 +349,6 @@
     <string name="show_search_suggestions">Keresési javaslatok megjelenítése</string>
     <string name="descriptive_audio_track">Hangalámondás</string>
     <string name="default_or_unknown_audio_track">Alapértelmezett</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_track_type">Ismeretlen típusú hangsáv</string>
     <string name="unknown_audio_language">Ismeretlen hang nyelv</string>
     <string name="original_or_main_audio_track">Eredeti</string>
@@ -451,7 +444,6 @@
     <string name="external_download_provider">Külső letöltési szolgáltató</string>
     <string name="external_download_provider_summary">Adja meg a videók letöltéséhez használni kívánt alkalmazás csomagnevét. A LibreTube beépített letöltőjének használatához hagyja üresen.</string>
     <string name="screenshot">Képernyőkép</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction">Helyi közvetítés kinyerése</string>
     <string name="local_stream_extraction_summary">Közvetlen videólejátszási információk lekérése a YouTube-ról a Piped használata nélkül.</string>
     <string name="local_ryd">Youtube „Nem tetszik” számláló megjelenítése</string>
@@ -520,18 +512,6 @@
     <string name="courses">Kurzusok</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

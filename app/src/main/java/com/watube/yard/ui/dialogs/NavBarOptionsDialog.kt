@@ -9,8 +9,9 @@ import com.watube.yard.databinding.SimpleOptionsRecyclerBinding
 import com.watube.yard.extensions.setOnDraggedListener
 import com.watube.yard.helpers.NavBarHelper
 import com.watube.yard.ui.adapters.NavBarOptionsAdapter
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Navigation
 data class NavBarItem(
     val itemId: Int,
     val title: String?,
@@ -44,7 +45,7 @@ class NavBarOptionsDialog : DialogFragment() {
             adapter.notifyItemMoved(from, to)
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.navigation_bar)
             .setView(binding.root)
             .setPositiveButton(R.string.okay) { _, _ ->
@@ -57,3 +58,4 @@ class NavBarOptionsDialog : DialogFragment() {
             .show()
     }
 }
+// endregion

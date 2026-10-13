@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region Channels
 @Serializable
 data class Channel(
     val id: String? = null,
@@ -15,3 +16,4 @@ data class Channel(
     var relatedStreams: List<StreamItem> = emptyList(),
     val tabs: List<ChannelTab> = emptyList()
 )
+// endregion

@@ -10,6 +10,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.time.LocalTime
 
+// region Settings
 class TimePickerPreference(
     context: Context,
     attributeSet: AttributeSet
@@ -42,3 +43,4 @@ class TimePickerPreference(
         const val DEFAULT_VALUE = "12:00"
     }
 }
+// endregion

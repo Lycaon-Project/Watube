@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
+// region Playlist Bookmarks
 @Serializable
 @Entity(tableName = "playlistBookmark")
 data class PlaylistBookmark(
@@ -16,3 +17,4 @@ data class PlaylistBookmark(
     var uploaderAvatar: String? = null,
     var videos: Int = 0
 )
+// endregion

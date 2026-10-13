@@ -34,6 +34,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.nio.file.Path
 
+// region Image Loading
 object ImageHelper {
     private const val HTTP_SCHEME = "http"
 
@@ -54,6 +55,8 @@ object ImageHelper {
         val httpClient = SharedHttpClient.base.newBuilder()
             // thumbnails must not leak `okhttp/x.y.z` either: same UA as the API calls
             .addInterceptor(com.watube.yard.api.GenericUserAgentInterceptor())
+            // every image goes where the operation mode allows (ProxyHelper), whatever asked
+            .addInterceptor(ProxyHelper.ImageInterceptor())
 
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -110,7 +113,8 @@ object ImageHelper {
     }
 
     /**
-     * load an image from a url into an imageView
+     * load an image from a url into an imageView (the host it is fetched from is decided by
+     * [ProxyHelper.ImageInterceptor])
      */
     fun loadImage(url: String?, target: ImageView, whiteBackground: Boolean = false) {
         if (url.isNullOrEmpty()) {
@@ -118,24 +122,22 @@ object ImageHelper {
             return
         }
 
-        val urlToLoad = ProxyHelper.rewriteUrlUsingProxyPreference(url)
-
         // only load online images if the data saver mode is disabled
         if (DataSaverMode.isEnabled(target.context) &&
-            urlToLoad.startsWith(HTTP_SCHEME) && !isCached(target.context, urlToLoad)
+            url.startsWith(HTTP_SCHEME) && !isCached(target.context, url)
         ) {
             clearImage(target)
             return
         }
 
         // the view already displays this exact image, don't clear and decode it again
-        if (target.tag == urlToLoad) return
-        target.tag = urlToLoad
+        if (target.tag == url) return
+        target.tag = url
 
         // clear image to avoid loading issues at fast scrolling
         target.setImageBitmap(null)
 
-        target.load(urlToLoad) {
+        target.load(url) {
             listener(
                 onSuccess = { _, _ ->
                     // set the background to white for transparent images
@@ -238,3 +240,4 @@ object ImageHelper {
         })
     }
 }
+// endregion

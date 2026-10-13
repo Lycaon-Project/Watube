@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
+// region Subscriptions
 class SubscriptionsBottomSheet : ExpandedBottomSheet(R.layout.sheet_subscriptions) {
     private var _binding: SheetSubscriptionsBinding? = null
     private val binding get() = _binding!!
@@ -167,3 +168,4 @@ class SubscriptionsBottomSheet : ExpandedBottomSheet(R.layout.sheet_subscription
         return filter { group.channels.contains(it.url.toID()) }
     }
 }
+// endregion

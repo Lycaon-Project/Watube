@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.watube.yard.db.obj.PlaylistBookmark
 
+// region Playlist Bookmarks
 @Dao
 interface PlaylistBookmarkDao {
     @Query("SELECT * FROM playlistBookmark")
@@ -33,3 +34,4 @@ interface PlaylistBookmarkDao {
     @Query("DELETE FROM playlistBookmark")
     suspend fun deleteAll()
 }
+// endregion

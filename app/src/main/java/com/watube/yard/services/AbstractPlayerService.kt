@@ -17,8 +17,10 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DataSourceBitmapLoader
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.session.CacheBitmapLoader
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
@@ -54,39 +56,218 @@ import kotlinx.coroutines.withContext
 
 @UnstableApi
 abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySession.Callback {
+    // region Media Notification
     private var mediaLibrarySession: MediaLibrarySession? = null
+    // endregion
+
+    // region Video Player
     var exoPlayer: ExoPlayer? = null
+        private set
+    // endregion
 
+    // region Media Notification
     private var notificationProvider: NowPlayingNotification? = null
+
+    private fun handlePlayerAction(event: PlayerEvent) {
+        if (PlayerHelper.handlePlayerAction(activePlayer ?: return, event)) return
+
+        when (event) {
+            PlayerEvent.Next -> {
+                navigateVideo(PlayingQueue.getNext() ?: return)
+            }
+
+            PlayerEvent.Prev -> {
+                navigateVideo(PlayingQueue.getPrev() ?: return)
+            }
+
+            PlayerEvent.Stop -> {
+                releaseAndStop()
+            }
+
+            else -> Unit
+        }
+    }
+
+    /**
+     * Trigger a notification update with an updated PendingIntent.
+     */
+    private fun updateNotification() {
+        val notificationIntent = Intent(this, getIntentActivity()).apply {
+            putExtra(IntentData.maximizePlayer, true)
+            putExtra(IntentData.offlinePlayer, isOfflinePlayer)
+            putExtra(IntentData.audioOnly, isAudioOnlyPlayer)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        notificationProvider?.notificationIntent = notificationIntent
+        triggerNotificationUpdate()
+    }
+
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? =
+        mediaLibrarySession
+
+    override fun onConnect(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo
+    ): MediaSession.ConnectionResult {
+        // Since Media3 1.11 super.onConnect() returns no command at all: start from the per-controller
+        // defaults instead. Untrusted controllers (other apps) keep their read-only access and never
+        // get the private service commands; this app, the system and media-control apps get them.
+        val connectionResult =
+            MediaSession.ConnectionResult.AcceptedResultBuilder(session, controller).build()
+        if (!controller.isTrusted) return connectionResult
+
+        val mediaNotificationSessionCommands =
+            connectionResult.availableSessionCommands.buildUpon()
+                .also { builder ->
+                    builder.addSessionCommands(
+                        listOf(
+                            startServiceCommand,
+                            runPlayerActionCommand,
+                            stopServiceCommand
+                        )
+                    )
+                }
+                .build()
+
+        val playerCommands = connectionResult.availablePlayerCommands.buildUpon()
+            .add(Player.COMMAND_SEEK_TO_NEXT)
+            .add(Player.COMMAND_SEEK_TO_PREVIOUS)
+            .build()
+
+        return MediaSession.ConnectionResult.AcceptedResultBuilder(session, controller)
+            .setAvailableSessionCommands(mediaNotificationSessionCommands)
+            .setAvailablePlayerCommands(playerCommands)
+            .build()
+    }
+
+    override fun onMediaButtonEvent(
+        session: MediaSession,
+        controllerInfo: MediaSession.ControllerInfo,
+        intent: Intent
+    ): Boolean {
+        val event: KeyEvent = intent.parcelableExtra(Intent.EXTRA_KEY_EVENT) ?: return false
+        when (event.keyCode) {
+            KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                handlePlayerAction(PlayerEvent.Next)
+                return true
+            }
+
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                handlePlayerAction(PlayerEvent.Prev)
+                return true
+            }
+
+            KeyEvent.KEYCODE_MEDIA_REWIND -> {
+                handlePlayerAction(PlayerEvent.Rewind)
+            }
+
+            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
+                handlePlayerAction(PlayerEvent.Forward)
+            }
+
+            KeyEvent.KEYCODE_MEDIA_STOP -> {
+                handlePlayerAction(PlayerEvent.Stop)
+            }
+        }
+
+        return super.onMediaButtonEvent(session, controllerInfo, intent)
+    }
+
+    /**
+     * [Player] wrapper that handles seeking actions (next/previous) itself instead of using the
+     * default [Player] implementation
+     */
+    inner class MediaSessionForwarder(player: Player) : ForwardingPlayer(player) {
+        override fun hasNextMediaItem(): Boolean {
+            return PlayingQueue.hasNext()
+        }
+
+        override fun hasPreviousMediaItem(): Boolean {
+            return PlayingQueue.hasPrev()
+        }
+
+        override fun seekToPrevious() {
+            handlePlayerAction(PlayerEvent.Prev)
+        }
+
+        override fun seekToNext() {
+            handlePlayerAction(PlayerEvent.Next)
+        }
+
+        override fun getAvailableCommands(): Player.Commands {
+            return super.getAvailableCommands().buildUpon()
+                .addAll(COMMAND_SEEK_TO_PREVIOUS, COMMAND_SEEK_TO_NEXT)
+                .build()
+        }
+
+        override fun isCommandAvailable(command: Int): Boolean {
+            if (command == COMMAND_SEEK_TO_NEXT || command == COMMAND_SEEK_TO_PREVIOUS) return true
+
+            return super.isCommandAvailable(command)
+        }
+    }
+    // endregion
+
+    // region Playback Options
     var trackSelector: DefaultTrackSelector? = null
+        private set
+    // endregion
 
-    lateinit var videoId: String
-
+    // region Video Player
     var isTransitioning = false
         private set
 
-    val handler = Handler(Looper.getMainLooper())
+    /** [releaseAndStop] state, and the system's onDestroy() waiting for the release to finish. */
+    private var isReleasing = false
+    private var isReleased = false
+    private var afterRelease: (() -> Unit)? = null
 
+    val handler = Handler(Looper.getMainLooper())
+    // endregion
+
+    // region Watch Positions
     private val watchPositionTimer = PauseableTimer(
         onTick = ::saveWatchPosition,
         delayMillis = PlayerHelper.WATCH_POSITION_TIMER_DELAY_MS
     )
 
+    val watchPositionsEnabled
+        get() =
+            (PlayerHelper.watchPositionsAudio && isAudioOnlyPlayer) || (PlayerHelper.watchPositionsVideo && !isAudioOnlyPlayer)
+
+    private fun saveWatchPosition() {
+        if (!watchPositionsEnabled || !::videoId.isInitialized) return
+
+        watchPositionSource()?.let { PlayerHelper.saveWatchPosition(it, videoId) }
+    }
+
+    /** The player whose position belongs to [videoId] right now, null while it changes. */
+    protected open fun watchPositionSource(): Player? = exoPlayer.takeUnless { isTransitioning }
+    // endregion
+
+    // region SponsorBlock
     // SponsorBlock Segment data
     private var sponsorBlockAutoSkip = true
     protected val sponsorBlockConfig = PlayerHelper.getSponsorBlockCategories()
     private var sponsorBlockSegments = listOf<Segment>()
+    // endregion
 
+    // region Autoplay
     /**
      * Whether the service should automatically play the next video after the current video finished.
      *
      * If set to `false`, the player UI views have to handle autoplay themselves.
      */
-    protected var shouldHandleAutoplay = true
+    private var shouldHandleAutoplay = true
+    // endregion
 
-    private val pauseForRestMode: () -> Unit = { exoPlayer?.pause() }
+    // region Rest Mode
+    private val pauseForRestMode: () -> Unit = { activePlayer?.pause() }
+    // endregion
 
-    private val playerListener = object : Player.Listener {
+    // region Video Player
+    /** Listens to the local player, and to the TV while it is the [activePlayer]. */
+    protected val servicePlayerListener = object : Player.Listener {
         override fun onPositionDiscontinuity(
             oldPosition: Player.PositionInfo,
             newPosition: Player.PositionInfo,
@@ -102,7 +283,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             // Start or pause watch position timer
             if (isPlaying) {
                 // nothing plays while the scheduled rest mode runs, whoever started it
-                if (RestMode.isActive) exoPlayer?.pause()
+                if (RestMode.isActive) activePlayer?.pause()
                 watchPositionTimer.resume()
                 // the SponsorBlock polling loop stops while paused: restart it here
                 checkForSegments()
@@ -114,6 +295,8 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         }
 
         override fun onPlayerError(error: PlaybackException) {
+            // a failing cast is ended by its owner, with a message of its own
+            if (activePlayer !== exoPlayer) return
             // show a toast on errors, unless the service recovers on its own
             if (recoverFromPlayerError(error)) return
             toastFromMainThread(error.localizedMessage.orEmpty())
@@ -135,6 +318,78 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             }
         }
     }
+    // endregion
+
+    // region SponsorBlock
+    /**
+     * Check for SponsorBlock segments. This method automatically schedules itself to repeat every
+     * 100ms using [handler], so it's not needed to schedule it manually.
+     */
+    private val segmentsChecker = Runnable { checkForSegments() }
+
+    protected fun setSponsorBlockSegments(segments: List<Segment>) {
+        sponsorBlockSegments = segments
+        if (!PlayerHelper.sponsorBlockEnabled) return
+
+        updatePlaylistMetadata {
+            // JSON-encode as work-around for https://github.com/androidx/media/issues/564
+            val segments = JsonHelper.json.encodeToString(sponsorBlockSegments)
+            setExtras(bundleOf(IntentData.segments to segments))
+        }
+
+        checkForSegments()
+    }
+
+    private fun checkForSegments() {
+        // a single loop: this is (re)started on every play and every segments update
+        handler.removeCallbacks(segmentsChecker)
+        val player = activePlayer
+        // The loop must only run while it can actually do something: no player, paused,
+        // no segments or SponsorBlock disabled would otherwise keep 10 wake-ups/second
+        // alive for the whole service lifetime. It is restarted by onIsPlayingChanged(true)
+        // and by setSponsorBlockSegments().
+        if (player == null ||
+            !player.isPlaying ||
+            sponsorBlockSegments.isEmpty() ||
+            !PlayerHelper.sponsorBlockEnabled
+        ) {
+            return
+        }
+
+        // battery: sleep until the next segment starts instead of polling 10 times a second for
+        // the whole video; seeks restart the loop (onPositionDiscontinuity)
+        val position = player.currentPosition
+        val nextStart = sponsorBlockSegments
+            .map { (it.segmentStartAndEnd.first * 1000f).toLong() }
+            .filter { it > position }
+            .minOrNull()
+        val untilNext = nextStart?.let { ((it - position) / player.playbackParameters.speed).toLong() }
+        handler.postDelayed(segmentsChecker, (untilNext ?: MAX_SEGMENT_CHECK_DELAY).coerceIn(100, MAX_SEGMENT_CHECK_DELAY))
+
+        val (currentSegment, sbSkipOption) = player.getCurrentSegment(
+            sponsorBlockSegments,
+            sponsorBlockConfig
+        ) ?: return
+
+        if (sbSkipOption in arrayOf(SbSkipOptions.AUTOMATIC, SbSkipOptions.AUTOMATIC_ONCE) && sponsorBlockAutoSkip) {
+            player.seekTo(currentSegment.segmentStartAndEnd.second.toLong() * 1000)
+            currentSegment.skipped = true
+
+            if (PlayerHelper.sponsorBlockNotifications) toastFromMainThread(R.string.segment_skipped)
+        }
+    }
+    // endregion
+
+    // region Video Player
+    abstract val isOfflinePlayer: Boolean
+
+    /**
+     * The player the media session drives: [exoPlayer], or the TV while a Stolm cast runs.
+     * Position saving, SponsorBlock skips and the rest mode follow it.
+     */
+    protected open val activePlayer: Player? get() = exoPlayer
+
+    lateinit var videoId: String
 
     override fun onCustomCommand(
         session: MediaSession,
@@ -158,7 +413,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             }
 
             STOP_SERVICE_ACTION -> {
-                onDestroy()
+                releaseAndStop()
             }
 
             RUN_PLAYER_COMMAND_ACTION -> {
@@ -247,32 +502,6 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
     }
 
     /**
-     * Plays the next video.
-     *
-     * If a video ID is explicitly given, it is played next,
-     * otherwise a queued video (which includes playlists) is chosen.
-     *
-     * If no video is queued and autoplay is enabled, a related video is used.
-     */
-    fun playNextVideo(videoId: String? = null, relatedStreams: List<StreamItem>? = null) {
-        if (PlayingQueue.repeatMode == Player.REPEAT_MODE_ONE) {
-            exoPlayer?.seekTo(0)
-            return
-        }
-
-        if (!shouldHandleAutoplay) {
-            return
-        }
-
-        val nextVideo = videoId ?: PlayingQueue.getNext()
-        ?: relatedStreams?.firstOrNull { !it.isLive }?.url?.toID()
-            ?.takeIf { PlayerHelper.autoPlayEnabled && PlayerHelper.relatedStreamsEnabled }
-        ?: return
-
-        navigateVideo(nextVideo)
-    }
-
-    /**
      * Clear the currently playing video and start playing the new provided [videoId]
      *
      * If overriding, clearing old data must be done BEFORE calling [super.navigateVideo()]!
@@ -301,117 +530,18 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         }
     }
 
-    protected fun setSponsorBlockSegments(segments: List<Segment>) {
-        sponsorBlockSegments = segments
-        if (!PlayerHelper.sponsorBlockEnabled) return
-
-        updatePlaylistMetadata {
-            // JSON-encode as work-around for https://github.com/androidx/media/issues/564
-            val segments = JsonHelper.json.encodeToString(sponsorBlockSegments)
-            setExtras(bundleOf(IntentData.segments to segments))
-        }
-
-        checkForSegments()
-    }
-
-    /**
-     * Check for SponsorBlock segments. This method automatically schedules itself to repeat every
-     * 100ms using [handler], so it's not needed to schedule it manually.
-     */
-    private val segmentsChecker = Runnable { checkForSegments() }
-
-    private fun checkForSegments() {
-        // a single loop: this is (re)started on every play and every segments update
-        handler.removeCallbacks(segmentsChecker)
-        val player = exoPlayer
-        // The loop must only run while it can actually do something: no player, paused,
-        // no segments or SponsorBlock disabled would otherwise keep 10 wake-ups/second
-        // alive for the whole service lifetime. It is restarted by onIsPlayingChanged(true)
-        // and by setSponsorBlockSegments().
-        if (player == null ||
-            !player.isPlaying ||
-            sponsorBlockSegments.isEmpty() ||
-            !PlayerHelper.sponsorBlockEnabled
-        ) {
-            return
-        }
-
-        // battery: sleep until the next segment starts instead of polling 10 times a second for
-        // the whole video; seeks restart the loop (onPositionDiscontinuity)
-        val position = player.currentPosition
-        val nextStart = sponsorBlockSegments
-            .map { (it.segmentStartAndEnd.first * 1000f).toLong() }
-            .filter { it > position }
-            .minOrNull()
-        val untilNext = nextStart?.let { ((it - position) / player.playbackParameters.speed).toLong() }
-        handler.postDelayed(segmentsChecker, (untilNext ?: MAX_SEGMENT_CHECK_DELAY).coerceIn(100, MAX_SEGMENT_CHECK_DELAY))
-
-        val (currentSegment, sbSkipOption) = player.getCurrentSegment(
-            sponsorBlockSegments,
-            sponsorBlockConfig
-        ) ?: return
-
-        if (sbSkipOption in arrayOf(SbSkipOptions.AUTOMATIC, SbSkipOptions.AUTOMATIC_ONCE) && sponsorBlockAutoSkip) {
-            exoPlayer?.seekTo(currentSegment.segmentStartAndEnd.second.toLong() * 1000)
-            currentSegment.skipped = true
-
-            if (PlayerHelper.sponsorBlockNotifications) toastFromMainThread(R.string.segment_skipped)
-        }
-    }
-
     protected fun updatePlaylistMetadata(updateAction: MediaMetadata.Builder.() -> Unit) {
         handler.post {
-            exoPlayer?.playlistMetadata = MediaMetadata.Builder()
+            val metadata = MediaMetadata.Builder()
                 .apply(updateAction)
                 // send a unique timestamp to notify that the metadata changed, even if playing the same video twice
                 .setTrackNumber(System.currentTimeMillis().mod(Int.MAX_VALUE))
                 .build()
+            exoPlayer?.playlistMetadata = metadata
+            // the player screen reads it from the session's player
+            activePlayer?.takeIf { it !== exoPlayer }?.playlistMetadata = metadata
         }
     }
-
-    private fun handlePlayerAction(event: PlayerEvent) {
-        if (PlayerHelper.handlePlayerAction(exoPlayer ?: return, event)) return
-
-        when (event) {
-            PlayerEvent.Next -> {
-                navigateVideo(PlayingQueue.getNext() ?: return)
-            }
-
-            PlayerEvent.Prev -> {
-                navigateVideo(PlayingQueue.getPrev() ?: return)
-            }
-
-            PlayerEvent.Stop -> {
-                onDestroy()
-            }
-
-            else -> Unit
-        }
-    }
-
-    /**
-     * Trigger a notification update with an updated PendingIntent.
-     */
-    private fun updateNotification() {
-        val notificationIntent = Intent(this, getIntentActivity()).apply {
-            putExtra(IntentData.maximizePlayer, true)
-            putExtra(IntentData.offlinePlayer, isOfflinePlayer)
-            putExtra(IntentData.audioOnly, isAudioOnlyPlayer)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        }
-        notificationProvider?.notificationIntent = notificationIntent
-        triggerNotificationUpdate()
-    }
-
-    abstract val isOfflinePlayer: Boolean
-    var isAudioOnlyPlayer: Boolean = false
-
-    val watchPositionsEnabled
-        get() =
-            (PlayerHelper.watchPositionsAudio && isAudioOnlyPlayer) || (PlayerHelper.watchPositionsVideo && !isAudioOnlyPlayer)
-
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? =
-        mediaLibrarySession
 
     override fun onCreate() {
         super.onCreate()
@@ -422,39 +552,20 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         createPlayerAndMediaSession()
     }
 
+    /**
+     * Not sticky: Media3 asks Android to restart the service after its process dies (sleep
+     * timer, low memory), and the restarted service only held an empty player in the
+     * foreground, with its notification, in a new background process. Media buttons and
+     * playback resumption start it with an intent of their own, unaffected.
+     */
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
+    }
+
     open fun getIntentActivity(): Class<*> = MainActivity::class.java
 
     abstract suspend fun onServiceCreated(args: Bundle)
-
-    override fun onConnect(
-        session: MediaSession,
-        controller: MediaSession.ControllerInfo
-    ): MediaSession.ConnectionResult {
-        val connectionResult = super.onConnect(session, controller)
-
-        val mediaNotificationSessionCommands =
-            connectionResult.availableSessionCommands.buildUpon()
-                .also { builder ->
-                    builder.addSessionCommands(
-                        listOf(
-                            startServiceCommand,
-                            runPlayerActionCommand,
-                            stopServiceCommand
-                        )
-                    )
-                }
-                .build()
-
-        val playerCommands = connectionResult.availablePlayerCommands.buildUpon()
-            .add(Player.COMMAND_SEEK_TO_NEXT)
-            .add(Player.COMMAND_SEEK_TO_PREVIOUS)
-            .build()
-
-        return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
-            .setAvailableSessionCommands(mediaNotificationSessionCommands)
-            .setAvailablePlayerCommands(playerCommands)
-            .build()
-    }
 
     @OptIn(UnstableApi::class)
     private fun createPlayerAndMediaSession() {
@@ -464,7 +575,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         val player = PlayerHelper.createPlayer(this, trackSelector)
         // prevent android from putting Watube to sleep when locked
         player.setWakeMode(if (isOfflinePlayer) C.WAKE_MODE_LOCAL else C.WAKE_MODE_NETWORK)
-        player.addListener(playerListener)
+        player.addListener(servicePlayerListener)
         this.exoPlayer = player
         RestMode.pausePlayback = pauseForRestMode
 
@@ -477,11 +588,19 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         try {
             mediaLibrarySession = MediaLibrarySession.Builder(this, forwardingPlayer, this)
                 .setId(this.javaClass.name)
+                // notification artwork fetched like the media: generic User-Agent
+                .setBitmapLoader(
+                    CacheBitmapLoader(
+                        DataSourceBitmapLoader.Builder(this)
+                            .setDataSourceFactory(PlayerHelper.mediaDataSourceFactory(this))
+                            .build()
+                    )
+                )
                 .build()
         } catch (e: Exception) {
             Log.e(TAG(), "failed to start media library session because it already exists")
             e.printStackTrace()
-            onDestroy()
+            releaseAndStop()
         }
     }
 
@@ -502,46 +621,26 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         }
     }
 
-    private fun saveWatchPosition() {
-        if (isTransitioning || !watchPositionsEnabled || !::videoId.isInitialized) return
+    /** Called first by [releaseAndStop], on the main thread. */
+    protected open fun onRelease() = Unit
 
-        exoPlayer?.let { PlayerHelper.saveWatchPosition(it, videoId) }
-    }
-
-    override fun onMediaButtonEvent(
-        session: MediaSession,
-        controllerInfo: MediaSession.ControllerInfo,
-        intent: Intent
-    ): Boolean {
-        val event: KeyEvent = intent.parcelableExtra(Intent.EXTRA_KEY_EVENT) ?: return false
-        when (event.keyCode) {
-            KeyEvent.KEYCODE_MEDIA_NEXT -> {
-                handlePlayerAction(PlayerEvent.Next)
-                return true
-            }
-
-            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
-                handlePlayerAction(PlayerEvent.Prev)
-                return true
-            }
-
-            KeyEvent.KEYCODE_MEDIA_REWIND -> {
-                handlePlayerAction(PlayerEvent.Rewind)
-            }
-
-            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
-                handlePlayerAction(PlayerEvent.Forward)
-            }
-
-            KeyEvent.KEYCODE_MEDIA_STOP -> {
-                handlePlayerAction(PlayerEvent.Stop)
-            }
-        }
-
-        return super.onMediaButtonEvent(session, controllerInfo, intent)
-    }
-
+    /**
+     * Since Media3 1.10 the service is a LifecycleService: onDestroy() belongs to the system and
+     * must run once, after the session is released. Stopping by hand goes through
+     * [releaseAndStop] instead, which lets the system call onDestroy() afterwards.
+     */
     override fun onDestroy() {
+        if (isReleased) return super.onDestroy()
+        afterRelease = { super.onDestroy() }
+        releaseAndStop()
+    }
+
+    /** Releases the player and the session, then stops the service. Runs once. */
+    protected fun releaseAndStop() {
+        if (isReleasing) return
+        isReleasing = true
+        onRelease()
+
         // wait for a short time before killing the mediaSession
         // as the playerController must be released before we finish the session
         // otherwise there would be a
@@ -572,7 +671,9 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
             stopSelf()
 
-            super.onDestroy()
+            isReleased = true
+            afterRelease?.invoke()
+            afterRelease = null
         }
     }
 
@@ -581,53 +682,63 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        onDestroy()
+        releaseAndStop()
     }
+    // endregion
 
+    // region Background Playback
+    var isAudioOnlyPlayer: Boolean = false
+    // endregion
+
+    // region Playing Queue
     /**
-     * [Player] wrapper that handles seeking actions (next/previous) itself instead of using the
-     * default [Player] implementation
+     * Plays the next video.
+     *
+     * If a video ID is explicitly given, it is played next,
+     * otherwise a queued video (which includes playlists) is chosen.
+     *
+     * If no video is queued and autoplay is enabled, a related video is used.
      */
-    inner class MediaSessionForwarder(player: Player) : ForwardingPlayer(player) {
-        override fun hasNextMediaItem(): Boolean {
-            return PlayingQueue.hasNext()
+    fun playNextVideo(videoId: String? = null, relatedStreams: List<StreamItem>? = null) {
+        if (PlayingQueue.repeatMode == Player.REPEAT_MODE_ONE) {
+            activePlayer?.seekTo(0)
+            return
         }
 
-        override fun hasPreviousMediaItem(): Boolean {
-            return PlayingQueue.hasPrev()
+        if (!shouldHandleAutoplay) {
+            return
         }
 
-        override fun seekToPrevious() {
-            handlePlayerAction(PlayerEvent.Prev)
-        }
+        val nextVideo = videoId ?: PlayingQueue.getNext()
+        ?: relatedStreams?.firstOrNull { !it.isLive }?.url?.toID()
+            ?.takeIf { PlayerHelper.autoPlayEnabled && PlayerHelper.relatedStreamsEnabled }
+        ?: return
 
-        override fun seekToNext() {
-            handlePlayerAction(PlayerEvent.Next)
-        }
-
-        override fun getAvailableCommands(): Player.Commands {
-            return super.getAvailableCommands().buildUpon()
-                .addAll(COMMAND_SEEK_TO_PREVIOUS, COMMAND_SEEK_TO_NEXT)
-                .build()
-        }
-
-        override fun isCommandAvailable(command: Int): Boolean {
-            if (command == COMMAND_SEEK_TO_NEXT || command == COMMAND_SEEK_TO_PREVIOUS) return true
-
-            return super.isCommandAvailable(command)
-        }
+        navigateVideo(nextVideo)
     }
+    // endregion
+
+    // region Stolm
+    /** Hands the media session (notification, player screen, other apps) to [player]. */
+    protected fun useSessionPlayer(player: Player) {
+        mediaLibrarySession?.player = MediaSessionForwarder(player)
+    }
+    // endregion
 
     companion object {
-        private const val START_SERVICE_ACTION = "start_service_action"
-        private const val STOP_SERVICE_ACTION = "stop_service_action"
-        private const val RUN_PLAYER_COMMAND_ACTION = "run_player_command_action"
-
-        /** Longest sleep of the SponsorBlock loop between two segments. */
-        private const val MAX_SEGMENT_CHECK_DELAY = 2000L
-
+        // region Video Player
         val startServiceCommand = SessionCommand(START_SERVICE_ACTION, Bundle.EMPTY)
         val stopServiceCommand = SessionCommand(STOP_SERVICE_ACTION, Bundle.EMPTY)
         val runPlayerActionCommand = SessionCommand(RUN_PLAYER_COMMAND_ACTION, Bundle.EMPTY)
+
+        private const val START_SERVICE_ACTION = "start_service_action"
+        private const val STOP_SERVICE_ACTION = "stop_service_action"
+        private const val RUN_PLAYER_COMMAND_ACTION = "run_player_command_action"
+        // endregion
+
+        // region SponsorBlock
+        /** Longest sleep of the SponsorBlock loop between two segments. */
+        private const val MAX_SEGMENT_CHECK_DELAY = 2000L
+        // endregion
     }
 }

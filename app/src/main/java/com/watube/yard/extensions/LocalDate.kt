@@ -6,6 +6,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 
+// region Common Utilities
 fun LocalDate.toMillis() = this.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
 
 fun Long.toLocalDate() =
@@ -14,3 +15,4 @@ fun Long.toLocalDate() =
 fun Instant.toLocalDateTime() = this.toLocalDateTime(TimeZone.currentSystemDefault())
 
 fun Instant.toLocalDate() = this.toLocalDateTime().date
+// endregion

@@ -13,6 +13,7 @@ import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.ui.viewholders.PlayingQueueViewHolder
 import com.watube.yard.util.PlayingQueue
 
+// region Playing Queue
 class PlayingQueueAdapter(
     private val onQueueItemSelected: (String) -> Unit
 ) : RecyclerView.Adapter<PlayingQueueViewHolder>() {
@@ -64,3 +65,4 @@ class PlayingQueueAdapter(
         }
     }
 }
+// endregion

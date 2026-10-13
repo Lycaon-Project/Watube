@@ -8,6 +8,7 @@ import com.watube.yard.enums.FileType
 import java.nio.file.Path
 import kotlin.io.path.fileSize
 
+// region Downloads
 @Entity(
     tableName = "downloadItem",
     indices = [
@@ -44,3 +45,4 @@ data class DownloadItem(
 ) {
     val isFinished get() = downloadSize > 0L && runCatching { path.fileSize() }.getOrDefault(0L) >= downloadSize
 }
+// endregion

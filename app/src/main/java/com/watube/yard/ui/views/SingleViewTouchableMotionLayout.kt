@@ -12,6 +12,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.TransitionAdapter
 import com.watube.yard.R
 
+// region Mini Player
 class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeSet? = null) :
     MotionLayout(context, attributeSet) {
 
@@ -159,3 +160,4 @@ class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeS
         return handled
     }
 }
+// endregion

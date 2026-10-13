@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
+// region Image Loading
 /**
  * An image view that allows zooming the image inside
  * credits: https://stackoverflow.com/posts/6650473
@@ -232,3 +233,4 @@ class ZoomableImageView(context: Context, attr: AttributeSet?) : AppCompatImageV
         const val CLICK = 3
     }
 }
+// endregion

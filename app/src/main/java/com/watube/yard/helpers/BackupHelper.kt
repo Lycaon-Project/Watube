@@ -26,6 +26,7 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
 
+// region Backup & Restore
 /**
  * Backup and restore the preferences
  */
@@ -369,3 +370,4 @@ object BackupHelper {
         }
     }
 }
+// endregion

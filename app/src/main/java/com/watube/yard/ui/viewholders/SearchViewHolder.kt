@@ -6,10 +6,14 @@ import com.watube.yard.databinding.PlaylistsRowBinding
 import com.watube.yard.databinding.VideoRowBinding
 import kotlinx.coroutines.Job
 
+// region Search
 class SearchViewHolder : RecyclerView.ViewHolder {
     var videoRowBinding: VideoRowBinding? = null
+        private set
     var channelRowBinding: ChannelRowBinding? = null
+        private set
     var playlistRowBinding: PlaylistsRowBinding? = null
+        private set
 
     /** Async work started while binding this row; cancelled when the row is recycled. */
     var bindJob: Job? = null
@@ -26,3 +30,4 @@ class SearchViewHolder : RecyclerView.ViewHolder {
         playlistRowBinding = binding
     }
 }
+// endregion

@@ -25,8 +25,11 @@ import androidx.media3.common.Format
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
+import androidx.media3.common.util.ExperimentalApi
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
@@ -60,36 +63,21 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 object PlayerHelper {
-    private const val ACTION_MEDIA_CONTROL = "media_control"
-    const val CONTROL_TYPE = "control_type"
-    const val SPONSOR_HIGHLIGHT_CATEGORY = "poi_highlight"
-    const val ROLE_FLAG_AUTO_GEN_SUBTITLE = C.ROLE_FLAG_SUPPLEMENTARY
-    private const val MINIMUM_BUFFER_DURATION = 1000 * 10 // exo default is 50s
-    const val WATCH_POSITION_TIMER_DELAY_MS = 5000L
-
-    /**
-     * Playback speed while the fast_forward action is active (triggered by a long press on the player)
-     *
-     * Should be kept in sync with `fast_forward_view.xml`
-     */
-    const val FAST_FORWARD_SPEED_FACTOR = 2f
-
-    /**
-     * Maximum playback speed supported by ExoPlayer
-     */
-    const val MAXIMUM_PLAYBACK_SPEED = 8f
-
-    /**
-     * The maximum amount of time to wait until the video starts playing: 10 minutes
-     */
-    const val MAX_BUFFER_DELAY = 10 * 60 * 1000L
-
+    // region Playing Queue
     val repeatModes = listOf(
         Player.REPEAT_MODE_OFF to R.string.repeat_mode_none,
         Player.REPEAT_MODE_ONE to R.string.repeat_mode_current,
         Player.REPEAT_MODE_ALL to R.string.repeat_mode_all
     )
 
+    var repeatMode: Int
+        get() = PreferenceHelper.getInt(PreferenceKeys.REPEAT_MODE, Player.REPEAT_MODE_OFF)
+        set(value) {
+            PreferenceHelper.putInt(PreferenceKeys.REPEAT_MODE, value)
+        }
+    // endregion
+
+    // region SponsorBlock
     /**
      * A list of all categories that are not disabled by default
      * Also update `sponsorblock_settings.xml` when modifying this!
@@ -100,121 +88,7 @@ object PlayerHelper {
         "exclusive_access" to SbSkipOptions.AUTOMATIC,
     )
 
-    /**
-     * Create a base64 encoded DASH stream manifest
-     */
-    fun createDashSource(streams: Streams, context: Context): Uri {
-        val manifest = DashHelper.createManifest(
-            streams,
-            DisplayHelper.supportsHdr(context)
-        )
-
-        // encode to base64
-        val encoded = Base64.encodeToString(manifest.toByteArray(), Base64.DEFAULT)
-        return "data:application/dash+xml;charset=utf-8;base64,$encoded".toUri()
-    }
-
-    /**
-     * Get the system's default captions style
-     */
-    @OptIn(UnstableApi::class)
-    fun getCaptionStyle(context: Context): CaptionStyleCompat {
-        val captioningManager = context.getSystemService<CaptioningManager>()!!
-        return if (!captioningManager.isEnabled) {
-            // system captions are disabled, using android default captions style
-            CaptionStyleCompat.DEFAULT
-        } else {
-            // system captions are enabled
-            CaptionStyleCompat.createFromCaptionStyle(captioningManager.userStyle)
-        }
-    }
-
-    fun getFullscreenOrientation(isVerticalVideo: Boolean): Int {
-        val fullscreenOrientationPref = PreferenceHelper.getString(
-            PreferenceKeys.FULLSCREEN_ORIENTATION,
-            "ratio"
-        )
-
-        return when (fullscreenOrientationPref) {
-            "ratio" -> {
-                // probably a_youtube shorts video
-                if (isVerticalVideo) {
-                    ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
-                } // a video with normal aspect ratio
-                else {
-                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                }
-            }
-
-            "auto" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR
-            "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            "portrait" -> ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
-            else -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        }
-    }
-
-    val autoFullscreenEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.AUTO_FULLSCREEN,
-            false
-        )
-
-    val autoFullscreenShortsEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.AUTO_FULLSCREEN_SHORTS,
-            false
-        )
-
-    val relatedStreamsEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.RELATED_STREAMS,
-            true
-        )
-
-    val pausePlayerOnScreenOffEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.PAUSE_ON_SCREEN_OFF,
-            false
-        )
-
-    private val watchPositionsPref: String
-        get() = PreferenceHelper.getString(
-            PreferenceKeys.WATCH_POSITIONS,
-            "always"
-        )
-
-    val watchPositionsVideo: Boolean
-        get() = watchPositionsPref in listOf("always", "videos")
-
-    val watchPositionsAudio: Boolean
-        get() = watchPositionsPref in listOf("always", "audio")
-
-    val watchPositionsAny: Boolean
-        get() = watchPositionsVideo || watchPositionsAudio
-
-    val watchHistoryEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.WATCH_HISTORY_TOGGLE,
-            true
-        )
-
-    val useSystemCaptionStyle: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.SYSTEM_CAPTION_STYLE,
-            true
-        )
-
-    val useRichCaptionRendering: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.RICH_CAPTION_RENDERING,
-            false
-        )
-
-    private val bufferingGoal: Int
-        get() = PreferenceHelper.getString(
-            PreferenceKeys.BUFFERING_GOAL,
-            "50"
-        ).toInt() * 1000
+    const val SPONSOR_HIGHLIGHT_CATEGORY = "poi_highlight"
 
     val sponsorBlockEnabled: Boolean
         get() = PreferenceHelper.getBoolean(
@@ -233,309 +107,6 @@ object PlayerHelper {
             PreferenceKeys.SB_HIGHLIGHTS,
             true
         )
-
-    val defaultSubtitleCode: String?
-        get() {
-            val code = PreferenceHelper.getString(
-                PreferenceKeys.DEFAULT_SUBTITLE,
-                ""
-            )
-
-            if (code == "") return null
-
-            if (code.contains("-")) {
-                return code.split("-")[0]
-            }
-            return code
-        }
-
-    var autoPlayEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.AUTOPLAY,
-            true
-        )
-        set(value) {
-            PreferenceHelper.putBoolean(PreferenceKeys.AUTOPLAY, value)
-        }
-
-    val autoPlayCountdown: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.AUTOPLAY_COUNTDOWN,
-            false
-        )
-
-    val seekIncrement: Long
-        get() = PreferenceHelper.getString(
-            PreferenceKeys.SEEK_INCREMENT,
-            "10.0"
-        ).toFloat()
-            .roundToInt()
-            .toLong() * 1000
-
-    private val defaultPlaybackSpeed: Float
-        get() = PreferenceHelper.getString(
-            PreferenceKeys.PLAYBACK_SPEED,
-            "1"
-        ).replace("F", "").toFloat()
-
-    val swipeGestureEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.PLAYER_SWIPE_CONTROLS,
-            true
-        )
-
-    val fullscreenGesturesEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.FULLSCREEN_GESTURES,
-            true
-        )
-
-    val pinchGestureEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.PLAYER_PINCH_CONTROL,
-            true
-        )
-
-    val captionsTextSize: Float
-        get() = PreferenceHelper.getString(
-            PreferenceKeys.CAPTIONS_SIZE,
-            "18"
-        ).toFloat()
-
-    val doubleTapToSeek: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.DOUBLE_TAP_TO_SEEK,
-            true
-        )
-
-    val longPressFastForward: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.LONG_PRESS_FAST_FORWARD,
-            false
-        )
-
-    val autoPipEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(PreferenceKeys.AUTO_PIP, true)
-
-    val sleepTimerForAllVideos: Boolean
-        get() = PreferenceHelper.getBoolean(PreferenceKeys.SLEEP_TIMER_ALL_VIDEOS, false)
-
-    /** Duration of the last sleep timer started by the user, reused for every video. */
-    var sleepTimerMinutes: Long
-        get() = PreferenceHelper.getLong(PreferenceKeys.SLEEP_TIMER_MINUTES, 30L)
-        set(value) = PreferenceHelper.putLong(PreferenceKeys.SLEEP_TIMER_MINUTES, value)
-
-    val statsForNerdsEnabled: Boolean
-        get() = PreferenceHelper.getBoolean(PreferenceKeys.STATS_FOR_NERDS, false)
-
-    val persistentSearchBar: Boolean
-        get() = PreferenceHelper.getBoolean(PreferenceKeys.PERSISTENT_SEARCH_BAR, true)
-
-    private val alternativePiPControls: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.ALTERNATIVE_PIP_CONTROLS,
-            false
-        )
-
-    private val skipSilence: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.SKIP_SILENCE,
-            false
-        )
-
-    val playAutomatically: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.PLAY_AUTOMATICALLY,
-            true
-        )
-
-    val fullLocalMode: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.FULL_LOCAL_MODE,
-            true
-        )
-
-    val localStreamExtraction: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.LOCAL_STREAM_EXTRACTION,
-            true
-        )
-
-    val localRYD: Boolean
-        get() = PreferenceHelper.getBoolean(
-            PreferenceKeys.LOCAL_RYD,
-            // off by default: the counter would send every video id to a third party
-            // from the user's own IP. Still available (opt-in) in the instance settings.
-            false
-        )
-
-    var repeatMode: Int
-        get() = PreferenceHelper.getInt(PreferenceKeys.REPEAT_MODE, Player.REPEAT_MODE_OFF)
-        set(value) {
-            PreferenceHelper.putInt(PreferenceKeys.REPEAT_MODE, value)
-        }
-
-    fun getDefaultResolution(context: Context, isFullscreen: Boolean): Int? {
-        var prefKey = if (NetworkHelper.isNetworkMetered(context)) {
-            PreferenceKeys.DEFAULT_RESOLUTION_MOBILE
-        } else {
-            PreferenceKeys.DEFAULT_RESOLUTION
-        }
-        if (!isFullscreen) prefKey += "_no_fullscreen"
-
-        return PreferenceHelper.getString(prefKey, "")
-            .replace("p", "")
-            .toIntOrNull()
-    }
-
-    fun getIntentActionName(context: Context): String {
-        return context.packageName + "." + ACTION_MEDIA_CONTROL
-    }
-
-    private fun getRemoteAction(
-        activity: Activity,
-        icon: IconCompat,
-        @StringRes title: Int,
-        event: PlayerEvent
-    ): RemoteActionCompat {
-        val intent = Intent(getIntentActionName(activity))
-            .setPackage(activity.packageName)
-            .putExtra(CONTROL_TYPE, event)
-        val pendingIntent =
-            PendingIntentCompat.getBroadcast(activity, event.ordinal, intent, 0, false)!!
-
-        val text = activity.getString(title)
-        return RemoteActionCompat(icon, text, text, pendingIntent)
-    }
-
-    private fun seekIconWithSpeed(resources: Resources, @DrawableRes resourceId: Int): IconCompat {
-        val textSize = 15 * resources.displayMetrics.density
-        val bitmap = ResourcesCompat.getDrawable(resources, resourceId, null)!!.toBitmap()
-        ImageHelper.insertText(bitmap, seekIncrement.div(1000).toString(), 0.5f, 0.65f, textSize)
-        return IconCompat.createWithBitmap(bitmap)
-    }
-
-    /**
-     * Create controls to use in the PiP window
-     */
-    fun getPiPModeActions(activity: Activity, isPlaying: Boolean): List<RemoteActionCompat> {
-        val audioModeAction = getRemoteAction(
-            activity,
-            IconCompat.createWithResource(activity, R.drawable.ic_headphones),
-            R.string.background_mode,
-            PlayerEvent.Background
-        )
-
-        val rewindAction = getRemoteAction(
-            activity,
-            seekIconWithSpeed(activity.resources, R.drawable.ic_rewind),
-            R.string.rewind,
-            PlayerEvent.Rewind
-        )
-
-        val playPauseAction = getRemoteAction(
-            activity,
-            IconCompat.createWithResource(activity, if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-            if (isPlaying) R.string.resume else R.string.pause,
-            PlayerEvent.PlayPause
-        )
-
-        val skipNextAction = getRemoteAction(
-            activity,
-            IconCompat.createWithResource(activity, R.drawable.ic_next),
-            R.string.play_next,
-            PlayerEvent.Next
-        )
-
-        val forwardAction = getRemoteAction(
-            activity,
-            seekIconWithSpeed(activity.resources, R.drawable.ic_forward),
-            R.string.forward,
-            PlayerEvent.Forward
-        )
-        return if (alternativePiPControls) {
-            listOf(audioModeAction, playPauseAction, skipNextAction)
-        } else {
-            listOf(rewindAction, playPauseAction, forwardAction)
-        }
-    }
-
-    @OptIn(UnstableApi::class)
-    private fun createRendererFactory(context: Context): DefaultRenderersFactory {
-        val renderersFactory = object : DefaultRenderersFactory(context) {
-            init {
-                // when a decoder refuses a stream, ExoPlayer silently retries with the next
-                // one instead of ending playback with an error
-                setEnableDecoderFallback(true)
-            }
-
-            override fun buildTextRenderers(
-                context: Context,
-                output: TextOutput,
-                outputLooper: Looper,
-                extensionRendererMode: Int,
-                out: ArrayList<Renderer>
-            ) {
-                super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out)
-                @Suppress("DEPRECATION")
-                (out.last() as? TextRenderer)?.experimentalSetLegacyDecodingEnabled(true)
-            }
-        }
-        return renderersFactory
-    }
-
-    /**
-     * Create a basic player, that is used for all types of playback situations inside the app
-     */
-    @OptIn(UnstableApi::class)
-    fun createPlayer(context: Context, trackSelector: DefaultTrackSelector): ExoPlayer {
-        val dataSourceFactory = DefaultDataSource.Factory(context)
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
-            .build()
-
-        return ExoPlayer.Builder(context)
-            .setUsePlatformDiagnostics(false)
-            .setRenderersFactory(createRendererFactory(context))
-            .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
-            .setTrackSelector(trackSelector)
-            .setHandleAudioBecomingNoisy(true)
-            .setLoadControl(getLoadControl())
-            .setAudioAttributes(audioAttributes, true)
-            .build()
-            .apply {
-                loadPlaybackParams()
-            }
-    }
-
-    /**
-     * Get the load controls for the player (buffering)
-     */
-    @OptIn(UnstableApi::class)
-    fun getLoadControl(): LoadControl {
-        return DefaultLoadControl.Builder()
-            // cache the last minute of the video for backward seeks
-            .setBackBuffer(1000 * 60, true)
-            .setBufferDurationsMs(
-                MINIMUM_BUFFER_DURATION,
-                max(bufferingGoal, MINIMUM_BUFFER_DURATION),
-                DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS,
-                DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
-            )
-            .build()
-    }
-
-    /**
-     * Load playback parameters such as speed and skip silence
-     */
-    @OptIn(UnstableApi::class)
-    fun ExoPlayer.loadPlaybackParams(): ExoPlayer {
-        skipSilenceEnabled = skipSilence
-
-        playbackParameters = PlaybackParameters(defaultPlaybackSpeed, 1.0f)
-        return this
-    }
 
     /**
      * get the categories for sponsorBlock
@@ -588,25 +159,91 @@ object PlayerHelper {
 
         return null
     }
+    // endregion
+
+    // region Media Notification
+    private const val ACTION_MEDIA_CONTROL = "media_control"
+    const val CONTROL_TYPE = "control_type"
+
+    fun getIntentActionName(context: Context): String {
+        return context.packageName + "." + ACTION_MEDIA_CONTROL
+    }
 
     /**
-     * Get the name of the currently played chapter
+     * Handle basic [PlayerEvent]'s that can be handled by the player itself without context
      */
-    fun getCurrentChapterIndex(currentPositionMs: Long, chapters: List<ChapterSegment>): Int? {
-        val currentPositionSeconds = currentPositionMs / 1000
-        return chapters
-            .sortedBy { it.start }
-            .indexOfLast { currentPositionSeconds >= it.start }
-            .takeIf { it >= 0 }
-            ?.takeIf { index ->
-                val chapter = chapters[index]
-                // remove the video highlight if it's already longer ago than [ChapterSegment.HIGHLIGHT_LENGTH],
-                // otherwise the SponsorBlock highlight would be shown from its starting point to the end
-                val isWithinMaxHighlightDuration =
-                    (currentPositionSeconds - chapter.start) < ChapterSegment.HIGHLIGHT_LENGTH
-                chapter.highlightDrawable == null || isWithinMaxHighlightDuration
+    fun handlePlayerAction(player: Player, playerEvent: PlayerEvent): Boolean {
+        return when (playerEvent) {
+            PlayerEvent.PlayPause -> {
+                player.togglePlayPauseState()
+                true
             }
+
+            PlayerEvent.Forward -> {
+                player.seekBy(seekIncrement)
+                true
+            }
+
+            PlayerEvent.Rewind -> {
+                player.seekBy(-seekIncrement)
+                true
+            }
+
+            else -> false
+        }
     }
+    // endregion
+
+    // region Captions
+    const val ROLE_FLAG_AUTO_GEN_SUBTITLE = C.ROLE_FLAG_SUPPLEMENTARY
+
+    /**
+     * Get the system's default captions style
+     */
+    @OptIn(UnstableApi::class)
+    fun getCaptionStyle(context: Context): CaptionStyleCompat {
+        val captioningManager = context.getSystemService<CaptioningManager>()!!
+        return if (!captioningManager.isEnabled) {
+            // system captions are disabled, using android default captions style
+            CaptionStyleCompat.DEFAULT
+        } else {
+            // system captions are enabled
+            CaptionStyleCompat.createFromCaptionStyle(captioningManager.userStyle)
+        }
+    }
+
+    val useSystemCaptionStyle: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.SYSTEM_CAPTION_STYLE,
+            true
+        )
+
+    val useRichCaptionRendering: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.RICH_CAPTION_RENDERING,
+            false
+        )
+
+    val defaultSubtitleCode: String?
+        get() {
+            val code = PreferenceHelper.getString(
+                PreferenceKeys.DEFAULT_SUBTITLE,
+                ""
+            )
+
+            if (code == "") return null
+
+            if (code.contains("-")) {
+                return code.split("-")[0]
+            }
+            return code
+        }
+
+    val captionsTextSize: Float
+        get() = PreferenceHelper.getString(
+            PreferenceKeys.CAPTIONS_SIZE,
+            "18"
+        ).toFloat()
 
     /**
      * Get all caption tracks available in the player
@@ -639,6 +276,231 @@ object PlayerHelper {
         } else {
             ROLE_FLAG_AUTO_GEN_SUBTITLE
         }
+    }
+    // endregion
+
+    // region Video Player
+    private const val MINIMUM_BUFFER_DURATION = 1000 * 10 // exo default is 50s
+
+    /**
+     * The maximum amount of time to wait until the video starts playing: 10 minutes
+     */
+    const val MAX_BUFFER_DELAY = 10 * 60 * 1000L
+
+    val pausePlayerOnScreenOffEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.PAUSE_ON_SCREEN_OFF,
+            false
+        )
+
+    val seekIncrement: Long
+        get() = PreferenceHelper.getString(
+            PreferenceKeys.SEEK_INCREMENT,
+            "10.0"
+        ).toFloat()
+            .roundToInt()
+            .toLong() * 1000
+
+    val playAutomatically: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.PLAY_AUTOMATICALLY,
+            true
+        )
+
+    @OptIn(UnstableApi::class, ExperimentalApi::class)
+    private fun createRendererFactory(context: Context): DefaultRenderersFactory {
+        val renderersFactory = object : DefaultRenderersFactory(context) {
+            init {
+                // when a decoder refuses a stream, ExoPlayer silently retries with the next
+                // one instead of ending playback with an error
+                setEnableDecoderFallback(true)
+            }
+
+            override fun buildTextRenderers(
+                context: Context,
+                output: TextOutput,
+                outputLooper: Looper,
+                extensionRendererMode: Int,
+                out: ArrayList<Renderer>
+            ) {
+                super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out)
+                @Suppress("DEPRECATION")
+                (out.last() as? TextRenderer)?.experimentalSetLegacyDecodingEnabled(true)
+            }
+        }
+        return renderersFactory
+    }
+
+    /**
+     * Network access of the player (DASH / HLS segments, subtitles, notification artwork) with
+     * the app's generic User-Agent. Media3 sends none by default, so Android added its own,
+     * which names the phone model and system build ("Dalvik/2.1.0 (Linux; U; Android 13;
+     * <model> Build/...)") to Google or the instance.
+     */
+    @OptIn(UnstableApi::class)
+    fun mediaDataSourceFactory(context: Context): DataSource.Factory = DefaultDataSource.Factory(
+        context,
+        DefaultHttpDataSource.Factory().setUserAgent(PrivacyHelper.userAgent)
+    )
+
+    /**
+     * Create a basic player, that is used for all types of playback situations inside the app
+     */
+    @OptIn(UnstableApi::class)
+    fun createPlayer(context: Context, trackSelector: DefaultTrackSelector): ExoPlayer {
+        val dataSourceFactory = mediaDataSourceFactory(context)
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+            .build()
+
+        return ExoPlayer.Builder(context)
+            .setUsePlatformDiagnostics(false)
+            .setRenderersFactory(createRendererFactory(context))
+            .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
+            .setTrackSelector(trackSelector)
+            .setHandleAudioBecomingNoisy(true)
+            .setLoadControl(getLoadControl())
+            .setAudioAttributes(audioAttributes, true)
+            .build()
+            .apply {
+                loadPlaybackParams()
+            }
+    }
+
+    /**
+     * Get the load controls for the player (buffering)
+     */
+    @OptIn(UnstableApi::class)
+    fun getLoadControl(): LoadControl {
+        return DefaultLoadControl.Builder()
+            // cache the last minute of the video for backward seeks
+            .setBackBuffer(1000 * 60, true)
+            .setBufferDurationsMs(
+                MINIMUM_BUFFER_DURATION,
+                max(bufferingGoal, MINIMUM_BUFFER_DURATION),
+                DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS,
+                DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
+            )
+            .build()
+    }
+
+    fun getPlayPauseActionIcon(player: Player) = when {
+        player.isPlaying -> R.drawable.ic_pause
+        player.playbackState == Player.STATE_ENDED -> R.drawable.ic_restart
+        else -> R.drawable.ic_play
+    }
+    // endregion
+
+    // region Watch Positions
+    const val WATCH_POSITION_TIMER_DELAY_MS = 5000L
+
+    private val watchPositionsPref: String
+        get() = PreferenceHelper.getString(
+            PreferenceKeys.WATCH_POSITIONS,
+            "always"
+        )
+
+    val watchPositionsVideo: Boolean
+        get() = watchPositionsPref in listOf("always", "videos")
+
+    val watchPositionsAudio: Boolean
+        get() = watchPositionsPref in listOf("always", "audio")
+
+    val watchPositionsAny: Boolean
+        get() = watchPositionsVideo || watchPositionsAudio
+
+    fun saveWatchPosition(player: Player, videoId: String) {
+        if (player.duration == C.TIME_UNSET || player.currentPosition in listOf(0L, C.TIME_UNSET)) {
+            return
+        }
+
+        val watchPosition = WatchPosition(videoId, player.currentPosition)
+        CoroutineScope(Dispatchers.IO).launch {
+            DatabaseHelper.saveWatchPosition(watchPosition)
+        }
+    }
+    // endregion
+
+    // region Player Gestures
+    /**
+     * Playback speed while the fast_forward action is active (triggered by a long press on the player)
+     *
+     * Should be kept in sync with `fast_forward_view.xml`
+     */
+    const val FAST_FORWARD_SPEED_FACTOR = 2f
+
+    val swipeGestureEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.PLAYER_SWIPE_CONTROLS,
+            true
+        )
+
+    val pinchGestureEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.PLAYER_PINCH_CONTROL,
+            true
+        )
+
+    val doubleTapToSeek: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.DOUBLE_TAP_TO_SEEK,
+            true
+        )
+
+    val longPressFastForward: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.LONG_PRESS_FAST_FORWARD,
+            false
+        )
+    // endregion
+
+    // region Playback Options
+    /**
+     * Maximum playback speed supported by ExoPlayer
+     */
+    const val MAXIMUM_PLAYBACK_SPEED = 8f
+
+    private val bufferingGoal: Int
+        get() = PreferenceHelper.getString(
+            PreferenceKeys.BUFFERING_GOAL,
+            "50"
+        ).toInt() * 1000
+
+    private val defaultPlaybackSpeed: Float
+        get() = PreferenceHelper.getString(
+            PreferenceKeys.PLAYBACK_SPEED,
+            "1"
+        ).replace("F", "").toFloat()
+
+    private val skipSilence: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.SKIP_SILENCE,
+            false
+        )
+
+    fun getDefaultResolution(context: Context, isFullscreen: Boolean): Int? {
+        var prefKey = if (NetworkHelper.isNetworkMetered(context)) {
+            PreferenceKeys.DEFAULT_RESOLUTION_MOBILE
+        } else {
+            PreferenceKeys.DEFAULT_RESOLUTION
+        }
+        if (!isFullscreen) prefKey += "_no_fullscreen"
+
+        return PreferenceHelper.getString(prefKey, "")
+            .replace("p", "")
+            .toIntOrNull()
+    }
+
+    /**
+     * Load playback parameters such as speed and skip silence
+     */
+    @OptIn(UnstableApi::class)
+    fun ExoPlayer.loadPlaybackParams(): ExoPlayer {
+        skipSilenceEnabled = skipSilence
+
+        playbackParameters = PlaybackParameters(defaultPlaybackSpeed, 1.0f)
+        return this
     }
 
     /**
@@ -813,6 +675,193 @@ object PlayerHelper {
         // result of this operation
         return roleFlags or acontRoleFlags
     }
+    // endregion
+
+    // region Stream Sources
+    /**
+     * Create a base64 encoded DASH stream manifest
+     */
+    fun createDashSource(streams: Streams, context: Context): Uri {
+        val manifest = DashHelper.createManifest(
+            streams,
+            DisplayHelper.supportsHdr(context)
+        )
+
+        // encode to base64
+        val encoded = Base64.encodeToString(manifest.toByteArray(), Base64.DEFAULT)
+        return "data:application/dash+xml;charset=utf-8;base64,$encoded".toUri()
+    }
+    // endregion
+
+    // region Fullscreen
+    fun getFullscreenOrientation(isVerticalVideo: Boolean): Int {
+        val fullscreenOrientationPref = PreferenceHelper.getString(
+            PreferenceKeys.FULLSCREEN_ORIENTATION,
+            "ratio"
+        )
+
+        return when (fullscreenOrientationPref) {
+            "ratio" -> {
+                // probably a_youtube shorts video
+                if (isVerticalVideo) {
+                    ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+                } // a video with normal aspect ratio
+                else {
+                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                }
+            }
+
+            "auto" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR
+            "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            "portrait" -> ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+            else -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        }
+    }
+
+    val autoFullscreenEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.AUTO_FULLSCREEN,
+            false
+        )
+
+    val autoFullscreenShortsEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.AUTO_FULLSCREEN_SHORTS,
+            false
+        )
+
+    val fullscreenGesturesEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.FULLSCREEN_GESTURES,
+            true
+        )
+    // endregion
+
+    // region Related Videos
+    val relatedStreamsEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.RELATED_STREAMS,
+            true
+        )
+    // endregion
+
+    // region Watch History
+    val watchHistoryEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.WATCH_HISTORY_TOGGLE,
+            true
+        )
+    // endregion
+
+    // region Autoplay
+    var autoPlayEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.AUTOPLAY,
+            true
+        )
+        set(value) {
+            PreferenceHelper.putBoolean(PreferenceKeys.AUTOPLAY, value)
+        }
+
+    val autoPlayCountdown: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.AUTOPLAY_COUNTDOWN,
+            false
+        )
+    // endregion
+
+    // region Picture-in-Picture
+    val autoPipEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.AUTO_PIP, true)
+
+    private val alternativePiPControls: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.ALTERNATIVE_PIP_CONTROLS,
+            false
+        )
+
+    private fun getRemoteAction(
+        activity: Activity,
+        icon: IconCompat,
+        @StringRes title: Int,
+        event: PlayerEvent
+    ): RemoteActionCompat {
+        val intent = Intent(getIntentActionName(activity))
+            .setPackage(activity.packageName)
+            .putExtra(CONTROL_TYPE, event)
+        val pendingIntent =
+            PendingIntentCompat.getBroadcast(activity, event.ordinal, intent, 0, false)!!
+
+        val text = activity.getString(title)
+        return RemoteActionCompat(icon, text, text, pendingIntent)
+    }
+
+    private fun seekIconWithSpeed(resources: Resources, @DrawableRes resourceId: Int): IconCompat {
+        val textSize = 15 * resources.displayMetrics.density
+        val bitmap = ResourcesCompat.getDrawable(resources, resourceId, null)!!.toBitmap()
+        ImageHelper.insertText(bitmap, seekIncrement.div(1000).toString(), 0.5f, 0.65f, textSize)
+        return IconCompat.createWithBitmap(bitmap)
+    }
+
+    /**
+     * Create controls to use in the PiP window
+     */
+    fun getPiPModeActions(activity: Activity, isPlaying: Boolean): List<RemoteActionCompat> {
+        val audioModeAction = getRemoteAction(
+            activity,
+            IconCompat.createWithResource(activity, R.drawable.ic_headphones),
+            R.string.background_mode,
+            PlayerEvent.Background
+        )
+
+        val rewindAction = getRemoteAction(
+            activity,
+            seekIconWithSpeed(activity.resources, R.drawable.ic_rewind),
+            R.string.rewind,
+            PlayerEvent.Rewind
+        )
+
+        val playPauseAction = getRemoteAction(
+            activity,
+            IconCompat.createWithResource(activity, if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+            if (isPlaying) R.string.resume else R.string.pause,
+            PlayerEvent.PlayPause
+        )
+
+        val skipNextAction = getRemoteAction(
+            activity,
+            IconCompat.createWithResource(activity, R.drawable.ic_next),
+            R.string.play_next,
+            PlayerEvent.Next
+        )
+
+        val forwardAction = getRemoteAction(
+            activity,
+            seekIconWithSpeed(activity.resources, R.drawable.ic_forward),
+            R.string.forward,
+            PlayerEvent.Forward
+        )
+        return if (alternativePiPControls) {
+            listOf(audioModeAction, playPauseAction, skipNextAction)
+        } else {
+            listOf(rewindAction, playPauseAction, forwardAction)
+        }
+    }
+    // endregion
+
+    // region Sleep Timer
+    val sleepTimerForAllVideos: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.SLEEP_TIMER_ALL_VIDEOS, false)
+
+    /** Duration of the last sleep timer started by the user, reused for every video. */
+    var sleepTimerMinutes: Long
+        get() = PreferenceHelper.getLong(PreferenceKeys.SLEEP_TIMER_MINUTES, 30L)
+        set(value) = PreferenceHelper.putLong(PreferenceKeys.SLEEP_TIMER_MINUTES, value)
+    // endregion
+
+    // region Stats for Nerds
+    val statsForNerdsEnabled: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.STATS_FOR_NERDS, false)
 
     @OptIn(UnstableApi::class)
     fun getVideoStats(tracks: Tracks, videoId: String): VideoStats {
@@ -848,45 +897,58 @@ object PlayerHelper {
 
         return videoStats
     }
+    // endregion
 
-    fun getPlayPauseActionIcon(player: Player) = when {
-        player.isPlaying -> R.drawable.ic_pause
-        player.playbackState == Player.STATE_ENDED -> R.drawable.ic_restart
-        else -> R.drawable.ic_play
-    }
+    // region Search
+    val persistentSearchBar: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.PERSISTENT_SEARCH_BAR, true)
+    // endregion
 
-    fun saveWatchPosition(player: Player, videoId: String) {
-        if (player.duration == C.TIME_UNSET || player.currentPosition in listOf(0L, C.TIME_UNSET)) {
-            return
-        }
+    // region Piped Instances
+    val fullLocalMode: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.FULL_LOCAL_MODE,
+            true
+        )
+    // endregion
 
-        val watchPosition = WatchPosition(videoId, player.currentPosition)
-        CoroutineScope(Dispatchers.IO).launch {
-            DatabaseHelper.saveWatchPosition(watchPosition)
-        }
-    }
+    // region Local Extraction
+    val localStreamExtraction: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.LOCAL_STREAM_EXTRACTION,
+            // the Piped mode keeps the videos behind the instance unless asked otherwise
+            false
+        )
+    // endregion
 
+    // region Return YouTube Dislike
+    val localRYD: Boolean
+        get() = PreferenceHelper.getBoolean(
+            PreferenceKeys.LOCAL_RYD,
+            // off by default: the counter would send every video id to a third party
+            // from the user's own IP. Still available (opt-in) in the instance settings.
+            false
+        )
+    // endregion
+
+    // region Chapters
     /**
-     * Handle basic [PlayerEvent]'s that can be handled by the player itself without context
+     * Get the name of the currently played chapter
      */
-    fun handlePlayerAction(player: Player, playerEvent: PlayerEvent): Boolean {
-        return when (playerEvent) {
-            PlayerEvent.PlayPause -> {
-                player.togglePlayPauseState()
-                true
+    fun getCurrentChapterIndex(currentPositionMs: Long, chapters: List<ChapterSegment>): Int? {
+        val currentPositionSeconds = currentPositionMs / 1000
+        return chapters
+            .sortedBy { it.start }
+            .indexOfLast { currentPositionSeconds >= it.start }
+            .takeIf { it >= 0 }
+            ?.takeIf { index ->
+                val chapter = chapters[index]
+                // remove the video highlight if it's already longer ago than [ChapterSegment.HIGHLIGHT_LENGTH],
+                // otherwise the SponsorBlock highlight would be shown from its starting point to the end
+                val isWithinMaxHighlightDuration =
+                    (currentPositionSeconds - chapter.start) < ChapterSegment.HIGHLIGHT_LENGTH
+                chapter.highlightDrawable == null || isWithinMaxHighlightDuration
             }
-
-            PlayerEvent.Forward -> {
-                player.seekBy(seekIncrement)
-                true
-            }
-
-            PlayerEvent.Rewind -> {
-                player.seekBy(-seekIncrement)
-                true
-            }
-
-            else -> false
-        }
     }
+    // endregion
 }

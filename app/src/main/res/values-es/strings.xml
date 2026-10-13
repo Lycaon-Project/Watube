@@ -48,7 +48,6 @@
     <string name="videos">Vídeos</string>
     <string name="import_from_yt_summary">Desde YouTube, NewPipe o FreeTube</string>
     <string name="changeLanguage">Idioma</string>
-    <string name="systemLanguage">Sistema</string>
     <string name="lightTheme">Claro</string>
     <string name="darkTheme">Oscuro</string>
     <string name="subscribers">%1$s suscriptores</string>
@@ -71,7 +70,6 @@
     <string name="music_videos">YT Music: Vídeos</string>
     <string name="music_albums">YT Music: Álbumes</string>
     <string name="music_playlists">YT Music: Listas</string>
-    <string name="sponsorblock" translatable="false">SponsorBlock</string>
     <string name="segment_skipped">Segmento omitido</string>
     <string name="category_sponsor">Patrocinador</string>
     <string name="category_sponsor_summary">Promoción pagada, referencias pagadas y anuncios directos. No para la autopromoción o los agradecimientos genuinos y gratuitos a las causas, creadores, sitios web y productos</string>
@@ -130,7 +128,6 @@
     <string name="downloading">Descargando…</string>
     <string name="instance_frontend_url">URL de la interfaz de la instancia (opcional)</string>
     <string name="no_audio">Sin audio</string>
-    <string name="audio">Audio</string>
     <string name="video">Vídeo</string>
     <string name="quality">Calidad</string>
     <string name="behavior">Comportamiento</string>
@@ -148,7 +145,6 @@
     <string name="auth_instance">Instancia de autenticación</string>
     <string name="auth_instance_summary">Usa otra instancia distinta para hacer solicitudes con autenticación</string>
     <string name="auth_instances">Elige una instancia de autenticación</string>
-    <string name="audio_video">Audio y vídeo</string>
     <string name="fullscreen_orientation">Orientación de pantalla completa</string>
     <string name="landscape">Horizontal</string>
     <string name="portrait">Vertical</string>
@@ -192,7 +188,6 @@
     <string name="required_network">Conexión requerida</string>
     <string name="network_all">Todas</string>
     <string name="notify_new_streams_summary">Mostrar notificaciones de nuevas transmisiones de los creadores que sigues</string>
-    <string name="general">General</string>
     <string name="playerAudioQuality">Calidad de audio</string>
     <string name="resize_mode_zoom">Ampliar</string>
     <string name="repeat_mode">Modo de repetición</string>
@@ -206,12 +201,10 @@
     <string name="share_with_time">Compartir con marca de tiempo</string>
     <string name="export_subscriptions">Exportar suscripciones</string>
     <string name="take_a_break">Es hora de tomar un descanso</string>
-    <string name="error_occurred">Error</string>
     <string name="copied">Copiado</string>
     <string name="background_mode">Modo segundo plano</string>
     <string name="add_to_queue">Añadir a la cola</string>
     <string name="misc">Miscelánea</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="player_resize_mode">Modo de encuadre</string>
     <string name="copied_to_clipboard">Copiado al portapapeles</string>
     <string name="open_copied">Abrir</string>
@@ -223,6 +216,7 @@
     <string name="mobile_data">En conexiones móviles</string>
     <string name="download_channel_name">Servicio de Descarga</string>
     <string name="skip_segment">Omitir</string>
+    <string name="skip_segment_short">Omitir</string>
     <string name="download_channel_description">Mostrar una notificación al descargar medios.</string>
     <string name="push_channel_name">Notificador de Novedades</string>
     <string name="push_channel_description">Mostrar una notificación cuando haya nuevas transmisiones disponibles.</string>
@@ -343,18 +337,15 @@
     <string name="change_playlist_description">Cambiar descripción de la lista</string>
     <string name="emptyPlaylistDescription">La descripción no puede estar vacía</string>
     <string name="show_search_suggestions">Mostrar sugerencias al buscar</string>
-    <string name="manual">Manual</string>
     <string name="off">Deshabilitar</string>
     <string name="automatic">Automático</string>
     <string name="invalid_color">¡Se ha introducido un código de color inválido!</string>
     <string name="sb_custom_colors_summary">Usar colores personalizados para los segmentos de SponsorBlock</string>
     <string name="sb_custom_colors">Segmentos con color personalizado</string>
-    <string name="color">Color</string>
     <string name="category_highlight_summary">Puede ser tanto lo que anuncia el título, la vista previa o el momento más interesante del vídeo. Puedes avanzar hasta ahí tocando en el capítulo resaltado</string>
     <string name="category_highlight">Resaltar momentos destacados</string>
     <string name="chapters_videoHighlight">Momento Destacado</string>
     <string name="stop">Detener</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_or_no_audio">Desconocido/Sin audio</string>
     <string name="dubbed_audio_track">doblado</string>
     <string name="descriptive_audio_track">descriptivo</string>
@@ -452,7 +443,6 @@
     <string name="external_download_provider_summary">Introduzca el nombre de la aplicación que desea utilizar para descargar los vídeos. Déjelo en blanco para utilizar el LibreTube.</string>
     <string name="external_download_provider">Proveedor de descargas externo</string>
     <string name="screenshot">Capturas de pantalla</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction_summary">Obten directamente la información de reproducción de un vídeo de YouTube sin utilizar Piped.</string>
     <string name="local_stream_extraction">Adquisición de transmisión local</string>
     <string name="local_ryd_summary">Obtener directamente información de los \'no me gusta\' en https://returnyoutubedislikeapi.com</string>
@@ -478,7 +468,6 @@
     <string name="full_local_mode_desc">Obtenga todo directamente de YouTube, sin utilizar Piped.</string>
     <string name="authentication">Autentificación</string>
     <string name="createNewPlaylist">Crear nueva lista</string>
-    <string name="podcasts">Podcasts</string>
     <string name="trailers">Tráileres</string>
     <string name="music">Música</string>
     <string name="playback_pitch_semitone_error_input">El valor debe estar entre -%1$.1f (mínimo) y %1$.1f (máximo)</string>
@@ -519,18 +508,7 @@
     <string name="long_press_fast_forward_summary">Reproduce el vídeo a doble velocidad mientras pulsas y mantienes la pantalla.</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
+    <string name="watube_block_screenshots">Bloquear capturas de pantalla</string>
 </resources>

@@ -33,7 +33,6 @@
     <string name="channels">Kanaler</string>
     <string name="all">Alle</string>
     <string name="playlists">Playlister</string>
-    <string name="okay">OK</string>
     <string name="history">Historik</string>
     <string name="search_history">Søgehistorik</string>
     <string name="clear_history">Ryd historik</string>
@@ -41,10 +40,8 @@
     <string name="music_videos">YT Musik Videoer</string>
     <string name="music_albums">YT Musik Album</string>
     <string name="music_playlists">YT Musik Playlister</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="segment_skipped">Sprang segment over</string>
     <string name="category_segments">Segmenter</string>
-    <string name="category_sponsor">Sponsor</string>
     <string name="category_selfpromo_summary">Magen til \"Sponsor\", bortset fra ubetalt eller selvpromovering. Dette inkluderer segmenter om merchandise, donationer, eller info om samarbejdspartnere</string>
     <string name="category_intro_summary">Et interval uden egentligt indhold. Kan være en pause, statisk billede, gentagende animation. Bør ikke bruges til overgange, der indeholder info</string>
     <string name="sponsorblock_notifications">Notifikationer</string>
@@ -52,7 +49,6 @@
     <string name="playOnBackground">Afspil i baggrunden</string>
     <string name="update_available">Opdatering tilgængelig</string>
     <string name="appearance">Udseende</string>
-    <string name="downloads">Downloads</string>
     <string name="license">Licens</string>
     <string name="playback_speed">Afspilningshastighed</string>
     <string name="advanced">Avanceret</string>
@@ -75,7 +71,6 @@
     <string name="videos">Videoer</string>
     <string name="subscribe">Abonner</string>
     <string name="loggedIn">Logget ind.</string>
-    <string name="region">Region</string>
     <string name="share">Del</string>
     <string name="username">Brugernavn</string>
     <string name="error">Noget gik galt.</string>
@@ -93,9 +88,7 @@
     <string name="fail">Mislykkedes :(</string>
     <string name="about">Om</string>
     <string name="changeLanguage">Sprog</string>
-    <string name="systemLanguage">System</string>
     <string name="disabled">Fra</string>
-    <string name="systemDefault">System</string>
     <string name="enabled">Til</string>
     <string name="update_summary">Tjek for opdatering</string>
     <string name="app_uptodate">Kører den seneste version.</string>
@@ -126,7 +119,6 @@
     <string name="open">Åbn…</string>
     <string name="default_subtitle_language">Undertekstsprog</string>
     <string name="seek_increment">Springsstigning</string>
-    <string name="pauseOnScreenOff">Auto-pause</string>
     <string name="pauseOnScreenOff_summary">Sæt afspilning på pause, når skærmen er slukket</string>
     <string name="reset_message">Nulstil alle indstillinger, og log ud?</string>
     <string name="deleteAccount_summary">Slet din Piped-konto</string>
@@ -144,17 +136,14 @@
     <string name="auth_instances">Vælg en godkendelsesinstans</string>
     <string name="category_filler_summary">For tangentielle scener, der kun er tilføjet som fyld eller humor, der ikke er nødvendig for at forstå videoens hovedindhold</string>
     <string name="buffering_goal_summary">Maks. antal sekunder af video som buffer</string>
-    <string name="audio_video">Lyd og video</string>
     <string name="fullscreen_orientation">Fuldskærmsorientering</string>
     <string name="aspect_ratio">Videobilledformat</string>
-    <string name="auto_rotation">Auto-rotation</string>
     <string name="landscape">Landskab</string>
     <string name="portrait">Portræt</string>
     <string name="downloading">Henter…</string>
     <string name="no_audio">Ingen lyd</string>
     <string name="no_video">Ingen video</string>
     <string name="audio">Lyd</string>
-    <string name="video">Video</string>
     <string name="player_autoplay">Automatisk afspilning</string>
     <string name="always">Altid</string>
     <string name="never">Aldrig</string>
@@ -171,7 +160,6 @@
     <string name="system_caption_style">Systemets undertekststil</string>
     <string name="captions">Undertekster</string>
     <string name="none">Ingen</string>
-    <string name="general">Generel</string>
     <string name="instance_frontend_url">URL til instans-frontend (valgfrit)</string>
     <string name="quality">Kvalitet</string>
     <string name="behavior">Adfærd</string>
@@ -202,15 +190,12 @@
     <string name="add_to_queue">Føj til kø</string>
     <string name="misc">Diverse</string>
     <string name="take_a_break">Tid til at tage en pause</string>
-    <string name="yt_shorts">Shorts</string>
     <string name="repeat_mode">Gentagelsestilstand</string>
     <string name="repeat_mode_none">Ingen</string>
     <string name="resize_mode_fit">Tilpas</string>
     <string name="repeat_mode_current">Nuværende</string>
     <string name="resize_mode_fill">Udfyld</string>
-    <string name="resize_mode_zoom">Zoom</string>
     <string name="backup_restore">Backup og gendannelse</string>
-    <string name="backup">Backup</string>
     <string name="player_resize_mode">Tilpas størrelse tilstand</string>
     <string name="copied_to_clipboard">Kopieret til udklipsholder</string>
     <string name="open_copied">Åbn</string>
@@ -251,14 +236,12 @@
     <string name="new_videos_badge_summary">Vis et badge med antallet af nye videoer, hvis der er nogle</string>
     <string name="suggest_change_instance">Indlæsning tager længere tid end normalt. Overvej at ændre instans</string>
     <string name="invalid_color">Ugyldig farveværdi indtastet!</string>
-    <string name="livestreams">Livestreams</string>
     <string name="defaultIconLight">Standard lys</string>
     <string name="time">Tid</string>
     <string name="start_time">Starttid</string>
     <string name="notification_time_summary">Begræns tidsperiode, hvor streamnotifikationer er vist</string>
     <string name="audio_track">Lydspor</string>
     <string name="unsupported_file_format">Ikke-understøttet filformat: %1$s</string>
-    <string name="trends">Trends</string>
     <string name="local_playlists">Lokale playlister</string>
     <string name="brightness">Lysstyrke</string>
     <string name="volume">Lydstyrke</string>
@@ -313,7 +296,6 @@
     <string name="duration_span">Varighed: %1$s</string>
     <string name="queue">Kø</string>
     <string name="remove_bookmark">Fjern bogmærke</string>
-    <string name="auto">Auto</string>
     <string name="downvote">Ned</string>
     <string name="new_videos_badge">Indikator for nye videoer</string>
     <string name="mobile_data">Mobildata</string>
@@ -322,7 +304,6 @@
     <string name="privacy_alert">Privatlivsadvarsel</string>
     <string name="dubbed_audio_track">oversat</string>
     <string name="show_search_suggestions">Vis søgeforslag</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_track_type">Ukendt lydsporstype</string>
     <string name="proceed">Fortsæt</string>
     <string name="autoplay_countdown_summary">Vis en 5s nedtælling før automatisk afspilning af den næste video</string>
@@ -340,9 +321,7 @@
     <string name="download_paused">Download sat på pause</string>
     <string name="download_completed">Download fuldført</string>
     <string name="concurrent_downloads_limit_reached">Grænse for maks. downloads på samme tid nået.</string>
-    <string name="pause">Pause</string>
     <string name="resume">Genoptag</string>
-    <string name="stop">Stop</string>
     <string name="repeat_mode_all">Gentag alle</string>
     <string name="backup_customInstances">Brugerdefinerede instanser</string>
     <string name="preferences">Præferencer</string>
@@ -366,7 +345,6 @@
     <string name="undo">Fortryd</string>
     <string name="vote_for_segment">Stem på segment</string>
     <string name="upvote">Op</string>
-    <string name="segment">Segment</string>
     <string name="export_subscriptions_to">Eksportér abonnementer til</string>
     <string name="auto_generated">autogenereret</string>
     <string name="import_playlists_from">Importér playlister fra</string>
@@ -375,7 +353,6 @@
     <string name="sponsorblock_user_id">SponsorBlock BrugerID</string>
     <string name="successfully_removed_from_playlist">\"%1$s\" blev fjernet fra playlisten.</string>
     <string name="no_segments_found">Der er ingen segmenter for denne video endnu.</string>
-    <string name="download_channel_name">Download Service</string>
     <string name="start_sleep_timer">Start søvntimer</string>
     <string name="disable_sleep_timer">Deaktivér søvntimer</string>
     <string name="uptime">%.2f%% oppetid</string>
@@ -417,14 +394,11 @@
     <string name="add_to_bookmarks">Føj til bogmærker</string>
     <string name="time_in_minutes">Tid i minutter</string>
     <string name="play_all">Afspil alle</string>
-    <string name="layout">Layout</string>
     <string name="end_time">Sluttid</string>
-    <string name="auto_quality">Auto</string>
     <string name="featured">Fremhævet</string>
     <string name="trending">Hvad er populært lige nu</string>
     <string name="bookmarks">Bogmærker</string>
     <string name="replies">Svar</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="no_fullscreen_resolution">Ikke-fuldskærmsopløsning</string>
     <string name="forward">Spol frem</string>
     <string name="double_tap_seek_summary">Tryk to gange til venstre eller højre for at spole tilbage eller frem i afspillerpositionen</string>
@@ -478,18 +452,6 @@
     <string name="crashlog">Nedbrudslog</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

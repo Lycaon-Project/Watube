@@ -19,11 +19,12 @@ import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.parseDurationString
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region SponsorBlock
 class SubmitSegmentDialog : DialogFragment() {
     private var videoId: String = ""
     private var currentPosition: Long = 0
@@ -66,7 +67,7 @@ class SubmitSegmentDialog : DialogFragment() {
             fetchSegments()
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setView(binding.root)
             .setNegativeButton(R.string.cancel, null)
             .show()
@@ -174,3 +175,4 @@ class SubmitSegmentDialog : DialogFragment() {
         _binding = null
     }
 }
+// endregion

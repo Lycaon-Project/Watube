@@ -17,6 +17,7 @@ import com.watube.yard.ui.dialogs.ShareDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// region Channels
 /**
  * Dialog with different options for a selected video.
  *
@@ -105,3 +106,4 @@ class ChannelOptionsBottomSheet : BaseBottomSheet() {
         }
     }
 }
+// endregion

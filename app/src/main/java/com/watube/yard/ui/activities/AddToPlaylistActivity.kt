@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Playlists
 class AddToPlaylistActivity : BaseActivity() {
     override val isDialogActivity: Boolean = true
 
@@ -68,3 +69,4 @@ class AddToPlaylistActivity : BaseActivity() {
         private const val TAG = "AddToPlaylistActivity"
     }
 }
+// endregion

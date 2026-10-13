@@ -10,6 +10,7 @@ import com.watube.yard.databinding.AppIconHeaderBinding
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.ui.activities.AboutActivity.Companion.GITHUB_URL
 
+// region Appearance
 class AppIconHeader(context: Context, attributeSet: AttributeSet? = null) :
     LinearLayout(context, attributeSet) {
         val binding = AppIconHeaderBinding.inflate(LayoutInflater.from(context), this, true)
@@ -18,7 +19,7 @@ class AppIconHeader(context: Context, attributeSet: AttributeSet? = null) :
             val versionText = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
             binding.versionTv.text = versionText
             binding.versionCard.setOnClickListener {
-                ClipboardHelper.save(context, text = versionText, notify = true)
+                ClipboardHelper.save(context, text = versionText)
             }
 
             binding.appIcon.setOnClickListener {
@@ -30,3 +31,4 @@ class AppIconHeader(context: Context, attributeSet: AttributeSet? = null) :
             }
         }
 }
+// endregion

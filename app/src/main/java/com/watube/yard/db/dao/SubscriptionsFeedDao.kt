@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.watube.yard.db.obj.SubscriptionsFeedItem
 
+// region Feed
 @Dao
 interface SubscriptionsFeedDao {
     @Query("SELECT * FROM feedItem ORDER BY uploaded DESC")
@@ -26,7 +27,5 @@ interface SubscriptionsFeedDao {
 
     @Query("DELETE FROM feedItem WHERE uploaderUrl = :channelUrl")
     suspend fun delete(channelUrl: String)
-
-    @Query("DELETE FROM feedItem")
-    suspend fun deleteAll()
 }
+// endregion

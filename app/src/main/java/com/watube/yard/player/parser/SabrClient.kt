@@ -47,6 +47,7 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
+// region SABR Streaming
 class PlaybackRequest(
     /* Format for which new media data is being requested */
     val format: FormatId,
@@ -691,3 +692,4 @@ class SabrClient private constructor(
         }
     }
 }
+// endregion

@@ -17,24 +17,15 @@ import com.watube.yard.helpers.ShortcutHelper
 import com.watube.yard.ui.tools.RestMode
 import com.watube.yard.util.ExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class WatubeApp : Application(), SingletonImageLoader.Factory {
-
+    // region App Startup
     // Scope global de l'application qui survit aux changements de configuration
     // Utilise Dispatchers.IO pour ne pas bloquer le thread principal
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
-    // Deferred pour les initialisations critiques qui peuvent être attendues au premier besoin
-    // Permet au player d'attendre si nécessaire sans bloquer le démarrage
-    lateinit var newPipeInit: Deferred<Unit>
-        private set
-    lateinit var proxyInit: Deferred<Unit>
-        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -44,15 +35,18 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
         // Ces opérations sont nécessaires immédiatement et très rapides
         PreferenceHelper.initialize(applicationContext)
         RestMode.schedule()
-        setupExceptionHandler()
+        // crash traces are diagnostic data: recorded for the developer in debug builds only
+        if (BuildConfig.DEBUG) setupExceptionHandler()
         initializeNotificationChannels()
 
         // ✅ PHASE 2 : Initialisations asynchrones non-bloquantes
         // Ne bloquent PAS le premier frame rendu (critique pour le 120 Hz)
         appScope.launch {
-            // analytics the Cast library stored on the device before its telemetry was removed
+            // analytics left on the device by the Google Cast library of older versions
             deleteDatabase("com.google.android.datatransport.events")
             deleteSharedPreferences("$packageName.client_cast_analytics_data")
+            // crash trace that release versions used to keep until the next start
+            if (!BuildConfig.DEBUG) PreferenceHelper.deleteErrorLog()
             PreferenceHelper.migrate()
             // tourist mode promises an empty device, so anything written while it was off
             // (a restored backup for instance) is dropped, then the retention is applied
@@ -61,38 +55,18 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
             ImageHelper.initializeImageLoader(this@WatubeApp)
             // preloads the watch positions so that list rows don't need to query Room on bind
             DatabaseHelper.primeWatchPositionCache()
+            // UPDATE keeps the schedule but applies changed constraints to installed versions
             NotificationHelper.enqueueWork(
                 context = this@WatubeApp,
-                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP
+                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE
             )
             ShortcutHelper.createShortcuts(this@WatubeApp)
         }
 
-        // ✅ PHASE 3 : Initialisations deferred pour composants critiques
-        // S'exécutent en arrière-plan, prêtes quand le player en aura besoin
-        newPipeInit = appScope.async {
-            NewPipeExtractorInstance.init()
-        }
-
-        proxyInit = appScope.async {
-            ProxyHelper.fetchProxyUrl()
-        }
-    }
-
-    /**
-     * Coil singleton factory: guarantees that images, the data saver checks and the manual
-     * cache clearing all operate on one single set of caches.
-     */
-    override fun newImageLoader(context: Context): ImageLoader = ImageHelper.buildImageLoader(context)
-
-    /**
-     * Configure le gestionnaire d'exceptions
-     * Opération très rapide, peut rester synchrone
-     */
-    private fun setupExceptionHandler() {
-        val defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
-        val exceptionHandler = ExceptionHandler(defaultExceptionHandler)
-        Thread.setDefaultUncaughtExceptionHandler(exceptionHandler)
+        // background start-up work: nothing waits for it
+        appScope.launch { NewPipeExtractorInstance.init() }
+        // Piped modes only: the full local mode never contacts the instance
+        ProxyHelper.refreshProxyUrl()
     }
 
     /**
@@ -156,15 +130,46 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
             notificationManager.createNotificationChannelsCompat(channelsToCreate)
         }
     }
+    // endregion
+
+    // region Image Loading
+    /**
+     * Coil singleton factory: guarantees that images, the data saver checks and the manual
+     * cache clearing all operate on one single set of caches.
+     */
+    override fun newImageLoader(context: Context): ImageLoader = ImageHelper.buildImageLoader(context)
+    // endregion
+
+    // region Crash Reports
+    /**
+     * Configure le gestionnaire d'exceptions
+     * Opération très rapide, peut rester synchrone
+     */
+    private fun setupExceptionHandler() {
+        val defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+        val exceptionHandler = ExceptionHandler(defaultExceptionHandler)
+        Thread.setDefaultUncaughtExceptionHandler(exceptionHandler)
+    }
+    // endregion
 
     companion object {
+        // region App Startup
         @Volatile
         lateinit var instance: WatubeApp
             private set
+        // endregion
 
+        // region Downloads
         const val DOWNLOAD_CHANNEL_NAME = "download_service"
         const val PLAYLIST_DOWNLOAD_ENQUEUE_CHANNEL_NAME = "playlist_download_enqueue"
+        // endregion
+
+        // region Media Notification
         const val PLAYER_CHANNEL_NAME = "player_mode"
+        // endregion
+
+        // region New Video Notifications
         const val PUSH_CHANNEL_NAME = "notification_worker"
+        // endregion
     }
 }

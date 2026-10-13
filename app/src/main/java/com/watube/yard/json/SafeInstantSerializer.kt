@@ -12,6 +12,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+// region Networking
 object SafeInstantSerializer : KSerializer<Instant> {
     override val descriptor = PrimitiveSerialDescriptor("Instant", STRING)
 
@@ -29,3 +30,4 @@ object SafeInstantSerializer : KSerializer<Instant> {
         encoder.encodeString(value.toString())
     }
 }
+// endregion

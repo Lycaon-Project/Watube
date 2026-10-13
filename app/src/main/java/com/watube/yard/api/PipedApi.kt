@@ -14,31 +14,42 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PipedApi {
+    // region Trends
     @GET("trending")
     suspend fun getTrending(@Query("region") region: String): List<StreamItem>
+    // endregion
 
+    // region Video Player
     @GET("streams/{videoId}")
     suspend fun getStreams(@Path("videoId") videoId: String): Streams
+    // endregion
 
+    // region Comments
     @GET("comments/{videoId}")
     suspend fun getComments(@Path("videoId") videoId: String): CommentsPage
-
-    @GET("sponsors/{videoId}")
-    suspend fun getSegments(
-        @Path("videoId") videoId: String,
-        @Query("category") category: String,
-        @Query("actionType") actionType: String? = null
-    ): SegmentData
-
-    @GET("dearrow")
-    suspend fun getDeArrowContent(@Query("videoIds") videoIds: String): Map<String, DeArrowContent>
 
     @GET("nextpage/comments/{videoId}")
     suspend fun getCommentsNextPage(
         @Path("videoId") videoId: String,
         @Query("nextpage") nextPage: String
     ): CommentsPage
+    // endregion
 
+    // region SponsorBlock
+    @GET("sponsors/{videoId}")
+    suspend fun getSegments(
+        @Path("videoId") videoId: String,
+        @Query("category") category: String,
+        @Query("actionType") actionType: String? = null
+    ): SegmentData
+    // endregion
+
+    // region DeArrow
+    @GET("dearrow")
+    suspend fun getDeArrowContent(@Query("videoIds") videoIds: String): Map<String, DeArrowContent>
+    // endregion
+
+    // region Search
     @GET("search")
     suspend fun getSearchResults(
         @Query("q") searchQuery: String,
@@ -54,7 +65,9 @@ interface PipedApi {
 
     @GET("suggestions")
     suspend fun getSuggestions(@Query("query") query: String): List<String>
+    // endregion
 
+    // region Channels
     @GET("channel/{channelId}")
     suspend fun getChannel(@Path("channelId") channelId: String): Channel
 
@@ -72,7 +85,9 @@ interface PipedApi {
         @Path("channelId") channelId: String,
         @Query("nextpage") nextPage: String
     ): Channel
+    // endregion
 
+    // region Playlists
     @GET("playlists/{playlistId}")
     suspend fun getPlaylist(@Path("playlistId") playlistId: String): Playlist
 
@@ -81,4 +96,5 @@ interface PipedApi {
         @Path("playlistId") playlistId: String,
         @Query("nextpage") nextPage: String
     ): Playlist
+    // endregion
 }

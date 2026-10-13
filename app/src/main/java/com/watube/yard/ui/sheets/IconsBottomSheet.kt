@@ -7,6 +7,7 @@ import com.watube.yard.R
 import com.watube.yard.databinding.BottomSheetBinding
 import com.watube.yard.ui.adapters.IconsSheetAdapter
 
+// region Appearance
 class IconsBottomSheet : ExpandedBottomSheet(R.layout.bottom_sheet) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -15,3 +16,4 @@ class IconsBottomSheet : ExpandedBottomSheet(R.layout.bottom_sheet) {
         binding.optionsRecycler.adapter = IconsSheetAdapter()
     }
 }
+// endregion

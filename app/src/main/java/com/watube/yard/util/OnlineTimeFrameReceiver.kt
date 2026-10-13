@@ -7,6 +7,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.obj.PreviewFrame
 import com.watube.yard.ui.interfaces.TimeFrameReceiver
 
+// region Seekbar Preview
 class OnlineTimeFrameReceiver(
     private val context: Context,
     private val previewFrames: List<PreviewFrames>
@@ -57,3 +58,4 @@ class OnlineTimeFrameReceiver(
         return null
     }
 }
+// endregion

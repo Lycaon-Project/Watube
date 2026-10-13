@@ -13,8 +13,9 @@ import androidx.fragment.app.setFragmentResult
 import com.watube.yard.R
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogColorPickerBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Appearance
 class ColorPickerDialog : DialogFragment(), SeekBar.OnSeekBarChangeListener {
     private var initialColor: Int? = null
 
@@ -66,7 +67,7 @@ class ColorPickerDialog : DialogFragment(), SeekBar.OnSeekBarChangeListener {
             }
         })
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setView(binding.root)
             .setPositiveButton(R.string.okay) { _, _ ->
                 val color = getColor()
@@ -140,3 +141,4 @@ class ColorPickerDialog : DialogFragment(), SeekBar.OnSeekBarChangeListener {
         const val COLOR_PICKER_REQUEST_KEY = "color_picker_request_key"
     }
 }
+// endregion

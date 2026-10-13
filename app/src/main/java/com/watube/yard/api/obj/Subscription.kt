@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region Subscriptions
 @Serializable
 data class Subscription(
     val url: String,
@@ -9,3 +10,4 @@ data class Subscription(
     val avatar: String? = null,
     val verified: Boolean
 )
+// endregion

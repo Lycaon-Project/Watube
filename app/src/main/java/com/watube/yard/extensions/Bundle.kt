@@ -8,6 +8,7 @@ import android.util.SizeF
 import androidx.core.os.BundleCompat
 import java.io.Serializable
 
+// region Common Utilities
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String?): T? {
     return BundleCompat.getParcelable(this, key, T::class.java)
 }
@@ -114,3 +115,4 @@ fun bundleOf(vararg pairs: Pair<String, Any?>): Bundle = Bundle(pairs.size).appl
         }
     }
 }
+// endregion

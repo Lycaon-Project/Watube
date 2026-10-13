@@ -7,6 +7,7 @@ import org.xml.sax.ContentHandler
 import org.xml.sax.Locator
 import org.xml.sax.XMLReader
 
+// region Video Details
 class HtmlParser(
     private val handler: LinkHandler
 ) : Html.TagHandler, ContentHandler {
@@ -83,3 +84,4 @@ class HtmlParser(
         wrapped?.skippedEntity(name)
     }
 }
+// endregion

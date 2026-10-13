@@ -13,12 +13,13 @@ import com.watube.yard.api.PlaylistsHelper
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogCreatePlaylistBinding
 import com.watube.yard.extensions.toastFromMainDispatcher
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
+// region Playlists
 class CreatePlaylistDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogCreatePlaylistBinding.inflate(layoutInflater)
@@ -103,7 +104,7 @@ class CreatePlaylistDialog : DialogFragment() {
             dialog?.cancel()
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.createPlaylist)
             .setView(binding.root)
             .show()
@@ -113,3 +114,4 @@ class CreatePlaylistDialog : DialogFragment() {
         const val CREATE_PLAYLIST_DIALOG_REQUEST_KEY = "create_playlist_dialog_request_key"
     }
 }
+// endregion

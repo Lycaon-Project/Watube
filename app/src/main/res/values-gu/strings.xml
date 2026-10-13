@@ -10,7 +10,6 @@
     <string name="swipe_controls">સ્વાઇપ નિયંત્રણો</string>
     <string name="swipe_controls_summary">તેજ અને વોલ્યુમ સમાયોજિત કરવા માટે સ્વાઇપ હાવભાવનો ઉપયોગ કરો</string>
     <string name="deleteAccount">ખાતું કાઢી નાંખો</string>
-    <string name="wifi">Wi-Fi</string>
     <string name="playback_pitch">પિચ</string>
     <string name="channels">ચેનલો</string>
     <string name="all">તમામ</string>
@@ -72,7 +71,6 @@
     <string name="reset_message">શું બધા સુયોજનોને પુન:સુયોજિત કરવા છે અને બહાર નીકળવા માંગો છો\?</string>
     <string name="restore">પુન:સંગ્રહ કરો</string>
     <string name="auth_instance">સત્તાધિકરણ નમૂનો</string>
-    <string name="audio_video">ઓડિયો અને વિડિયો</string>
     <string name="fullscreen_orientation">સંપૂર્ણસ્ક્રીન દિશા</string>
     <string name="aspect_ratio">વિડિયો એસ્પેક્ટ રેશિયો</string>
     <string name="chapters">પ્રકરણો</string>
@@ -173,7 +171,6 @@
     <string name="fail">નિષ્ફળ :(</string>
     <string name="about">વિશે</string>
     <string name="changeLanguage">ભાષા</string>
-    <string name="systemLanguage">સિસ્ટમ</string>
     <string name="systemDefault">સિસ્ટમ</string>
     <string name="lightTheme">દીપ</string>
     <string name="darkTheme">અંધારું</string>
@@ -207,7 +204,6 @@
     <string name="system_caption_style">સિસ્ટમ કેપ્શન શૈલી</string>
     <string name="never">કદી નહિં</string>
     <string name="autoRotatePlayer">ઓટો-ફુલસ્ક્રીન</string>
-    <string name="general">જનરલ</string>
     <string name="auto_quality">આપમેળે</string>
     <string name="worst_quality">ખરાબ</string>
     <string name="videos">વિડિયો</string>
@@ -278,21 +274,8 @@
     <string name="bookmarks">બુકમાર્કો</string>
     <string name="bookmark">બુકમાર્ક</string>
     <string name="clear_bookmarks">બુકમાર્કો સાફ કરો</string>
-    <string name="pip">PiP</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

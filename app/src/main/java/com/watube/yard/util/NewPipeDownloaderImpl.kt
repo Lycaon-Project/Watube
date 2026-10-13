@@ -8,6 +8,7 @@ import org.schabi.newpipe.extractor.downloader.Response
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException
 import java.io.IOException
 
+// region Local Extraction
 class NewPipeDownloaderImpl : Downloader() {
     // the app wide pool: the extractor's requests reuse the connections of the other clients
     private val client = SharedHttpClient.base
@@ -51,3 +52,4 @@ class NewPipeDownloaderImpl : Downloader() {
         }
     }
 }
+// endregion

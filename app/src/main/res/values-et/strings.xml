@@ -45,7 +45,6 @@
     <string name="fail">Ei õnnestunud :(</string>
     <string name="about">Teave</string>
     <string name="changeLanguage">Keel</string>
-    <string name="systemLanguage">Süsteemi keel</string>
     <string name="systemDefault">Süsteemi vaikeseade</string>
     <string name="darkTheme">Tume kujundus</string>
     <string name="subscribers">%1$s tellijat</string>
@@ -73,7 +72,6 @@
     <string name="channels">Kanalid</string>
     <string name="clear_history">Tühjenda ajalugu</string>
     <string name="playlistCreated">Esitusloend on loodud.</string>
-    <string name="sponsorblock">SponsorBlock</string>
     <string name="music_songs">YT Music - Laulud</string>
     <string name="music_videos">YT Music - Videod</string>
     <string name="music_albums">YT Music - Albumid</string>
@@ -89,7 +87,6 @@
     <string name="appearance">Välimus</string>
     <string name="playback_speed">Taasesituse kiirus</string>
     <string name="category_segments">Video segmendid</string>
-    <string name="category_sponsor">Sponsor</string>
     <string name="category_sponsor_summary">Tasutud turundus, tasuline viitamine või otsene reklaam. Ei käi enesereklaami kohta ega tasuta tõeliste toetusavalduste kohta, mis tutvustavad üritusi, loojaid, saite või tooteid</string>
     <string name="category_selfpromo">Tasuta reklaam või enesereklaam</string>
     <string name="category_selfpromo_summary">Sarnane „sponsorile“, kuid tegemist on tasuta reklaamiga või enesereklaamiga. Siin hulgas on tootenäidete teave või info annetuste ja koostööpartnerite kohta</string>
@@ -126,8 +123,6 @@
     <string name="reset_message">Kas lähtestame kõik seadistused ja logime välja?</string>
     <string name="deleteAccount">Kustuta konto</string>
     <string name="deleteAccount_summary">Kustuta oma konto teenuses Piped</string>
-    <string name="audio_video">Heli ja video</string>
-    <string name="video">Video</string>
     <string name="downloading">Laadime alla…</string>
     <string name="download_paused">Allalaadimine on peatatud</string>
     <string name="download_completed">Allalaadimine on lõppenud</string>
@@ -161,7 +156,6 @@
     <string name="data_saver_mode_summary">Ära kuva pisipilte ja muid pilte</string>
     <string name="captions">Subtiitrid</string>
     <string name="search_history_summary">Jäta otsingud meelde</string>
-    <string name="general">Üldist</string>
     <string name="none">Määratlemata</string>
     <string name="irreversible">Kas sa oled kindel? Seda tegevust ei saa tagasi pöörata!</string>
     <string name="add_to_queue">Lisa esitusjärjekorda</string>
@@ -357,7 +351,6 @@
     <string name="no_fullscreen_resolution">Video resolutsioon, kui täisvaade pole kasutusel</string>
     <string name="same_as_fullscreen">Sama, kui täisvaates</string>
     <string name="vote_for_segment">Hääleta segmendi poolt</string>
-    <string name="segment">Segment</string>
     <string name="download_playlist">Laadi esitusloend alla</string>
     <string name="default_language">Vaikimisi</string>
     <string name="descriptive_audio_track">Helikirjeldus</string>
@@ -440,7 +433,6 @@
     <string name="also_clear_watch_positions">Lisaks kustuta kõik vaatamiste järje ajatemplid</string>
     <string name="registration_disabled">Registreerimise võimalus on välja lülitatud</string>
     <string name="player_channel_name">Meediamängija teenus</string>
-    <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Tundmatu keel heliribal</string>
     <string name="unknown_audio_track_type">Tundmatu heliriba tüüp</string>
     <string name="mark_as_unwatched">Märgi mittevaadatuks</string>
@@ -451,7 +443,6 @@
     <string name="external_download_provider">Väline allalaadimisrakendus</string>
     <string name="external_download_provider_summary">Sisesta välise allalaadimisrakenduse paketi nimi, mida soovid kasutada. Kui eelistad LibreTube\'i oma allalaadimislahendust, siis jäta tühjaks.</string>
     <string name="screenshot">Ekraanitõmmis</string>
-    <string name="pip">PiP</string>
     <string name="local_stream_extraction">Töötle meediavoogu kohalikus seadmes</string>
     <string name="local_stream_extraction_summary">Kasuta YouTube\'i meediavoo töötlemiseks kohalikku seadet, mitte Pipedi teenust.</string>
     <string name="local_ryd">Kohalik Youtube\'i mittemeeldimiste ekstraktor</string>
@@ -520,18 +511,6 @@
     <string name="courses">Kursused</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="privacy" translatable="true">Privacy</string>
-    <string name="privacy_hardening" translatable="true">Privacy hardening</string>
-    <string name="privacy_hardening_summary" translatable="true">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
-    <string name="current_sponsorblock_id" translatable="true">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info" translatable="true">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
-    <string name="privacy_identifiers" translatable="true">Identifiers</string>
-    <string name="reset_identifiers" translatable="true">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary" translatable="true">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message" translatable="true">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
-    <string name="sponsorblock_id_rotated" translatable="true">SponsorBlock ID reset</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
-    <string name="dialog_reset">Reset</string>
-    <string name="privacy_neutral_region" translatable="false">Neutral region</string>
 </resources>

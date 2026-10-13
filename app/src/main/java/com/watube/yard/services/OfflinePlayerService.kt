@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 
+// region Offline Playback
 /**
  * A service to play downloaded audio in the background
  */
@@ -230,6 +231,7 @@ open class OfflinePlayerService : AbstractPlayerService() {
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        onDestroy()
+        releaseAndStop()
     }
 }
+// endregion

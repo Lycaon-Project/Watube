@@ -12,12 +12,13 @@ import com.watube.yard.db.obj.SubscriptionGroup
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.sheets.EditChannelGroupSheet
 import com.watube.yard.ui.viewholders.SubscriptionGroupsViewHolder
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Subscriptions
 class SubscriptionGroupsAdapter(
     var groups: MutableList<SubscriptionGroup>,
     private val viewModel: SubscriptionsViewModel,
@@ -51,7 +52,7 @@ class SubscriptionGroupsAdapter(
     }
 
     private fun showDeleteDialog(context: Context, group: SubscriptionGroup) {
-        MaterialAlertDialogBuilder(context)
+        SecureAlertDialogBuilder(context)
             .setTitle(R.string.delete)
             .setMessage(R.string.irreversible)
             .setPositiveButton(R.string.okay) { _, _ ->
@@ -70,3 +71,4 @@ class SubscriptionGroupsAdapter(
             .show()
     }
 }
+// endregion

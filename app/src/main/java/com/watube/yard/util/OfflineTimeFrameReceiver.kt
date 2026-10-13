@@ -7,6 +7,7 @@ import com.watube.yard.extensions.toAndroidUri
 import com.watube.yard.ui.interfaces.TimeFrameReceiver
 import java.nio.file.Path
 
+// region Seekbar Preview
 class OfflineTimeFrameReceiver(
     private val context: Context,
     private val videoSource: Path
@@ -18,3 +19,4 @@ class OfflineTimeFrameReceiver(
         return metadataRetriever.getFrameAtTime(position * 1000)
     }
 }
+// endregion

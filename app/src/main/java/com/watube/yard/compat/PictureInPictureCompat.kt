@@ -8,6 +8,7 @@ import android.util.Log
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainThread
 
+// region Picture-in-Picture
 object PictureInPictureCompat {
     /**
      * Returns whether the system supports Picture-in-Picture mode.
@@ -50,3 +51,4 @@ object PictureInPictureCompat {
         }
     }
 }
+// endregion

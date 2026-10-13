@@ -12,6 +12,7 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.ui.viewholders.IconsSheetViewHolder
 
+// region Appearance
 class IconsSheetAdapter : RecyclerView.Adapter<IconsSheetViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconsSheetViewHolder {
         val binding = AppIconItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -68,3 +69,4 @@ class IconsSheetAdapter : RecyclerView.Adapter<IconsSheetViewHolder>() {
         )
     }
 }
+// endregion

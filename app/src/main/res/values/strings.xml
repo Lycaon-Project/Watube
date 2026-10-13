@@ -54,7 +54,6 @@
     <string name="fail">Failed :(</string>
     <string name="about">About</string>
     <string name="changeLanguage">Language</string>
-    <string name="systemLanguage">System</string>
     <string name="systemDefault">System</string>
     <string name="lightTheme">Light</string>
     <string name="darkTheme">Dark</string>
@@ -192,7 +191,6 @@
     <string name="auth_instance">Authentication instance</string>
     <string name="auth_instance_summary">Use a different instance for authenticated calls</string>
     <string name="auth_instances">Choose an auth instance</string>
-    <string name="audio_video">Audio and video</string>
     <string name="fullscreen_orientation">Fullscreen orientation</string>
     <string name="aspect_ratio">Video aspect ratio</string>
     <string name="auto_rotation">Auto-rotation</string>
@@ -223,7 +221,6 @@
     <string name="rich_caption_rendering_summary">Render web captions for a more rich and customized experience</string>
     <string name="captions">Captions</string>
     <string name="none">None</string>
-    <string name="general">General</string>
     <string name="caption_settings">Captions</string>
     <string name="playerAudioQuality">Audio quality</string>
     <string name="worst_quality">Worst</string>
@@ -291,6 +288,7 @@
     <string name="new_videos_badge">Indicator for new videos</string>
     <string name="new_videos_badge_summary">Show a badge with the amount of new videos if there are some</string>
     <string name="skip_segment">Skip segment</string>
+    <string name="skip_segment_short">Skip</string>
     <string name="local_subscriptions">Local subscriptions</string>
     <string name="preferences">Preferences</string>
     <string name="backup_customInstances">Custom instances</string>
@@ -496,7 +494,7 @@
     <string name="import_format_youtube_csv" translatable="false">YouTube (CSV)</string>
     <string name="import_format_list_of_urls">List of URLs or video IDs</string>
     <string name="home_tab_content">Home tab content</string>
-    <string name="show_search_suggestions">Show search suggestions</string>
+    <string name="show_search_suggestions">Online search suggestions</string>
     <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Unknown audio language</string>
     <string name="unknown_audio_track_type">Unknown audio track type</string>
@@ -539,7 +537,7 @@
     <string name="external_download_provider">External download provider</string>
     <string name="external_download_provider_summary">Enter the package name of the app you want to use for downloading videos. Leave blank to use Watube\'s inbuilt downloader.</string>
     <string name="local_stream_extraction">Local stream extraction</string>
-    <string name="local_stream_extraction_summary">Directly fetch video playback information from YouTube without using Piped.</string>
+    <string name="local_stream_extraction_summary">Videos straight from YouTube instead of through the instance: faster, but YouTube sees your IP address.</string>
     <string name="local_ryd">Local Return Youtube Dislike extractor</string>
     <string name="local_ryd_summary">Directly fetch dislike information from https://returnyoutubedislikeapi.com</string>
     <string name="dialog_play_offline_title">A local version of this video is available.</string>
@@ -547,7 +545,7 @@
     <string name="view_count">%1$s views</string>
     <string name="delete_only_watched_videos">Only delete already watched videos</string>
     <string name="local_feed_extraction">Local feed extraction</string>
-    <string name="local_feed_extraction_summary">Directly fetch the feed from YouTube. This may be significantly slower.</string>
+    <string name="local_feed_extraction_summary">Feed straight from YouTube instead of through the instance: YouTube sees your IP address, and it can be much slower.</string>
     <string name="show_upcoming_videos">Show upcoming videos</string>
     <string name="updating_feed">Updating feed …</string>
     <string name="full_local_mode">Full local mode</string>
@@ -598,7 +596,6 @@
     <string name="tooltip_theme">Change theme</string>
     <string name="tooltip_cast">Cast</string>
     <string name="tooltip_more">More options</string>
-    <string name="toast_cast_unavailable">Cast not available</string>
     <string name="tooltip_create_playlist">Create playlist</string>
     <string name="tooltip_scroll_to_top">Scroll to top</string>
     <string name="also_clear_watch_positions">Also clear watch positions</string>
@@ -623,7 +620,7 @@
     <!-- Privacy settings -->
     <string name="privacy">Privacy</string>
     <string name="privacy_hardening">Privacy hardening</string>
-    <string name="privacy_hardening_summary">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
+    <string name="privacy_hardening_summary">Block SIM, network and device-based fingerprinting: no telephony data, neutral trending region, channels fetched in random order, hardened WebView</string>
     <string name="privacy_rotation_frequency">Rotation frequency</string>
     <string name="rotation_frequency_summary">%1$s — rotates the SponsorBlock ID</string>
     <string name="rotation_every_12_hours">Every 12 hours</string>
@@ -640,8 +637,8 @@
     <string name="privacy_category_protection">Anti-tracking protection</string>
     <string name="privacy_category_data">Browsing data</string>
     <string name="reset_identifiers">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
+    <string name="reset_identifiers_summary">Delete the SponsorBlock ID, the WebView cookies and storage, the HTTP cache and the open connections</string>
+    <string name="reset_identifiers_dialog_message">This resets your SponsorBlock submission ID, clears the WebView cookies and storage and the HTTP cache, and closes the open connections.</string>
     <string name="sponsorblock_id_rotated">SponsorBlock ID reset</string>
     <string name="dialog_reset">Reset</string>
 
@@ -716,4 +713,24 @@
 <string name="search_clear">Clear</string>
 <string name="downloads_search_hint">Search downloads</string>
 <string name="playlist_search_hint">Search in playlist</string>
+    <string name="watube_block_screenshots">Block screenshots</string>
+    <string name="watube_block_screenshots_summary">Hides Watube from screenshots, screen recordings and the recent apps preview.</string>
+    <string name="watube_search_suggestions_summary">Off: suggestions come from your own search history, on the device. On: what you type is sent to YouTube (or your Piped instance) as you type, never links, e-mail addresses or numbers.</string>
+    <!-- Stolm: Watube's own Cast -->
+    <string name="stolm_picker_title">Cast to a TV</string>
+    <string name="stolm_searching">Looking for Cast devices on this Wi-Fi…</string>
+    <string name="stolm_empty">Nothing found yet. The TV and this phone must be on the same Wi-Fi network.</string>
+    <string name="stolm_privacy_note">Watube only talks to devices that prove they are genuine. The video goes through your phone: the TV never contacts YouTube, but it loads Google’s player itself.</string>
+    <string name="stolm_connecting">Connecting to %1$s…</string>
+    <string name="stolm_casting_to">Casting to %1$s</string>
+    <string name="stolm_volume">TV volume</string>
+    <string name="stolm_stop">Stop casting</string>
+    <string name="stolm_wait_for_video">Wait for the video to load, then try again</string>
+    <string name="stolm_no_stream">This video can’t be cast: YouTube offers no stream the TV can read</string>
+    <string name="stolm_not_genuine">This device could not prove it is a genuine Cast device. Nothing was sent to it.</string>
+    <string name="stolm_unreachable">Can’t connect to the TV. Check that it is on and on the same Wi-Fi.</string>
+    <string name="stolm_launch_failed">The TV didn’t start its player. Try again.</string>
+    <string name="stolm_playback_failed">The TV couldn’t play this video. It is back on your phone.</string>
+    <string name="stolm_tv_cannot_reach_phone">The TV couldn’t reach your phone. Your Wi-Fi may keep devices apart.</string>
+    <string name="stolm_ended">Casting ended. The video is back on your phone.</string>
 </resources>

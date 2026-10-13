@@ -12,6 +12,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// region Video Player
 @Serializable
 @Parcelize
 data class Streams(
@@ -104,3 +105,4 @@ data class Streams(
         const val CATEGORY_MUSIC = "Music"
     }
 }
+// endregion

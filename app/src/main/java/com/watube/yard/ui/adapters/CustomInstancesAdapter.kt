@@ -8,6 +8,7 @@ import com.watube.yard.db.obj.CustomInstance
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.viewholders.CustomInstancesViewHolder
 
+// region Piped Instances
 class CustomInstancesAdapter(
     private val onClickInstance: (CustomInstance) -> Unit,
     private val onDeleteInstance: (CustomInstance) -> Unit
@@ -38,3 +39,4 @@ class CustomInstancesAdapter(
         }
     }
 }
+// endregion

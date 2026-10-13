@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.getSystemService
@@ -34,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.nio.file.Path
 
+// region Downloads
 class PlaylistDownloadEnqueueService : LifecycleService() {
     private lateinit var nManager: NotificationManager
 
@@ -54,11 +54,7 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
             this,
             NotificationId.ENQUEUE_PLAYLIST_DOWNLOAD.id,
             buildNotification(),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            } else {
-                0
-            }
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
     }
 
@@ -244,3 +240,4 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
         super.onDestroy()
     }
 }
+// endregion

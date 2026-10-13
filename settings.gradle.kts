@@ -53,7 +53,7 @@ dependencyResolutionManagement {
             forRepository { maven("https://jitpack.io") }
             filter {
                 includeGroup("com.github.TeamNewPipe")
-                includeGroup("com.github.libre-tube")
+                includeGroup("com.github.Lycaon-Project")
             }
         }
 

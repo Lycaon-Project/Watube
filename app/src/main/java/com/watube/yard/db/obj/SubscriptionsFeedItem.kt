@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.extensions.toLocalDate
 
+// region Feed
 @Entity(tableName = "feedItem")
 data class SubscriptionsFeedItem(
     @PrimaryKey
@@ -38,3 +39,4 @@ data class SubscriptionsFeedItem(
         isShort = isShort
     )
 }
+// endregion

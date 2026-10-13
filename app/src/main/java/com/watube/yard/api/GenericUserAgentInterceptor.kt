@@ -4,6 +4,7 @@ import com.watube.yard.helpers.PrivacyHelper
 import okhttp3.Interceptor
 import okhttp3.Response
 
+// region Networking
 /**
  * Watube anti-fingerprinting: normalize the User-Agent of every outgoing request
  * that doesn't already carry a service-specific one. OkHttp otherwise appends its
@@ -26,3 +27,4 @@ class GenericUserAgentInterceptor : Interceptor {
         )
     }
 }
+// endregion

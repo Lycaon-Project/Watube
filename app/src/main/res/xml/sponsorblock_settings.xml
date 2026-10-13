@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region SponsorBlock -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -29,18 +30,22 @@
         app:key="sb_user_id"
         app:title="@string/sponsorblock_user_id" />
 
+    <!-- region DeArrow -->
     <SwitchPreferenceCompat
         app:defaultValue="false"
         app:key="dearrow"
         app:summary="@string/dearrow_summary"
         app:title="@string/dearrow" />
+    <!-- endregion -->
 
+    <!-- region DeArrow -->
     <SwitchPreferenceCompat
         android:summaryOff="@string/disabled"
         android:summaryOn="@string/enabled"
         app:defaultValue="false"
         app:key="dearrow_contribute_key"
         app:title="@string/contribute_to_dearrow" />
+    <!-- endregion -->
 
     <SwitchPreferenceCompat
         app:defaultValue="true"
@@ -164,3 +169,4 @@
     </PreferenceCategory>
 
 </PreferenceScreen>
+<!-- endregion -->

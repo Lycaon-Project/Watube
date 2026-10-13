@@ -13,38 +13,74 @@ import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.helpers.LocaleHelper.getDetectedCountry
 import kotlin.math.roundToInt
 
+// region Crash Reports
 /**
  * Preference file holding the last crash log. It deliberately lives outside of the default
- * preferences so the backup rules (backup_rules.xml, data_extraction_rules.xml) can exclude
- * it: a stack trace may contain video ids and urls and must not reach a cloud backup.
+ * preferences so the backup rules (data_extraction_rules.xml) can exclude it from the
+ * device-to-device transfer too: a stack trace may contain video ids and urls.
  */
 private const val ERROR_LOG_PREF_FILE = "errors"
+// endregion
 
 object PreferenceHelper {
+    // region Settings
     private val TAG = PreferenceHelper::class.simpleName
+    // endregion
 
-    /**
-     * Preference migration from [fromVersion] to [toVersion].
-     */
-    private class PreferenceMigration(
-        val fromVersion: Int, val toVersion: Int, val onMigration: () -> Unit
-    )
-
-    /**
-     * for normal preferences
-     */
-    lateinit var settings: SharedPreferences
-
-    /**
-     * For sensitive data (like token)
-     */
-    private lateinit var authSettings: SharedPreferences
-
+    // region New Video Notifications
     /**
      * Cache for ignorable notification channels to avoid repeated string splitting
      */
     private var ignorableChannelsCache: List<String>? = null
 
+    /**
+     * Get the list of ignorable notification channels.
+     * Uses caching to avoid repeated string splitting.
+     */
+    fun getIgnorableNotificationChannels(): List<String> {
+        ignorableChannelsCache?.let { return it }
+
+        val channels = getString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, "")
+            .split(",")
+            .filter { it.isNotEmpty() }
+
+        ignorableChannelsCache = channels
+        return channels
+    }
+
+    fun isChannelNotificationIgnorable(channelId: String): Boolean {
+        return getIgnorableNotificationChannels().any { it == channelId }
+    }
+
+    /**
+     * Toggle whether a channel's notifications should be ignored.
+     * Optimized to minimize allocations.
+     */
+    fun toggleIgnorableNotificationChannel(channelId: String) {
+        val currentChannels = getString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, "")
+        val channelsList = if (currentChannels.isEmpty()) {
+            mutableListOf()
+        } else {
+            currentChannels.split(",").toMutableList()
+        }
+
+        if (channelsList.contains(channelId)) {
+            channelsList.remove(channelId)
+        } else {
+            channelsList.add(channelId)
+        }
+
+        val channelsString = channelsList.joinToString(",")
+        settings.edit {
+            putString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, channelsString)
+        }
+
+        // Invalidate cache
+        ignorableChannelsCache = null
+    }
+    // endregion
+
+    // region Settings
     /**
      * Migrations required to migrate the application to a newer preference version.
      * The version is automatically determined from the number of migrations available.
@@ -219,8 +255,29 @@ object PreferenceHelper {
             // user and its rotation stamp are dropped
             remove("privacy_neutral_region_active")
             remove("privacy_neutral_region_cycle")
+        },
+        PreferenceMigration(14, 15) {
+            // Watube: the local stream and feed extraction of the Piped mode are off by default
+            // now (YouTube contacted directly from the device). They have no effect in the full
+            // local mode, so for its users they take the new defaults; a Piped user keeps them.
+            if (getBoolean(PreferenceKeys.FULL_LOCAL_MODE, true)) {
+                remove(PreferenceKeys.LOCAL_STREAM_EXTRACTION)
+                remove(PreferenceKeys.LOCAL_FEED_EXTRACTION)
+            }
         }
     )
+
+    /**
+     * Preference migration from [fromVersion] to [toVersion].
+     */
+    private class PreferenceMigration(
+        val fromVersion: Int, val toVersion: Int, val onMigration: () -> Unit
+    )
+
+    /**
+     * for normal preferences
+     */
+    lateinit var settings: SharedPreferences
 
     /**
      * set the context that is being used to access the shared preferences
@@ -356,6 +413,17 @@ object PreferenceHelper {
         ignorableChannelsCache = null
     }
 
+    private fun getDefaultSharedPreferences(context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
+    // endregion
+
+    // region Piped Account
+    /**
+     * For sensitive data (like token)
+     */
+    private lateinit var authSettings: SharedPreferences
+
     fun getToken(): String {
         val stored = authPreferences().getString(PreferenceKeys.TOKEN, "").orEmpty()
         if (stored.isEmpty() || TokenCipher.isEncrypted(stored)) return TokenCipher.decrypt(stored)
@@ -386,18 +454,6 @@ object PreferenceHelper {
     }
 
     /**
-     * Watube: no browsing trace (watch history, searches, playback positions) may be
-     * written to the device while this is enabled.
-     */
-    fun isTouristModeEnabled(): Boolean = getBoolean(PreferenceKeys.TOURIST_MODE, false)
-
-    /**
-     * Watube: automatic retention of the watch history in days, 0 keeps it forever.
-     */
-    fun getHistoryRetentionDays(): Int =
-        getString(PreferenceKeys.HISTORY_RETENTION_DAYS, "0").toIntOrNull()?.coerceAtLeast(0) ?: 0
-
-    /**
      * The auth preferences are opened lazily so that accessing them before [initialize]
      * (or from a context that got torn down) can never crash the caller.
      */
@@ -408,6 +464,28 @@ object PreferenceHelper {
         return authSettings
     }
 
+    private fun getAuthenticationPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(PreferenceKeys.AUTH_PREF_FILE, Context.MODE_PRIVATE)
+    }
+    // endregion
+
+    // region Privacy
+    /**
+     * Watube: no browsing trace (watch history, searches, playback positions) may be
+     * written to the device while this is enabled.
+     */
+    fun isTouristModeEnabled(): Boolean = getBoolean(PreferenceKeys.TOURIST_MODE, false)
+    // endregion
+
+    // region Watch History
+    /**
+     * Watube: automatic retention of the watch history in days, 0 keeps it forever.
+     */
+    fun getHistoryRetentionDays(): Int =
+        getString(PreferenceKeys.HISTORY_RETENTION_DAYS, "0").toIntOrNull()?.coerceAtLeast(0) ?: 0
+    // endregion
+
+    // region Feed
     fun updateLastFeedWatchedTime(time: Long, seenByUser: Boolean) {
         // only update the time if the time is newer
         // this avoids cases, where the user last saw an older video, which had already been seen,
@@ -427,7 +505,9 @@ object PreferenceHelper {
             if (seenByUser) PreferenceKeys.LAST_USER_SEEN_FEED_TIME else PreferenceKeys.LAST_REFRESHED_FEED_TIME
         return getLong(key, 0)
     }
+    // endregion
 
+    // region Crash Reports
     fun saveErrorLog(log: String) {
         // stored in its own preference file, which every backup rule excludes, so the
         // stack trace (it can contain video ids and urls) is never uploaded to the cloud.
@@ -442,52 +522,12 @@ object PreferenceHelper {
             .getString(PreferenceKeys.ERROR_LOG, "") ?: ""
     }
 
-    /**
-     * Get the list of ignorable notification channels.
-     * Uses caching to avoid repeated string splitting.
-     */
-    fun getIgnorableNotificationChannels(): List<String> {
-        ignorableChannelsCache?.let { return it }
-
-        val channels = getString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, "")
-            .split(",")
-            .filter { it.isNotEmpty() }
-
-        ignorableChannelsCache = channels
-        return channels
+    fun deleteErrorLog() {
+        WatubeApp.instance.deleteSharedPreferences(ERROR_LOG_PREF_FILE)
     }
+    // endregion
 
-    fun isChannelNotificationIgnorable(channelId: String): Boolean {
-        return getIgnorableNotificationChannels().any { it == channelId }
-    }
-
-    /**
-     * Toggle whether a channel's notifications should be ignored.
-     * Optimized to minimize allocations.
-     */
-    fun toggleIgnorableNotificationChannel(channelId: String) {
-        val currentChannels = getString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, "")
-        val channelsList = if (currentChannels.isEmpty()) {
-            mutableListOf()
-        } else {
-            currentChannels.split(",").toMutableList()
-        }
-
-        if (channelsList.contains(channelId)) {
-            channelsList.remove(channelId)
-        } else {
-            channelsList.add(channelId)
-        }
-
-        val channelsString = channelsList.joinToString(",")
-        settings.edit {
-            putString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, channelsString)
-        }
-
-        // Invalidate cache
-        ignorableChannelsCache = null
-    }
-
+    // region SponsorBlock
     /**
      * Get or generate a SponsorBlock user ID.
      *
@@ -503,7 +543,9 @@ object PreferenceHelper {
         PrivacyHelper.storeSponsorBlockUserId(newUuid)
         return newUuid
     }
+    // endregion
 
+    // region Trends
     fun getTrendingRegion(context: Context): String {
         val regionPref = getString(PreferenceKeys.REGION, "sys")
 
@@ -519,12 +561,5 @@ object PreferenceHelper {
             regionPref
         }
     }
-
-    private fun getDefaultSharedPreferences(context: Context): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-    }
-
-    private fun getAuthenticationPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PreferenceKeys.AUTH_PREF_FILE, Context.MODE_PRIVATE)
-    }
+    // endregion
 }

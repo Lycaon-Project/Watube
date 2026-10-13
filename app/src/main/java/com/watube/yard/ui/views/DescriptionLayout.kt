@@ -25,6 +25,7 @@ import com.watube.yard.util.LinkHandler
 import com.watube.yard.util.TextUtils
 import java.util.Locale
 
+// region Video Details
 class DescriptionLayout(
     context: Context,
     attributeSet: AttributeSet?
@@ -169,3 +170,4 @@ class DescriptionLayout(
         private const val SB_SPONSOR_CATEGORY = "sponsor_category"
     }
 }
+// endregion

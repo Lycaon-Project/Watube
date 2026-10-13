@@ -1,7 +1,6 @@
 <resources>
 
     <color name="shortcut_color">#0061A6</color>
-    <color name="splash_screen_icon_color">#222</color>
     <color name="watube_theme_light_primary">#35E08C</color>
     <color name="watube_theme_light_onPrimary">#062015</color>
     <color name="watube_theme_light_primaryContainer">#E1FAEE</color>

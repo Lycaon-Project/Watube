@@ -2,6 +2,7 @@
 // ⚠️ IMPORTANT : Le bloc plugins {} DOIT être la TOUTE PREMIÈRE instruction du fichier
 // Il ne doit PAS être à l'intérieur d'un bloc android {}, dependencies {}, ou autre
 
+// region Build
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.androidx.navigation.safeargs)
@@ -163,15 +164,6 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.session)
 
-    /* Google Cast */
-    implementation(libs.google.play.services.cast.framework) {
-        // Google's telemetry transport (Firelog uploads, with its event database, upload jobs
-        // and encoders) is not shipped at all: the few symbols Cast links against are inert
-        // stand-ins, see app/src/main/java/com/google/android/datatransport
-        exclude(group = "com.google.android.datatransport")
-    }
-    implementation(libs.androidx.mediarouter)
-
     /* Retrofit and Kotlinx Serialization */
     implementation(libs.square.retrofit)
     implementation(libs.logging.interceptor)
@@ -221,14 +213,29 @@ protobuf {
         }
     }
 }
-// Privacy guard: the release build fails when telemetry code is back in the dex, typically after
-// a library update made the obfuscated rules of proguard-rules.pro stale (re-audit them then).
+// endregion
+// region Privacy
+// Privacy guard: no proprietary Google library (Play Services, Firebase, datatransport, Play Core)
+// may be resolved, not even as a transitive dependency of something else.
+val proprietaryGoogleGroups =
+    Regex("""com\.google\.(android\.gms|firebase|android\.datatransport|android\.play)(\..+)?""")
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        check(!proprietaryGoogleGroups.matches(requested.group)) {
+            "Proprietary Google dependency refused: ${requested.group}:${requested.name}"
+        }
+    }
+}
+
+// Privacy guard: the release build fails when proprietary Google code (Play Services, Firebase,
+// datatransport) or telemetry is back in the dex, e.g. pulled in again by a dependency, or after
+// a library update made the Media3 rule of proguard-rules.pro stale (re-audit it then).
 tasks.matching { it.name == "minifyReleaseWithR8" }.configureEach {
     doLast {
         val markers = listOf(
-            "JobInfoSchedulerService", // Google datatransport (Firelog uploads)
-            "IUsageReportingService", // Cast analytics consent
-            "feature_usage_", // Cast feature usage analytics
+            "com/google/android/gms/", // Google Play Services (proprietary)
+            "com/google/firebase/", // Firebase
+            "com/google/android/datatransport/", // Google datatransport (Firelog uploads)
             "IClientTelemetryService", // Play Services client telemetry
             "createPlaybackSession" // Media3 platform diagnostics
         )
@@ -239,3 +246,4 @@ tasks.matching { it.name == "minifyReleaseWithR8" }.configureEach {
         check(found.isEmpty()) { "Telemetry code survived R8: $found, re-audit proguard-rules.pro" }
     }
 }
+// endregion

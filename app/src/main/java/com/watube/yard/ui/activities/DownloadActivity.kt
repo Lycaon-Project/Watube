@@ -9,6 +9,7 @@ import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.dialogs.DownloadDialog
 import com.watube.yard.ui.dialogs.DownloadPlaylistDialog
 
+// region Downloads
 class DownloadActivity : BaseActivity() {
     override val isDialogActivity: Boolean = true
 
@@ -45,3 +46,4 @@ class DownloadActivity : BaseActivity() {
         }
     }
 }
+// endregion

@@ -30,7 +30,7 @@ import java.time.format.TextStyle
 import kotlin.math.ceil
 
 class PlayerSettings : BasePreferenceFragment() {
-
+    // region Settings
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.player_settings, rootKey)
 
@@ -86,7 +86,9 @@ class PlayerSettings : BasePreferenceFragment() {
         super.onResume()
         updateSleepTimerSummaries()
     }
+    // endregion
 
+    // region Sleep Timer
     private fun updateSleepTimerSummaries() {
         val minutesLeft = ceil(SleepTimer.timeLeftMillis.toDouble() / DateUtils.MINUTE_IN_MILLIS).toInt()
         findPreference<Preference>(PreferenceKeys.SLEEP_TIMER)?.summary =
@@ -99,7 +101,9 @@ class PlayerSettings : BasePreferenceFragment() {
             resources.getQuantityString(R.plurals.sleep_timer_chip_minutes, minutes, minutes)
         )
     }
+    // endregion
 
+    // region Rest Mode
     /** Days of the week (Monday first) and start / end hours of the scheduled rest mode. */
     private fun setupRestModeSchedule() {
         val locale = resources.configuration.locales[0]
@@ -146,7 +150,9 @@ class PlayerSettings : BasePreferenceFragment() {
             .joinToString { it.getDisplayName(TextStyle.SHORT, locale) }
             .ifEmpty { getString(R.string.rest_mode_no_days) }
     }
+    // endregion
 
+    // region Captions
     private fun setupSubtitlePref(preference: ListPreference) {
         val locales = LocaleHelper.getAvailableLocales()
         val localeNames = locales.map { it.name }
@@ -164,4 +170,5 @@ class PlayerSettings : BasePreferenceFragment() {
                 it.entry
             }
     }
+    // endregion
 }

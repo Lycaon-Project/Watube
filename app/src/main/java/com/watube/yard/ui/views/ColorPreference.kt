@@ -15,6 +15,7 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.ui.dialogs.ColorPickerDialog
 import com.watube.yard.ui.dialogs.ColorPickerDialog.Companion.COLOR_PICKER_REQUEST_KEY
 
+// region Appearance
 class ColorPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private lateinit var circleView: View
     private var currentColor: Int? = null
@@ -82,3 +83,4 @@ class ColorPreference(context: Context, attrs: AttributeSet) : Preference(contex
         return "${super.getTitle()}:"
     }
 }
+// endregion
