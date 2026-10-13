@@ -61,7 +61,7 @@ data class LibraryInfo(
 
             // --- Extraction / storage / images ---
             // Copyleft: the only GPL component of the app besides Watube itself
-            LibraryInfo("NewPipeExtractor", "190dae5f12", GPL3, GPL3_URL),
+            LibraryInfo("NewPipeExtractor", "6b51e91d61", GPL3, GPL3_URL),
             LibraryInfo("Coil", "3.6.3", APACHE, APACHE_URL),
             LibraryInfo("desugar_jdk_libs_nio", "2.1.5", APACHE, APACHE_URL),
 
