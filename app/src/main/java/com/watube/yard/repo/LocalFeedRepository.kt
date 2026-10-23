@@ -15,6 +15,7 @@ import com.watube.yard.helpers.NewPipeExtractorInstance
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.dialogs.ShareDialog.Companion.YOUTUBE_FRONTEND_URL
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -106,6 +107,8 @@ class LocalFeedRepository : FeedRepository {
                             // increase counter if we had to fully fetch the channel
                             channelExtractionCount.incrementAndGet()
                     }
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e("feed", "failed to fetch channel feed", e)
                     null

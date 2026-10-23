@@ -18,6 +18,7 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet.Companion.PLAYLIST_OPTIONS_REQUEST_KEY
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,6 +67,8 @@ class RenamePlaylistDialog : DialogFragment() {
                             withContext(Dispatchers.IO) {
                                 PlaylistsHelper.renamePlaylist(playlistId, newPlaylistName)
                             }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             Log.e(TAG(), e.toString())
                             e.localizedMessage?.let { appContext.toastFromMainDispatcher(it) }

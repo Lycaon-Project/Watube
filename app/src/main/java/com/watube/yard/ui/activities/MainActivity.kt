@@ -61,6 +61,7 @@ import com.watube.yard.ui.preferences.BackupRestoreSettings.Companion.FILETYPE_A
 import com.watube.yard.util.UpdateChecker
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -320,6 +321,8 @@ class MainActivity : AbstractPlayerHostActivity() {
         // save start tab fragment id and apply navbar style
         startFragmentId = try {
             NavBarHelper.applyNavBarStyle(binding.bottomNav)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             R.id.homeFragment
         }

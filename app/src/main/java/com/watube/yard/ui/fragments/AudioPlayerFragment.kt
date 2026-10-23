@@ -145,6 +145,9 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
         BackgroundHelper.startMediaService(
             requireContext(),
             if (isOffline) OfflinePlayerService::class.java else OnlinePlayerService::class.java,
+            // the session was stopped from outside: close the screen. killFragment() clears
+            // playerController before its own release, so that one is skipped here.
+            onDisconnected = { if (_binding != null && playerController === it) killFragment(false) },
         ) {
             if (_binding == null) {
                 it.sendCustomCommand(AbstractPlayerService.stopServiceCommand, Bundle.EMPTY)
@@ -361,13 +364,18 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
         viewModel.isFullscreen.value = false
         binding.playerMotionLayout.transitionToEnd()
+        // removed before the transition ends: clear the dim behind the player here
+        activity.minimizePlayerContainerLayout()
         activity.supportFragmentManager.commit {
             remove(this@AudioPlayerFragment)
         }
     }
 
-    fun playNextVideo(videoId: String) {
-        playerController?.navigateVideo(videoId)
+    /** Returns false when this screen has no live player left to play [videoId]. */
+    fun playNextVideo(videoId: String): Boolean {
+        val controller = playerController?.takeIf { it.isConnected } ?: return false
+        controller.navigateVideo(videoId)
+        return true
     }
 
     @SuppressLint("ClickableViewAccessibility")

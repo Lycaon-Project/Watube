@@ -177,6 +177,8 @@ class DownloadService : LifecycleService() {
             withContext(Dispatchers.IO) {
                 MediaServiceRepository.instance.getStreams(videoId)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
             toastFromMainDispatcher(e.localizedMessage.orEmpty())
@@ -241,6 +243,8 @@ class DownloadService : LifecycleService() {
                 val segmentData = try {
                     val categories = PlayerHelper.getSponsorBlockCategories()
                     MediaServiceRepository.instance.getSegments(videoId, categories.map { it.key })
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e(TAG(), "failed to download SponsorBlock segments")
                     Log.e(TAG(), e.stackTraceToString())
@@ -259,6 +263,8 @@ class DownloadService : LifecycleService() {
                         thumbnailUrl,
                         thumbnailTargetPath
                     )
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     // never log the thumbnail url: it carries the video id
                     Log.e(TAG(), "failed to download the video image")

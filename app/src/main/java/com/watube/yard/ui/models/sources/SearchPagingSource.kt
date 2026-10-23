@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.obj.ContentItem
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -30,6 +31,8 @@ class SearchPagingSource(
             }
 
             LoadResult.Page(result.items, null, result.nextpage)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

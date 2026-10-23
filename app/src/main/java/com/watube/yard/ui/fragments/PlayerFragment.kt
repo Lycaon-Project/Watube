@@ -187,6 +187,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         private set
 
     private val handler = Handler(Looper.getMainLooper())
+
+    /** True once this screen released its own controller (rotation, switch to audio). */
+    private var controllerReleasedHere = false
     // endregion
 
     // region Seekbar Preview
@@ -891,6 +894,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             requireContext(),
             serviceClass,
             args,
+            onDisconnected = { controller ->
+                // the session was stopped from outside (notification, media button, system):
+                // close the screen instead of keeping a dead player on it
+                handler.post {
+                    if (_binding != null && !controllerReleasedHere &&
+                        ::playerController.isInitialized && playerController === controller
+                    ) killPlayerFragment()
+                }
+            },
         ) {
             if (_binding == null) {
                 if (::playerController.isInitialized) {
@@ -1148,6 +1160,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         // in once the view is already gone
         val binding = _binding ?: return
         binding.playerMotionLayout.transitionToEnd()
+        // closed while maximized (session stopped from outside), the transition end that
+        // clears the dim behind the player never comes: the fragment is removed first
+        baseActivity.minimizePlayerContainerLayout()
 
         commonPlayerViewModel.isMiniPlayerVisible.value = false
 
@@ -1170,8 +1185,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         }
     }
 
-    fun playVideo(videoId: String) {
-        if (!::playerController.isInitialized) return
+    /** Returns false when this screen has no live player left to play [videoId]. */
+    fun playVideo(videoId: String): Boolean {
+        if (!::playerController.isInitialized || !playerController.isConnected) return false
 
         // Nouvelle vidéo (navigation, file d'attente) : on réarme les garde-fous de
         // récupération d'erreur. Une ré-extraction de la vidéo courante (même id, déclenchée
@@ -1188,6 +1204,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 putString(PlayerCommand.PLAY_VIDEO_BY_ID.name, videoId)
             }
         )
+        return true
     }
 
     private fun connectToPlayerView(player: Player) {
@@ -1599,6 +1616,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
             binding.player.detachPlayer()
 
+            controllerReleasedHere = true
             if (::playerController.isInitialized) playerController.release()
 
             activity?.recreate()
@@ -2017,6 +2035,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         binding.player.detachPlayer()
 
+        controllerReleasedHere = true
         playerController.release()
         killPlayerFragment()
 

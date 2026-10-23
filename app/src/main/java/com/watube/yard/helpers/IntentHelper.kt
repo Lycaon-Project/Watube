@@ -77,16 +77,21 @@ object IntentHelper {
         // query parameters throws, so it simply resolves to nothing
         if (!uri.isHierarchical) return@with this
         val lastSegment = uri.lastPathSegment
-        val secondLastSegment = uri.pathSegments.getOrNull(uri.pathSegments.size - 2)
+        // a channel link may end with one of its tabs (/live, /videos...): the channel opens
+        val firstSegment = uri.pathSegments.firstOrNull()
+        val channelSegment = uri.pathSegments.getOrNull(1)
         when {
             lastSegment == "results" -> {
                 putExtra(IntentData.query, uri.getQueryParameter("search_query"))
             }
-            secondLastSegment == "channel" -> {
-                putExtra(IntentData.channelId, lastSegment)
+            firstSegment == "channel" && channelSegment != null -> {
+                putExtra(IntentData.channelId, channelSegment)
             }
-            secondLastSegment == "c" || secondLastSegment == "user" -> {
-                putExtra(IntentData.channelName, lastSegment)
+            (firstSegment == "c" || firstSegment == "user") && channelSegment != null -> {
+                putExtra(IntentData.channelName, channelSegment)
+            }
+            firstSegment?.startsWith("@") == true -> {
+                putExtra(IntentData.channelName, firstSegment)
             }
             lastSegment == "playlist" -> {
                 putExtra(IntentData.playlistId, uri.getQueryParameter("list"))

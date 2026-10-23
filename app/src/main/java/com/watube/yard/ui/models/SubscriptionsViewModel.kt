@@ -15,6 +15,7 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.repo.FeedProgress
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -47,6 +48,8 @@ class SubscriptionsViewModel : ViewModel() {
                 SubscriptionHelper.getFeed(forceRefresh = forceRefresh) { feedProgress ->
                     this@SubscriptionsViewModel.feedProgress.postValue(feedProgress)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 context.toastFromMainDispatcher(R.string.server_error)
                 Log.e(TAG(), e.toString())
@@ -68,6 +71,8 @@ class SubscriptionsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val subscriptions = try {
                 SubscriptionHelper.getSubscriptions()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 context.toastFromMainDispatcher(R.string.server_error)
                 Log.e(TAG(), e.toString())

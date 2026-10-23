@@ -14,6 +14,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.obj.ShareData
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.dialogs.ShareDialog
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -79,6 +80,8 @@ class ChannelOptionsBottomSheet : BaseBottomSheet() {
                                 )
                             )
                         }
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e(TAG(), e.toString())
                     }
@@ -98,6 +101,8 @@ class ChannelOptionsBottomSheet : BaseBottomSheet() {
                                 )
                             )
                         }
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e(TAG(), e.toString())
                     }

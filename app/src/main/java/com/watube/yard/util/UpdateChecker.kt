@@ -15,6 +15,7 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.dialogs.UpdateAvailableDialog
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -230,6 +231,8 @@ class UpdateChecker(private val context: Context) {
             if (isManualCheck) {
                 context.toastFromMainDispatcher(R.string.error_occurred)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Failed to check for updates", e)
             if (isManualCheck) {

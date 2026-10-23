@@ -28,6 +28,7 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.views.TimePickerPreference
 import com.watube.yard.util.DataSaverMode
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -118,6 +119,8 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
                     return false
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Failed to fetch feed", e)
             return false
@@ -336,6 +339,8 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
                 }
 
                 bitmap
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.w(TAG(), "Failed to download image from $url", e)
                 null

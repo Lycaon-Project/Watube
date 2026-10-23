@@ -22,6 +22,7 @@ import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.preferences.InstanceSettings.Companion.INSTANCE_DIALOG_REQUEST_KEY
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,6 +80,8 @@ class LoginDialog : DialogFragment() {
                 }?.getOrNull() ?: context?.getString(R.string.server_error).orEmpty()
                 context?.toastFromMainDispatcher(errorMessage)
                 return@launch
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.toString())
                 context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())

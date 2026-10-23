@@ -22,6 +22,7 @@ import com.watube.yard.services.DownloadService
 import com.watube.yard.ui.dialogs.DownloadDialog
 import com.watube.yard.ui.dialogs.DownloadPlaylistDialog
 import com.watube.yard.ui.dialogs.ShareDialog
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -137,6 +138,8 @@ object DownloadHelper {
             CoroutineScope(Dispatchers.IO).launch {
                 val playlistVideoIds = try {
                     PlaylistsHelper.getPlaylist(playlistId)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (_: Exception) {
                     context.toastFromMainDispatcher(R.string.unknown_error)
                     return@launch

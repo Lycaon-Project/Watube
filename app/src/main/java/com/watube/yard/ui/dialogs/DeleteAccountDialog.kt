@@ -18,6 +18,7 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.preferences.InstanceSettings
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,6 +58,8 @@ class DeleteAccountDialog : DialogFragment() {
             withContext(Dispatchers.IO) {
                 RetrofitInstance.authApi.deleteAccount(token, DeleteUserRequest(password))
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_SHORT).show()

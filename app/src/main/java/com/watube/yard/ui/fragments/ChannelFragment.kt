@@ -28,6 +28,7 @@ import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.models.ChannelViewModel
 import com.watube.yard.ui.sheets.ChannelOptionsBottomSheet
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -118,6 +119,8 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
                     MediaServiceRepository.instance.getChannelByName(channelName!!)
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
             context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())

@@ -55,6 +55,7 @@ import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.TextUtils
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -194,6 +195,8 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
                 withContext(Dispatchers.IO) {
                     PlaylistsHelper.getPlaylist(playlistId)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.toString())
                 return@launch
@@ -489,6 +492,8 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
                         .show()
                     updateInfo(updatedList)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.toString())
                 context?.toastFromMainDispatcher(R.string.unknown_error)
@@ -524,6 +529,8 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
                     playlistAdapter.submitList(fixedList)
                     updateInfo(fixedList)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.toString())
                 context?.toastFromMainDispatcher(R.string.unknown_error)
@@ -572,6 +579,8 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
                     // load locally stored playlists with the auth api
                     MediaServiceRepository.instance.getPlaylistNextPage(playlistId, nextPage!!)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
                 Log.e(TAG(), e.toString())

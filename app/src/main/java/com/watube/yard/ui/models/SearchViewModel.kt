@@ -10,6 +10,7 @@ import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.enums.SearchDataType
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.obj.SearchDataItem
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -81,6 +82,8 @@ class SearchViewModel : ViewModel() {
             try {
                 MediaServiceRepository.instance.getSuggestions(query)
                     .also { suggestionCache.put(query, it) }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("search", "failed to fetch search suggestions", e)
                 emptyList<String>()

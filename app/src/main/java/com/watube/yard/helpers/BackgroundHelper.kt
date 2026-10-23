@@ -81,9 +81,10 @@ object BackgroundHelper {
         context: Context,
         serviceClass: Class<*>,
         arguments: Bundle = Bundle.EMPTY,
+        onDisconnected: (MediaController) -> Unit = {},
         onController: (MediaController) -> Unit = {}
     ) {
-        connectMediaService(context, serviceClass, arguments, onController, retryCount = 0)
+        connectMediaService(context, serviceClass, arguments, onDisconnected, onController, retryCount = 0)
     }
 
     @OptIn(UnstableApi::class)
@@ -91,6 +92,7 @@ object BackgroundHelper {
         context: Context,
         serviceClass: Class<*>,
         arguments: Bundle,
+        onDisconnected: (MediaController) -> Unit,
         onController: (MediaController) -> Unit,
         retryCount: Int
     ) {
@@ -99,7 +101,12 @@ object BackgroundHelper {
             SessionToken(context, ComponentName(context, serviceClass))
 
         val controllerFuture =
-            MediaController.Builder(context, sessionToken).buildAsync()
+            MediaController.Builder(context, sessionToken)
+                // also called when the controller releases itself: callers check whose release it is
+                .setListener(object : MediaController.Listener {
+                    override fun onDisconnected(controller: MediaController) = onDisconnected(controller)
+                })
+                .buildAsync()
         Futures.addCallback(controllerFuture, object : FutureCallback<MediaController> {
             override fun onSuccess(result: MediaController?) {
                 val controller = controllerFuture.get()
@@ -129,6 +136,7 @@ object BackgroundHelper {
                         context,
                         serviceClass,
                         arguments,
+                        onDisconnected,
                         onController,
                         retryCount + 1
                     )
@@ -157,7 +165,7 @@ object BackgroundHelper {
         arguments: Bundle = Bundle.EMPTY,
         onController: (MediaController) -> Unit = {}
     ) {
-        startMediaService(context, getCurrentPlayerServiceClass(), arguments, onController)
+        startMediaService(context, getCurrentPlayerServiceClass(), arguments, onController = onController)
     }
 }
 // endregion

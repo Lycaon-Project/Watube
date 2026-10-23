@@ -11,13 +11,16 @@ kotlin = "2.4.21"
 ksp = "2.3.12"
 lifecycle = "2.11.0"
 constraintlayout = "2.2.2"
-loggingInterceptor = "5.5.0"
+loggingInterceptor = "5.5.1"
 material = "1.14.0"
 navigation = "2.10.2"
-# Watube fork github.com/Lycaon-Project/WatubeExtrato (branch watube-26.11): LibreTube's SABR fork 3e863d7 + upstream fixes of 2026-10-05
+# Watube fork github.com/Lycaon-Project/WatubeExtrato (branch watube-Extracto): LibreTube's SABR fork 3e863d7 + upstream fixes of 2026-10-05
 # (65cabc2 caption track names, d050168 Gradle wrapper 9.8.0) + ab984a8 jsoup 1.23.2 (CVE-2026-75140)
 # + 3313901 test User-Agent Firefox 153 ESR (tests only, the app sends its own User-Agent)
-newpipeextractor = "6b51e91d61"
+# + Watube hardening: no PoToken, SecureRandom nonces, sandboxed player JavaScript, dead code
+# removed, comment author verified flag fixed, per-item regex caches.
+# Full commit hash: JitPack keeps a "not found" answer per version string.
+newpipeextractor = "00a541b908de0df5ff7a374c03e1e75392d7c2e7"
 # same JSON library as the extractor ships (its runtime dependency), for the player response
 nanojson = "e9d656ddb49a412a5a0a5d5ef20ca7ef09549996"
 preference = "1.2.1"
@@ -28,7 +31,7 @@ retrofit = "3.0.0"
 desugaring = "2.1.5"
 coil = "3.6.3"
 room = "2.8.5"
-kotlinxSerialization = "1.11.0"
+kotlinxSerialization = "1.12.0"
 kotlinxDatetime = "0.8.0"
 media = "1.8.0"
 media3 = "1.11.1"

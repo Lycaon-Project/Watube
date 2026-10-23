@@ -28,6 +28,8 @@ import com.watube.yard.cast.CastTarget
 import com.watube.yard.cast.Stolm
 import com.watube.yard.cast.StolmCast
 import com.watube.yard.cast.StolmException
+import com.watube.yard.cast.chain
+import com.watube.yard.cast.stolmTrace
 import com.watube.yard.constants.IntentData
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.enums.PlayerCommand
@@ -48,6 +50,7 @@ import com.watube.yard.util.DeArrowUtil
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.SharedHttpClient
 import com.watube.yard.util.YoutubeHlsPlaylistParser
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -206,6 +209,8 @@ open class OnlinePlayerService : AbstractPlayerService() {
             MediaServiceRepository.instance.getStreams(videoId).let {
                 DeArrowUtil.deArrowStreams(it, videoId)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
             toastFromMainDispatcher(e.localizedMessage.orEmpty())
@@ -266,6 +271,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
     /** Moves the current video to [target], from where the phone is. */
     private fun startCast(target: CastTarget) {
         val current = streams ?: return toastFromMainThread(R.string.stolm_wait_for_video)
+        stolmTrace { "cast to ${target.address.hostAddress}:${target.port} live=${current.isLive} hls=${current.hls != null}" }
         stopCast(endState = Stolm.State.Connecting(target.name))
         castJob = scope.launch {
             val cast = try {
@@ -273,6 +279,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
                     handler.post { stopCast() }
                 }
             } catch (e: StolmException) {
+                stolmTrace { "connect failed: ${e.chain()}" }
                 Stolm.update(Stolm.State.Idle)
                 toastFromMainDispatcher(e.messageRes)
                 return@launch
@@ -312,8 +319,10 @@ open class OnlinePlayerService : AbstractPlayerService() {
             try {
                 cast.play(videoId, streams, mediaItem, positionMs)
             } catch (e: StolmException) {
+                stolmTrace { "load failed: ${e.chain()}" }
                 if (stolm === cast) stopCast(e.messageRes)
             } catch (e: IOException) {
+                stolmTrace { "load failed, receiver reached the relay: ${cast.receiverReached}: ${e.chain()}" }
                 if (stolm !== cast) return@launch
                 // the TV never asked the phone for the video: it cannot reach it
                 if (cast.receiverReached) {

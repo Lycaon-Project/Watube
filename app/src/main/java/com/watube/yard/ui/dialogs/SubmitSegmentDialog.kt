@@ -20,6 +20,7 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.parseDurationString
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -105,6 +106,8 @@ class SubmitSegmentDialog : DialogFragment() {
                     .submitSegment(videoId, uuid, userAgent, startTime, endTime, category, duration)
             }
             context.toastFromMainDispatcher(R.string.segment_submitted)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
@@ -136,6 +139,8 @@ class SubmitSegmentDialog : DialogFragment() {
                     score = score
                 )
                 context.toastFromMainDispatcher(R.string.success)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
             }
@@ -147,6 +152,8 @@ class SubmitSegmentDialog : DialogFragment() {
         val categories = resources.getStringArray(R.array.sponsorBlockSegments).toList()
         segments = try {
             MediaServiceRepository.instance.getSegments(videoId, categories).segments
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             return

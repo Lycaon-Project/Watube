@@ -26,6 +26,7 @@ import com.watube.yard.ui.dialogs.RenamePlaylistDialog
 import com.watube.yard.ui.dialogs.ShareDialog
 import com.watube.yard.ui.preferences.BackupRestoreSettings
 import com.watube.yard.util.PlayingQueue
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -178,6 +179,8 @@ class PlaylistOptionsBottomSheet : BaseBottomSheet() {
                         } else {
                             val bookmark = try {
                                 MediaServiceRepository.instance.getPlaylist(playlistId)
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (_: Exception) {
                                 return@withContext
                             }.toPlaylistBookmark(playlistId)

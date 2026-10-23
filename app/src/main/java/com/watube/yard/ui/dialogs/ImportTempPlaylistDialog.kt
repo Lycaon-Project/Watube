@@ -12,6 +12,7 @@ import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.obj.PipedImportPlaylist
 import com.watube.yard.util.TextUtils
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,6 +44,8 @@ class ImportTempPlaylistDialog : DialogFragment() {
 
                         PlaylistsHelper.importPlaylists(listOf(playlist))
                         context.toastFromMainDispatcher(R.string.playlistCreated)
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e(TAG(), e.toString())
                         e.localizedMessage?.let {

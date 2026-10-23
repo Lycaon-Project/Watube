@@ -28,6 +28,7 @@ import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.parcelable.DownloadData
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -96,6 +97,8 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
     private suspend fun enqueuePrivatePlaylist() {
         val playlist = try {
             PlaylistsHelper.getPlaylist(playlistId)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             toastFromMainDispatcher(e.localizedMessage.orEmpty())
             stopSelf()
@@ -108,6 +111,8 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
     private suspend fun enqueuePublicPlaylist() {
         val playlist = try {
             MediaServiceRepository.instance.getPlaylist(playlistId)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             toastFromMainDispatcher(e.localizedMessage.orEmpty())
             stopSelf()

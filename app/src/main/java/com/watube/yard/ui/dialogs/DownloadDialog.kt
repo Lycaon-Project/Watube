@@ -28,6 +28,7 @@ import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.parcelable.DownloadData
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,7 +80,9 @@ class DownloadDialog : DialogFragment() {
                 withContext(Dispatchers.IO) {
                     MediaServiceRepository.instance.getStreams(videoId)
                 }
-            }  catch (e: Exception) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
                 Log.e(TAG(), e.stackTraceToString())
                 context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
                 return@launch

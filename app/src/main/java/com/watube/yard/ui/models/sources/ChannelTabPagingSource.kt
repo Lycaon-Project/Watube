@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.obj.ChannelTab
 import com.watube.yard.api.obj.ContentItem
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -20,6 +21,8 @@ class ChannelTabPagingSource(
                 MediaServiceRepository.instance.getChannelTab(tab.data, params.key)
             }
             LoadResult.Page(resp.content, null, resp.nextpage)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

@@ -708,7 +708,7 @@
     <string name="about_privacy">Privacy policy</string>
     <string name="about_report_issue">Report an issue</string>
     <string name="about_mission">Why Watube</string>
-    <string name="about_header_subtitle">Independent LibreTube fork · Local mode by default · optional Piped instances</string>
+    <string name="about_header_subtitle">Checking for updates keeps the app reliable and brings you the latest fixes.</string>
 <string name="search_back">Back</string>
 <string name="search_clear">Clear</string>
 <string name="downloads_search_hint">Search downloads</string>

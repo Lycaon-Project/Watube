@@ -16,6 +16,7 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.obj.PreferenceItem
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -41,6 +42,8 @@ object BackupHelper {
                 JsonHelper.json.encodeToStream(backupFile, outputStream)
             }
             context.toastFromMainDispatcher(R.string.backup_creation_success)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Error while writing backup: $e")
             context.toastFromMainDispatcher(R.string.backup_creation_failed)

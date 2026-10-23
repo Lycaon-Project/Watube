@@ -30,6 +30,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
+import kotlinx.coroutines.CancellationException
 import java.util.stream.Collectors
 
 // region Backup & Restore
@@ -53,6 +54,8 @@ object ImportHelper {
             val type = context.contentResolver.getType(uri)
             val message = context.getString(R.string.unsupported_file_format, type)
             context.toastFromMainDispatcher(message)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             e.localizedMessage?.let {
@@ -256,6 +259,8 @@ object ImportHelper {
         try {
             PlaylistsHelper.importPlaylists(importPlaylists)
             context.toastFromMainDispatcher(R.string.success)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             e.localizedMessage?.let {

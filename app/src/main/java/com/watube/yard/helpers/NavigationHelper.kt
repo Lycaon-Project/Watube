@@ -69,25 +69,20 @@ object NavigationHelper {
             // otherwise, recreate the player
             if (playerData.isOffline != isOffline || playerData.videoId == null) return@runOnPlayerFragment false
 
-            try {
-                PlayingQueue.clearAfterCurrent()
-                this.playVideo(playerData.videoId.toID())
+            // the session may have been stopped from outside (notification, media button): the
+            // screen is then replaced below by a new player
+            if (!this.playVideo(playerData.videoId.toID())) return@runOnPlayerFragment false
+            PlayingQueue.clearAfterCurrent()
 
-                if (audioOnlyPlayerRequested) {
-                    // switch to audio only player
-                    this.switchToAudioMode()
-                } else {
-                    // maximize player
-                    this.binding.playerMotionLayout.transitionToStart()
-                }
-
-                true
-            } catch (e: Exception) {
-                // Log the exception for debugging
-                Log.e(TAG(), "Failed to reuse running player, recreating", e)
-                this.onDestroy()
-                false
+            if (audioOnlyPlayerRequested) {
+                // switch to audio only player
+                this.switchToAudioMode()
+            } else {
+                // maximize player
+                this.binding.playerMotionLayout.transitionToStart()
             }
+
+            true
         }
         if (attachedToRunningPlayer) return
 
@@ -97,8 +92,8 @@ object NavigationHelper {
             // otherwise, recreate the player
             if (playerData.isOffline != isOffline || playerData.videoId == null) return@runOnAudioPlayerFragment false
 
+            if (!this.playNextVideo(playerData.videoId.toID())) return@runOnAudioPlayerFragment false
             PlayingQueue.clearAfterCurrent()
-            this.playNextVideo(playerData.videoId.toID())
 
             if (!audioOnlyPlayerRequested && !audioOnlyMode) {
                 // switch to video only player

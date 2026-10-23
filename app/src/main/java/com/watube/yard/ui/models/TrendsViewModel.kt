@@ -12,6 +12,7 @@ import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -38,6 +39,8 @@ class TrendsViewModel : ViewModel() {
                     MediaServiceRepository.instance.getTrending(region, category)
                 }
                 setStreamsForCategory(category, TrendingStreams(region, response))
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.stackTraceToString())
                 context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
