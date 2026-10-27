@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Theming -->
+<!-- Splash icon (Android 12+: a 240dp canvas, only the centred 160dp circle shows): the home
+     header mark, i.e. the watube_mark_bg tile (accent at 13%, 9.7/27.7 corner ratio) and the
+     play outline of watube_logo.xml filling 18.2/27.7 of it, as in the header. The 104dp tile
+     fits the circle with its corners (diagonal 147dp). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="240dp"
+    android:height="240dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+
+    <path
+        android:fillColor="@color/watube_mark_bg"
+        android:pathData="M104.4,68h31.2a36.4,36.4 0,0 1,36.4 36.4v31.2a36.4,36.4 0,0 1,-36.4 36.4h-31.2a36.4,36.4 0,0 1,-36.4 -36.4v-31.2a36.4,36.4 0,0 1,36.4 -36.4z" />
+
+    <group
+        android:scaleX="2.847"
+        android:scaleY="2.847"
+        android:translateX="85.84"
+        android:translateY="85.84">
+        <path
+            android:pathData="M8.2,4.9L19.4,12L8.2,19.1Z"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.6">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endColor="#1FD47E"
+                    android:endX="19.4"
+                    android:endY="19.1"
+                    android:startColor="#9BF25C"
+                    android:startX="8.2"
+                    android:startY="4.9"
+                    android:type="linear" />
+            </aapt:attr>
+            <aapt:attr name="android:strokeColor">
+                <gradient
+                    android:endColor="#1FD47E"
+                    android:endX="19.4"
+                    android:endY="19.1"
+                    android:startColor="#9BF25C"
+                    android:startX="8.2"
+                    android:startY="4.9"
+                    android:type="linear" />
+            </aapt:attr>
+        </path>
+    </group>
+</vector>
+<!-- endregion -->

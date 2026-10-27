@@ -733,4 +733,15 @@
     <string name="stolm_playback_failed">The TV couldn’t play this video. It is back on your phone.</string>
     <string name="stolm_tv_cannot_reach_phone">The TV couldn’t reach your phone. Your Wi-Fi may keep devices apart.</string>
     <string name="stolm_ended">Casting ended. The video is back on your phone.</string>
+    <!-- New video notifications -->
+    <plurals name="new_videos_digest">
+        <item quantity="one">%1$d new video from your subscriptions</item>
+        <item quantity="other">%1$d new videos from your subscriptions</item>
+    </plurals>
+    <plurals name="new_videos_digest_channels">
+        <item quantity="one">From %1$d channel</item>
+        <item quantity="other">From %1$d channels</item>
+    </plurals>
+    <string name="new_videos_more">+%1$d more</string>
+    <string name="new_videos_hidden">New videos from your subscriptions</string>
 </resources>

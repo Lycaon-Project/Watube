@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.ExistingPeriodicWorkPolicy
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import com.watube.yard.db.DatabaseHelper
@@ -55,11 +54,7 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
             ImageHelper.initializeImageLoader(this@WatubeApp)
             // preloads the watch positions so that list rows don't need to query Room on bind
             DatabaseHelper.primeWatchPositionCache()
-            // UPDATE keeps the schedule but applies changed constraints to installed versions
-            NotificationHelper.enqueueWork(
-                context = this@WatubeApp,
-                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE
-            )
+            NotificationHelper.scheduleOnAppStart(this@WatubeApp)
             ShortcutHelper.createShortcuts(this@WatubeApp)
         }
 

@@ -3,7 +3,7 @@
 <network-security-config xmlns:tools="http://schemas.android.com/tools">
     <!--
       Cleartext (http://) traffic is only allowed towards the local machine, so that
-      self-hosted instances running on the emulator or on localhost keep working.
+      self-hosted instances running on the device itself keep working.
       Everything else must be encrypted, which protects the streams, the local pages
       and all API calls from man-in-the-middle injection.
     -->
@@ -22,7 +22,8 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="false">localhost</domain>
         <domain includeSubdomains="false">127.0.0.1</domain>
-        <domain includeSubdomains="false">10.0.2.2</domain>
+        <!-- 10.0.2.2 (the emulator host) only in the debug build: on a real network it is an
+             ordinary private address that any machine of the LAN can hold -->
     </domain-config>
 </network-security-config>
 <!-- endregion -->

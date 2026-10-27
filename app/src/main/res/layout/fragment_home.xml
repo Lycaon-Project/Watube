@@ -21,7 +21,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Solar search pill: full width, hairline stroke, LOCAL badge on the right -->
+            <!-- Solar search pill: full width, hairline stroke, LOCAL badge on the right. No
+                 android:foreground: the card draws its own ripple clipped to the pill, a
+                 selectableItemBackground there spilled rectangular corners at both ends -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/search_pill"
                 android:transitionName="search_bar"
@@ -33,7 +35,6 @@
                 android:layout_marginBottom="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="?attr/colorSurfaceContainerHighest"
                 app:cardCornerRadius="30dp"
                 app:cardElevation="0dp"

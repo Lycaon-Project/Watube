@@ -13,20 +13,24 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          # the job pushes nothing itself: do not leave the token in .git/config
+          persist-credentials: false
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: "zulu"
           java-version: "17"
-          cache: "gradle"
+          # no shared Gradle cache for the signed build: a cache written by another workflow
+          # run could inject build logic next to the signing key
 
       - name: Build APK
         run: ./gradlew assembleRelease --no-daemon
 
       - name: Sign APK
-        uses: ilharp/sign-android-release@v2
+        uses: ilharp/sign-android-release@13dd52242698526f951aa8bb8696204f6fea702a # v2
         id: sign
         with:
           signingKey: ${{ secrets.ANDROID_RELEASE_SIGNING_KEY }}
@@ -37,7 +41,7 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: requarks/changelog-action@v1
+        uses: requarks/changelog-action@b78a3354a01f4a1affb484b9264b506a815c46b1 # v1
         with:
           token: ${{ github.token }}
           tag: ${{ github.ref_name }}
@@ -53,15 +57,40 @@ jobs:
             
 
       - name: Rename apk file
-        run: mv "${{ steps.sign.outputs.signedFile }}" "app-release.apk"
+        env:
+          SIGNED_FILE: ${{ steps.sign.outputs.signedFile }}
+        run: mv "$SIGNED_FILE" "app-release.apk"
+
+      # Fake "YouTube without ads" clones are a common Android malware lure: publish what lets
+      # anybody check that an APK is the genuine Watube (apksigner verify --print-certs,
+      # AppVerifier, Obtainium)
+      - name: Checksums and signing certificate
+        id: integrity
+        run: |
+          sha256sum app-release.apk > app-release.apk.sha256
+          apk_sha256=$(cut -d ' ' -f 1 app-release.apk.sha256)
+          cert_sha256=$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs app-release.apk             | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')
+          test -n "$cert_sha256"
+          {
+            echo "verification<<EOF"
+            echo "> [!IMPORTANT]"
+            echo "> Only install an APK whose values match these:"
+            echo "> - APK SHA-256: \`$apk_sha256\`"
+            echo "> - Signing certificate SHA-256: \`$cert_sha256\`"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           body:
             ${{ steps.changelog-summary.outputs.summary }}
 
+            ${{ steps.integrity.outputs.verification }}
+
             ${{ steps.changelog.outputs.changes }}
-          files: "app-release.apk"
+          files: |
+            app-release.apk
+            app-release.apk.sha256
           fail_on_unmatched_files: true
           make_latest: true

@@ -108,13 +108,13 @@ object BackgroundHelper {
                 })
                 .buildAsync()
         Futures.addCallback(controllerFuture, object : FutureCallback<MediaController> {
-            override fun onSuccess(result: MediaController?) {
-                val controller = controllerFuture.get()
-                if (!arguments.isEmpty) controller.sendCustomCommand(
+            // Guava 33.7 annotates the result with JSpecify: it is the connected controller
+            override fun onSuccess(result: MediaController) {
+                if (!arguments.isEmpty) result.sendCustomCommand(
                     AbstractPlayerService.startServiceCommand,
                     arguments
                 )
-                onController(controller)
+                onController(result)
             }
 
             // HACK:

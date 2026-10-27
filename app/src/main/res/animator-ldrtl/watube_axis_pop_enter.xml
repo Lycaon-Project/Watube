@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Right-to-left layouts: the shared axis of animator/, travelling the other way. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:duration="300"
+        android:interpolator="@interpolator/watube_standard"
+        android:propertyName="translationX"
+        android:valueFrom="30dp"
+        android:valueTo="0dp"
+        android:valueType="floatType" />
+    <!-- keyframes rather than a start delay: a delayed animator only applies its first
+         value when the delay ends, so the page would show fully for 90 ms first -->
+    <objectAnimator
+        android:duration="300"
+        android:interpolator="@android:interpolator/linear">
+        <propertyValuesHolder
+            android:propertyName="alpha"
+            android:valueType="floatType">
+            <keyframe android:fraction="0" android:value="0" />
+            <keyframe android:fraction="0.3" android:value="0" />
+            <keyframe android:fraction="1" android:value="1" />
+        </propertyValuesHolder>
+    </objectAnimator>
+</set>

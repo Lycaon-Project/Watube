@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import com.watube.yard.R
 import com.watube.yard.constants.IntentData.appUpdateChangelog
 import com.watube.yard.constants.IntentData.appUpdateURL
+import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
 // region Updates
@@ -28,7 +29,8 @@ class UpdateAvailableDialog : DialogFragment() {
             .setTitle(R.string.update_available)
             .setMessage(changelog)
             .setPositiveButton(R.string.download) { _, _ ->
-                releaseUrl?.let {
+                // the link comes from the network: only web links may be opened
+                releaseUrl?.takeIf(IntentHelper::isAllowedLink)?.let {
                     startActivity(Intent(Intent.ACTION_VIEW, it.toUri()))
                 }
             }

@@ -93,7 +93,7 @@ class LocalFeedRepository : FeedRepository {
         // links the user across networks and VPNs; a new order on every refresh breaks it
         val requestOrder = if (PrivacyHelper.isHardeningEnabled()) channelIds.shuffled() else channelIds
         for (channelIdChunk in requestOrder.chunked(CHANNEL_CHUNK_SIZE)) {
-            val count = channelExtractionCount.get();
+            val count = channelExtractionCount.get()
             if (count >= CHANNEL_BATCH_SIZE) {
                 // add a delay after each BATCH_SIZE amount of fully-fetched channels
                 delay(CHANNEL_BATCH_DELAY.random())
@@ -134,7 +134,9 @@ class LocalFeedRepository : FeedRepository {
         val feedInfo = FeedInfo.getInfo(channelUrl)
         val feedInfoItems = feedInfo.relatedItems.associateBy { it.url.toID() }
 
-        val mostRecentChannelVideo = feedInfo.relatedItems.maxBy {
+        // maxBy threw NoSuchElementException on a channel without any video, so the elvis never
+        // ran and every refresh logged an error for it
+        val mostRecentChannelVideo = feedInfo.relatedItems.maxByOrNull {
             it.uploadDate?.offsetDateTime()?.toInstant()?.toEpochMilli() ?: 0
         } ?: return Pair(null, emptyList())
 

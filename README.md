@@ -21,14 +21,14 @@
 
   <!-- ░░░ TECH / STATUS BADGES ░░░ -->
   <p>
-    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-00C9A7?style=for-the-badge&logo=android&logoColor=white" alt="Android 13 to 17">
-    <img src="https://img.shields.io/badge/Kotlin-100%25-00C9A7?style=for-the-badge&logo=kotlin&logoColor=white" alt="100% Kotlin">
-    <img src="https://img.shields.io/badge/Material_3-Expressive-00C9A7?style=for-the-badge&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
+    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-1FD47E?style=for-the-badge&labelColor=15181C&logo=android&logoColor=white" alt="Android 13 to 17">
+    <img src="https://img.shields.io/badge/Kotlin-100%25-1FD47E?style=for-the-badge&labelColor=15181C&logo=kotlin&logoColor=white" alt="100% Kotlin">
+    <img src="https://img.shields.io/badge/Material_3-Expressive-1FD47E?style=for-the-badge&labelColor=15181C&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
   </p>
   <p>
-    <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-2EA043?style=for-the-badge&logo=gnu&logoColor=white" alt="GPL-v3"></a>
-    <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
-    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.10.4-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Latest release 26.10.4"></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-1FD47E?style=for-the-badge&labelColor=15181C&logo=gnu&logoColor=white" alt="GPL-v3"></a>
+    <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-15181C?style=for-the-badge&labelColor=0E1013&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
+    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.11-1FD47E?style=for-the-badge&labelColor=15181C&logo=github&logoColor=white" alt="Latest release 26.11"></a>
   </p>
 
   <br>
@@ -147,14 +147,14 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1.jpg" width="19%" alt="Home" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_2.jpg" width="19%" alt="Feed" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_3.jpg" width="19%" alt="Subscriptions" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4.jpg" width="19%" alt="Library" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_9.jpg" width="19%" alt="Channel" style="border-radius: 14px;">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="19%" alt="Home">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="19%" alt="Player">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="19%" alt="Subscriptions">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="19%" alt="Search">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="19%" alt="Privacy">
 </div>
 
-<div align="center"><sub>More shots in <a href="SCREEN_SHOT.md">the gallery →</a></sub></div>
+<div align="center"><sub>The essentials only, the rest is yours to discover. · L'essentiel seulement, le reste est à découvrir.<br><a href="SCREEN_SHOT.md">Larger view →</a></sub></div>
 
 <br>
 

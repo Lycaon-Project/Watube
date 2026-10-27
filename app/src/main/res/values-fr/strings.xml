@@ -672,4 +672,17 @@
     <string name="stolm_playback_failed">La TV n’a pas pu lire cette vidéo. Elle est de retour sur votre téléphone.</string>
     <string name="stolm_tv_cannot_reach_phone">La TV n’a pas pu joindre votre téléphone. Votre Wi-Fi isole peut-être les appareils.</string>
     <string name="stolm_ended">Diffusion terminée. La vidéo est de retour sur votre téléphone.</string>
+    <!-- Notifications de nouvelles vidéos -->
+    <plurals name="new_videos_digest">
+        <item quantity="one">%1$d nouvelle vidéo de vos abonnements</item>
+        <item quantity="many">%1$d nouvelles vidéos de vos abonnements</item>
+        <item quantity="other">%1$d nouvelles vidéos de vos abonnements</item>
+    </plurals>
+    <plurals name="new_videos_digest_channels">
+        <item quantity="one">De %1$d chaîne</item>
+        <item quantity="many">De %1$d chaînes</item>
+        <item quantity="other">De %1$d chaînes</item>
+    </plurals>
+    <string name="new_videos_more">+%1$d de plus</string>
+    <string name="new_videos_hidden">Nouvelles vidéos de vos abonnements</string>
 </resources>

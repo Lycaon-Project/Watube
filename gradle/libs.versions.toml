@@ -19,8 +19,11 @@ navigation = "2.10.2"
 # + 3313901 test User-Agent Firefox 153 ESR (tests only, the app sends its own User-Agent)
 # + Watube hardening: no PoToken, SecureRandom nonces, sandboxed player JavaScript, dead code
 # removed, comment author verified flag fixed, per-item regex caches.
+# + 6d92d7d4 (2026-10-27): NewPipeExtractor dev merged (n-sig, clients, mocks, deps), tracking
+# parameters stripped from links, googlevideo.com-only streaming URLs, checked DASH redirects,
+# SABR URL crash fixed; 0c55ba6c: documentation.
 # Full commit hash: JitPack keeps a "not found" answer per version string.
-newpipeextractor = "00a541b908de0df5ff7a374c03e1e75392d7c2e7"
+newpipeextractor = "0c55ba6c808970eb731f3e067047cdd20130de87"
 # same JSON library as the extractor ships (its runtime dependency), for the player response
 nanojson = "e9d656ddb49a412a5a0a5d5ef20ca7ef09549996"
 preference = "1.2.1"
@@ -47,6 +50,9 @@ swiperefreshlayout = "1.2.0"
 splashscreen = "1.2.0"
 protobuf = "4.36.2"
 protobufPlugin = "0.10.0"
+# not used directly: Media3 1.11.1 pulls Guava 33.3.1-android, affected by CVE-2026-102554
+# (GHSA-xxph-c9ww-hj94, unbounded allocation on deserialization), fixed in 33.7.2
+guava = "33.7.2-android"
 
 [libraries]
 androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
@@ -94,6 +100,7 @@ androidx-collection = { group = "androidx.collection", name = "collection", vers
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
 google-protobuf-javalite = { module = 'com.google.protobuf:protobuf-javalite', version.ref = 'protobuf' }
+google-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 google-protobuf-kotlin-lite = { module = 'com.google.protobuf:protobuf-kotlin-lite', version.ref = 'protobuf' }
 
 [plugins]

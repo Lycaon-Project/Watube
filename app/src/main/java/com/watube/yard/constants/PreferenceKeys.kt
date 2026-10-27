@@ -262,6 +262,10 @@ object PreferenceKeys {
     const val NOTIFICATION_TIME_ENABLED = "notification_time"
     const val NOTIFICATION_START_TIME = "notification_start_time"
     const val NOTIFICATION_END_TIME = "notification_end_time"
+    // ids of the latest videos a notification was posted for, newest first (deduplication)
+    const val NOTIFIED_VIDEO_IDS = "notified_video_ids"
+    // version of the notification work request scheduled by this install
+    const val NOTIFICATION_WORK_SPEC_VERSION = "notification_work_spec_version"
     // endregion
 
     // region Updates

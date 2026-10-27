@@ -196,6 +196,13 @@ dependencies {
 
     /* Testing */
     testImplementation(libs.junit)
+
+    /* Security patches of transitive dependencies */
+    constraints {
+        implementation(libs.google.guava) {
+            because("CVE-2026-102554: Media3 still pulls a vulnerable Guava")
+        }
+    }
 }
 
 // Protobuf configuration

@@ -28,6 +28,7 @@ import androidx.core.view.isNotEmpty
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
@@ -349,7 +350,15 @@ class MainActivity : AbstractPlayerHostActivity() {
         // bars on the destination ourselves. The listener fires immediately for the
         // current destination, so onCreate() ends in a consistent state.
         navController.addOnDestinationChangedListener(
-            NavController.OnDestinationChangedListener { _, _, _ -> syncBottomBarSelection() }
+            NavController.OnDestinationChangedListener { _, destination, _ ->
+                if (binding.bottomNav.menu.findItem(destination.id) != null) {
+                    syncBottomBarSelection(destination)
+                } else {
+                    // a channel, a playlist...: its tab is found in the back stack, which is
+                    // only published once the listeners ran, so wait for it
+                    binding.root.post { syncBottomBarSelection() }
+                }
+            }
         )
 
         setupSubscriptionsBadge()
@@ -502,10 +511,12 @@ class MainActivity : AbstractPlayerHostActivity() {
             binding.navRail.removeBadge(R.id.subscriptionsFragment)
         }
 
-        // settings are hosted by their own activity, not by this nav graph
+        // settings are hosted by their own activity, not by this nav graph: the tab must never
+        // become the selected one (false), otherwise the bar saved "Settings" as its selection
+        // and a recreation after changing a setting restored a wrong tab (Library while on Home)
         if (item.itemId == R.id.settingsFragment) {
             startActivity(Intent(this, SettingsActivity::class.java))
-            return true
+            return false
         }
 
         // NavigationUI reports false when the restored tab stack ends on a destination
@@ -514,9 +525,20 @@ class MainActivity : AbstractPlayerHostActivity() {
             currentTab(binding.bottomNav.menu)?.itemId == item.itemId
     }
 
-    /** The tab owning the current back stack: the closest destination below it in [menu] */
-    private fun currentTab(menu: Menu): MenuItem? = navController.currentBackStack.value
-        .asReversed().firstNotNullOfOrNull { menu.findItem(it.destination.id) }
+    /**
+     * The tab owning [destination]: the destination itself when it is a tab, otherwise the
+     * closest tab below it in the back stack, and the start tab while the back stack is still
+     * empty (state restore).
+     */
+    private fun currentTab(
+        menu: Menu,
+        destination: NavDestination? = navController.currentDestination
+    ): MenuItem? {
+        destination?.let { menu.findItem(it.id) }?.let { return it }
+        return navController.currentBackStack.value.asReversed()
+            .firstNotNullOfOrNull { menu.findItem(it.destination.id) }
+            ?: menu.findItem(startFragmentId)
+    }
 
     /**
      * The settings tab opens a separate activity, so the checked item no longer matches
@@ -527,11 +549,18 @@ class MainActivity : AbstractPlayerHostActivity() {
      * owning their back stack, i.e. the closest tab below them: restoring a saved tab
      * stack (home -> channel) otherwise kept the previously selected tab lit.
      * Hidden destinations (trends, downloads) leave no visible tab lit.
+     *
+     * @param shownDestination the destination being shown. Inside an
+     * [NavController.OnDestinationChangedListener] it must be the one the listener received:
+     * [NavController.currentBackStack] is only published after the listeners ran, so reading it
+     * there still returned the previous destination and re-lit the previous tab (home ->
+     * "Subscriptions" header kept "Home" lit).
      */
-    private fun syncBottomBarSelection() {
+    private fun syncBottomBarSelection(shownDestination: NavDestination? = null) {
         if (!::binding.isInitialized || !this::navController.isInitialized) return
+        val destination = shownDestination ?: navController.currentDestination
         listOf(binding.bottomNav, binding.navRail).forEach { bar ->
-            val item = currentTab(bar.menu) ?: return@forEach
+            val item = currentTab(bar.menu, destination) ?: return@forEach
             val destinationId = item.itemId
             if (!item.isVisible) {
                 if (bar.menu.children.any { it.isChecked }) forceExclusiveCheck(bar, null)

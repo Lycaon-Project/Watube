@@ -7,20 +7,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.NotificationManagerCompat.NotificationWithIdAndTag
 import androidx.core.app.PendingIntentCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.watube.yard.WatubeApp.Companion.PUSH_CHANNEL_NAME
 import com.watube.yard.R
+import com.watube.yard.WatubeApp.Companion.PUSH_CHANNEL_NAME
 import com.watube.yard.api.SubscriptionHelper
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
 import com.watube.yard.constants.PreferenceKeys
+import com.watube.yard.enums.TopLevelDestination
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.ImageHelper
@@ -30,25 +33,28 @@ import com.watube.yard.ui.views.TimePickerPreference
 import com.watube.yard.util.DataSaverMode
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalTime
-import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 // region New Video Notifications
 /**
- * The notification worker which checks for new streams in a certain frequency
+ * Checks the subscriptions for new streams at the frequency chosen by the user and notifies
+ * about them, while keeping both the noise and the resource usage low:
+ * - the feed is really refreshed on every run (the local feed only re-reads the RSS of each
+ *   channel and fully loads the channels which uploaded something new);
+ * - a video is only notified once, even when its upload time moves or the run is retried;
+ * - a few channels get one notification group each, more of them a single digest, so a busy
+ *   morning never floods the shade, and only one thumbnail per channel is downloaded;
+ * - the titles stay hidden on the lock screen, the run is skipped in battery saver mode.
  */
 class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
     CoroutineWorker(appContext, parameters) {
 
     private val notificationManager = NotificationManagerCompat.from(appContext)
-
-    // Cache pour éviter de retélécharger les mêmes images, accessed from parallel coroutines
-    private val imageCache = ConcurrentHashMap<String, Bitmap>()
 
     override suspend fun doWork(): Result {
         if (!checkTime()) {
@@ -56,14 +62,19 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
             return Result.success()
         }
 
-        // check whether there are new streams and notify if there are some
-        val result = checkForNewStreams()
+        // the battery saver asks apps to defer background work: the next run catches up,
+        // since the last check time only moves when a feed was actually read
+        if (applicationContext.getSystemService<PowerManager>()?.isPowerSaveMode == true) {
+            Log.d(TAG(), "Battery saver on, skipping this run")
+            return Result.success()
+        }
 
-        // Clear image cache to free memory
-        clearImageCache()
+        if (!canPostNotifications()) {
+            Log.w(TAG(), "Notifications are not allowed, skipping this run")
+            return Result.success()
+        }
 
-        // return success if the API request succeeded
-        return if (result) Result.success() else Result.retry()
+        return if (checkForNewStreams()) Result.success() else Result.retry()
     }
 
     /**
@@ -96,187 +107,192 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
         }
     }
 
+    private fun canPostNotifications() = ContextCompat.checkSelfPermission(
+        applicationContext,
+        Manifest.permission.POST_NOTIFICATIONS
+    ) == PackageManager.PERMISSION_GRANTED && notificationManager.areNotificationsEnabled()
+
     /**
      * check whether new streams are available in subscriptions
+     *
+     * @return false if the feed could not be read, so that the work is retried
      */
     private suspend fun checkForNewStreams(): Boolean {
-        Log.d(TAG(), "Work manager started")
-
-        // fetch the users feed with timeout to avoid hanging
+        // forceRefresh: the cached local feed is only renewed once a day, reading it made every
+        // hourly check miss the videos uploaded since. The system stops a work after 10
+        // minutes: give up a bit before, a retry follows with a backoff.
         val videoFeed = try {
-            withTimeoutOrNull(30.seconds) { // ✅ Duration moderne
+            withTimeoutOrNull(FEED_TIMEOUT) {
                 withContext(Dispatchers.IO) {
-                    SubscriptionHelper.getFeed(forceRefresh = false) // Use cache when possible
-                }
-            }?.filter { !it.isUpcoming } ?: run {
-                Log.w(TAG(), "Feed fetch timeout or null, retrying with force refresh")
-                withTimeoutOrNull(30.seconds) {
-                    withContext(Dispatchers.IO) {
-                        SubscriptionHelper.getFeed(forceRefresh = true)
-                    }
-                }?.filter { !it.isUpcoming } ?: run {
-                    Log.w(TAG(), "Feed fetch still failed, skipping this run")
-                    return false
+                    SubscriptionHelper.getFeed(forceRefresh = true)
                 }
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Failed to fetch feed", e)
-            return false
-        }
+            null
+        } ?: return false
 
-        if (videoFeed.isEmpty()) {
-            Log.d(TAG(), "No videos in feed")
-            return true
-        }
+        val feed = videoFeed.filter { !it.isUpcoming }
+        val newestUpload = feed.maxOfOrNull { it.uploaded } ?: return true
 
         val lastFeedCheckMillis = PreferenceHelper.getLastCheckedFeedTime(seenByUser = false)
 
-        // first time notifications are enabled
-        if (lastFeedCheckMillis == 0L) {
-            // Update timestamp but don't notify (avoid spam on first enable)
-            PreferenceHelper.updateLastFeedWatchedTime(videoFeed.first().uploaded, seenByUser = false)
-            Log.d(TAG(), "First feed check, updating timestamp without notifications")
-            return true
+        // first run once notifications are enabled: only remember where the feed stands
+        // (not every repository sorts the feed: the newest upload is the mark)
+        val newVideos = if (lastFeedCheckMillis == 0L) {
+            emptyList()
+        } else {
+            selectVideosToNotify(feed, lastFeedCheckMillis)
         }
-
-        // Check if there are any new videos
-        val newVideos = videoFeed.filter { it.uploaded > lastFeedCheckMillis }
         if (newVideos.isEmpty()) {
-            Log.d(TAG(), "No new videos since last check")
+            PreferenceHelper.updateLastFeedWatchedTime(newestUpload, seenByUser = false)
             return true
         }
 
-        val channelsToIgnore = PreferenceHelper.getIgnorableNotificationChannels()
+        // keyed by channel id, the channel with the newest upload first
+        val channelGroups = newVideos.groupBy { requireNotNull(it.uploaderUrl).toID() }
+        Log.d(TAG(), "${newVideos.size} new videos from ${channelGroups.size} channels")
+
+        if (channelGroups.size > MAX_CHANNEL_GROUPS) {
+            postDigest(newVideos, channelGroups.size)
+        } else {
+            channelGroups.forEach { (channelId, streams) ->
+                postChannelGroup(channelId, streams.take(MAX_NOTIFICATIONS_PER_CHANNEL))
+            }
+        }
+
+        // the mark only moves once everything was posted: a worker stopped on the way (lost
+        // constraint, killed process) finds the same videos again, the ids avoid duplicates
+        rememberNotifiedIds(newVideos.mapNotNull { it.url?.toID() })
+        PreferenceHelper.updateLastFeedWatchedTime(newestUpload, seenByUser = false)
+        return true
+    }
+
+    /** The videos worth a notification, newest first */
+    private fun selectVideosToNotify(
+        feed: List<StreamItem>,
+        lastFeedCheckMillis: Long
+    ): List<StreamItem> {
+        val notifiedIds = readNotifiedIds().toSet()
+        val channelsToIgnore = PreferenceHelper.getIgnorableNotificationChannels().toSet()
         val enableShortsNotification =
             PreferenceHelper.getBoolean(PreferenceKeys.SHORTS_NOTIFICATIONS, false)
+        // a phone switched off for days must not get a flood of stale videos when it comes back
+        val oldestNotifiable =
+            System.currentTimeMillis() - MAX_NOTIFIED_VIDEO_AGE.inWholeMilliseconds
 
-        val channelGroups = newVideos.asSequence()
-            // don't show notifications for shorts videos if not enabled
+        return feed.asSequence()
+            .filter { it.uploaded > lastFeedCheckMillis && it.uploaded > oldestNotifiable }
             .filter { enableShortsNotification || !it.isShort }
-            // hide for notifications unsubscribed channels (safe null check)
             .filter { stream ->
-                stream.uploaderUrl?.let { url ->
-                    url.toID() !in channelsToIgnore
-                } ?: false
+                val channelId = stream.uploaderUrl?.toID() ?: return@filter false
+                channelId !in channelsToIgnore
             }
-            // group the new streams by the uploader
-            .groupBy { it.uploaderUrl!!.toID() }
+            .filter { stream -> stream.url?.toID()?.let { it !in notifiedIds } ?: false }
+            .sortedByDescending { it.uploaded }
+            .toList()
+    }
 
-        // update the last feed check time
-        PreferenceHelper.updateLastFeedWatchedTime(videoFeed.first().uploaded, seenByUser = false)
-
-        // return if all channels have notifications disabled
-        if (channelGroups.isEmpty()) {
-            Log.d(TAG(), "No channels to notify")
-            return true
+    /**
+     * A single notification for many channels: no image is downloaded and a single alert is
+     * played, however many channels uploaded since the last check.
+     */
+    private fun postDigest(streams: List<StreamItem>, channelCount: Int) {
+        val resources = applicationContext.resources
+        val style = NotificationCompat.InboxStyle()
+            .setSummaryText(
+                resources.getQuantityString(
+                    R.plurals.new_videos_digest_channels, channelCount, channelCount
+                )
+            )
+        streams.take(MAX_DIGEST_LINES).forEach { stream ->
+            style.addLine("${stream.uploaderName.orEmpty()} · ${stream.title.orEmpty()}")
+        }
+        if (streams.size > MAX_DIGEST_LINES) {
+            style.addLine(
+                applicationContext.getString(
+                    R.string.new_videos_more,
+                    streams.size - MAX_DIGEST_LINES
+                )
+            )
         }
 
-        Log.d(TAG(), "Create notifications for ${newVideos.size} new videos from ${channelGroups.size} channels")
+        // opens the subscriptions feed, where all of them are listed
+        val intent = Intent(applicationContext, MainActivity::class.java)
+            .setFlags(INTENT_FLAGS)
+            .putExtra(IntentData.fragmentToOpen, TopLevelDestination.Subscriptions.route)
+        val pendingIntent = PendingIntentCompat
+            .getActivity(applicationContext, DIGEST_ID, intent, FLAG_UPDATE_CURRENT, false)
 
-        // Limit notifications per channel to avoid spam (max 5 per channel)
-        val maxNotificationsPerChannel = 5
+        val notification = createNotificationBuilder(DIGEST_GROUP)
+            .setContentTitle(
+                resources.getQuantityString(R.plurals.new_videos_digest, streams.size, streams.size)
+            )
+            .setContentText(streams.first().title)
+            .setContentIntent(pendingIntent)
+            .setStyle(style)
+            .setNumber(streams.size)
+            .setWhen(streams.first().uploaded)
+            .setShowWhen(true)
+            .build()
 
-        // create a notification for each new stream
-        channelGroups.forEach { (channelId, streams) ->
-            val limitedStreams = streams.take(maxNotificationsPerChannel)
-            if (streams.size > maxNotificationsPerChannel) {
-                Log.w(TAG(), "Limiting notifications for channel $channelId from ${streams.size} to $maxNotificationsPerChannel")
-            }
-            createNotificationsForChannel(channelId, limitedStreams)
-        }
-
-        return true
+        notify(DIGEST_ID, notification)
     }
 
     /**
      * Group of notifications created when new streams are found in a given channel.
      */
-    private suspend fun createNotificationsForChannel(group: String, streams: List<StreamItem>) {
+    private suspend fun postChannelGroup(channelId: String, streams: List<StreamItem>) {
         if (streams.isEmpty()) return
 
-        // Avoid creating notifications if permission is not granted.
-        if (ContextCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.w(TAG(), "POST_NOTIFICATIONS permission not granted")
-            return
-        }
-
-        val summaryId = group.hashCode()
-
-        // Check if notification already exists to avoid duplicates
-        if (isNotificationAlreadyShown()) {
-            Log.d(TAG(), "Notification for group $group already shown, skipping")
-            return
-        }
-
+        val summaryId = channelId.hashCode()
         val intent = Intent(applicationContext, MainActivity::class.java)
             .setFlags(INTENT_FLAGS)
-            .putExtra(IntentData.channelId, group)
+            .putExtra(IntentData.channelId, channelId)
         val pendingIntent = PendingIntentCompat
             .getActivity(applicationContext, summaryId, intent, FLAG_UPDATE_CURRENT, false)
 
-        // Create summary notification
         val newStreams = applicationContext.resources
             .getQuantityString(R.plurals.channel_new_streams, streams.size, streams.size)
-        val summary = NotificationCompat.InboxStyle()
-            .setSummaryText(newStreams)
-        streams.forEach {
-            summary.addLine(it.title ?: "Untitled")
-        }
+        val summary = NotificationCompat.InboxStyle().setSummaryText(newStreams)
+        streams.forEach { summary.addLine(it.title.orEmpty()) }
 
-        val uploaderName = streams[0].uploaderName ?: "Unknown Channel"
-        val uploaderAvatar = streams[0].uploaderAvatar
-
-        val summaryNotification = createNotificationBuilder(group)
-            .setContentTitle(uploaderName)
+        val newest = streams.first()
+        val summaryNotification = createNotificationBuilder(channelId)
+            .setContentTitle(newest.uploaderName)
             .setContentText(newStreams)
             .setContentIntent(pendingIntent)
             .setGroupSummary(true)
             .setStyle(summary)
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-            .setLargeIcon(downloadImage(uploaderAvatar))
+            .setLargeIcon(downloadImage(newest.uploaderAvatar))
             .build()
 
-        // Create stream notifications with parallel processing but limited concurrency
-        val notifications = withContext(Dispatchers.IO) {
-            streams.map { stream ->
-                async { createStreamNotification(group, stream) }
-            }.awaitAll().filterNotNull() // Filter out failed notifications
+        // only the newest video gets its thumbnail: the others stay in the collapsed group
+        // most of the time, downloading their pictures was wasted data and battery
+        val notifications = streams.mapIndexedNotNull { index, stream ->
+            createStreamNotification(channelId, stream, withThumbnail = index == 0)
         }
+        if (notifications.isEmpty()) return
 
-        if (notifications.isNotEmpty()) {
+        try {
             notificationManager.notify(notifications)
-            notificationManager.notify(summaryId, summaryNotification)
-            Log.d(TAG(), "Created ${notifications.size} notifications for channel $group")
+        } catch (e: SecurityException) {
+            // the permission can be revoked while the work runs
+            Log.w(TAG(), "Could not post notifications", e)
+            return
         }
-    }
-
-    /**
-     * Check if a notification was already shown recently
-     * TODO: Implement proper deduplication using SharedPreferences
-     */
-    @Suppress("FunctionOnlyReturningConstant")
-    private fun isNotificationAlreadyShown(): Boolean {
-        // For now, always return false
-        // Future implementation could track shown notification IDs
-        return false
+        notify(summaryId, summaryNotification)
     }
 
     private suspend fun createStreamNotification(
         group: String,
-        stream: StreamItem
+        stream: StreamItem,
+        withThumbnail: Boolean
     ): NotificationWithIdAndTag? {
-        val videoUrl = stream.url ?: run {
-            Log.w(TAG(), "Stream has no URL, skipping notification")
-            return null
-        }
-
-        val videoId = videoUrl.toID()
+        val videoId = stream.url?.toID() ?: return null
         val intent = Intent(applicationContext, MainActivity::class.java)
             .setFlags(INTENT_FLAGS)
             .putExtra(IntentData.videoId, videoId)
@@ -284,96 +300,109 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
         val pendingIntent = PendingIntentCompat
             .getActivity(applicationContext, notificationId, intent, FLAG_UPDATE_CURRENT, false)
 
-        // Load stream thumbnails only if NOT in data saver mode (inverted logic fix)
-        val thumbnail = downloadImage(stream.thumbnail)
-
-        val title = stream.title ?: "Untitled Video"
-        val uploaderName = stream.uploaderName ?: "Unknown Channel"
-
-        val notificationBuilder = createNotificationBuilder(group)
-            .setContentTitle(title)
-            .setContentText(uploaderName)
+        val builder = createNotificationBuilder(group)
+            .setContentTitle(stream.title)
+            .setContentText(stream.uploaderName)
             .setContentIntent(pendingIntent)
             .setSilent(true)
-            .setLargeIcon(thumbnail)
-            .setStyle(
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(thumbnail)
-                    .bigLargeIcon(null as Bitmap?) // Hides the icon when expanding
-            )
             .setWhen(stream.uploaded)
             .setShowWhen(true)
 
-        return NotificationWithIdAndTag(notificationId, notificationBuilder.build())
+        if (withThumbnail) {
+            downloadImage(stream.thumbnail)?.let { thumbnail ->
+                builder.setLargeIcon(thumbnail)
+                    .setStyle(
+                        NotificationCompat.BigPictureStyle()
+                            .bigPicture(thumbnail)
+                            .bigLargeIcon(null as Bitmap?) // Hides the icon when expanding
+                    )
+            }
+        }
+
+        return NotificationWithIdAndTag(notificationId, builder.build())
     }
 
     /**
-     * Download image with caching and proper logic
-     * Returns image if NOT in data saver mode (normal behavior)
+     * Download an image for a notification, unless the data saver is on (the setting is a
+     * list - disabled / metered / enabled - reading it as a boolean threw a ClassCastException)
      */
     private suspend fun downloadImage(url: String?): Bitmap? {
-        if (url.isNullOrBlank()) return null
+        if (url.isNullOrBlank() || DataSaverMode.isEnabled(applicationContext)) return null
 
-        // Check cache first
-        imageCache[url]?.let { cached ->
-            Log.d(TAG(), "Using cached image for $url")
-            return cached
-        }
-
-        // Only download if NOT in data saver mode. The setting is a list (disabled / metered /
-        // enabled): reading it as a boolean threw a ClassCastException once it had been changed
-        val shouldDownload = !DataSaverMode.isEnabled(applicationContext)
-
-        return if (shouldDownload) {
-            try {
-                val bitmap = withTimeoutOrNull(10.seconds) { // ✅ Duration moderne
-                    withContext(Dispatchers.IO) {
-                        ImageHelper.getImage(applicationContext, url)
-                    }
+        return try {
+            withTimeoutOrNull(IMAGE_TIMEOUT) {
+                withContext(Dispatchers.IO) {
+                    ImageHelper.getImage(applicationContext, url)
                 }
-
-                if (bitmap != null) {
-                    // Cache the image
-                    imageCache[url] = bitmap
-                    Log.d(TAG(), "Downloaded and cached image for $url")
-                }
-
-                bitmap
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Log.w(TAG(), "Failed to download image from $url", e)
-                null
             }
-        } else {
-            Log.d(TAG(), "Data saver mode enabled, skipping image download for $url")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG(), "Failed to download a notification image", e)
             null
         }
     }
 
-    /**
-     * Clear image cache to free memory
-     *
-     * The bitmaps are not recycled on purpose, they might still be rendered by the system
-     * once they have been passed to a notification.
-     */
-    private fun clearImageCache() {
-        imageCache.clear()
-        Log.d(TAG(), "Image cache cleared")
-    }
-
     private fun createNotificationBuilder(group: String): NotificationCompat.Builder {
+        // what the lock screen shows instead: neither the channels nor the titles, which
+        // would tell anybody glancing at the phone what its owner watches
+        val publicVersion = NotificationCompat.Builder(applicationContext, PUSH_CHANNEL_NAME)
+            .setSmallIcon(R.drawable.ic_launcher_lockscreen)
+            .setContentTitle(applicationContext.getString(R.string.new_videos_hidden))
+            .build()
+
         return NotificationCompat.Builder(applicationContext, PUSH_CHANNEL_NAME)
             .setSmallIcon(R.drawable.ic_launcher_lockscreen)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            // no setOnlyAlertOnce: a digest or a channel summary still shown is replaced (same
+            // id) when newer videos arrive, and that must alert; the children are silent
             .setAutoCancel(true)
             .setGroup(group)
             .setCategory(Notification.CATEGORY_SOCIAL)
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            .setPublicVersion(publicVersion)
+    }
+
+    private fun notify(id: Int, notification: Notification) {
+        try {
+            notificationManager.notify(id, notification)
+        } catch (e: SecurityException) {
+            // the permission can be revoked while the work runs
+            Log.w(TAG(), "Could not post a notification", e)
+        }
+    }
+
+    private fun readNotifiedIds(): List<String> = PreferenceHelper
+        .getString(PreferenceKeys.NOTIFIED_VIDEO_IDS, "")
+        .split(ID_SEPARATOR)
+        .filter { it.isNotBlank() }
+
+    /** Keep the ids just notified first, then the older ones, bounded */
+    private fun rememberNotifiedIds(newIds: List<String>) {
+        val ids = (newIds + readNotifiedIds()).distinct().take(MAX_REMEMBERED_IDS)
+        PreferenceHelper.putString(
+            PreferenceKeys.NOTIFIED_VIDEO_IDS,
+            ids.joinToString(ID_SEPARATOR)
+        )
     }
 
     companion object {
         private const val INTENT_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        /** More channels than this with new videos are merged into a single digest */
+        private const val MAX_CHANNEL_GROUPS = 3
+        private const val MAX_NOTIFICATIONS_PER_CHANNEL = 5
+        private const val MAX_DIGEST_LINES = 6
+        private const val MAX_REMEMBERED_IDS = 300
+        private const val ID_SEPARATOR = ","
+
+        private const val DIGEST_GROUP = "watube_new_videos_digest"
+        private val DIGEST_ID = DIGEST_GROUP.hashCode()
+
+        private val FEED_TIMEOUT = 8.minutes
+        private val IMAGE_TIMEOUT = 10.seconds
+        private val MAX_NOTIFIED_VIDEO_AGE = 48.hours
     }
 }
 // endregion

@@ -6,6 +6,7 @@ import com.watube.yard.api.PipedMediaServiceRepository
 import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.extensions.TAG
+import com.watube.yard.util.PublicAddress
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -69,7 +70,7 @@ object ProxyHelper {
                     .getInstanceConfig("${apiUrl.trimEnd('/')}/config")
                     .imageProxyUrl
                     ?.toHttpUrlOrNull()
-                    ?.takeIf(::isAcceptableProxy)
+                    ?.takeIf { isAcceptableProxy(it, apiUrl.toHttpUrlOrNull()?.host) }
                 // stored even when empty: the proxy of the previous instance must not survive
                 PreferenceHelper.putString(PreferenceKeys.IMAGE_PROXY_URL, proxy?.toString().orEmpty())
                 PreferenceHelper.putString(PreferenceKeys.LAST_PROXY_FETCH_INSTANCE, apiUrl)
@@ -81,9 +82,19 @@ object ProxyHelper {
         }
     }
 
-    /** Over https only (plain http for an instance running on the device itself), never Google. */
-    private fun isAcceptableProxy(url: HttpUrl) =
-        (url.isHttps || url.host in LOOPBACK_HOSTS) && !isYouTubeMedia(url.host)
+    /**
+     * Over https only (plain http for an instance running on the device itself), never Google,
+     * and on the public internet unless it is the very host of the instance the user chose: an
+     * instance must not be able to point the app at another machine of the user's network.
+     */
+    private fun isAcceptableProxy(url: HttpUrl, instanceHost: String?): Boolean {
+        val reachable = when {
+            // resolved here (Dispatchers.IO): a public looking name can point at the LAN
+            url.isHttps -> url.host == instanceHost || PublicAddress.resolvesToPublic(url.host)
+            else -> url.host in LOOPBACK_HOSTS
+        }
+        return reachable && !isYouTubeMedia(url.host)
+    }
 
     private fun isProxyOf(apiUrl: String) =
         PreferenceHelper.getString(PreferenceKeys.LAST_PROXY_FETCH_INSTANCE, "") == apiUrl

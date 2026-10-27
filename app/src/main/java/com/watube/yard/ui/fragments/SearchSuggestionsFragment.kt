@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -23,6 +24,9 @@ import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.adapters.SearchSuggestionsAdapter
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.models.SearchViewModel
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.shape.RelativeCornerSize
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialFadeThrough
 import kotlinx.coroutines.Dispatchers
@@ -72,11 +76,30 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         super.onCreate(savedInstanceState)
         // continuity with the home search pill: it morphs into the input (only used when the
         // navigation shares it), while the rest of the screen fades in
+        // Both ends are the same flat pill (30dp corners on a ~44dp height, so fully round):
+        // without these shapes the transform morphed the corners into a rectangle, cross-faded
+        // two backgrounds and drew an elevation shadow, which all showed at the rounded ends.
+        val pill = ShapeAppearanceModel.builder()
+            .setAllCornerSizes(RelativeCornerSize(PILL_CORNER_FRACTION))
+            .build()
+        val surface = MaterialColors.getColor(
+            requireContext(),
+            com.google.android.material.R.attr.colorSurfaceContainerHighest,
+            Color.TRANSPARENT
+        )
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
-            duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
+            containerColor = surface
+            startShapeAppearanceModel = pill
+            endShapeAppearanceModel = pill
+            isElevationShadowEnabled = false
+            // through, not cross: the two "Rechercher sur Watube" sit at different offsets and
+            // showed doubled while both were half visible
+            fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
+            duration = SEARCH_TRANSFORM_MS
+            interpolator = FastOutSlowInInterpolator()
         }
-        enterTransition = MaterialFadeThrough()
+        enterTransition = MaterialFadeThrough().apply { duration = SEARCH_TRANSFORM_MS }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,11 +112,9 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         // chevron of the header is the one press escape from an open keyboard.
         binding.searchBack.setOnClickListener {
             binding.searchInput.hideKeyboard()
-            findNavController().popBackStack()
+            leaveSearch()
         }
-        setOnBackPressed {
-            findNavController().popBackStack()
-        }
+        setOnBackPressed { leaveSearch() }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -155,6 +176,15 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         }
     }
 
+    /**
+     * The field morphs back into the home pill: without its focus first, the accent stroke of
+     * the focused field was drawn on the pill during the whole return.
+     */
+    private fun leaveSearch() {
+        binding.searchInput.clearFocus()
+        findNavController().popBackStack()
+    }
+
     /** The query the input currently holds, or null while it is empty. */
     private fun inputQuery(): String? =
         binding.searchInput.text?.toString()?.takeIf { it.isNotEmpty() }
@@ -177,9 +207,10 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         if (inputQuery() == null) {
             // a fresh search screen behaves like the old expanded action view: it takes
             // focus and raises the IME. Coming back from a result keeps the keyboard down.
+            // Only once the pill has landed: focusing earlier switched the field stroke to the
+            // accent and opened the keyboard in the middle of the transform, which jolted it.
             val input = binding.searchInput
-            input.requestFocus()
-            input.post { input.showKeyboard() }
+            input.postDelayed({ if (_binding != null) input.showKeyboard() }, SEARCH_TRANSFORM_MS)
         }
     }
 
@@ -192,6 +223,12 @@ class SearchSuggestionsFragment : Fragment(R.layout.fragment_search_suggestions)
         super.onDestroy()
 
         _binding = null
+    }
+
+    private companion object {
+        /** Material 3 "medium" emphasized duration, shared by the morph and the fade. */
+        const val SEARCH_TRANSFORM_MS = 300L
+        const val PILL_CORNER_FRACTION = 0.5f
     }
 }
 // endregion

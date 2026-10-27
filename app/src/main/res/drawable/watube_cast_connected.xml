@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stolm: the cast glyph of watube_cast with the screen lit, over the video while a TV plays it -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillAlpha="0.35"
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M6,7h12v10h-4.5a11,11 0 0 0 -7.5,-7.5z" />
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M2,8V6a2,2 0 0 1 2,-2h16a2,2 0 0 1 2,2v12a2,2 0 0 1 -2,2h-6 M2,12a9,9 0 0 1 8,8 M2,16a5,5 0 0 1 4,4 M2,20h.01"
+        android:strokeColor="#E6FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="2" />
+
+</vector>
