@@ -4,7 +4,13 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import com.watube.yard.extensions.bundleOf
+import android.widget.Button
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.children
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -19,11 +25,15 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.databinding.FragmentSubscriptionsBinding
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.DatabaseHolder
+import com.watube.yard.extensions.bundleOf
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.obj.SelectableOption
 import com.watube.yard.parcelable.PlayerData
+import com.watube.yard.ui.adapters.RailChannel
+import com.watube.yard.ui.adapters.SubscriptionRailAdapter
 import com.watube.yard.ui.adapters.VideoCardsAdapter
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.models.SubscriptionsViewModel
@@ -55,6 +65,8 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
     private var feedProgressAnimToken = 0
 
     private var feedAdapter = VideoCardsAdapter()
+    private val railAdapter = SubscriptionRailAdapter(::onRailChannelSelected)
+
     private var selectedSortOrder = PreferenceHelper.getInt(PreferenceKeys.FEED_SORT_ORDER, 0)
         set(value) {
             PreferenceHelper.putInt(PreferenceKeys.FEED_SORT_ORDER, value)
@@ -83,6 +95,12 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSubscriptionsBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+
+        // read once, before the feed observer below marks the newest video as seen: kept in the
+        // activity scoped view model so a rotation or a channel visit keeps the badges
+        if (viewModel.feedSeenBefore == null) {
+            viewModel.feedSeenBefore = PreferenceHelper.getLastCheckedFeedTime(seenByUser = true)
+        }
 
         setupSortAndFilter()
 
@@ -171,12 +189,16 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
             viewModel.fetchFeed(requireContext(), forceRefresh = true)
         }
 
-        binding.toggleSubs.isVisible = true
-
-        binding.toggleSubs.setOnClickListener {
+        binding.manageSubs.setOnClickListener {
             SubscriptionsBottomSheet()
                 .show(childFragmentManager)
         }
+
+        binding.subsRail.adapter = railAdapter
+        // the adapter dims the other channels itself: item animations would reset that alpha
+        binding.subsRail.itemAnimator = null
+        ViewCompat.setAccessibilityDelegate(binding.manageSubs, ButtonRoleDelegate)
+        railAdapter.selectedId = viewModel.selectedRailChannel
 
         binding.channelGroups.setOnCheckedStateChangeListener { group, _ ->
             selectedFilterGroup = group.children.indexOfFirst { it.id == group.checkedChipId } - 1 // 0th index is "all" button
@@ -243,6 +265,9 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
     }
 
     override fun onDestroyView() {
+        // the adapters outlive the view: detach them so they do not keep the old view tree
+        _binding?.subsRail?.adapter = null
+        _binding?.subFeed?.adapter = null
         super.onDestroyView()
         _binding = null
     }
@@ -339,6 +364,94 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         }
     }
 
+    private fun List<StreamItem>.filterBySelectedChannel(): List<StreamItem> {
+        val channelId = viewModel.selectedRailChannel ?: return this
+        return filter { it.uploaderUrl.orEmpty().toID() == channelId }
+    }
+
+    private fun onRailChannelSelected(channel: RailChannel?) {
+        viewModel.selectedRailChannel = channel?.id
+        railAdapter.selectedId = channel?.id
+        lifecycleScope.launch { showFeed(restoreScrollState = false) }
+    }
+
+    /**
+     * Fills the rail with the channels of [groupFeed]: those with new videos first, then by
+     * their latest upload. A selection that left the group (another group was picked) is dropped.
+     */
+    private fun updateRail(groupFeed: List<StreamItem>) {
+        val binding = _binding ?: return
+
+        val channels = groupFeed
+            .filter { !it.isUpcoming && !it.uploaderUrl.isNullOrEmpty() }
+            .groupBy { it.uploaderUrl.orEmpty().toID() }
+            .map { (id, streams) ->
+                val latest = streams.maxBy { it.uploaded }
+                // no previous visit: nothing is "new", every channel would be badged otherwise
+                val seenBefore = viewModel.feedSeenBefore ?: 0L
+                val newCount = if (seenBefore == 0L) 0 else streams.count { it.uploaded > seenBefore }
+                latest.uploaded to RailChannel(
+                    id = id,
+                    url = latest.uploaderUrl.orEmpty(),
+                    name = latest.uploaderName.orEmpty(),
+                    avatar = latest.uploaderAvatar,
+                    newCount = newCount,
+                )
+            }
+            .sortedWith(
+                compareByDescending<Pair<Long, RailChannel>> { it.second.newCount > 0 }
+                    .thenByDescending { it.first }
+            )
+            .map { it.second }
+
+        // an empty feed (failed refresh) keeps the selection, a group without the channel drops it
+        if (channels.isNotEmpty() && channels.none { it.id == viewModel.selectedRailChannel }) {
+            viewModel.selectedRailChannel = null
+        }
+        railAdapter.selectedId = viewModel.selectedRailChannel
+        railAdapter.submitList(channels)
+
+        binding.subsRailRow.isVisible = channels.isNotEmpty()
+        updateSummary(channels)
+    }
+
+    /** "3 channels · 5 new", or "Only <channel> · 2 new" while a rail channel is picked. */
+    private fun updateSummary(channels: List<RailChannel>) {
+        val binding = _binding ?: return
+        val selected = channels.firstOrNull { it.id == viewModel.selectedRailChannel }
+
+        // only the channel name may be shortened, never the new videos count after it
+        val scope = selected?.let {
+            getString(R.string.subs_only_channel, it.name.ellipsized(SUMMARY_NAME_MAX_LENGTH))
+        }
+            ?: resources.getQuantityString(
+                R.plurals.subs_channel_count, channels.size, channels.size
+            )
+        val newTotal = selected?.newCount ?: channels.sumOf { it.newCount }
+
+        binding.subsSummary.text = buildSpannedString {
+            append(scope)
+            append(SUMMARY_SEPARATOR)
+            if (newTotal > 0) {
+                val accent = ThemeHelper.getThemeColor(
+                    requireContext(), androidx.appcompat.R.attr.colorPrimary
+                )
+                bold {
+                    color(accent) {
+                        append(
+                            resources.getQuantityString(
+                                R.plurals.subs_new_count, newTotal, newTotal
+                            )
+                        )
+                    }
+                }
+            } else {
+                append(getString(R.string.subs_up_to_date))
+            }
+        }
+        binding.subsSummary.isVisible = channels.isNotEmpty()
+    }
+
     private fun List<StreamItem>.sortedBySelectedOrder() = when (selectedSortOrder) {
         // "most recent" must actually sort: the piped repositories return the api order
         0 -> this.sortedByDescending { it.uploaded }
@@ -354,8 +467,11 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         val binding = _binding ?: return
         val videoFeed = viewModel.videoFeed.value ?: return
 
-        val feed = videoFeed
-            .filterByGroup(selectedFilterGroup)
+        val groupFeed = videoFeed.filterByGroup(selectedFilterGroup)
+        updateRail(groupFeed)
+
+        val feed = groupFeed
+            .filterBySelectedChannel()
             .let {
                 DatabaseHelper.filterByStreamTypeAndWatchPosition(it, hideWatched, showUpcoming)
             }
@@ -405,6 +521,26 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
     fun removeItem(videoId: String) {
         feedAdapter.removeItemById(videoId)
+    }
+
+    /** Gives a clickable layout the role of a button for screen readers. */
+    private object ButtonRoleDelegate : AccessibilityDelegateCompat() {
+        override fun onInitializeAccessibilityNodeInfo(
+            host: View,
+            info: AccessibilityNodeInfoCompat
+        ) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info.className = Button::class.java.name
+        }
+    }
+
+    private fun String.ellipsized(maxLength: Int) =
+        if (length <= maxLength) this else take(maxLength - 1).trimEnd() + ELLIPSIS
+
+    private companion object {
+        const val SUMMARY_SEPARATOR = " · "
+        const val SUMMARY_NAME_MAX_LENGTH = 22
+        const val ELLIPSIS = "…"
     }
 }
 // endregion

@@ -2,6 +2,7 @@ package com.watube.yard.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.R
@@ -52,6 +53,19 @@ class NavBarOptionsAdapter(
                 }
             }
             checkbox.setOnClickListener {
+                // the bottom bar holds four tabs next to the two pinned ones
+                val visibleUserTabs = items.count { it.isVisible && !NavBarHelper.isPinned(it.itemId) }
+                if (checkbox.isChecked && visibleUserTabs >= NavBarHelper.MAX_VISIBLE_USER_TABS) {
+                    checkbox.isChecked = false
+                    Toast.makeText(
+                        root.context,
+                        root.context.getString(
+                            R.string.navbar_max_tabs, NavBarHelper.MAX_VISIBLE_USER_TABS
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
                 item.isVisible = checkbox.isChecked
             }
         }

@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.getSystemService
@@ -21,12 +22,15 @@ import com.watube.yard.db.obj.DownloadPlaylist
 import com.watube.yard.db.obj.DownloadPlaylistVideosCrossRef
 import com.watube.yard.enums.NotificationId
 import com.watube.yard.enums.PlaylistType
+import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.getWhileDigit
 import com.watube.yard.extensions.serializableExtra
 import com.watube.yard.extensions.toID
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.DownloadEncryption
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.parcelable.DownloadData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -91,6 +95,8 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
             )
             .setProgress(amountOfVideos, amountOfVideosDone, false)
             .setOnlyAlertOnce(true)
+            // the title carries the playlist name
+            .setVisibility(ScreenPrivacy.lockScreenVisibility)
             .build()
     }
 
@@ -119,12 +125,19 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
             return
         }
 
-        val thumbnailPath = getDownloadPath(DownloadHelper.PLAYLIST_THUMBNAIL_DIR, playlistId)
+        // stored encrypted, like every download (see DownloadEncryption)
+        val thumbnailPath = DownloadEncryption.encryptedPathOf(
+            getDownloadPath(DownloadHelper.PLAYLIST_THUMBNAIL_DIR, playlistId)
+        )
         CoroutineScope(Dispatchers.IO).launch {
-            playlist.thumbnailUrl?.let { url ->
-                ImageHelper.downloadImage(
-                    this@PlaylistDownloadEnqueueService, url, thumbnailPath
-                )
+            val url = playlist.thumbnailUrl ?: return@launch
+            // a missing cover must not bring the app down: the playlist is saved without one
+            try {
+                ImageHelper.downloadImage(this@PlaylistDownloadEnqueueService, url, thumbnailPath)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(TAG(), "Failed to save the playlist thumbnail", e)
             }
         }
 

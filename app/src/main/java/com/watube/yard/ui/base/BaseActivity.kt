@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
+import com.watube.yard.helpers.AppLock
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.helpers.ThemeHelper
@@ -68,6 +69,7 @@ open class BaseActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         ScreenPrivacy.applyTo(window)
+        ScreenPrivacy.applyRecentsPreviewTo(this)
         supportFragmentManager.registerFragmentLifecycleCallbacks(ScreenPrivacy.dialogWatcher, true)
 
         if (!isDialogActivity) keepContentClearOfSideInsets()
@@ -140,10 +142,21 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        AppLock.onStart(this)
+    }
+
+    override fun onStop() {
+        AppLock.onStop(this)
+        super.onStop()
+    }
+
     override fun onResume() {
         super.onResume()
-        // the setting may have changed on another screen
+        // the settings may have changed on another screen
         ScreenPrivacy.applyTo(window)
+        ScreenPrivacy.applyRecentsPreviewTo(this)
         // the scheduled rest mode covers whichever screen is in front
         RestMode.onResume(this)
     }

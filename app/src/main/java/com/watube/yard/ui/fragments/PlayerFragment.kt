@@ -132,6 +132,7 @@ import com.watube.yard.ui.models.CommentsViewModel
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.PlayerViewModel
 import com.watube.yard.ui.sheets.CommentsSheet
+import com.watube.yard.ui.sheets.ExternalLinkSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
 import com.watube.yard.ui.tools.SleepTimer
 import com.watube.yard.util.OfflineTimeFrameReceiver
@@ -194,6 +195,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
     // region Seekbar Preview
     private var seekBarPreviewListener: SeekbarPreviewListener? = null
+
+    /** Feeds [seekBarPreviewListener]: an offline one keeps the downloaded file open. */
+    private var previewFrameReceiver: TimeFrameReceiver? = null
+
+    private fun releasePreviewFrames() {
+        previewFrameReceiver?.release()
+        previewFrameReceiver = null
+    }
 
     private suspend fun getTimeFrameReceiver(): TimeFrameReceiver? = withContext(Dispatchers.IO) {
         return@withContext if (isOffline) {
@@ -941,6 +950,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             ) { _, bundle ->
                 bundle.getString(IntentData.url)?.let { handleLink(it) }
             }
+        childFragmentManager.setFragmentResultListener(
+            ExternalLinkSheet.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            bundle.getString(IntentData.url)?.let { openExternalLink(it) }
+        }
 
         binding.commentsToggle.setOnClickListener {
             if (!this::streams.isInitialized) return@setOnClickListener
@@ -1283,9 +1298,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         playerControlsBinding.seekbarPreview.isGone = true
         seekBarPreviewListener?.let { playerControlsBinding.exoProgress.removeSeekBarListener(it) }
+        releasePreviewFrames()
 
         viewLifecycleOwner.lifecycleScope.launch {
             val timeFrameReceiver = getTimeFrameReceiver() ?: return@launch
+            previewFrameReceiver = timeFrameReceiver
             val listener = SeekbarPreviewListener(
                 timeFrameReceiver,
                 playerControlsBinding,
@@ -1318,6 +1335,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         super.onDestroyView()
         handler.removeCallbacks(miniProgressUpdater)
         releaseOrientationHold()
+        releasePreviewFrames()
         _binding = null
     }
 
@@ -1778,7 +1796,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         val highlightStart = highlight.segmentStartAndEnd.first.toLong()
         val frame = withContext(Dispatchers.IO) {
-            frameReceiver.getFrameAtTime(highlightStart * 1000)
+            try {
+                frameReceiver.getFrameAtTime(highlightStart * 1000)
+            } finally {
+                frameReceiver.release()
+            }
         }
         val highlightChapter = ChapterSegment(
             title = getString(R.string.chapters_videoHighlight),
@@ -2077,16 +2099,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 ctx.toastFromMainThread(R.string.error)
                 return
             }
-
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-
-            onUserLeaveHint()
-            try {
-                startActivity(intent)
-            } catch (_: Exception) {
-                ctx.toastFromMainThread(R.string.error)
-            }
-
+            // the user sees where it really leads first (ExternalLinkSheet, then openExternalLink)
+            ExternalLinkSheet.newInstance(link).show(childFragmentManager)
             return
         }
 
@@ -2098,6 +2112,17 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             }
         } else {
             playVideo(videoId)
+        }
+    }
+
+    /** A link confirmed in [ExternalLinkSheet], already cleaned of its trackers. */
+    private fun openExternalLink(link: String) {
+        val ctx = context ?: return
+        onUserLeaveHint()
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, link.toUri()))
+        } catch (_: Exception) {
+            ctx.toastFromMainThread(R.string.error)
         }
     }
     // endregion

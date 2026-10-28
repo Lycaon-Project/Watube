@@ -142,7 +142,7 @@
         app:activeIndicatorLabelPadding="6.5dp"
         app:labelMaxLines="1"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_menu" />
+        tools:menu="@menu/bottom_menu" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"

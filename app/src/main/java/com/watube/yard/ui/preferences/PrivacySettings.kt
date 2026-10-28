@@ -1,6 +1,7 @@
 package com.watube.yard.ui.preferences
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -10,11 +11,15 @@ import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.db.DatabaseHelper
+import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.AppLock
+import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.LocaleHelper
+import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.helpers.ScreenPrivacy
-import com.watube.yard.util.SharedHttpClient
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import com.watube.yard.util.SharedHttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +58,28 @@ class PrivacySettings : InstanceSettings() {
             }
         refreshIdentifierSummary()
 
+        // the lock needs something to ask for: a fingerprint, a face or a screen lock code
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.APP_LOCK)
+            ?.setOnPreferenceChangeListener { _, enable ->
+                if (enable != true) return@setOnPreferenceChangeListener true
+                if (!AppLock.canLock(requireContext())) {
+                    Toast.makeText(context, R.string.app_lock_unavailable, Toast.LENGTH_LONG).show()
+                    return@setOnPreferenceChangeListener false
+                }
+                AppLock.onEnabled()
+                true
+            }
+
+        findPreference<Preference>(CLEAR_EVERYTHING)?.setOnPreferenceClickListener {
+            SecureAlertDialogBuilder(requireContext())
+                .setTitle(R.string.clear_everything)
+                .setMessage(R.string.clear_everything_dialog)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.clear_everything_confirm) { _, _ -> clearEverything() }
+                .show()
+            true
+        }
+
         findPreference<Preference>("reset_identifiers")?.setOnPreferenceClickListener {
             SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.reset_identifiers)
@@ -61,6 +88,24 @@ class PrivacySettings : InstanceSettings() {
                 .setPositiveButton(R.string.dialog_reset) { _, _ -> resetIdentifiers() }
                 .show()
             true
+        }
+    }
+
+    /**
+     * "Clear everything now": the watch and search history, the playback positions, the caches,
+     * the account session and the identifiers sent to third parties, in one go. What the user
+     * built on purpose (subscriptions, playlists, downloads, settings) stays.
+     */
+    private fun clearEverything() {
+        val context = requireContext().applicationContext
+        CoroutineScope(Dispatchers.IO).launch {
+            DatabaseHelper.clearBrowsingData()
+            ImageHelper.clearCache(context)
+            PreferenceHelper.setToken("")
+            PrivacyHelper.resetSponsorBlockUserId()
+            PrivacyHelper.clearWebViewData()
+            SharedHttpClient.dropIdleConnections()
+            context.toastFromMainDispatcher(R.string.clear_everything_done)
         }
     }
 
@@ -222,4 +267,8 @@ class PrivacySettings : InstanceSettings() {
             .show()
     }
     // endregion
+
+    private companion object {
+        const val CLEAR_EVERYTHING = "clear_everything"
+    }
 }

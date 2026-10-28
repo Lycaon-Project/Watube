@@ -18,6 +18,7 @@ import com.watube.yard.obj.PreferenceItem
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
@@ -73,8 +74,10 @@ class BackupDialog : DialogFragment() {
             // instance / privacy settings that would be dropped on restore anyway
             file.preferences = PreferenceHelper.settings.all
                 .filterKeys { it !in BackupHelper.SENSITIVE_PREFERENCE_KEYS }
-                .map { (key, value) ->
-                    val jsonValue = when (value) {
+                .map { (key, stored) ->
+                    // encrypted with a key of this phone only: written readable, the restore
+                    // encrypts it again on the phone it lands on
+                    val jsonValue = when (val value = PreferenceHelper.readableForm(key, stored)) {
                         is Number -> JsonPrimitive(value)
                         is Boolean -> JsonPrimitive(value)
                         is String -> JsonPrimitive(value)
@@ -115,14 +118,16 @@ class BackupDialog : DialogFragment() {
                 getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     requireDialog().hide()
 
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val backupFile = BackupFile()
-
-                        backupOptions.forEachIndexed { index, option ->
-                            if (selected[index]) option.onSelected(backupFile)
+                    lifecycleScope.launch {
+                        // the content is gathered off the main thread, the result is handed
+                        // over on it: its receiver shows dialogs and launches the file picker
+                        val encodedBackupFile = withContext(Dispatchers.IO) {
+                            val backupFile = BackupFile()
+                            backupOptions.forEachIndexed { index, option ->
+                                if (selected[index]) option.onSelected(backupFile)
+                            }
+                            Json.encodeToString(backupFile)
                         }
-
-                        val encodedBackupFile = Json.encodeToString(backupFile)
                         setFragmentResult(
                             BACKUP_DIALOG_REQUEST_KEY,
                             Bundle().apply {

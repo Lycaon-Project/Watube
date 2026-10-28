@@ -19,7 +19,7 @@ class NewPipeDownloaderImpl : Downloader() {
         .addNetworkInterceptor(Interceptor { chain ->
             val url = chain.request().url
             if (!ExtractorNetworkPolicy.isAllowed(url)) {
-                throw IOException("Extractor request refused: ${url.scheme}://${url.host}")
+                throw RefusedRequestException("Extractor request refused: ${url.scheme}://${url.host}")
             }
             chain.proceed(chain.request())
         })

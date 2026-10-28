@@ -30,6 +30,11 @@
         android:visible="false" />
 
     <item
+        android:id="@+id/privacyFragment"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/privacy_tab" />
+
+    <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings" />

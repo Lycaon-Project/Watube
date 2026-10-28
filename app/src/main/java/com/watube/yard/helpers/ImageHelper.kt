@@ -2,6 +2,7 @@ package com.watube.yard.helpers
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -13,13 +14,19 @@ import android.widget.ImageView
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import coil3.ImageLoader
+import coil3.decode.DataSource
+import coil3.decode.ImageSource
 import coil3.disk.DiskCache
 import coil3.disk.directory
+import coil3.fetch.FetchResult
+import coil3.fetch.Fetcher
+import coil3.fetch.SourceFetchResult
 import coil3.imageLoader
 import coil3.load
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.Options
 import coil3.request.crossfade
 import coil3.toBitmap
 import com.watube.yard.BuildConfig
@@ -31,8 +38,11 @@ import com.watube.yard.util.SharedHttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.logging.HttpLoggingInterceptor
+import okio.Buffer
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Path
+import java.nio.file.Paths
 
 // region Image Loading
 object ImageHelper {
@@ -41,6 +51,9 @@ object ImageHelper {
     /** Images may only take half of the app cache quota, the rest is for http and temp files. */
     private const val DISK_CACHE_FRACTION = 0.5
     private const val MIN_DISK_CACHE_BYTES = 32L * 1024 * 1024
+
+    private const val ARTWORK_MAX_SIDE = 512
+    private const val ARTWORK_QUALITY = 85
 
     private val Context.coilFile get() = cacheDir.resolve("coil")
 
@@ -72,6 +85,8 @@ object ImageHelper {
                 add(
                     OkHttpNetworkFetcherFactory(httpClient.build())
                 )
+                // thumbnails of the downloads are stored encrypted
+                add(EncryptedFileFetcher.Factory())
             }
             .apply {
                 diskCachePolicy(CachePolicy.ENABLED)
@@ -164,13 +179,50 @@ object ImageHelper {
         target.setImageBitmap(null)
     }
 
+    /** Saves the image at [url] to [path]: encrypted when [path] names an encrypted file. */
     suspend fun downloadImage(context: Context, url: String, path: Path) {
         val bitmap = getImage(context, url) ?: return
         withContext(Dispatchers.IO) {
+            if (DownloadEncryption.isEncrypted(path)) {
+                val png = ByteArrayOutputStream()
+                    .also { bitmap.compress(Bitmap.CompressFormat.PNG, 25, it) }
+                    .toByteArray()
+                DownloadEncryption.encryptBytes(png, path)
+                return@withContext
+            }
             context.contentResolver.openOutputStream(path.toAndroidUri())?.use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 25, it)
             }
         }
+    }
+
+    /**
+     * The artwork of the media session goes to the system with every update of it: [image]
+     * is brought down to [ARTWORK_MAX_SIDE] pixels as a JPEG (a few dozen KiB). Null when
+     * [image] is no image.
+     */
+    fun compactArtwork(image: ByteArray): ByteArray? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(image, 0, image.size, bounds)
+        val longestSide = maxOf(bounds.outWidth, bounds.outHeight)
+        if (longestSide <= 0) return null
+
+        // decoded at once at a power of two close to the target, then scaled to it
+        var sampleSize = 1
+        while (longestSide / (sampleSize * 2) >= ARTWORK_MAX_SIDE) sampleSize *= 2
+        val options = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+        val decoded = BitmapFactory.decodeByteArray(image, 0, image.size, options) ?: return null
+        val scale = ARTWORK_MAX_SIDE.toFloat() / maxOf(decoded.width, decoded.height)
+        val artwork = if (scale < 1f) {
+            Bitmap.createScaledBitmap(
+                decoded, (decoded.width * scale).toInt(), (decoded.height * scale).toInt(), true
+            )
+        } else {
+            decoded
+        }
+        return ByteArrayOutputStream()
+            .also { artwork.compress(Bitmap.CompressFormat.JPEG, ARTWORK_QUALITY, it) }
+            .toByteArray()
     }
 
     suspend fun getImage(context: Context, url: String?): Bitmap? {
@@ -238,6 +290,32 @@ object ImageHelper {
             color = Color.WHITE
             textAlign = Paint.Align.CENTER
         })
+    }
+
+    /**
+     * Shows an encrypted image of the downloads (see [DownloadEncryption]): decrypted in memory
+     * as it is loaded, never written back in clear.
+     */
+    private class EncryptedFileFetcher(
+        private val path: Path,
+        private val options: Options
+    ) : Fetcher {
+        override suspend fun fetch(): FetchResult = withContext(Dispatchers.IO) {
+            SourceFetchResult(
+                source = ImageSource(Buffer().write(DownloadEncryption.readBytes(path)), options.fileSystem),
+                mimeType = null,
+                dataSource = DataSource.DISK
+            )
+        }
+
+        class Factory : Fetcher.Factory<coil3.Uri> {
+            override fun create(data: coil3.Uri, options: Options, imageLoader: ImageLoader): Fetcher? {
+                // a file uri, or a bare path (as the downloads list passes it)
+                if (data.scheme != null && data.scheme != "file") return null
+                val path = data.path?.takeIf { it.endsWith(DownloadEncryption.SUFFIX) } ?: return null
+                return EncryptedFileFetcher(Paths.get(path), options)
+            }
+        }
     }
 }
 // endregion

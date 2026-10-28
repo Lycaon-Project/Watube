@@ -177,9 +177,9 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
                 binding.libraryScroll.smoothScrollTo(0, binding.playlistsSection.top)
             }
         }
+        // the tile leads to the privacy tab, which shows what the app keeps and sends
         binding.shortcutPrivacy.root.setOnClickListener {
-            Toast.makeText(context, R.string.watube_shortcut_privacy_toast, Toast.LENGTH_SHORT)
-                .show()
+            findNavController().navigate(R.id.privacyFragment)
         }
 
         refreshHistoryCount()

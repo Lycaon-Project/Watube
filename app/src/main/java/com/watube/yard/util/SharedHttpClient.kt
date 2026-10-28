@@ -5,6 +5,7 @@ import com.watube.yard.BuildConfig
 import okhttp3.ConnectionSpec
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
 
 // region Networking
 /**
@@ -24,11 +25,25 @@ object SharedHttpClient {
         chain.proceed(request)
     }
 
+    /**
+     * TLS 1.3 only, for hosts known to support it (SponsorBlock, DeArrow, Return YouTube Dislike,
+     * GitHub): no older version is offered, so a downgrade attempt fails instead of succeeding.
+     */
+    val TLS_1_3_ONLY: ConnectionSpec = ConnectionSpec.Builder(ConnectionSpec.RESTRICTED_TLS)
+        .tlsVersions(TlsVersion.TLS_1_3)
+        .build()
+
     val base: OkHttpClient = OkHttpClient.Builder()
         // TLS 1.3 / 1.2 with forward secret AEAD ciphers only, no older fallback. Plain http stays
         // limited to localhost (self-hosted instances) by network_security_config.xml.
         .connectionSpecs(listOf(ConnectionSpec.RESTRICTED_TLS, ConnectionSpec.CLEARTEXT))
+        // first network interceptor: it sees the refusals of the policies added after it
+        .addNetworkInterceptor(NetworkLedger.interceptor)
         .apply { if (BuildConfig.DEBUG) addNetworkInterceptor(debugRequestLog) }
+        // 5 redirects at most, for every client derived from this one
+        .apply { RedirectLimit.install(this) }
+        // host names resolved over encrypted DNS, unless the user turned it off
+        .dns(PrivateDns)
         .build()
 
     /**

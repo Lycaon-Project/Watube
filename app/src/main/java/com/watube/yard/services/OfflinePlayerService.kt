@@ -9,7 +9,6 @@ import androidx.media3.common.MediaItem.SubtitleConfiguration
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.FileDataSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
@@ -23,7 +22,10 @@ import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.setMetadata
 import com.watube.yard.extensions.toAndroidUri
 import com.watube.yard.extensions.updateParameters
+import com.watube.yard.helpers.DownloadEncryption
+import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.PlayerHelper
+import com.watube.yard.player.EncryptedFileDataSource
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.activities.NoInternetActivity
@@ -46,6 +48,7 @@ open class OfflinePlayerService : AbstractPlayerService() {
     private var noInternetService: Boolean = false
 
     private var downloadWithItems: DownloadWithItems? = null
+    private var artwork: ByteArray? = null
     private lateinit var playerData: PlayerData
 
     private val scope = CoroutineScope(Dispatchers.Main)
@@ -115,6 +118,14 @@ open class OfflinePlayerService : AbstractPlayerService() {
             Database.downloadDao().findById(videoId)
         } ?: return
         this.downloadWithItems = downloadWithItems
+        // the thumbnail is encrypted too: decrypted here, off the main thread, for the
+        // notification and the lock screen
+        artwork = withContext(Dispatchers.IO) {
+            downloadWithItems.download.thumbnailPath?.let { path ->
+                runCatching { ImageHelper.compactArtwork(DownloadEncryption.readBytes(path)) }
+                    .getOrNull()
+            }
+        }
 
         PlayingQueue.updateCurrent(downloadWithItems.download.toStreamItem())
 
@@ -144,27 +155,28 @@ open class OfflinePlayerService : AbstractPlayerService() {
     private fun setMediaItem(downloadWithItems: DownloadWithItems) {
         val downloadFiles = downloadWithItems.downloadItems.filter { it.path.exists() }
 
-        val videoUri = downloadFiles.firstOrNull { it.type == FileType.VIDEO }?.path?.toAndroidUri()
-        val audioUri = downloadFiles.firstOrNull { it.type == FileType.AUDIO }?.path?.toAndroidUri()
+        // downloads are encrypted: each file is read through the source that decrypts it
+        val videoPath = downloadFiles.firstOrNull { it.type == FileType.VIDEO }?.path
+        val audioPath = downloadFiles.firstOrNull { it.type == FileType.AUDIO }?.path
         val subtitleInfo = downloadFiles.firstOrNull { it.type == FileType.SUBTITLE }
 
-        val videoSource = videoUri?.let { videoUri ->
+        val videoSource = videoPath?.let { videoPath ->
             val videoItem = MediaItem.Builder()
-                .setUri(videoUri)
-                .setMetadata(downloadWithItems)
+                .setUri(videoPath.toAndroidUri())
+                .setMetadata(downloadWithItems, artwork)
                 .build()
 
-            ProgressiveMediaSource.Factory(FileDataSource.Factory())
+            ProgressiveMediaSource.Factory(EncryptedFileDataSource.factoryFor(videoPath))
                 .createMediaSource(videoItem)
         }
 
-        val audioSource = audioUri?.let { audioUri ->
+        val audioSource = audioPath?.let { audioPath ->
             val audioItem = MediaItem.Builder()
-                .setUri(audioUri)
-                .setMetadata(downloadWithItems)
+                .setUri(audioPath.toAndroidUri())
+                .setMetadata(downloadWithItems, artwork)
                 .build()
 
-            ProgressiveMediaSource.Factory(FileDataSource.Factory())
+            ProgressiveMediaSource.Factory(EncryptedFileDataSource.factoryFor(audioPath))
                 .createMediaSource(audioItem)
         }
 
@@ -178,7 +190,9 @@ open class OfflinePlayerService : AbstractPlayerService() {
                 .setLanguage(subtitleInfo.language ?: "en")
                 .build()
 
-            androidx.media3.exoplayer.source.SingleSampleMediaSource.Factory(FileDataSource.Factory())
+            androidx.media3.exoplayer.source.SingleSampleMediaSource.Factory(
+                EncryptedFileDataSource.factoryFor(subtitleInfo.path)
+            )
                 .createMediaSource(subtitle, C.TIME_UNSET)
         }
 

@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.watube.yard.enums.FileType
+import com.watube.yard.helpers.DownloadEncryption
 import java.nio.file.Path
 import kotlin.io.path.fileSize
 
@@ -43,6 +44,11 @@ data class DownloadItem(
      */
     var currentDownloadPositionMillis: Long? = null
 ) {
-    val isFinished get() = downloadSize > 0L && runCatching { path.fileSize() }.getOrDefault(0L) >= downloadSize
+    /**
+     * Only a complete download is encrypted (see DownloadEncryption): an encrypted file is
+     * finished whatever its size says, which is unknown for subtitles.
+     */
+    val isFinished get() = DownloadEncryption.isEncrypted(path) ||
+        downloadSize > 0L && runCatching { path.fileSize() }.getOrDefault(0L) >= downloadSize
 }
 // endregion

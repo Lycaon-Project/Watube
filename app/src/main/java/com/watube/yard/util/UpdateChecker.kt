@@ -29,7 +29,7 @@ class UpdateChecker(private val context: Context) {
          * "0" = check on every launch (no throttling). Must stay in sync with the `update_check_interval`
          * ListPreference default in res/xml/general_settings.xml.
          */
-        private const val DEFAULT_CHECK_INTERVAL_HOURS = "24"
+        private const val DEFAULT_CHECK_INTERVAL_HOURS = "0"
 
         /**
          * "Every launch" means once per start of the app: MainActivity is also created again by a

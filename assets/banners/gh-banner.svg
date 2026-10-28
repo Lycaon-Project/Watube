@@ -20,7 +20,8 @@
   <rect width="3240" height="1080" fill="url(#halo)"/>
   <rect width="3240" height="1080" fill="url(#corner)"/>
   <g transform="translate(850.0,320.0)">
-    <rect width="300" height="300" rx="68" fill="#35E08C" fill-opacity="0.13"/>
+    <rect width="300" height="300" rx="68" fill="#0B1712"/>
+    <rect width="300" height="300" rx="68" fill="#35E08C" fill-opacity="0.08"/>
     <rect x="1.5" y="1.5" width="297" height="297" rx="66.5" fill="none" stroke="#35E08C" stroke-opacity="0.28" stroke-width="3"/>
     <g transform="translate(51.00,51.00) scale(8.2500)"><path d="M8.2,4.9L19.4,12L8.2,19.1Z" fill="url(#play)" fill-rule="evenodd" stroke="url(#play)" stroke-width="2.6" stroke-linejoin="round"/></g>
   </g>

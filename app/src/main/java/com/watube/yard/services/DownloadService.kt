@@ -42,9 +42,11 @@ import com.watube.yard.extensions.parcelableExtra
 import com.watube.yard.extensions.toLocalDate
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.extensions.toastFromMainThread
+import com.watube.yard.helpers.DownloadEncryption
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.DownloadHelper.getNotificationId
 import com.watube.yard.helpers.ImageHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.helpers.NetworkHelper
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.obj.DownloadStatus
@@ -190,7 +192,10 @@ class DownloadService : LifecycleService() {
     }
 
     private suspend fun storeVideoMetadata(videoId: String, streams: Streams) {
-        val thumbnailTargetPath = getDownloadPath(DownloadHelper.THUMBNAIL_DIR, videoId)
+        // the thumbnail tells what was downloaded: it is stored encrypted as well
+        val thumbnailTargetPath = DownloadEncryption.encryptedPathOf(
+            getDownloadPath(DownloadHelper.THUMBNAIL_DIR, videoId)
+        )
 
         val download = Download(
             videoId,
@@ -308,16 +313,21 @@ class DownloadService : LifecycleService() {
         val notificationBuilder = getNotificationBuilder(item)
         setResumeNotification(notificationBuilder, item)
 
+        if (!prepareFile(item, notificationBuilder)) {
+            downloadQueue[item.id] = false
+            stopServiceIfDone()
+            return
+        }
         val sink = item.path.sink(StandardOpenOption.APPEND).buffer()
         var totalRead = item.path.fileSize()
         var numberOfTries = 0
+        var completed = false
         while (downloadQueue[item.id] && !item.isFinished) {
             try {
                 when (val result = downloadProvider.downloadNextChunk(item, sink)) {
                     DownloadProgressResult.DownloadComplete -> {
-                        setPauseNotification(notificationBuilder, item, true)
-                        _downloadFlow.emit(item.id to DownloadStatus.Completed)
-                        downloadQueue[item.id] = false
+                        // still counted as running until encrypted, which keeps the service up
+                        completed = true
                         break
                     }
                     DownloadProgressResult.Failed -> {
@@ -358,6 +368,12 @@ class DownloadService : LifecycleService() {
             sink.flush()
             sink.close()
         }
+
+        // a download complete but not encrypted yet (the app was stopped in between) too
+        if (completed || item.isFinished && !DownloadEncryption.isEncrypted(item.path)) {
+            finishDownload(item, notificationBuilder)
+        }
+        downloadQueue[item.id] = false
 
         // start the next download if there are any remaining ones enqueued
         startNextEnqueueDownload()
@@ -439,11 +455,11 @@ class DownloadService : LifecycleService() {
      * for the requested file.
      */
     private fun start(item: DownloadItem) {
-        item.path = when (item.type) {
-            FileType.AUDIO -> getDownloadPath(DownloadHelper.AUDIO_DIR, item.fileName)
-            FileType.VIDEO -> getDownloadPath(DownloadHelper.VIDEO_DIR, item.fileName)
-            FileType.SUBTITLE -> getDownloadPath(DownloadHelper.SUBTITLE_DIR, item.fileName)
-        }.apply { deleteIfExists() }.createFile()
+        // written in private storage while it runs, encrypted into place once complete
+        item.path = DownloadHelper.resolveDownloadPath(
+            DownloadHelper.getPartialDownloadDir(this, DownloadHelper.directoryOf(item.type)),
+            item.fileName
+        ).apply { deleteIfExists() }.createFile()
 
         lifecycleScope.launch(coroutineContext) {
             item.id = Database.downloadDao().insertDownloadItem(item).toInt()
@@ -528,11 +544,11 @@ class DownloadService : LifecycleService() {
      */
     private fun stop(id: Int) = lifecycleScope.launch(coroutineContext) {
         downloadQueue[id] = false
+        // the part already received goes too; an encryption under way is waited for, then
+        // its encrypted copy is deleted (it is never left behind, nor announced complete)
+        val item = withContext(Dispatchers.IO) { DownloadHelper.discardDownloadItem(id) }
         _downloadFlow.emit(id to DownloadStatus.Stopped)
-
-        val item = Database.downloadDao().findDownloadItemById(id) ?: return@launch
-        notificationManager.cancel(item.getNotificationId())
-        Database.downloadDao().deleteDownloadItemById(id)
+        item?.let { notificationManager.cancel(it.getNotificationId()) }
         stopServiceIfDone()
     }
 
@@ -573,6 +589,7 @@ class DownloadService : LifecycleService() {
             .setContentTitle(getString(R.string.downloading))
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setGroup(DOWNLOAD_NOTIFICATION_GROUP)
+            .setVisibility(ScreenPrivacy.lockScreenVisibility)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOnlyAlertOnce(true)
             .setGroupSummary(true)
@@ -597,6 +614,8 @@ class DownloadService : LifecycleService() {
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
             .setGroup(DOWNLOAD_NOTIFICATION_GROUP)
+            // the file name is the video title
+            .setVisibility(ScreenPrivacy.lockScreenVisibility)
     }
 
     private fun setResumeNotification(
@@ -675,6 +694,66 @@ class DownloadService : LifecycleService() {
             getString(R.string.stop),
             PendingIntentCompat.getBroadcast(this, requestCode, intent, FLAG_UPDATE_CURRENT, false)
         ).build()
+    }
+
+    /**
+     * Brings the file of [item] where a running download is written (see
+     * DownloadHelper.moveToPartialDir). False when the download does not go on: stopped,
+     * complete already, or the file could not be moved (left where it is, nothing is lost).
+     */
+    private suspend fun prepareFile(item: DownloadItem, notificationBuilder: Builder): Boolean {
+        val goesOn = try {
+            withContext(Dispatchers.IO) { DownloadHelper.moveToPartialDir(this@DownloadService, item) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG(), "Could not move the download in progress", e)
+            toastFromMainThread(
+                if (e is DownloadHelper.NotEnoughSpaceException) {
+                    getString(R.string.download_no_space)
+                } else {
+                    "${getString(R.string.download)}: ${e.message}"
+                }
+            )
+            setPauseNotification(notificationBuilder, item, false)
+            _downloadFlow.emit(item.id to DownloadStatus.Error(e.message.toString(), e))
+            return false
+        }
+        if (!goesOn) {
+            if (DownloadEncryption.isEncrypted(item.path)) {
+                setPauseNotification(notificationBuilder, item, true)
+                _downloadFlow.emit(item.id to DownloadStatus.Completed)
+            } else {
+                notificationManager.cancel(item.getNotificationId())
+            }
+        }
+        return goesOn
+    }
+
+    /**
+     * Encrypts a complete download into its place among the downloads (see
+     * DownloadHelper.encryptInPlace), then announces it: it can be played right away.
+     */
+    private suspend fun finishDownload(item: DownloadItem, notificationBuilder: Builder) {
+        try {
+            withContext(Dispatchers.IO) {
+                DownloadHelper.encryptInPlace(this@DownloadService, item) {
+                    setPauseNotification(notificationBuilder, item, true)
+                    _downloadFlow.emit(item.id to DownloadStatus.Completed)
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: DownloadHelper.NotEnoughSpaceException) {
+            // kept as it is and encrypted on a later start, once room was made
+            toastFromMainThread(getString(R.string.download_encrypt_no_space))
+            setPauseNotification(notificationBuilder, item, false)
+            _downloadFlow.emit(item.id to DownloadStatus.Error(e.message.toString(), e))
+        } catch (e: Exception) {
+            Log.e(TAG(), "Could not encrypt the finished download", e)
+            setPauseNotification(notificationBuilder, item, false)
+            _downloadFlow.emit(item.id to DownloadStatus.Error(e.message.toString(), e))
+        }
     }
 
     /**

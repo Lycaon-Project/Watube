@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
+import com.watube.yard.api.NewPipeMediaServiceRepository
 import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.api.obj.Segment
 import com.watube.yard.constants.IntentData
@@ -105,6 +106,7 @@ class SubmitSegmentDialog : DialogFragment() {
                 RetrofitInstance.externalApi
                     .submitSegment(videoId, uuid, userAgent, startTime, endTime, category, duration)
             }
+            NewPipeMediaServiceRepository.invalidateSegmentCache()
             context.toastFromMainDispatcher(R.string.segment_submitted)
         } catch (e: CancellationException) {
             throw e
@@ -138,6 +140,7 @@ class SubmitSegmentDialog : DialogFragment() {
                     userID = PreferenceHelper.getSponsorBlockUserID(),
                     score = score
                 )
+                NewPipeMediaServiceRepository.invalidateSegmentCache()
                 context.toastFromMainDispatcher(R.string.success)
             } catch (e: CancellationException) {
                 throw e

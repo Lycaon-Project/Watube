@@ -73,6 +73,18 @@
 
     </style>
 
+    <!-- A line of what to know about an external link (ExternalLinkSheet): icon and words,
+         never the color alone -->
+    <style name="WatubeLinkNote">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
     <style name="CustomDialogTextInputLayout" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
         <item name="android:layout_width">match_parent</item>
@@ -388,6 +400,22 @@
          view inheriting the theme picks it up. "system" (default) applies nothing. -->
     <style name="WatubeFontFigtree">
         <item name="android:fontFamily">@font/figtree</item>
+    </style>
+
+    <!-- Tonal Material components (filled tonal buttons, toggle groups) take the secondary
+         container, a blue meant for the player accents: on the subscriptions screens they use
+         the green of the brand instead, in every theme including the OLED one. -->
+    <style name="ThemeOverlay.Watube.GreenTonal" parent="">
+        <item name="colorSecondaryContainer">?attr/colorPrimaryContainer</item>
+        <item name="colorOnSecondaryContainer">?attr/colorOnPrimaryContainer</item>
+    </style>
+
+    <!-- Section title of the privacy dashboard (the dashboard column already has the gutter) -->
+    <style name="WatubeDashboardTitle" parent="HomeCategoryTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:paddingStart">0dp</item>
     </style>
 
 </resources>

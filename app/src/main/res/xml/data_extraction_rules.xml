@@ -5,8 +5,9 @@
 
   Privacy line of this app: nothing is uploaded to a cloud backup service (allowBackup is off
   in the manifest, and every domain is excluded here as well, since some devices still read
-  these rules). A local device-to-device transfer keeps the settings and the library, and the
-  in-app export (Settings -> Backup) remains the supported way to save a copy of everything.
+  these rules). A local device-to-device transfer keeps the settings, but neither the library
+  (database) nor the downloads: both are encrypted with keys held by this phone's Keystore,
+  which never leave it. The in-app export (Settings -> Backup) is the way to move the library.
 
   Credentials (Piped auth token, login data) and crash logs (they can contain video ids and
   urls) never leave the device at all.
@@ -30,6 +31,22 @@
             path="." />
     </cloud-backup>
     <device-transfer>
+        <!-- the database is encrypted with a key held by this phone's Keystore, which never
+             moves: copied to another phone it could not be read (use the in-app export) -->
+        <exclude
+            domain="database"
+            path="." />
+        <exclude
+            domain="sharedpref"
+            path="database_key.xml" />
+        <!-- key of the encrypted downloads, wrapped by this phone's Keystore: useless elsewhere -->
+        <exclude
+            domain="sharedpref"
+            path="download_keyset.xml" />
+        <!-- the downloads themselves, encrypted with that key: they could not be read either -->
+        <exclude
+            domain="external"
+            path="." />
         <exclude
             domain="sharedpref"
             path="auth.xml" />

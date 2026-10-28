@@ -34,14 +34,29 @@ object NavBarHelper {
     )
 
     /**
-     * The settings tab can be neither hidden nor moved: once hidden, nothing led to the settings
-     * anymore. It always comes last and visible, which also repairs older preferences.
+     * Privacy then settings close the bar, always visible and never moved: once hidden, nothing
+     * led to the settings anymore. This also repairs older preferences.
      */
-    fun isPinned(itemId: Int) = itemId == R.id.settingsFragment
+    private val PINNED_TABS = listOf(R.id.privacyFragment, R.id.settingsFragment)
+
+    /**
+     * Tabs the user may show at once: the bottom bar holds six items (hidden ones included,
+     * Material throws beyond) and two of them are pinned.
+     */
+    const val MAX_VISIBLE_USER_TABS = 4
+
+    fun isPinned(itemId: Int) = itemId in PINNED_TABS
 
     fun getNavBarItemPreference(context: Context): List<Pair<Int, Boolean>> {
         val (pinned, items) = readNavBarItemPreference(context).partition { (itemId, _) -> isPinned(itemId) }
-        return items + pinned.map { (itemId, _) -> itemId to true }
+        // more visible tabs than the bar holds (older preference): the last ones are hidden
+        var visibleLeft = MAX_VISIBLE_USER_TABS
+        val userTabs = items.map { (itemId, isVisible) ->
+            itemId to (isVisible && visibleLeft-- > 0)
+        }
+        return userTabs + pinned
+            .sortedBy { (itemId, _) -> PINNED_TABS.indexOf(itemId) }
+            .map { (itemId, _) -> itemId to true }
     }
 
     // contains "-" -> invisible menu item, else -> visible menu item
@@ -120,13 +135,18 @@ object NavBarHelper {
      * @return Id of the start fragment
      */
     fun applyNavBarStyle(bottomNav: NavigationBarView): Int {
-        val navBarItems = getNavBarItemPreference(bottomNav.context)
-        val startFragmentId = getStartFragmentId(bottomNav.context)
+        val context = bottomNav.context
+        val navBarItems = getNavBarItemPreference(context)
+        val startFragmentId = getStartFragmentId(context)
         val menu = bottomNav.menu
 
-        // 1. read everything BEFORE touching the menu, in the user-preferred order
+        // 1. read everything BEFORE touching the menu, in the user-preferred order. The items
+        // come from the menu resource: the bottom bar is not inflated with it, it could not
+        // hold every tab
+        val template = PopupMenu(context, null).menu
+        MenuInflater(context).inflate(R.menu.bottom_menu, template)
         val snapshots = navBarItems.mapNotNull { (menuItemId, isVisible) ->
-            menu.findItem(menuItemId)?.let { oldMenuItem ->
+            template.findItem(menuItemId)?.let { oldMenuItem ->
                 NavItemSnapshot(
                     groupId = oldMenuItem.groupId,
                     itemId = oldMenuItem.itemId,
@@ -140,8 +160,12 @@ object NavBarHelper {
         // 2. empty menu: no item is checked anymore, so Material has nothing to re-check
         menu.clear()
 
-        // 3. we re-add all items, even if they're hidden, otherwise the nav graph breaks
+        // 3. hidden items are added too while the bar has room: the selection sync relies on
+        // them to light no tab on their screens. Beyond the bar capacity a hidden screen
+        // lights the tab it was opened from (downloads -> library) instead.
+        var hiddenRoom = bottomNav.maxItemCount - snapshots.count { it.isVisible }
         snapshots.forEach { snapshot ->
+            if (!snapshot.isVisible && hiddenRoom-- <= 0) return@forEach
             menu.add(snapshot.groupId, snapshot.itemId, Menu.NONE, snapshot.title).apply {
                 icon = snapshot.icon
                 isVisible = snapshot.isVisible
@@ -160,7 +184,9 @@ object NavBarHelper {
         val pref = PreferenceHelper.getInt(PreferenceKeys.START_FRAGMENT, Int.MAX_VALUE)
         val defaultNavItems = getDefaultNavBarItems(context)
         return if (pref == Int.MAX_VALUE) {
-            getNavBarItemPreference(context).firstOrNull { (_, isVisible) -> isVisible }?.first
+            // the pinned tabs (dashboard, settings) are never where the app opens
+            getNavBarItemPreference(context)
+                .firstOrNull { (itemId, isVisible) -> isVisible && !isPinned(itemId) }?.first
                 ?: R.id.homeFragment
         } else {
             // -1 (unknown item) or a stale index must not throw IndexOutOfBounds; settings can no

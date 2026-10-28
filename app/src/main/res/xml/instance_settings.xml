@@ -28,7 +28,7 @@
 
     <PreferenceCategory app:title="@string/instance">
 
-        <ListPreference
+        <com.watube.yard.ui.preferences.EncryptedListPreference
             android:icon="@drawable/ic_server"
             app:defaultValue="https://pipedapi.kavin.rocks"
             app:key="selectInstance"
@@ -65,7 +65,7 @@
         <!-- endregion -->
 
         <!-- region Piped Account -->
-        <ListPreference
+        <com.watube.yard.ui.preferences.EncryptedListPreference
             android:dependency="auth_instance_toggle"
             android:icon="@drawable/ic_server"
             app:defaultValue="https://pipedapi.kavin.rocks"

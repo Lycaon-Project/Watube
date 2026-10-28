@@ -55,7 +55,16 @@ object RetrofitInstance {
 
     // region Networking
     // the url provided here isn't actually used anywhere in the external api
+    // SponsorBlock, DeArrow, Return YouTube Dislike and GitHub: TLS 1.3 only
     val externalApi by resettableLazy(apiLazyMgr) {
+        buildRetrofitInstance<ExternalApi>(PIPED_API_URL, knownHostsClient())
+    }
+
+    /**
+     * [ExternalApi.getInstanceConfig] only: a Piped instance can be self-hosted behind a server
+     * without TLS 1.3, it keeps the shared TLS 1.2 / 1.3 client.
+     */
+    val instanceConfigApi by resettableLazy(apiLazyMgr) {
         buildRetrofitInstance<ExternalApi>(PIPED_API_URL)
     }
 
@@ -91,6 +100,9 @@ object RetrofitInstance {
             cacheDirectory.mkdirs()
             apiLazyMgr.reset()
         }
+        // the SponsorBlock answers kept in memory go too: "clear cache" and "new identity"
+        // must leave no recent video prefix behind
+        NewPipeMediaServiceRepository.invalidateSegmentCache()
     }
 
     /**
@@ -114,9 +126,17 @@ object RetrofitInstance {
         return httpClient.build()
     }
 
-    inline fun <reified T: Any> buildRetrofitInstance(apiUrl: String): T = Retrofit.Builder()
+    /** [httpClient] restricted to TLS 1.3: same cache, pool and interceptors. */
+    private fun knownHostsClient(): OkHttpClient = httpClient.newBuilder()
+        .connectionSpecs(listOf(SharedHttpClient.TLS_1_3_ONLY))
+        .build()
+
+    inline fun <reified T: Any> buildRetrofitInstance(
+        apiUrl: String,
+        client: OkHttpClient = httpClient,
+    ): T = Retrofit.Builder()
         .baseUrl(apiUrl)
-        .client(httpClient)
+        .client(client)
         .addConverterFactory(kotlinxConverterFactory)
         .build()
         .create<T>()

@@ -7,12 +7,13 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:paddingHorizontal="8dp"
-    android:paddingVertical="4dp">
+    android:paddingVertical="6dp"
+    android:theme="@style/ThemeOverlay.Watube.GreenTonal">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/subscription_channel_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
         app:shapeAppearance="@style/CircleImageView" />
@@ -26,34 +27,35 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="16sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textFontWeight="600"
+        android:textSize="15sp"
         tools:text="Channel Name" />
 
-    <com.google.android.material.button.MaterialButtonGroup
+    <!-- quiet controls: the row is about the channel, unsubscribing is the rare action -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/notification_bell"
+        style="?materialIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/notifications"
+        android:tooltipText="@string/notifications"
+        app:icon="@drawable/ic_notification"
+        app:iconTint="?attr/colorOnSurfaceVariant" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/subscription_subscribe"
+        style="?materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginEnd="8dp"
-        android:paddingTop="0dp"
-        android:paddingBottom="0dp"
-        style="@style/Widget.Material3.MaterialSplitButton">
-
-        <com.google.android.material.button.MaterialButton
-            style="?materialIconButtonFilledTonalStyle"
-            android:id="@+id/notification_bell"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:tooltipText="@string/notifications"
-            app:icon="@drawable/ic_notification" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/subscription_subscribe"
-            style="?materialButtonTonalStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unsubscribe"
-            android:textSize="12sp"/>
-
-    </com.google.android.material.button.MaterialButtonGroup>
+        android:minHeight="40dp"
+        android:paddingHorizontal="12dp"
+        android:text="@string/unsubscribe"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        app:strokeColor="?attr/colorOutlineVariant" />
 </LinearLayout>
 <!-- endregion -->

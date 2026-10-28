@@ -70,10 +70,8 @@ object PreferenceHelper {
             channelsList.add(channelId)
         }
 
-        val channelsString = channelsList.joinToString(",")
-        settings.edit {
-            putString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, channelsString)
-        }
+        // through putString: the channels followed are stored encrypted
+        putString(PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS, channelsList.joinToString(","))
 
         // Invalidate cache
         ignorableChannelsCache = null
@@ -312,7 +310,15 @@ object PreferenceHelper {
      * Uses apply() for async write to avoid blocking the UI thread.
      */
     fun putString(key: String, value: String) {
-        settings.edit { putString(key, value) }
+        if (key !in ENCRYPTED_KEYS) {
+            settings.edit { putString(key, value) }
+            return
+        }
+        val stored = storedForm(key, value)
+        synchronized(encryptedWrites) {
+            // encryption unavailable: no value rather than a clear one, the default applies
+            settings.edit { if (stored == null) remove(key) else putString(key, stored) }
+        }
     }
 
     /**
@@ -362,8 +368,79 @@ object PreferenceHelper {
      */
     fun getString(key: String?, defValue: String): String {
         if (key == null) return defValue
+        if (key in ENCRYPTED_KEYS) return readEncrypted(settings, key)?.ifEmpty { null } ?: defValue
         return settings.getString(key, defValue) ?: defValue
     }
+
+    // region Privacy
+    /**
+     * Values that tell about the user (where they watch from, their identifiers, the channels
+     * they follow and were notified about): kept encrypted by [ValueCipher], transparently
+     * for the callers of [getString] and [putString].
+     */
+    internal val ENCRYPTED_KEYS = setOf(
+        PreferenceKeys.FETCH_INSTANCE,
+        PreferenceKeys.AUTH_INSTANCE,
+        PreferenceKeys.IMAGE_PROXY_URL,
+        PreferenceKeys.LAST_PROXY_FETCH_INSTANCE,
+        PreferenceKeys.SB_USER_ID,
+        PreferenceKeys.IGNORED_NOTIFICATION_CHANNELS,
+        PreferenceKeys.NOTIFIED_VIDEO_IDS,
+    )
+
+    /** The form [value] takes in the preferences under [key], null when it cannot be encrypted. */
+    fun storedForm(key: String?, value: String): String? {
+        if (key !in ENCRYPTED_KEYS || value.isEmpty()) return value
+        return ValueCipher.encrypt(value).takeIf(ValueCipher::isEncrypted)
+    }
+
+    /** The readable form of a value stored under [key], for a backup file. */
+    fun readableForm(key: String, value: Any?): Any? =
+        if (key in ENCRYPTED_KEYS && value is String) ValueCipher.decrypt(value) else value
+
+    /** Writes of encrypted values: an in-place encryption must never overwrite a newer value. */
+    private val encryptedWrites = Any()
+
+    /**
+     * Encrypts the values still in clear text, written by a version without the encryption.
+     * Run in the background at every start; once done it only reads the values.
+     */
+    fun encryptStoredValues() {
+        val files = listOf(
+            settings to ENCRYPTED_KEYS,
+            authPreferences() to setOf(PreferenceKeys.TOKEN, PreferenceKeys.USERNAME),
+            errorLogPreferences() to setOf(PreferenceKeys.ERROR_LOG)
+        )
+        // copied from another phone (device transfer): encrypted with a key that stayed there,
+        // they can never be read here, the defaults apply
+        if (ValueCipher.isKeyMissing()) {
+            files.forEach { (prefs, keys) ->
+                val unreadable = keys.filter { ValueCipher.isEncrypted(prefs.getString(it, null).orEmpty()) }
+                if (unreadable.isNotEmpty()) prefs.edit(commit = true) { unreadable.forEach(::remove) }
+            }
+        }
+        files.forEach { (prefs, keys) -> keys.forEach { encryptInPlace(prefs, it) } }
+    }
+
+    /**
+     * Reads an encrypted value of [prefs]. One still in clear text is returned as is:
+     * [encryptStoredValues] encrypts it, off the main thread.
+     */
+    private fun readEncrypted(prefs: SharedPreferences, key: String): String? =
+        prefs.getString(key, null)?.let(ValueCipher::decrypt)
+
+    private fun encryptInPlace(prefs: SharedPreferences, key: String) {
+        val clear = prefs.getString(key, null)
+        if (clear.isNullOrEmpty() || ValueCipher.isEncrypted(clear)) return
+        val encrypted = ValueCipher.encrypt(clear).takeIf(ValueCipher::isEncrypted) ?: return
+        synchronized(encryptedWrites) {
+            // written meanwhile: the newer value stays
+            if (prefs.getString(key, null) == clear) {
+                prefs.edit(commit = true) { putString(key, encrypted) }
+            }
+        }
+    }
+    // endregion
 
     /**
      * Get a boolean value from preferences.
@@ -424,33 +501,20 @@ object PreferenceHelper {
      */
     private lateinit var authSettings: SharedPreferences
 
-    fun getToken(): String {
-        val stored = authPreferences().getString(PreferenceKeys.TOKEN, "").orEmpty()
-        if (stored.isEmpty() || TokenCipher.isEncrypted(stored)) return TokenCipher.decrypt(stored)
-
-        // transparent migration: a token written before the encryption existed gets
-        // re-encrypted in place on the first read, and is returned unchanged either way
-        val encrypted = TokenCipher.encrypt(stored)
-        if (TokenCipher.isEncrypted(encrypted)) {
-            authPreferences().edit(commit = true) {
-                putString(PreferenceKeys.TOKEN, encrypted)
-            }
-        }
-        return stored
-    }
+    fun getToken(): String = readEncrypted(authPreferences(), PreferenceKeys.TOKEN).orEmpty()
 
     fun setToken(newValue: String) {
         authPreferences().edit {
-            putString(PreferenceKeys.TOKEN, TokenCipher.encrypt(newValue))
+            putString(PreferenceKeys.TOKEN, ValueCipher.encrypt(newValue))
         }
     }
 
-    fun getUsername(): String {
-        return authPreferences().getString(PreferenceKeys.USERNAME, "").orEmpty()
-    }
+    fun getUsername(): String = readEncrypted(authPreferences(), PreferenceKeys.USERNAME).orEmpty()
 
     fun setUsername(newValue: String) {
-        authPreferences().edit { putString(PreferenceKeys.USERNAME, newValue) }
+        authPreferences().edit {
+            putString(PreferenceKeys.USERNAME, ValueCipher.encrypt(newValue))
+        }
     }
 
     /**
@@ -509,18 +573,20 @@ object PreferenceHelper {
 
     // region Crash Reports
     fun saveErrorLog(log: String) {
-        // stored in its own preference file, which every backup rule excludes, so the
-        // stack trace (it can contain video ids and urls) is never uploaded to the cloud.
+        // stored encrypted in its own preference file, which every backup rule excludes, so
+        // the stack trace (it can contain video ids and urls) is never readable outside the
+        // app nor uploaded to the cloud.
         // commit() instead of apply(): this runs in the uncaught exception handler and the
         // process is about to die, an async write would simply be dropped
-        WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
-            .edit(commit = true) { putString(PreferenceKeys.ERROR_LOG, log) }
+        errorLogPreferences()
+            .edit(commit = true) { putString(PreferenceKeys.ERROR_LOG, ValueCipher.encrypt(log)) }
     }
 
-    fun getErrorLog(): String {
-        return WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
-            .getString(PreferenceKeys.ERROR_LOG, "") ?: ""
-    }
+    fun getErrorLog(): String =
+        readEncrypted(errorLogPreferences(), PreferenceKeys.ERROR_LOG).orEmpty()
+
+    private fun errorLogPreferences(): SharedPreferences =
+        WatubeApp.instance.getSharedPreferences(ERROR_LOG_PREF_FILE, Context.MODE_PRIVATE)
 
     fun deleteErrorLog() {
         WatubeApp.instance.deleteSharedPreferences(ERROR_LOG_PREF_FILE)

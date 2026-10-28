@@ -27,10 +27,10 @@
         <!-- endregion -->
 
         <!-- region Updates -->
-        <!-- once a day by default: checking at every launch told GitHub each time the app
-             was opened, for no benefit since releases are weeks apart -->
+        <!-- every launch by default (a cold start, not a rotation or a return from the
+             background): one request without identifier, cookie or token, sent in TLS 1.3 -->
         <ListPreference
-            android:defaultValue="24"
+            android:defaultValue="0"
             android:dependency="automatic_update_checks"
             android:entries="@array/updateIntervalOptions"
             android:entryValues="@array/updateIntervalValues"

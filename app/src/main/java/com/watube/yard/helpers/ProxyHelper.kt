@@ -66,7 +66,7 @@ object ProxyHelper {
 
         scope.launch {
             runCatching {
-                val proxy = RetrofitInstance.externalApi
+                val proxy = RetrofitInstance.instanceConfigApi
                     .getInstanceConfig("${apiUrl.trimEnd('/')}/config")
                     .imageProxyUrl
                     ?.toHttpUrlOrNull()

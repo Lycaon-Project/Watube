@@ -16,6 +16,7 @@ import com.watube.yard.db.obj.DownloadPlaylistWithDownload
 import com.watube.yard.db.obj.DownloadPlaylistWithDownloadWithItems
 import com.watube.yard.db.obj.DownloadSponsorBlockSegment
 import com.watube.yard.db.obj.DownloadWithItems
+import java.nio.file.Path
 
 // region Downloads
 @Dao
@@ -57,6 +58,13 @@ interface DownloadDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateDownloadItem(downloadItem: DownloadItem)
+
+    // an UPDATE, not an insert: replacing a download would cascade to its files
+    @Query("UPDATE download SET thumbnailPath = :path WHERE videoId = :videoId")
+    suspend fun updateThumbnailPath(videoId: String, path: Path)
+
+    @Query("UPDATE downloadPlaylist SET thumbnailPath = :path WHERE playlistId = :playlistId")
+    suspend fun updatePlaylistThumbnailPath(playlistId: String, path: Path)
 
     @Transaction
     @Delete

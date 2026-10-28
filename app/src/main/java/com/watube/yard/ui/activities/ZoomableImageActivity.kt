@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.ActivityZoomableImageBinding
+import com.watube.yard.helpers.AppLock
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.ScreenPrivacy
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,9 @@ class ZoomableImageActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // not a BaseActivity: the privacy settings of the windows are applied here
         ScreenPrivacy.applyTo(window)
+        ScreenPrivacy.applyRecentsPreviewTo(this)
 
         val binding = ActivityZoomableImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -37,6 +40,23 @@ class ZoomableImageActivity : AppCompatActivity() {
                 binding.imageView.isVisible = true
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        AppLock.onStart(this)
+    }
+
+    override fun onStop() {
+        AppLock.onStop(this)
+        super.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // the settings may have changed while this screen was in the background
+        ScreenPrivacy.applyTo(window)
+        ScreenPrivacy.applyRecentsPreviewTo(this)
     }
 }
 // endregion

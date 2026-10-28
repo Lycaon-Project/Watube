@@ -1,6 +1,8 @@
 package com.watube.yard.api
 
+import android.os.SystemClock
 import android.util.Base64
+import android.util.LruCache
 import com.watube.yard.api.obj.Channel
 import com.watube.yard.api.obj.ChannelTab
 import com.watube.yard.api.obj.ChannelTabResponse
@@ -53,6 +55,8 @@ import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.stream.StreamType
 import org.schabi.newpipe.extractor.stream.VideoStream
+import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 import kotlin.time.toKotlinInstant
 
 // region Local Extraction
@@ -409,11 +413,33 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
     // region SponsorBlock
     override suspend fun getSegments(
         videoId: String, category: List<String>, actionType: List<String>?
-    ): SegmentData = RetrofitInstance.externalApi.getSegments(
+    ): SegmentData {
         // use hashed video id for privacy
         // https://wiki.sponsor.ajay.app/w/API_Docs#GET_/api/skipSegments/:sha256HashPrefix
-        videoId.sha256Sum().substring(0, 4), category, actionType
-    ).first { it.videoID == videoId }
+        val prefix = videoId.sha256Sum().substring(0, 4)
+        val key = "$prefix|${category.sorted()}|${actionType.orEmpty().sorted()}"
+        val now = SystemClock.elapsedRealtime()
+
+        // the answer covers every video under the prefix: reopening a video (or the player
+        // asking again after a rotation) needs no new request while it is fresh
+        val prefixSegments = segmentCache.get(key)
+            ?.takeIf { (fetchedAt, _) -> now - fetchedAt < SEGMENT_CACHE_TTL_MS }
+            ?.second
+            ?: fetchPrefixSegments(prefix, category, actionType)
+                .also { segmentCache.put(key, now to it) }
+
+        // no segment for this video: an empty answer, not an error (the usual case)
+        return prefixSegments.firstOrNull { it.videoID == videoId } ?: SegmentData(videoID = videoId)
+    }
+
+    /** A 404 is the API's "no segment under this prefix", the answer for most videos. */
+    private suspend fun fetchPrefixSegments(
+        prefix: String, category: List<String>, actionType: List<String>?
+    ): List<SegmentData> = try {
+        RetrofitInstance.externalApi.getSegments(prefix, category, actionType)
+    } catch (e: HttpException) {
+        if (e.code() == HTTP_NOT_FOUND) emptyList() else throw e
+    }
     // endregion
 
     // region DeArrow
@@ -614,6 +640,20 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             StreamType.VIDEO_STREAM,
             StreamType.AUDIO_STREAM,
         )
+        // endregion
+
+        // region SponsorBlock
+        private const val SEGMENT_CACHE_ENTRIES = 64
+        private val SEGMENT_CACHE_TTL_MS = TimeUnit.MINUTES.toMillis(30)
+        private const val HTTP_NOT_FOUND = 404
+
+        /** prefix answers by "prefix|categories|action types", with their fetch time */
+        private val segmentCache = LruCache<String, Pair<Long, List<SegmentData>>>(
+            SEGMENT_CACHE_ENTRIES
+        )
+
+        /** after a submission or a vote: the next read must show the new state */
+        fun invalidateSegmentCache() = segmentCache.evictAll()
         // endregion
 
         // region DeArrow

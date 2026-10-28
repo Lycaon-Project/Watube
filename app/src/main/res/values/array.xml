@@ -279,6 +279,21 @@
         <item>manual</item>
     </string-array>
 
+    <!-- util/PrivateDns.kt, Resolver keys -->
+    <string-array name="privateDnsResolver">
+        <item>@string/private_dns_quad9</item>
+        <item>@string/private_dns_mullvad</item>
+        <item>@string/private_dns_cloudflare</item>
+        <item>@string/private_dns_dns4eu</item>
+    </string-array>
+
+    <string-array name="privateDnsResolverValues" translatable="false">
+        <item>quad9</item>
+        <item>mullvad</item>
+        <item>cloudflare</item>
+        <item>dns4eu</item>
+    </string-array>
+
     <!-- How often the app looks for a new release when automatic checks are enabled -->
     <string-array name="updateIntervalOptions">
         <item>@string/update_interval_launch</item>
@@ -294,5 +309,18 @@
         <item>12</item>
         <item>24</item>
         <item>168</item>
+    </string-array>
+    <!-- app lock: how long the app may stay in the background before asking again (seconds) -->
+    <string-array name="app_lock_delay_entries">
+        <item>@string/app_lock_delay_now</item>
+        <item>@string/app_lock_delay_30s</item>
+        <item>@string/app_lock_delay_1min</item>
+        <item>@string/app_lock_delay_5min</item>
+    </string-array>
+    <string-array name="app_lock_delay_values" translatable="false">
+        <item>0</item>
+        <item>30</item>
+        <item>60</item>
+        <item>300</item>
     </string-array>
 </resources>

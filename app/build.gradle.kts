@@ -139,6 +139,14 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment)
+    // app lock (biometric or device credential), AOSP library: no Play Services involved
+    implementation(libs.androidx.biometric)
+    // the Room database is stored encrypted, see db/DatabaseEncryption.kt
+    implementation(libs.sqlcipher.android)
+    // backups are encrypted with a key derived by Argon2id, see helpers/BackupCrypto.kt
+    implementation(libs.bouncycastle.bcprov)
+    // downloads are encrypted, see helpers/DownloadEncryption.kt
+    implementation(libs.tink.android)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.preference)
@@ -163,10 +171,12 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.datasource.okhttp)
 
     /* Retrofit and Kotlinx Serialization */
     implementation(libs.square.retrofit)
     implementation(libs.logging.interceptor)
+    implementation(libs.okhttp.dnsoverhttps)
     implementation(libs.kotlinx.serialization)
     implementation(libs.kotlinx.datetime)
     implementation(libs.converter.kotlinx.serialization)

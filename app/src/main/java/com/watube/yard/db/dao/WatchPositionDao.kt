@@ -12,6 +12,9 @@ interface WatchPositionDao {
     @Query("SELECT * FROM watchPosition")
     suspend fun getAll(): List<WatchPosition>
 
+    @Query("SELECT COUNT(*) FROM watchPosition")
+    suspend fun getSize(): Int
+
     @Query("SELECT * FROM watchPosition WHERE videoId = :videoId LIMIT 1")
     suspend fun findById(videoId: String): WatchPosition?
 

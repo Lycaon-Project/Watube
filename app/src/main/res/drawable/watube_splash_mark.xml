@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- region Theming -->
 <!-- Splash icon (Android 12+: a 240dp canvas, only the centred 160dp circle shows): the home
-     header mark, i.e. the watube_mark_bg tile (accent at 13%, 9.7/27.7 corner ratio) and the
+     header mark, i.e. the watube_mark_bg tile (accent at 8%, 9.7/27.7 corner ratio) and the
      play outline of watube_logo.xml filling 18.2/27.7 of it, as in the header. The 104dp tile
      fits the circle with its corners (diagonal 147dp). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"

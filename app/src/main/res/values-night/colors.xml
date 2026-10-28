@@ -3,4 +3,9 @@
     <color name="watube_nav_active">#35E08C</color>
     <color name="watube_chip_fill">#242932</color>
     <color name="watube_link">#35E08C</color>
+    <!-- Privacy dashboard chart, dark steps of the same hues (graphite and OLED black) -->
+    <color name="watube_chart_1">#199E70</color>
+    <color name="watube_chart_2">#3987E5</color>
+    <color name="watube_chart_3">#D95926</color>
+    <color name="watube_chart_other">#6B7380</color>
 </resources>

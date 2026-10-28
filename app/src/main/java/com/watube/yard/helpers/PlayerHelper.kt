@@ -29,7 +29,7 @@ import androidx.media3.common.util.ExperimentalApi
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
@@ -54,6 +54,7 @@ import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.extensions.seekBy
 import com.watube.yard.extensions.togglePlayPauseState
 import com.watube.yard.obj.VideoStats
+import com.watube.yard.util.SharedHttpClient
 import com.watube.yard.util.TextUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -336,12 +337,22 @@ object PlayerHelper {
      * the app's generic User-Agent. Media3 sends none by default, so Android added its own,
      * which names the phone model and system build ("Dalvik/2.1.0 (Linux; U; Android 13;
      * <model> Build/...)") to Google or the instance.
+     *
+     * The requests go through the app's OkHttp client, like every other one: encrypted DNS,
+     * TLS settings, redirect limit and network journal (Android's own HTTP stack had none).
      */
     @OptIn(UnstableApi::class)
     fun mediaDataSourceFactory(context: Context): DataSource.Factory = DefaultDataSource.Factory(
         context,
-        DefaultHttpDataSource.Factory().setUserAgent(PrivacyHelper.userAgent)
+        OkHttpDataSource.Factory(mediaHttpClient).setUserAgent(PrivacyHelper.userAgent)
     )
+
+    private val mediaHttpClient by lazy {
+        SharedHttpClient.base.newBuilder()
+            // an https -> http redirect would expose the stream request on the network
+            .followSslRedirects(false)
+            .build()
+    }
 
     /**
      * Create a basic player, that is used for all types of playback situations inside the app

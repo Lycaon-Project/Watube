@@ -40,9 +40,10 @@ object SponsorBlockLabelHelper {
     suspend fun getVideoLabels(
         videoId: String,
     ): VideoLabelData? {
-        // use hashed video id for privacy
+        // use hashed video id for privacy: the shortest prefix the API takes (4, as for the
+        // segments), so that each request stands for as many videos as possible
         // https://wiki.sponsor.ajay.app/w/API_Docs/Draft#GET_/api/videoLabels/:sha256HashPrefix
-        val prefix = videoId.sha256Sum().substring(0, 5)
+        val prefix = videoId.sha256Sum().substring(0, 4)
         return labelsUnder(prefix)?.firstOrNull { it.videoID == videoId }
     }
 

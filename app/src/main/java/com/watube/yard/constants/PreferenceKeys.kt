@@ -39,11 +39,21 @@ object PreferenceKeys {
     /** Watube: Tor/Mullvad-style neutral region for trending/home requests (opt-in). */
     const val PRIVACY_NEUTRAL_REGION = "privacy_neutral_region"
 
+    /** Watube: host names resolved over DNS-over-HTTPS (util/PrivateDns.kt), on by default. */
+    const val PRIVATE_DNS = "private_dns"
+
+    /** Watube: the DNS-over-HTTPS resolver, a [com.watube.yard.util.PrivateDns.Resolver] key. */
+    const val PRIVATE_DNS_RESOLVER = "private_dns_resolver"
+
     /** Watube: keeps no browsing trace on the device (history, searches, positions). */
     const val TOURIST_MODE = "tourist_mode"
 
     /** Watube: hides every window of the app from screenshots, recordings and recent apps. */
     const val BLOCK_SCREENSHOTS = "block_screenshots"
+    const val HIDE_LOCKSCREEN_CONTENT = "hide_lockscreen_content"
+    const val HIDE_RECENTS_PREVIEW = "hide_recents_preview"
+    const val APP_LOCK = "app_lock"
+    const val APP_LOCK_DELAY = "app_lock_delay"
 
     /** Country of the neutral region picked by the user, used while the rotation is manual. */
     const val NEUTRAL_REGION_COUNTRY = "privacy_neutral_region_country"

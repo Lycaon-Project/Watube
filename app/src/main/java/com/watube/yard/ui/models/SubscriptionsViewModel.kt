@@ -30,6 +30,12 @@ class SubscriptionsViewModel : ViewModel() {
 
     var subFeedRecyclerViewState: Parcelable? = null
 
+    /** channel id picked in the subscriptions rail, null to show every channel of the group */
+    var selectedRailChannel: String? = null
+
+    /** when the user had last seen the feed before this app session: newer videos are "new" */
+    var feedSeenBefore: Long? = null
+
     val groups = MutableLiveData<List<SubscriptionGroup>>()
     var groupToEdit: SubscriptionGroup? = null
 

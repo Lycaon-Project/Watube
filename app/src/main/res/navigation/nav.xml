@@ -71,6 +71,13 @@
         android:label="fragment_subscriptions"
         tools:layout="@layout/fragment_subscriptions" />
     <!-- endregion -->
+    <!-- region Privacy -->
+    <fragment
+        android:id="@+id/privacyFragment"
+        android:name="com.watube.yard.ui.fragments.PrivacyFragment"
+        android:label="fragment_privacy"
+        tools:layout="@layout/fragment_privacy" />
+    <!-- endregion -->
     <!-- region Library -->
     <fragment
         android:id="@+id/libraryFragment"

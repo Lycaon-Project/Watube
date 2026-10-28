@@ -4,6 +4,7 @@ import com.watube.yard.api.GenericUserAgentInterceptor
 import com.watube.yard.helpers.ProxyHelper
 import com.watube.yard.util.PublicAddress
 import com.watube.yard.util.PublicAddress.isPublic
+import com.watube.yard.util.RefusedRequestException
 import com.watube.yard.util.SharedHttpClient
 import okhttp3.Dns
 import okhttp3.HttpUrl
@@ -446,7 +447,7 @@ internal class CastMediaServer(
             // every hop, redirects included, must be an address the relay may fetch as it is
             .addNetworkInterceptor { chain ->
                 val url = chain.request().url.toString()
-                if (defaultRoute(url) != url) throw IOException("relay target refused")
+                if (defaultRoute(url) != url) throw RefusedRequestException("relay target refused")
                 chain.proceed(chain.request())
             }
             .build()

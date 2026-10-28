@@ -71,13 +71,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <!-- title and the two feed actions; the summary runs under them, full width -->
                         <LinearLayout
                             android:id="@+id/subs_header"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/watube_gutter"
+                            android:layout_marginStart="@dimen/watube_gutter"
                             android:layout_marginTop="2dp"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginEnd="6dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -91,37 +92,110 @@
                                 android:text="@string/subscriptions" />
 
                             <ImageButton
-                                android:id="@+id/toggle_subs"
-                                android:layout_width="@dimen/watube_ib_size"
-                                android:layout_height="@dimen/watube_ib_size"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="@string/channels"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_arrow_up_down"
-                                android:tooltipText="@string/channels"
-                                app:tint="?attr/colorOnSurfaceVariant" />
-
-                            <ImageButton
                                 android:id="@+id/filter_sort"
-                                android:layout_width="@dimen/watube_ib_size"
-                                android:layout_height="@dimen/watube_ib_size"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="@string/tooltip_filter"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_filter_sort"
-                                android:tooltipText="@string/tooltip_filter"
+                                android:contentDescription="@string/subs_sort_filter"
+                                android:padding="13dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_sort"
+                                android:tooltipText="@string/subs_sort_filter"
                                 app:tint="?attr/colorOnSurfaceVariant" />
 
                             <ImageButton
                                 android:id="@+id/header_refresh"
-                                android:layout_width="@dimen/watube_ib_size"
-                                android:layout_height="@dimen/watube_ib_size"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/tooltip_refresh"
-                                android:padding="8dp"
-                                android:src="@drawable/watube_bell"
+                                android:padding="13dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_refresh"
                                 android:tooltipText="@string/tooltip_refresh"
                                 app:tint="?attr/colorOnSurfaceVariant" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/subs_summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/watube_gutter"
+                            android:layout_marginTop="1dp"
+                            android:accessibilityLiveRegion="polite"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="13sp"
+                            android:visibility="gone"
+                            tools:text="3 chaînes · 5 nouveautés"
+                            tools:visibility="visible" />
+
+                        <!-- the channels of the selected group: "Manage" stays in place, the
+                             avatars scroll; a tap keeps only that channel in the feed -->
+                        <LinearLayout
+                            android:id="@+id/subs_rail_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <LinearLayout
+                                android:id="@+id/manage_subs"
+                                android:layout_width="@dimen/watube_rail_item_width"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="7dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/subs_manage_description"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                android:paddingVertical="4dp"
+                                android:tooltipText="@string/subs_manage_description">
+
+                                <FrameLayout
+                                    android:layout_width="@dimen/watube_rail_avatar_size"
+                                    android:layout_height="@dimen/watube_rail_avatar_size">
+
+                                    <ImageView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="4dp"
+                                        android:background="@drawable/watube_rail_manage_bg"
+                                        android:importantForAccessibility="no"
+                                        android:padding="13dp"
+                                        android:src="@drawable/ic_subscriptions"
+                                        app:tint="?attr/colorOnPrimaryContainer" />
+
+                                </FrameLayout>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:gravity="center_horizontal"
+                                    android:importantForAccessibility="no"
+                                    android:maxLines="1"
+                                    android:text="@string/subs_manage"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textFontWeight="600"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/subs_rail"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clipToPadding="false"
+                                android:nestedScrollingEnabled="false"
+                                android:orientation="horizontal"
+                                android:overScrollMode="never"
+                                android:paddingEnd="7dp"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         </LinearLayout>
 
@@ -129,29 +203,22 @@
                             android:id="@+id/channel_groups_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginStart="@dimen/watube_gutter"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="6dp"
+                            android:clipToPadding="false"
+                            android:paddingHorizontal="@dimen/watube_gutter"
                             android:scrollbars="none">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
                                 android:orientation="horizontal">
-
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/edit_groups"
-                                    style="?materialIconButtonFilledTonalStyle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:tooltipText="@string/tooltip_edit_groups"
-                                    app:icon="@drawable/ic_edit" />
 
                                 <com.google.android.material.chip.ChipGroup
                                     android:id="@+id/channel_groups"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
                                     app:checkedChip="@id/chip_all"
                                     app:selectionRequired="true"
                                     app:singleLine="true"
@@ -170,6 +237,18 @@
                                         android:visibility="gone" />
 
                                 </com.google.android.material.chip.ChipGroup>
+
+                                <!-- after the groups it edits: a quiet action, not a first item -->
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/edit_groups"
+                                    style="?materialIconButtonStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="2dp"
+                                    android:contentDescription="@string/tooltip_edit_groups"
+                                    android:tooltipText="@string/tooltip_edit_groups"
+                                    app:icon="@drawable/ic_edit"
+                                    app:iconTint="?attr/colorOnSurfaceVariant" />
 
                             </LinearLayout>
 

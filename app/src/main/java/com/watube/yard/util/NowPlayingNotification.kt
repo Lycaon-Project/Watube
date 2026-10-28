@@ -14,6 +14,7 @@ import com.watube.yard.R
 import com.watube.yard.enums.NotificationId
 import com.watube.yard.enums.PlayerEvent
 import com.watube.yard.helpers.PlayerHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import com.google.common.collect.ImmutableList
 
 // region Media Notification
@@ -57,7 +58,10 @@ class NowPlayingNotification(
     ): MediaNotification {
         createCurrentContentIntent()?.let { mediaSession.setSessionActivity(it) }
         nProvider.setSmallIcon(R.drawable.ic_launcher_lockscreen)
-        return nProvider.createNotification(mediaSession, customLayout, actionFactory, onNotificationChangedCallback)
+        return nProvider
+            .createNotification(mediaSession, customLayout, actionFactory, onNotificationChangedCallback)
+            // the title and the artwork of what is playing stay off the lock screen by default
+            .also { it.notification.visibility = ScreenPrivacy.lockScreenVisibility }
     }
 
     override fun handleCustomCommand(

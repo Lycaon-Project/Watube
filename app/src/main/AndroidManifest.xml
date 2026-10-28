@@ -97,6 +97,12 @@
         <activity
             android:name=".ui.activities.ZoomableImageActivity"
             android:screenOrientation="locked" />
+        <!-- app lock: not exported, only the app itself can show it -->
+        <activity
+            android:name=".ui.activities.AppLockActivity"
+            android:launchMode="singleTop"
+            android:exported="false"
+            android:theme="@style/Theme.Watube" />
         <!-- endregion -->
 
         <!-- region Playing Queue -->

@@ -28,6 +28,7 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.views.TimePickerPreference
 import com.watube.yard.util.DataSaverMode
@@ -359,7 +360,8 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
             .setAutoCancel(true)
             .setGroup(group)
             .setCategory(Notification.CATEGORY_SOCIAL)
-            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            // secret by default; the public version serves when the user allows the lock screen
+            .setVisibility(ScreenPrivacy.lockScreenVisibility)
             .setPublicVersion(publicVersion)
     }
 

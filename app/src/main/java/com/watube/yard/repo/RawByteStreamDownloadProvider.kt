@@ -39,6 +39,10 @@ class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider
         sink: BufferedSink,
     ): DownloadProgressResult {
         val startByteOffset = item.path.fileSize()
+        val isSizeKnown = item.downloadSize > 0L
+        // nothing left to ask for: a range past the end would only get an HTTP 416
+        if (isSizeKnown && startByteOffset >= item.downloadSize) return DownloadProgressResult.DownloadComplete
+
         val source =
             startConnection(url, startByteOffset, item.downloadSize) ?: return DownloadProgressResult.Failed
 
@@ -60,7 +64,8 @@ class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider
             source.close()
         }
 
-        return if (startByteOffset + totalRead < item.downloadSize) {
+        // without a known size the request has no end bound: the end of the body is the end of the file
+        return if (isSizeKnown && startByteOffset + totalRead < item.downloadSize) {
             DownloadProgressResult.Progressed(totalRead)
         } else {
             DownloadProgressResult.DownloadComplete
@@ -70,16 +75,12 @@ class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider
     private suspend fun startConnection(
         url: HttpUrl,
         alreadyRead: Long,
-        readLimit: Long?
+        totalSize: Long
     ): ResponseBody? {
-        val limit = readLimit?.let {
-            min(readLimit, alreadyRead + BYTES_PER_REQUEST)
-        }?.toString().orEmpty()
-
         val request = Request.Builder()
             .url(url)
             .method("GET", null)
-            .header("Range", "bytes=$alreadyRead-$limit")
+            .apply { rangeHeaderValue(alreadyRead, totalSize)?.let { header("Range", it) } }
             .build()
 
         return withContext(Dispatchers.IO) {
@@ -92,7 +93,7 @@ class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider
                     response.close()
                     Log.e(TAG(), "Got HTTP 403 while downloading")
                     return@withContext null
-                } else if (response.code !in 200..299) {
+                } else if (!isUsableResponse(response.code, alreadyRead)) {
                     response.close()
                     return@withContext null // TODO: print response.message
                 }
@@ -111,7 +112,35 @@ class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider
 
     companion object {
         // maximum working tested chunk size is 3MB, the 512MB value here is from NewPipe
-        private const val BYTES_PER_REQUEST = 512 * 1024L
+        internal const val BYTES_PER_REQUEST = 512 * 1024L
+
+        private const val HTTP_PARTIAL_CONTENT = 206
+
+        /**
+         * Value of the `Range` header for the request starting at [start], or `null` to send none.
+         *
+         * A [totalSize] of 0 or less means unknown (subtitles): the request then has no end bound,
+         * `bytes=0--1` being invalid, and the first one no range at all.
+         * The end of a range is inclusive (RFC 9110 14.1.2).
+         */
+        internal fun rangeHeaderValue(start: Long, totalSize: Long): String? {
+            if (totalSize <= 0L) return if (start > 0L) "bytes=$start-" else null
+
+            val end = min(totalSize, start + BYTES_PER_REQUEST) - 1
+            return "bytes=$start-$end"
+        }
+
+        /**
+         * Whether a response with the HTTP [code] can be appended to the [alreadyRead] bytes.
+         *
+         * A resumed download needs a 206: a 200 means the range was ignored and the body
+         * starts at byte 0 again, which would corrupt the file.
+         */
+        internal fun isUsableResponse(code: Int, alreadyRead: Long): Boolean = when {
+            code !in 200..299 -> false
+            alreadyRead > 0L -> code == HTTP_PARTIAL_CONTENT
+            else -> true
+        }
     }
 }
 // endregion

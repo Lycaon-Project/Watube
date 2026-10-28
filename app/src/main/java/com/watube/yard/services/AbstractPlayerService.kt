@@ -41,6 +41,7 @@ import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.extensions.updateParameters
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
+import com.watube.yard.helpers.PrivacyStats
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.tools.RestMode
 import com.watube.yard.util.DefaultTrackSelectorWithAudioQualitySupport
@@ -372,7 +373,10 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
         ) ?: return
 
         if (sbSkipOption in arrayOf(SbSkipOptions.AUTOMATIC, SbSkipOptions.AUTOMATIC_ONCE) && sponsorBlockAutoSkip) {
-            player.seekTo(currentSegment.segmentStartAndEnd.second.toLong() * 1000)
+            val segmentEndMs = currentSegment.segmentStartAndEnd.second.toLong() * 1000
+            // the privacy tab shows the time SponsorBlock gave back
+            PrivacyStats.recordSkippedSegment(segmentEndMs - player.currentPosition)
+            player.seekTo(segmentEndMs)
             currentSegment.skipped = true
 
             if (PlayerHelper.sponsorBlockNotifications) toastFromMainThread(R.string.segment_skipped)

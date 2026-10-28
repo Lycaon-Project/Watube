@@ -152,8 +152,15 @@ object PrivacyHelper {
      * it is valid for.
      */
     fun storeSponsorBlockUserId(userId: String) {
+        // kept encrypted (see PreferenceHelper.storedForm); when it cannot be, no id is kept
+        // and a fresh one is generated for the next submission
+        val stored = PreferenceHelper.storedForm(PreferenceKeys.SB_USER_ID, userId)
         PreferenceHelper.settings.edit {
-            putString(PreferenceKeys.SB_USER_ID, userId)
+            if (stored == null) {
+                remove(PreferenceKeys.SB_USER_ID)
+            } else {
+                putString(PreferenceKeys.SB_USER_ID, stored)
+            }
             putString(PreferenceKeys.SB_USER_ID_CYCLE, currentCycleStamp())
         }
     }

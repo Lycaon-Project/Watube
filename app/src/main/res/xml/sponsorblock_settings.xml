@@ -25,7 +25,7 @@
         app:key="sb_contribute_key"
         app:title="@string/contribute_to_sponsorblock" />
 
-    <EditTextPreference
+    <com.watube.yard.ui.preferences.EncryptedEditTextPreference
         android:dependency="sb_contribute_key"
         app:key="sb_user_id"
         app:title="@string/sponsorblock_user_id" />

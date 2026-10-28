@@ -15,11 +15,17 @@ on:
       - "assets/**"
       - ".github/**/*.md"
 
+# least privilege: jobs only read the repository unless they say otherwise
+permissions:
+  contents: read
+
 jobs:
   debug-builds:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
       - uses: gradle/actions/wrapper-validation@0723195856401067f7a2779048b490ace7a47d7c # v5
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
@@ -37,22 +43,15 @@ jobs:
         run: |
           ./gradlew assembleDebug
 
-      - name: Sign Apk
-        continue-on-error: true
-        id: sign_apk
-        uses: ilharp/sign-android-release@13dd52242698526f951aa8bb8696204f6fea702a # v2
-        with:
-          releaseDir: app/build/outputs/apk/debug
-          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
-          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
+      # The debug build is debuggable and trusts user installed CAs: it keeps the debug key the
+      # build gives it and is never signed with the release key (a public artifact signed by
+      # that key would carry the release identity).
       - name: Upload APK
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: app
-          path: app/build/outputs/apk/debug/app-debug-signed.apk
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
 
   release-nightly:
     if: github.ref_name == 'main'

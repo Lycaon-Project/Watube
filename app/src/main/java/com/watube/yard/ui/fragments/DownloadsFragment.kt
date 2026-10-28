@@ -87,6 +87,7 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
     private var _binding: FragmentDownloadsBinding? = null
     private val binding get() = _binding!!
     private val downloadsViewModel: DownloadsViewModel by activityViewModels()
+    private val downloadExport = DownloadExport(this)
 
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -96,6 +97,7 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDownloadsBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        downloadExport.bind()
 
         binding.downloadsPager.adapter = DownloadsFragmentAdapter(this)
 

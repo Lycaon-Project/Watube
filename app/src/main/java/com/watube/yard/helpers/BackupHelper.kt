@@ -16,13 +16,11 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.obj.PreferenceItem
+import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.decodeFromStream
-import kotlinx.serialization.json.encodeToStream
 import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
@@ -32,32 +30,63 @@ import kotlinx.serialization.json.longOrNull
  * Backup and restore the preferences
  */
 object BackupHelper {
+    /** Larger than any real library: a bigger file is not read into memory. */
+    private const val MAX_BACKUP_BYTES = 64 * 1024 * 1024
+
     /**
-     * Write a [BackupFile] containing the database content as well as the preferences
+     * Write a [BackupFile] containing the database content as well as the preferences,
+     * always encrypted (see [BackupCrypto]) with [secret], which is cleared afterwards.
      */
-    @OptIn(ExperimentalSerializationApi::class)
-    suspend fun createAdvancedBackup(context: Context, uri: Uri, backupFile: BackupFile) {
+    suspend fun createAdvancedBackup(
+        context: Context,
+        uri: Uri,
+        backupFile: BackupFile,
+        secret: CharArray,
+        kind: BackupCrypto.SecretKind
+    ) {
         try {
-            context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                JsonHelper.json.encodeToStream(backupFile, outputStream)
+            val json = JsonHelper.json.encodeToString(backupFile).toByteArray()
+            val encrypted = try {
+                BackupCrypto.encrypt(json, secret, kind)
+            } finally {
+                json.fill(0)
             }
+            // "wt": a file chosen again is truncated, old trailing bytes would break the tag
+            val output = context.contentResolver.openOutputStream(uri, "wt")
+                ?: throw IOException("backup destination unavailable")
+            output.use { it.write(encrypted) }
             context.toastFromMainDispatcher(R.string.backup_creation_success)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Error while writing backup: $e")
             context.toastFromMainDispatcher(R.string.backup_creation_failed)
+        } catch (e: OutOfMemoryError) {
+            // the key derivation and the copies of a large library did not fit in this phone
+            Log.e(TAG(), "Not enough memory to write the backup")
+            context.toastFromMainDispatcher(R.string.backup_creation_failed)
+        } finally {
+            secret.fill(Char.MIN_VALUE)
+        }
+    }
+
+    /** The backup file at [uri]: encrypted, or a clear one written by an older version. */
+    suspend fun readBackupFile(context: Context, uri: Uri): ByteArray = withContext(Dispatchers.IO) {
+        val input = context.contentResolver.openInputStream(uri)
+            ?: throw IOException("backup file unavailable")
+        input.use {
+            val bytes = it.readNBytes(MAX_BACKUP_BYTES + 1)
+            if (bytes.size > MAX_BACKUP_BYTES) throw IOException("backup file too large")
+            bytes
         }
     }
 
     /**
-     * Restore data from a [BackupFile]
+     * Restore data from a [BackupFile], given as its JSON (the decrypted content of the file,
+     * or a clear file of an older version)
      */
-    @OptIn(ExperimentalSerializationApi::class)
-    suspend fun restoreAdvancedBackup(context: Context, uri: Uri) = withContext(Dispatchers.IO) {
-        val backupFile = context.contentResolver.openInputStream(uri)?.use {
-            JsonHelper.json.decodeFromStream<BackupFile>(it)
-        } ?: return@withContext
+    suspend fun restoreAdvancedBackup(context: Context, json: ByteArray) = withContext(Dispatchers.IO) {
+        val backupFile = JsonHelper.json.decodeFromString<BackupFile>(json.decodeToString())
 
         // tourist mode keeps browsing data off the device, even while restoring a backup;
         // entries without a watch time are stamped so the retention purge can age them
@@ -152,7 +181,8 @@ object BackupHelper {
                         ) {
                             putStringSet(key, value.split(",").toSet())
                         } else {
-                            putString(key, value)
+                            // encrypted again on this phone (see PreferenceHelper.storedForm)
+                            PreferenceHelper.storedForm(key, value)?.let { putString(key, it) }
                         }
                     }
                 }
@@ -213,6 +243,9 @@ object BackupHelper {
         PreferenceKeys.USERNAME,
         // crash logs may contain video ids and urls, they have their own preference file
         PreferenceKeys.ERROR_LOG,
+        // videos already notified: they tell which channels are followed, and are only
+        // useful on the phone that showed the notifications
+        PreferenceKeys.NOTIFIED_VIDEO_IDS,
     )
 
     /**

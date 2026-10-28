@@ -2,6 +2,7 @@ package com.watube.yard.ui.preferences
 
 import android.content.Context
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.view.LayoutInflater
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
@@ -13,26 +14,33 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.databinding.DialogImportExportFormatChooserBinding
 import com.watube.yard.enums.ImportFormat
+import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.extensions.toastFromMainThread
+import com.watube.yard.helpers.BackupCrypto
 import com.watube.yard.helpers.BackupHelper
 import com.watube.yard.helpers.ImportHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.ui.base.BasePreferenceFragment
 import com.watube.yard.ui.dialogs.BackupDialog
+import com.watube.yard.ui.dialogs.BackupProtectionDialogs
 import com.watube.yard.ui.dialogs.BackupDialog.Companion.BACKUP_DIALOG_REQUEST_KEY
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.util.TextUtils
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 // region Backup & Restore
 class BackupRestoreSettings : BasePreferenceFragment() {
     private var backupFile = BackupFile()
     private var importFormat: ImportFormat = ImportFormat.NEWPIPE
+
+    /** What will open the backup being exported, from the protection dialog to the file. */
+    private var exportSecret: Pair<CharArray, BackupCrypto.SecretKind>? = null
 
     // backup and restore database
     private val getBackupFile =
@@ -41,22 +49,76 @@ class BackupRestoreSettings : BasePreferenceFragment() {
             // bound to the fragment lifecycle so nothing runs (and no dialog is shown)
             // once the screen is gone
             val appContext = context?.applicationContext ?: return@registerForActivityResult
-            lifecycleScope.launch(Dispatchers.IO) {
-                BackupHelper.restoreAdvancedBackup(appContext, uri)
-                withContext(Dispatchers.Main) {
-                    // could fail if fragment is already closed
-                    runCatching {
-                        RequireRestartDialog().show(childFragmentManager, this::class.java.name)
-                    }
-                }
+            lifecycleScope.launch {
+                val file = runCatching { BackupHelper.readBackupFile(appContext, uri) }
+                    .getOrElse { return@launch appContext.toastFromMainDispatcher(R.string.backup_unreadable) }
+                if (!BackupCrypto.isEncrypted(file)) return@launch confirmUnencrypted(appContext, file)
+
+                val kind = runCatching { BackupCrypto.secretKindOf(file) }
+                    .getOrElse { return@launch appContext.toastFromMainDispatcher(R.string.backup_unreadable) }
+                BackupProtectionDialogs.askUnlockSecret(
+                    requireContext(),
+                    kind,
+                    lifecycleScope,
+                    open = { secret ->
+                        try {
+                            BackupCrypto.decrypt(file, secret)
+                        } catch (e: BackupCrypto.WrongSecretException) {
+                            null
+                        }
+                    },
+                    onOpened = { json -> lifecycleScope.launch { restore(appContext, json) } }
+                )
             }
         }
     private val createBackupFile = registerForActivityResult(CreateDocument(FILETYPE_ANY)) { uri ->
-        if (uri == null) return@registerForActivityResult
         val appContext = context?.applicationContext ?: return@registerForActivityResult
-        lifecycleScope.launch(Dispatchers.IO) {
-            BackupHelper.createAdvancedBackup(appContext, uri, backupFile)
+        val pending = exportSecret
+        exportSecret = null
+        if (pending == null) {
+            // the secret did not survive (the app was stopped while choosing the file): the
+            // file the picker created stays empty, it is removed and the user told
+            if (uri != null) {
+                runCatching { DocumentsContract.deleteDocument(appContext.contentResolver, uri) }
+                appContext.toastFromMainThread(R.string.backup_creation_failed)
+            }
+            return@registerForActivityResult
         }
+        val (secret, kind) = pending
+        if (uri == null) {
+            secret.fill(Char.MIN_VALUE)
+            return@registerForActivityResult
+        }
+        // started even if the screen is closed meanwhile: the secret is always cleared
+        lifecycleScope.launch(Dispatchers.IO, start = CoroutineStart.ATOMIC) {
+            BackupHelper.createAdvancedBackup(appContext, uri, backupFile, secret, kind)
+        }
+    }
+
+    /** A file of an older version is not protected: anyone could have read or changed it. */
+    private fun confirmUnencrypted(appContext: Context, file: ByteArray) {
+        SecureAlertDialogBuilder(requireContext())
+            .setTitle(R.string.backup_unencrypted_title)
+            .setMessage(R.string.backup_unencrypted_message)
+            .setNegativeButton(R.string.cancel) { _, _ -> file.fill(0) }
+            .setPositiveButton(R.string.restore) { _, _ ->
+                lifecycleScope.launch { restore(appContext, file) }
+            }
+            .show()
+    }
+
+    private suspend fun restore(appContext: Context, json: ByteArray) {
+        val restored = runCatching { BackupHelper.restoreAdvancedBackup(appContext, json) }
+        json.fill(0)
+        if (restored.isFailure) return appContext.toastFromMainDispatcher(R.string.backup_unreadable)
+        // could fail if fragment is already closed
+        runCatching { RequireRestartDialog().show(childFragmentManager, this::class.java.name) }
+    }
+
+    override fun onDestroy() {
+        exportSecret?.first?.fill(Char.MIN_VALUE)
+        exportSecret = null
+        super.onDestroy()
     }
 
     /**
@@ -193,8 +255,13 @@ class BackupRestoreSettings : BasePreferenceFragment() {
         ) { _, resultBundle ->
             val encodedBackupFile = resultBundle.getString(IntentData.backupFile)!!
             backupFile = Json.decodeFromString(encodedBackupFile)
-            val timestamp = TextUtils.getFileSafeTimeStampNow()
-            createBackupFile.launch("watube-backup-${timestamp}.json")
+            // always encrypted: what will open it is chosen first, then where it goes
+            BackupProtectionDialogs.askExportSecret(requireContext()) { secret, kind ->
+                exportSecret?.first?.fill(Char.MIN_VALUE)
+                exportSecret = secret to kind
+                val timestamp = TextUtils.getFileSafeTimeStampNow()
+                createBackupFile.launch("watube-backup-${timestamp}.$BACKUP_EXTENSION")
+            }
         }
         val advancedBackup = findPreference<Preference>("backup")
         advancedBackup?.setOnPreferenceClickListener {
@@ -204,13 +271,15 @@ class BackupRestoreSettings : BasePreferenceFragment() {
 
         val restoreAdvancedBackup = findPreference<Preference>("restore")
         restoreAdvancedBackup?.setOnPreferenceClickListener {
-            getBackupFile.launch(JSON)
+            // encrypted backups have no registered type, older ones are JSON
+            getBackupFile.launch("*/*")
             true
         }
     }
 
     companion object {
         const val JSON = "application/json"
+        private const val BACKUP_EXTENSION = "watube"
 
         /**
          * Mimetype to use to create new files when setting extension manually

@@ -14,6 +14,9 @@ interface SearchHistoryDao {
     @Query("SELECT * FROM searchHistoryItem ORDER BY rowid ASC")
     suspend fun getAll(): List<SearchHistoryItem>
 
+    @Query("SELECT COUNT(*) FROM searchHistoryItem")
+    suspend fun getSize(): Int
+
     @Query("SELECT * FROM searchHistoryItem ORDER BY rowid DESC")
     fun getAllNewestFirstFlow(): Flow<List<SearchHistoryItem>>
 

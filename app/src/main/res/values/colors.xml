@@ -93,8 +93,8 @@
     <!-- Night sibling of watube_nav_scrim (values-night is out of the editable set):
          the mockup dark nav token is rgba(15,17,20,.92) -->
     <color name="watube_nav_scrim_night">#EB0F1114</color>
-    <!-- Brand tile behind the home header .mark: the acc token at 13% over transparent -->
-    <color name="watube_mark_bg">#2135E08C</color>
+    <!-- Brand tile behind the home header .mark: the acc token at 8% over transparent -->
+    <color name="watube_mark_bg">#1435E08C</color>
     <color name="watube_chip_fill">#E8EAE4</color>
     <color name="watube_link">#0A6B43</color>
     <!-- Voile sombre (60 % noir) derrière les contrôles du lecteur, remplace la ressource
@@ -103,4 +103,10 @@
     <!-- Quality pill (HD / 2K / 4K) of the player quality menu: Watube green in both themes -->
     <color name="watube_quality_badge">#35E08C</color>
     <color name="watube_quality_badge_text">#062015</color>
+    <!-- Privacy dashboard chart: categorical slots checked with the dataviz palette validator
+         (lightness band, colour blind separation, contrast); "other" is a neutral fold -->
+    <color name="watube_chart_1">#1BAF7A</color>
+    <color name="watube_chart_2">#2A78D6</color>
+    <color name="watube_chart_3">#EB6834</color>
+    <color name="watube_chart_other">#8A929C</color>
 </resources>

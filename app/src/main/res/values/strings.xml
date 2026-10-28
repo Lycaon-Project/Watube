@@ -622,6 +622,13 @@
     <string name="privacy_hardening">Privacy hardening</string>
     <string name="privacy_hardening_summary">Block SIM, network and device-based fingerprinting: no telephony data, neutral trending region, channels fetched in random order, hardened WebView</string>
     <string name="privacy_rotation_frequency">Rotation frequency</string>
+    <string name="private_dns">Encrypted DNS</string>
+    <string name="private_dns_summary">The names of the sites Watube contacts go encrypted to the chosen resolver instead of travelling in clear text on the network. If it does not answer, nothing is sent in clear: turn this off to use the network\'s DNS again.</string>
+    <string name="private_dns_resolver">DNS resolver</string>
+    <string name="private_dns_quad9">Quad9 · Switzerland, no logs</string>
+    <string name="private_dns_mullvad">Mullvad · Sweden, no logs, no filtering</string>
+    <string name="private_dns_cloudflare">Cloudflare · fastest, United States</string>
+    <string name="private_dns_dns4eu">DNS4EU · European Union, no filtering</string>
     <string name="rotation_frequency_summary">%1$s — rotates the SponsorBlock ID</string>
     <string name="rotation_every_12_hours">Every 12 hours</string>
     <string name="rotation_every_24_hours">Every 24 hours</string>
@@ -684,7 +691,6 @@
     <string name="watube_shortcut_downloads">offline</string>
     <string name="watube_shortcut_privacy_title">Private data</string>
     <string name="watube_shortcut_privacy">never sent</string>
-    <string name="watube_shortcut_privacy_toast">Your data stays on this device</string>
 
     <!-- Solar search pane (.slab labels, .noresult empty state) -->
     <string name="watube_search_recent">Recents</string>
@@ -713,6 +719,10 @@
 <string name="search_clear">Clear</string>
 <string name="downloads_search_hint">Search downloads</string>
 <string name="playlist_search_hint">Search in playlist</string>
+    <string name="watube_hide_lockscreen">Hide on the lock screen</string>
+    <string name="watube_hide_lockscreen_summary">Playback, download and new video notifications stay off the lock screen.</string>
+    <string name="watube_hide_recents">Hide from recent apps</string>
+    <string name="watube_hide_recents_summary">The recent apps screen shows a blank card instead of what you were watching.</string>
     <string name="watube_block_screenshots">Block screenshots</string>
     <string name="watube_block_screenshots_summary">Hides Watube from screenshots, screen recordings and the recent apps preview.</string>
     <string name="watube_search_suggestions_summary">Off: suggestions come from your own search history, on the device. On: what you type is sent to YouTube (or your Piped instance) as you type, never links, e-mail addresses or numbers.</string>
@@ -744,4 +754,151 @@
     </plurals>
     <string name="new_videos_more">+%1$d more</string>
     <string name="new_videos_hidden">New videos from your subscriptions</string>
+    <!-- Subscriptions header -->
+    <string name="subs_manage">Manage</string>
+    <string name="subs_manage_description">Manage subscribed channels</string>
+    <string name="subs_sort_filter">Sort and filter</string>
+    <string name="subs_up_to_date">up to date</string>
+    <string name="subs_badge_overflow" translatable="false">%1$d+</string>
+    <string name="subs_only_channel">Only %1$s</string>
+    <plurals name="subs_channel_count">
+        <item quantity="one">%d channel</item>
+        <item quantity="other">%d channels</item>
+    </plurals>
+    <plurals name="subs_new_count">
+        <item quantity="one">%d new</item>
+        <item quantity="other">%d new</item>
+    </plurals>
+    <plurals name="subs_rail_new_videos">
+        <item quantity="one">%1$s, %2$d new video</item>
+        <item quantity="other">%1$s, %2$d new videos</item>
+    </plurals>
+    <string name="subs_rail_action_show">show only this channel</string>
+    <string name="subs_rail_action_open">open the channel</string>
+    <string name="privacy_tab">Dashboard</string>
+    <string name="navbar_max_tabs">Up to %1$d tabs besides Dashboard and Settings</string>
+    <!-- Privacy tab -->
+    <string name="privacy_section_device">On this phone</string>
+    <string name="privacy_network_empty">No request since the app opened.</string>
+    <plurals name="privacy_requests">
+        <item quantity="one">%d request</item>
+        <item quantity="other">%d requests</item>
+    </plurals>
+    <plurals name="privacy_refused">
+        <item quantity="one">%d refused</item>
+        <item quantity="other">%d refused</item>
+    </plurals>
+    <string name="privacy_dashboard_intro">What Watube does for you, in figures. Everything shown here stays on this phone.</string>
+    <string name="privacy_protections_short">protections</string>
+    <string name="privacy_protections_description">%1$d of %2$d protections on</string>
+    <string name="privacy_encrypted_label">of exchanges encrypted</string>
+    <string name="privacy_stat_requests">Requests</string>
+    <string name="privacy_stat_requests_caption">since the app opened</string>
+    <string name="privacy_stat_servers">Servers</string>
+    <string name="privacy_stat_servers_caption">contacted</string>
+    <string name="privacy_stat_skipped">Sponsors skipped</string>
+    <string name="privacy_stat_skipped_caption">with SponsorBlock</string>
+    <string name="privacy_stat_saved">Time saved</string>
+    <string name="privacy_stat_saved_caption">without sponsors</string>
+    <string name="privacy_stat_trackers">Trackers removed</string>
+    <string name="privacy_stat_trackers_caption">from links</string>
+    <string name="privacy_stat_network">Addresses protected</string>
+    <string name="privacy_stat_network_caption">refused or in https</string>
+    <string name="privacy_chart_destinations">Where exchanges go</string>
+    <string name="privacy_cat_youtube">YouTube</string>
+    <string name="privacy_cat_services">SponsorBlock services</string>
+    <string name="privacy_cat_updates">Updates</string>
+    <string name="privacy_cat_other">Other</string>
+    <string name="privacy_chart_activity">Live activity</string>
+    <string name="privacy_activity_caption">Requests every 10 seconds, last 5 minutes</string>
+    <string name="privacy_activity_peak">Peak: %1$d</string>
+    <string name="privacy_activity_description">Live activity, peak of %1$d requests in 10 seconds</string>
+    <string name="privacy_chart_hosts">Most contacted servers</string>
+    <string name="privacy_stat_history">History</string>
+    <string name="privacy_stat_history_caption">videos watched</string>
+    <string name="privacy_stat_searches">Searches</string>
+    <string name="privacy_stat_searches_caption">kept</string>
+    <string name="privacy_stat_positions">Positions</string>
+    <string name="privacy_stat_positions_caption">videos to resume</string>
+    <string name="privacy_stat_cache">Cache</string>
+    <string name="privacy_stat_cache_caption">to load faster</string>
+    <string name="privacy_duration_s">%1$d s</string>
+    <string name="privacy_duration_min">%1$d min</string>
+    <string name="privacy_duration_h">%1$d h %2$02d</string>
+    <string name="privacy_share_percent">%1$d %%</string>
+    <plurals name="privacy_refused_requests">
+        <item quantity="one">%d request blocked</item>
+        <item quantity="other">%d requests blocked</item>
+    </plurals>
+    <plurals name="privacy_requests_unit">
+        <item quantity="one">request</item>
+        <item quantity="other">requests</item>
+    </plurals>
+    <string name="privacy_protections_ratio" translatable="false">%1$d/%2$d</string>
+    <string name="privacy_tile_description">%1$s: %2$s, %3$s</string>
+    <string name="clear_everything">Clear everything now</string>
+    <string name="clear_everything_summary">History, searches, playback positions, caches and account session, in one go. Subscriptions, playlists and downloads stay.</string>
+    <string name="clear_everything_dialog">Your watch and search history, playback positions, caches and account session will be deleted. Subscriptions, playlists, downloads and settings stay. This cannot be undone.</string>
+    <string name="clear_everything_confirm">Clear everything</string>
+    <string name="clear_everything_done">Everything was cleared</string>
+    <string name="app_lock">Lock the app</string>
+    <string name="app_lock_summary">Asks for your fingerprint, face or screen lock code to open Watube.</string>
+    <string name="app_lock_delay">Lock after</string>
+    <string name="app_lock_delay_now">Immediately</string>
+    <string name="app_lock_delay_30s">30 seconds in the background</string>
+    <string name="app_lock_delay_1min">1 minute in the background</string>
+    <string name="app_lock_delay_5min">5 minutes in the background</string>
+    <string name="app_lock_prompt_title">Unlock Watube</string>
+    <string name="app_lock_prompt_subtitle">Confirm it is you</string>
+    <string name="app_lock_locked">Watube is locked</string>
+    <string name="app_lock_locked_summary">Unlock to see your videos.</string>
+    <string name="app_lock_unlock">Unlock</string>
+    <string name="app_lock_unavailable">Set a screen lock on your phone first.</string>
+    <string name="backup_protect_title">Protect the backup</string>
+    <string name="backup_protect_message">The backup is always encrypted. Choose what will open it.</string>
+    <string name="backup_protect_password_summary">You choose it.</string>
+    <string name="backup_protect_code">Recovery code</string>
+    <string name="backup_protect_code_summary">Watube creates it, you write it down.</string>
+    <string name="backup_password_confirm">Confirm the password</string>
+    <string name="backup_password_helper">At least %d characters</string>
+    <string name="backup_password_too_short">At least %d characters</string>
+    <string name="backup_password_mismatch">The two passwords differ</string>
+    <string name="backup_password_manager_note">Tip: a password manager can create and remember it for you. It is more comfortable day to day.</string>
+    <string name="backup_code_warning">Watube will create a code to write down. Without it, the backup cannot be opened on any phone.</string>
+    <string name="backup_continue">Continue</string>
+    <string name="recovery_code_title">Your recovery code</string>
+    <string name="recovery_code_message">Write it down, or save it in your password manager: it will never be shown again.</string>
+    <string name="recovery_code_copy">Copy the code</string>
+    <string name="recovery_code_label">Watube recovery code</string>
+    <string name="recovery_code_noted">I have written this code down</string>
+    <string name="backup_create">Create the backup</string>
+    <string name="backup_unlock_title">Protected backup</string>
+    <string name="backup_unlock_password_message">Enter the password chosen when the backup was made.</string>
+    <string name="backup_unlock_code_message">Enter the recovery code written down when the backup was made.</string>
+    <string name="backup_unlock_open">Open</string>
+    <string name="backup_unlock_opening">Opening the backup</string>
+    <string name="backup_unlock_wrong_password">Wrong password</string>
+    <string name="backup_unlock_wrong_code">Wrong code</string>
+    <string name="backup_unreadable">This file is not a readable Watube backup.</string>
+    <string name="backup_unencrypted_title">Unencrypted backup</string>
+    <string name="backup_unencrypted_message">This file was made by an older version of Watube, without encryption: anyone who could reach it may have read or changed it. Only restore it if you know it comes from you.</string>
+    <string name="export_download">Export the file</string>
+    <string name="download_export_choose">Which file to export?</string>
+    <string name="download_export_unfinished">This download is not finished</string>
+    <string name="download_exported">File exported. It is no longer encrypted: keep it somewhere safe.</string>
+    <string name="download_export_failed">Could not export the file</string>
+    <string name="download_encrypt_no_space">Not enough free space to finish the download: free some up, it will be finished on the next start</string>
+    <string name="download_no_space">Not enough free space to go on with the download</string>
+    <string name="external_link_title">Open an external link</string>
+    <string name="external_link_destination">Destination: %1$s</string>
+    <string name="external_link_secure">Encrypted connection (https)</string>
+    <string name="external_link_unencrypted">Unencrypted link (http): what you send and receive there can be read on the network</string>
+    <string name="external_link_lookalike">This name uses letters of other alphabets and may imitate a known site. It reads: %1$s</string>
+    <string name="external_link_email">Email address</string>
+    <string name="external_link_open">Open</string>
+    <string name="external_link_copy">Copy link</string>
+    <plurals name="external_link_trackers">
+        <item quantity="one">%1$d tracker removed: %2$s</item>
+        <item quantity="other">%1$d trackers removed: %2$s</item>
+    </plurals>
 </resources>

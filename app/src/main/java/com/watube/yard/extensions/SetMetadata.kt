@@ -44,7 +44,11 @@ fun MediaItem.Builder.setMetadata(streams: Streams, videoId: String) = apply {
 }
 
 @OptIn(UnstableApi::class)
-fun MediaItem.Builder.setMetadata(downloadWithItems: DownloadWithItems) = apply {
+/**
+ * [artwork] is the clear thumbnail: the stored one is encrypted, the system could not read it
+ * from its file for the notification and the lock screen.
+ */
+fun MediaItem.Builder.setMetadata(downloadWithItems: DownloadWithItems, artwork: ByteArray?) = apply {
     val (download, _, downloadChapters) = downloadWithItems
     val chapters = downloadChapters.map(DownloadChapter::toChapterSegment)
     val streams = downloadWithItems.toStreams()
@@ -61,7 +65,11 @@ fun MediaItem.Builder.setMetadata(downloadWithItems: DownloadWithItems) = apply 
             .setTitle(download.title)
             .setArtist(download.uploader)
             .setDurationMs(download.duration?.takeIf { it > 0 }?.times(1000))
-            .setArtworkUri(download.thumbnailPath?.toAndroidUri())
+            .apply {
+                if (artwork != null) {
+                    setArtworkData(artwork, MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+                }
+            }
             .setExtras(extras)
             // send a unique timestamp to notify that the metadata changed, even if playing the same video twice
             .setTrackNumber(System.currentTimeMillis().mod(Int.MAX_VALUE))

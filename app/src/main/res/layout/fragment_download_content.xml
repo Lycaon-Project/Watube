@@ -13,38 +13,43 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <!-- Stacked rather than side by side: long labels (e.g. French) do not fit
+             both controls on one row at phone widths, and the sort pill keeps its
+             place whether or not the resume button is shown. -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingHorizontal="@dimen/watube_gutter">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/resume_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/resume_all"
-                android:contentDescription="@string/resume_all"
-                app:icon="@drawable/ic_play"
-                android:tooltipText="@string/resume_all"
-                android:visibility="gone"
-                tools:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sort_type"
                 style="?materialButtonTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
-                android:layout_alignParentEnd="true"
                 android:text="@string/sort_by"
                 app:icon="@drawable/ic_sort"
                 android:gravity="end"
                 app:iconGravity="textEnd" />
 
-        </RelativeLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/resume_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/resume_all"
+                app:icon="@drawable/ic_play"
+                app:iconGravity="textStart"
+                android:tooltipText="@string/resume_all"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/playlist_name"

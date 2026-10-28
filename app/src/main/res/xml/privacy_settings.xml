@@ -35,11 +35,54 @@
             app:key="privacy_neutral_region_country"
             app:title="@string/privacy_neutral_region_country" />
 
+        <!-- DNS-over-HTTPS for every request of the app (util/PrivateDns.kt) -->
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="private_dns"
+            app:summary="@string/private_dns_summary"
+            app:title="@string/private_dns" />
+
+        <ListPreference
+            app:defaultValue="quad9"
+            app:dependency="private_dns"
+            app:entries="@array/privateDnsResolver"
+            app:entryValues="@array/privateDnsResolverValues"
+            app:key="private_dns_resolver"
+            app:title="@string/private_dns_resolver"
+            app:useSimpleSummaryProvider="true" />
+
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="tourist_mode"
             app:summary="@string/tourist_mode_summary"
             app:title="@string/tourist_mode" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="app_lock"
+            app:summary="@string/app_lock_summary"
+            app:title="@string/app_lock" />
+
+        <ListPreference
+            app:defaultValue="0"
+            app:dependency="app_lock"
+            app:entries="@array/app_lock_delay_entries"
+            app:entryValues="@array/app_lock_delay_values"
+            app:key="app_lock_delay"
+            app:title="@string/app_lock_delay"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="hide_lockscreen_content"
+            app:summary="@string/watube_hide_lockscreen_summary"
+            app:title="@string/watube_hide_lockscreen" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="hide_recents_preview"
+            app:summary="@string/watube_hide_recents_summary"
+            app:title="@string/watube_hide_recents" />
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
@@ -70,6 +113,13 @@
 
     <!-- What the app records locally while browsing -->
     <PreferenceCategory app:title="@string/privacy_category_data">
+
+        <!-- one tap, confirmed: every trace of what was watched or searched, at once -->
+        <Preference
+            android:icon="@drawable/ic_delete"
+            app:key="clear_everything"
+            app:summary="@string/clear_everything_summary"
+            app:title="@string/clear_everything" />
 
         <!-- region Watch History -->
         <ListPreference

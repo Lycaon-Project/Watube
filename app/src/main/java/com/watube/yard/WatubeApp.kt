@@ -7,10 +7,12 @@ import androidx.core.app.NotificationManagerCompat
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import com.watube.yard.db.DatabaseHelper
+import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NewPipeExtractorInstance
 import com.watube.yard.helpers.NotificationHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.PrivacyStats
 import com.watube.yard.helpers.ProxyHelper
 import com.watube.yard.helpers.ShortcutHelper
 import com.watube.yard.ui.tools.RestMode
@@ -19,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.utils.PrivacyEvents
 
 class WatubeApp : Application(), SingletonImageLoader.Factory {
     // region App Startup
@@ -33,6 +36,8 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
         // ✅ PHASE 1 : Initialisations synchrones ULTRA-RAPIDES (<10ms)
         // Ces opérations sont nécessaires immédiatement et très rapides
         PreferenceHelper.initialize(applicationContext)
+        // what the extractor does for the user, counted for the Dashboard (counts only)
+        PrivacyEvents.setListener(PrivacyStats::recordExtractorEvent)
         RestMode.schedule()
         // crash traces are diagnostic data: recorded for the developer in debug builds only
         if (BuildConfig.DEBUG) setupExceptionHandler()
@@ -47,6 +52,8 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
             // crash trace that release versions used to keep until the next start
             if (!BuildConfig.DEBUG) PreferenceHelper.deleteErrorLog()
             PreferenceHelper.migrate()
+            // values that tell about the user, still in clear text from an older version
+            PreferenceHelper.encryptStoredValues()
             // tourist mode promises an empty device, so anything written while it was off
             // (a restored backup for instance) is dropped, then the retention is applied
             if (PreferenceHelper.isTouristModeEnabled()) DatabaseHelper.clearBrowsingData()
@@ -60,6 +67,8 @@ class WatubeApp : Application(), SingletonImageLoader.Factory {
 
         // background start-up work: nothing waits for it
         appScope.launch { NewPipeExtractorInstance.init() }
+        // downloads of an older version, still in clear text: encrypted in the background
+        appScope.launch { DownloadHelper.encryptExistingDownloads(this@WatubeApp) }
         // Piped modes only: the full local mode never contacts the instance
         ProxyHelper.refreshProxyUrl()
     }
