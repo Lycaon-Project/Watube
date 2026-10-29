@@ -47,18 +47,9 @@
         </a>
       </td>
     </tr>
-    <tr>
-      <td align="center">
-        <a href="#"><img src="assets/badges/fdrload.png" alt="Get it on F-Droid (soon)" height="62"></a>
-      </td>
-      <td align="center">
-        <a href="#"><img src="assets/badges/izzyload.png" alt="Get it on IzzyOnDroid (soon)" height="62"></a>
-      </td>
-    </tr>
   </table>
 
-  <a href="#"><img src="assets/badges/tgload.png" alt="Join us on Telegram" height="54"></a>
-
+  
   <br><br>
 
   <sub>⚠️ <strong>Nightly builds</strong> ship new features and fixes ahead of the stable channel. They are less tested — use at your own risk.</sub>
