@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Settings -->
+<!-- Title of a settings row: greyed while the row is disabled (an option that depends on a
+     switch turned off), at the Material disabled emphasis. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="0.38" android:color="?attr/colorOnSurface" android:state_enabled="false" />
+    <item android:color="?attr/colorOnSurface" />
+</selector>
+<!-- endregion -->

@@ -343,7 +343,6 @@
     <string name="unknown_audio_track_type">Невядомы тып гукавой дарожкі</string>
     <string name="sb_custom_colors">Карыстальніцкія колеры сегментаў</string>
     <string name="invalid_color">Ўведзена няправільнае значэнне колеру!</string>
-    <string name="color">Колер</string>
     <string name="manual">Ўручную</string>
     <string name="automatic">Аўтаматычны</string>
     <string name="sb_custom_colors_summary">Пераключае карыстальніцкія каляровыя сегменты для сегментаў SponsorBlock</string>

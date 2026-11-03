@@ -396,7 +396,6 @@
     <string name="duration">Трајање</string>
     <string name="tooltip_watch_position">Позиција гледања</string>
     <string name="descriptive_audio_track">описно</string>
-    <string name="color">Боја</string>
     <string name="show_search_suggestions">Прикажи предлоге за претрагу</string>
     <string name="duration_reversed">Трајање (обрнуто)</string>
     <string name="vote_for_segment">Гласај за сегмент</string>

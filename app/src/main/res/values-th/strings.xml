@@ -210,7 +210,6 @@
     <string name="queue">คิว</string>
     <string name="sb_custom_colors_summary">ใช้สีเซกเมนต์แบบกำหนดเองสำหรับเซกเมนต์ของ SponsorBlock</string>
     <string name="sb_custom_colors">สีเซกเมนต์กำหนดเอง</string>
-    <string name="color">สี</string>
     <string name="invalid_color">ค่าสีที่ใส่ไม่ถูกต้อง!</string>
     <string name="livestreams">ไลฟ์สตรีม</string>
     <string name="defaultIconLight">สว่างปกติ</string>

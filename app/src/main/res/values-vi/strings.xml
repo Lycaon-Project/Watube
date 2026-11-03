@@ -280,7 +280,6 @@
     <string name="automatic">Tự động</string>
     <string name="play_automatically_summary">Bắt đầu phát đoạn phim tự động khi chọn</string>
     <string name="invalid_color">Đã nhập giá trị màu không hợp lệ!</string>
-    <string name="color">Màu sắc</string>
     <string name="off">Tắt</string>
     <string name="fullscreen_gestures">Cử chỉ vào/thoát toàn màn hình</string>
     <string name="alternative_pip_controls_summary">Chỉ hiển thị âm thanh và bỏ qua các điều khiển trong HtH thay vì tua đi và tua lại</string>

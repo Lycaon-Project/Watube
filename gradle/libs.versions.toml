@@ -47,7 +47,7 @@ activity = "1.13.0"
 biometric = "1.1.0"
 # encrypted Room database (AES-256, HMAC-SHA512 per page); 4.20.0 was two weeks old too early
 sqlcipher = "4.20.0"
-# Argon2id for the encrypted backups (lightweight API only, no JCE provider registered)
+# Argon2 id for the encrypted backups (lightweight API only, no JCE provider registered)
 bouncycastle = "1.86"
 # downloads encrypted at rest (streaming AEAD); 1.24.0 was less than two weeks old
 tink = "1.24.0"

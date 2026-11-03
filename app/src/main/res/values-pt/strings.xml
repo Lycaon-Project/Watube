@@ -339,7 +339,6 @@
     <string name="off">Desligado</string>
     <string name="automatic">Automático</string>
     <string name="invalid_color">Indicou um código de cor inválido!</string>
-    <string name="color">Cor</string>
     <string name="stop">Parar</string>
     <string name="sb_custom_colors">Cores personalizadas</string>
     <string name="chapters_videoHighlight">Vídeo em destaque</string>

@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.io.IOException
 import java.net.Inet4Address
 import java.net.InetAddress
@@ -147,6 +148,9 @@ internal class StolmCast private constructor(
     /** Whether the receiver ever asked the relay for the current video. */
     val receiverReached get() = server.receiverReached
 
+    /** The audio tracks and heights the current video offers the TV. */
+    val options: HlsOptions get() = server.options
+
     init {
         // battery: the phone only stays awake while the TV plays or buffers
         player.addListener(object : Player.Listener {
@@ -159,18 +163,33 @@ internal class StolmCast private constructor(
     }
 
     /**
-     * Plays [streams] of [videoId] on the TV from [positionMs]. Only the HLS stream can be cast
-     * (a phone-made DASH or SABR stream cannot be read by the receiver).
+     * Plays [streams] of [videoId] on the TV from [positionMs], with the audio track, quality and
+     * subtitles of [choices]. Only the HLS stream can be cast (a phone-made DASH or SABR stream
+     * cannot be read by the receiver).
      */
-    suspend fun play(videoId: String, streams: Streams, mediaItem: MediaItem, positionMs: Long) {
+    suspend fun play(
+        videoId: String,
+        streams: Streams,
+        mediaItem: MediaItem,
+        positionMs: Long,
+        choices: StolmChoices = StolmChoices()
+    ) {
         val hls = streams.hls?.takeIf { it.isNotBlank() }
             ?: throw StolmException(R.string.stolm_no_stream)
         holdLocks()
         val (url, formats) = withContext(Dispatchers.IO) {
-            server.publish(hls) to runCatching { server.segmentFormats(hls) }
+            server.publish(hls, choices) to runCatching { server.segmentFormats(hls) }
                 .onFailure { e -> stolmTrace { "playlist check failed: ${e.chain()}" } }.getOrDefault(HlsFormats.DEFAULT)
         }
-        stolmTrace { "play live=${streams.isLive} $formats hls=${CastMediaServer.shape(hls)}" }
+        val subtitles = choices.subtitles?.let { chosen ->
+            val vtt = chosen.url?.let(::asWebVtt) ?: return@let null
+            server.publishSubtitles(vtt)?.let { relayed -> CastTextTrack(relayed, chosen.code.orEmpty()) }
+        }
+        val tracks = StolmTracks.of(server.options, streams.subtitles, choices)
+        stolmTrace {
+            "play live=${streams.isLive} $formats hls=${CastMediaServer.shape(hls)} audio=${choices.audioLanguage}" +
+                " dubbed=${choices.dubbed} maxHeight=${choices.maxHeight} subtitles=${subtitles?.language}"
+        }
         val item = StolmItem(
             videoId = videoId,
             mediaItem = mediaItem,
@@ -178,8 +197,12 @@ internal class StolmCast private constructor(
             isLive = streams.isLive,
             durationMs = streams.duration * 1000
         )
-        player.load(item, url, positionMs, formats)
+        player.load(item, url, positionMs, formats, subtitles, tracks)
     }
+
+    /** YouTube's subtitles are asked as TTML by the phone; receivers read WebVTT best. */
+    private fun asWebVtt(url: String): String? =
+        url.toHttpUrlOrNull()?.newBuilder()?.setQueryParameter("fmt", "vtt")?.build()?.toString()
 
     private fun holdLocks() {
         if (!wakeLock.isHeld) wakeLock.acquire(MAX_LOCK_MS)

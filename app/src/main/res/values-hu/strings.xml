@@ -338,7 +338,6 @@
     <string name="emptyPlaylistDescription">A lejátszási lista leírása nem lehet üres</string>
     <string name="category_highlight">Videó kiemelés megjelenítése</string>
     <string name="sb_custom_colors">Egyéni szakaszok színei</string>
-    <string name="color">Szín</string>
     <string name="invalid_color">Érvénytelen a megadott színérték!</string>
     <string name="sb_custom_colors_summary">Egyéni színek be/kikapcsolása a SponsorBlock szakaszokhoz</string>
     <string name="category_highlight_summary">Lehet a meghirdetett cím, a bélyegkép vagy a videó legérdekesebb része. A fejezetek részben a rákoppintással ugorhat oda</string>

@@ -387,7 +387,6 @@
     <string name="change_region">Trending ser ud til at være utilgængelig i den nuværende region. Vælg venligst en anden i indstillingerne.</string>
     <string name="playback_pitch">Tonehøjde</string>
     <string name="category_highlight_summary">Kan være enten sponsoreret titel, miniaturebilledet eller den mest interessante del af videoen. Du kan springe hen til den ved at trykke på den i kapitlersektionen</string>
-    <string name="color">Farve</string>
     <string name="captions_size">Undertekstsstørrelse</string>
     <string name="hide_watched_from_feed">Skjul allerede sete videoer</string>
     <string name="playlistUrl">Playliste-URL</string>

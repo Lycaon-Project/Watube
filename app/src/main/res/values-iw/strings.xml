@@ -344,7 +344,6 @@
     <string name="off">כבוי</string>
     <string name="manual">ידני</string>
     <string name="invalid_color">ערך הצבע שנבחר שגוי!</string>
-    <string name="color">צבע</string>
     <string name="sb_custom_colors">צבעי מקטעים מותאמים</string>
     <string name="sb_custom_colors_summary">מחליף מקטעי צבע מותאמים במקטעים ממומנים ולהפך</string>
     <string name="chapters_videoHighlight">קטע בולט בסרטון</string>

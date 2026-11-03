@@ -52,7 +52,6 @@
     <string name="app_icon">Piktograma</string>
     <string name="enabled">Įjungta</string>
     <string name="playOnBackground">Groti fone</string>
-    <string name="update_available">Yra galima versija %1$s</string>
     <string name="appearance">Išvaizda</string>
     <string name="update_summary">Tikrinti, ar yra atnaujinimų</string>
     <string name="app_uptodate">Įdiegta naujausia versija.</string>
@@ -322,7 +321,6 @@
     <string name="playback_pitch_semitone_error_input">Vertė turi būti nuo -%1$.1f (mažiausia) iki %1$.1f (didžiausia)</string>
     <string name="sb_custom_colors_summary">Įjungia pasirinktinius spalvų segmentus „SponsorBlock“ segmentams</string>
     <string name="sb_custom_colors">Pasirenkamos segmentų spalvos</string>
-    <string name="color">Spalva</string>
     <string name="invalid_color">Įvesta neteisinga spalvos vertė!</string>
     <string name="unsubscribe_snackbar_message">Sėkmingai panaikinta %1$s prenumerata</string>
     <string name="unsupported_file_format">Nepalaikomas failo formatas: %1$s</string>
@@ -385,7 +383,6 @@
     <string name="visibility_unlisted">Turintiems nuorodą</string>
     <string name="sort_by">Rūšiuoti pagal</string>
     <string name="uploader_name">Įkėlėjo vardas</string>
-    <string name="duration_span">Trukmės intervalas</string>
     <string name="remove_watched_videos">Pašalinti peržiūrėtus vaizdo įrašus</string>
     <string name="no_fullscreen_resolution">Nekeisti raiškos visame ekrane</string>
     <string name="same_as_fullscreen">Tokia pati, kaip visame ekrane</string>
@@ -416,7 +413,6 @@
     <string name="import_format_list_of_urls">Importuoti formatu: URL sąrašas</string>
     <string name="home_tab_content">Pagrindinio skirtuko turinys</string>
     <string name="show_search_suggestions">Rodyti paieškos pasiūlymus</string>
-    <string name="audio_track_format">Garso takelio formatas</string>
     <string name="unknown_audio_language">Nežinoma garso kalba</string>
     <string name="unknown_audio_track_type">Nežinomas garso takelio tipas</string>
     <string name="original_or_main_audio_track">Originalus arba pagrindinis garso takelis</string>
@@ -434,7 +430,6 @@
     <string name="sb_invalid_segment">Neteisingas segmentas</string>
     <string name="contribute_to_sponsorblock">Prisidėti prie „SponsorBlock“</string>
     <string name="sponsorblock_user_id">„SponsorBlock“ vartotojo ID</string>
-    <string name="successfully_removed_from_playlist">Sėkmingai pašalinta iš grojaraščio</string>
     <string name="no_segments_found">Segmentų nerasta</string>
     <string name="start_sleep_timer">Paleisti miego laikmatį</string>
     <string name="disable_sleep_timer">Išjungti miego laikmatį</string>
@@ -453,7 +448,6 @@
         <item quantity="other"/>
     </plurals>
     <string name="add_to_group">Pridėti į grupę</string>
-    <string name="uptime">Veikimo laikas</string>
     <string name="change">Pakeisti</string>
     <string name="gestures">Gestai</string>
     <string name="external_download_provider">Išorinis atsisiuntimų teikėjas</string>
@@ -510,7 +504,6 @@
     <string name="tooltip_scroll_to_top">Slinkti į viršų</string>
     <string name="also_clear_watch_positions">Taip pat išvalyti įsimintas žiūrėjimo vietas</string>
     <string name="import_temp_playlist">Importuoti laikiną grojaraštį</string>
-    <string name="import_temp_playlist_summary">Importuoti grojaraštį neišsaugant jo įrenginyje</string>
 
     <!-- TODO: translate (Watube privacy settings) -->
 

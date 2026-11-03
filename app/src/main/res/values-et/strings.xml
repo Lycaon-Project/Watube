@@ -228,7 +228,6 @@
     <string name="backup">Varundus</string>
     <string name="copied_to_clipboard">Kopeeritud lõikelauale</string>
     <string name="backup_customInstances">Kohandatud vaheserverid</string>
-    <string name="color">Värv</string>
     <string name="invalid_color">Vigane värvikood!</string>
     <string name="proceed">Jätka</string>
     <string name="play_latest_videos">Esita uusimaid videoid</string>

@@ -372,9 +372,9 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     }
 
     /** Returns false when this screen has no live player left to play [videoId]. */
-    fun playNextVideo(videoId: String): Boolean {
+    fun playNextVideo(videoId: String, playerData: PlayerData? = null): Boolean {
         val controller = playerController?.takeIf { it.isConnected } ?: return false
-        controller.navigateVideo(videoId)
+        controller.navigateVideo(videoId, playerData)
         return true
     }
 

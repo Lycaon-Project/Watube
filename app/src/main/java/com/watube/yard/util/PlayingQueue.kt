@@ -18,6 +18,12 @@ object PlayingQueue {
     private val queue = Collections.synchronizedList(mutableListOf<StreamItem>())
     private var currentStream: StreamItem? = null
 
+    /**
+     * The video autoplay goes on with once the queue has nothing left: the first suggestion of the
+     * current video. Kept apart from the queue, so that turning autoplay off takes effect at once.
+     */
+    private var autoplayStream: StreamItem? = null
+
     private val queueJobs = mutableListOf<Job>()
 
     /**
@@ -40,10 +46,11 @@ object PlayingQueue {
         queueJobs.clear()
     }
 
-    fun clear() {
+    fun clear() = synchronized(queue) {
         clearJobs()
         queue.clear()
         currentStream = null
+        autoplayStream = null
     }
 
     /**
@@ -77,14 +84,29 @@ object PlayingQueue {
         queue.add(currentIndex() + 1, streamItem)
     }
 
-    // return the next item, or if repeating enabled and no video left, the first one of the queue
+    // return the next item, or if repeating enabled and no video left, the first one of the queue,
+    // else the autoplay suggestion
     fun getNext(): String? = synchronized(queue) {
-        val nextItem = queue.getOrNull(currentIndex() + 1)
-        if (nextItem != null) return nextItem.url?.toID()
+        val autoplay = autoplayStream?.takeIf {
+            queueMode == PlayingQueueMode.ONLINE &&
+                PlayerHelper.autoPlayEnabled && PlayerHelper.relatedStreamsEnabled
+        }
+        return nextVideoId(queue, currentIndex(), repeatMode == Player.REPEAT_MODE_ALL, autoplay)
+    }
 
-        if (repeatMode == Player.REPEAT_MODE_ALL) return queue.firstOrNull()?.url?.toID()
+    /** Whether the queue itself has a video after the current one, autoplay left aside. */
+    fun hasQueuedNext(): Boolean = synchronized(queue) {
+        queue.getOrNull(currentIndex() + 1) != null
+    }
 
-        return null
+    /** Sets the video autoplay plays after the queue, from the suggestions of the current video. */
+    fun setAutoplaySuggestions(suggestions: List<StreamItem>) = synchronized(queue) {
+        autoplayStream = pickAutoplayStream(suggestions, queue)
+    }
+
+    /** The suggestion belonged to the previous video. */
+    fun clearAutoplaySuggestion() = synchronized(queue) {
+        autoplayStream = null
     }
 
     // return the previous item, or if repeating enabled and no video left, the last one of the queue
@@ -231,6 +253,33 @@ object PlayingQueue {
         } else if (channelId != null) {
             insertChannel(channelId, streamItem)
         }
+    }
+}
+
+/**
+ * The video after the one at [currentIndex]: the next one of [queue], the first one again when the
+ * whole queue repeats, else the [autoplay] suggestion (null when autoplay is off).
+ */
+internal fun nextVideoId(
+    queue: List<StreamItem>,
+    currentIndex: Int,
+    repeatAll: Boolean,
+    autoplay: StreamItem?
+): String? {
+    queue.getOrNull(currentIndex + 1)?.let { return it.url?.toID() }
+    if (repeatAll) queue.firstOrNull()?.let { return it.url?.toID() }
+    return autoplay?.url?.toID()
+}
+
+/**
+ * The first playable suggestion that is not already in [queue]: no live stream (it never ends),
+ * and no video played earlier, which would make two videos suggesting each other alternate.
+ */
+internal fun pickAutoplayStream(suggestions: List<StreamItem>, queue: List<StreamItem>): StreamItem? {
+    val queued = queue.mapNotNull { it.url?.toID() }.toSet()
+    return suggestions.firstOrNull { stream ->
+        val id = stream.url?.toID()
+        id != null && !stream.isLive && !stream.isUpcoming && id !in queued
     }
 }
 

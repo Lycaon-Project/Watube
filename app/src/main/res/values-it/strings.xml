@@ -340,7 +340,6 @@
     <string name="chapters_videoHighlight">Momento saliente</string>
     <string name="category_highlight">Mostra il momento saliente</string>
     <string name="category_highlight_summary">Può essere il titolo pubblicizzato, la miniatura o la parte più interessante del video. Puoi passare ad esso toccandolo nella sezione dei capitoli</string>
-    <string name="color">Colore</string>
     <string name="invalid_color">Valore del colore inserito non valido!</string>
     <string name="unknown_audio_language">Lingua audio sconosciuta</string>
     <string name="unknown_audio_track_type">Tipo di traccia audio sconosciuta</string>

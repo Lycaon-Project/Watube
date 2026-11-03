@@ -1,13 +1,12 @@
 # ----------------------------------------------------------------------------
-# Watube ProGuard/R8 Rules - Ubdated
+# Watube ProGuard/R8 Rules
 # ----------------------------------------------------------------------------
 
 # region Build
-# Enable aggressive optimizations for smaller APK size
--optimizationpasses 5
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+# R8 (full mode, see gradle.properties) ignores the ProGuard-only -optimizationpasses and
+# -optimizations: they were removed, R8 runs its own passes.
 
-# Keep line numbers for crash reporting and debugging
+# Keep line numbers: a stack trace from a user is retraced with the mapping of the release
 -keepattributes SourceFile,LineNumberTable,Signature,InnerClasses,EnclosingMethod
 -keepattributes *Annotation*,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 
@@ -24,40 +23,8 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 # endregion
 
-# region Build
-# ----------------------------------------------------------------------------
-# KOTLIN COROUTINES
-
-# Keep coroutine dispatcher factories (loaded via ServiceLoader)
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
-# endregion
-
-# region Build
-# ----------------------------------------------------------------------------
-# KOTLINX SERIALIZATION
-
-# Keep serializable classes (required for JSON parsing)
--if @kotlinx.serialization.Serializable class **
--keepclassmembers class <1> {
-    static <1>$Companion Companion;
-}
-
--if @kotlinx.serialization.Serializable class ** {
-    static **$* *;
-}
--keepclassmembers class <2>$<3> {
-    kotlinx.serialization.KSerializer serializer(...);
-}
-
--if @kotlinx.serialization.Serializable class ** {
-    public static ** INSTANCE;
-}
--keepclassmembers class <1> {
-    public static <1> INSTANCE;
-    kotlinx.serialization.KSerializer serializer(...);
-}
-# endregion
+# Kotlin coroutines and kotlinx.serialization ship their own R8 rules (META-INF/com.android.tools/r8),
+# the copies that were here duplicated them.
 
 # region Build
 # ----------------------------------------------------------------------------
@@ -96,8 +63,8 @@
 # ----------------------------------------------------------------------------
 # NEWPIPE EXTRACTOR (No built-in ProGuard rules)
 
-# Keep only the classes used via reflection
--keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
+# The timeago patterns (one class per language) are reached through PatternMap, not by
+# reflection: R8 shrinks and renames them like any other class.
 
 # ✅ CORRECTION : Remplacement des règles Rhino par dontwarn
 # Rhino JavaScript engine classes are handled by NewPipe Extractor internally
@@ -139,10 +106,6 @@
 # Merge classes when possible to reduce APK size
 -repackageclasses ''
 
-# Remove unused code aggressively
--dontskipnonpubliclibraryclasses
--dontskipnonpubliclibraryclassmembers
-
 # Keep native methods
 -keepclasseswithmembernames class * {
     native <methods>;
@@ -183,6 +146,12 @@
     public void printStackTrace();
     public void printStackTrace(java.io.PrintStream);
     public void printStackTrace(java.io.PrintWriter);
+}
+
+# and for Kotlin's println (System.out in logcat), from the app or a library
+-assumenosideeffects class kotlin.io.ConsoleKt {
+    public static void println(...);
+    public static void print(...);
 }
 # endregion
 

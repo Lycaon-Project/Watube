@@ -59,7 +59,6 @@
     <string name="enabled">চালু</string>
     <string name="disabled">বন্ধ</string>
     <string name="playOnBackground">ব্যাকগ্রাউন্ডে প্লে করুন</string>
-    <string name="update_available">সংস্করণ %1$s হালনাগাদ করা যাবে</string>
     <string name="appearance">উপস্থাপনা</string>
     <string name="downloads">ডাউনলোডগুলো</string>
     <string name="app_uptodate">অ্যাপটি হালনাগাদ করা হয়েছে।</string>

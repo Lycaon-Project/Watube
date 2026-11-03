@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Privacy -->
+<!-- A legend line of the destinations donut: its color, the category, the count and share. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="5dp">
+
+    <View
+        android:id="@+id/legend_dot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/watube_rail_manage_bg"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/legend_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:maxLines="2"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="13sp"
+        tools:text="YouTube" />
+
+    <TextView
+        android:id="@+id/legend_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFeatureSettings="tnum"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="13sp"
+        tools:text="82 %" />
+
+</LinearLayout>
+<!-- endregion -->

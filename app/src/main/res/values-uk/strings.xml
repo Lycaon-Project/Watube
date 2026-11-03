@@ -343,7 +343,6 @@
     <string name="off">Вимкнено</string>
     <string name="automatic">Автоматично</string>
     <string name="invalid_color">Введено недійсне значення кольору!</string>
-    <string name="color">Колір</string>
     <string name="sb_custom_colors_summary">Перемикає власні колірні сегменти для сегментів SponsorBlock</string>
     <string name="sb_custom_colors">Користувацькі кольори сегментів</string>
     <string name="category_highlight_summary">Це може бути рекламований заголовок, мініатюра або найцікавіша частина відео. Ви можете перейти до нього, натиснувши на нього в секції розділів</string>

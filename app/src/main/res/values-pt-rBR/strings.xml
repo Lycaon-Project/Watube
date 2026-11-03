@@ -335,7 +335,6 @@
     <string name="stop">Parar</string>
     <string name="sb_custom_colors">Cores de segmento personalizadas</string>
     <string name="sb_custom_colors_summary">Alterna segmentos de cores personalizadas para segmentos SponsorBlock</string>
-    <string name="color">Cor</string>
     <string name="invalid_color">Cor hexadecimal inválido!</string>
     <string name="dearrow">Habilitar DeArrow</string>
     <string name="dearrow_summary">Mostrar títulos e miniaturas mais precisos e menos sensacionalistas. Aumenta o tempo de carregamento dos vídeos</string>

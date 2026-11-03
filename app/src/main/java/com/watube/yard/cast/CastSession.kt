@@ -25,7 +25,10 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.addJsonObject
 import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
 import java.io.IOException
 import java.security.SecureRandom
@@ -42,7 +45,10 @@ data class CastMediaStatus(
     val idleReason: String?,
     val playbackRate: Double,
     /** When the status arrived ([System.nanoTime]): the position goes on from there. */
-    val receivedAtNanos: Long
+    val receivedAtNanos: Long,
+    /** The picture the TV shows, 0 until it reports it. */
+    val videoWidth: Int = 0,
+    val videoHeight: Int = 0
 )
 
 /**
@@ -57,6 +63,17 @@ data class HlsFormats(val audio: String?, val video: String?) {
         const val TS = "ts"
         val DEFAULT = HlsFormats(null, null)
         val FMP4 = HlsFormats(FMP4_FORMAT, FMP4_FORMAT)
+    }
+}
+
+/**
+ * Subtitles the receiver shows: a WebVTT file at [url] (the relay's), in [language]. Only the
+ * language code goes to the TV with it, no track name.
+ */
+data class CastTextTrack(val url: String, val language: String) {
+    companion object {
+        /** The receiver's id of the only text track sent. */
+        const val TRACK_ID = 1
     }
 }
 
@@ -150,7 +167,8 @@ internal class CastSession private constructor(
         isLive: Boolean,
         title: String,
         positionSeconds: Double,
-        formats: HlsFormats
+        formats: HlsFormats,
+        subtitles: CastTextTrack? = null
     ) {
         val requestId = nextRequestId()
         val load = buildJsonObject {
@@ -163,6 +181,18 @@ internal class CastSession private constructor(
                 put("streamType", if (isLive) "LIVE" else "BUFFERED")
                 formats.audio?.let { put("hlsSegmentFormat", it) }
                 formats.video?.let { put("hlsVideoSegmentFormat", it) }
+                subtitles?.let { track ->
+                    putJsonArray("tracks") {
+                        addJsonObject {
+                            put("trackId", CastTextTrack.TRACK_ID)
+                            put("type", "TEXT")
+                            put("subtype", "SUBTITLES")
+                            put("trackContentId", track.url)
+                            put("trackContentType", "text/vtt")
+                            put("language", track.language)
+                        }
+                    }
+                }
                 putJsonObject("metadata") {
                     put("metadataType", 0)
                     put("title", title)
@@ -170,6 +200,8 @@ internal class CastSession private constructor(
             }
             put("autoplay", true)
             if (!isLive) put("currentTime", positionSeconds)
+            // shown from the start, as on the phone
+            if (subtitles != null) putJsonArray("activeTrackIds") { add(CastTextTrack.TRACK_ID) }
         }
         // the old media's status must not be taken for the new one
         _mediaStatus.value = null
@@ -255,7 +287,11 @@ internal class CastSession private constructor(
                     ?: previous?.durationSeconds,
                 idleReason = string("idleReason"),
                 playbackRate = number("playbackRate") ?: 1.0,
-                receivedAtNanos = now
+                receivedAtNanos = now,
+                videoWidth = status["videoInfo"]?.jsonObject?.get("width")?.jsonPrimitive?.intOrNull
+                    ?: previous?.videoWidth ?: 0,
+                videoHeight = status["videoInfo"]?.jsonObject?.get("height")?.jsonPrimitive?.intOrNull
+                    ?: previous?.videoHeight ?: 0
             )
         }
 

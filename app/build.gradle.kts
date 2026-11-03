@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.watube.yard"
-        minSdk = 33
+        minSdk = 32
         targetSdk = 37
 
         versionCode = 6211
@@ -43,6 +43,10 @@ android {
             // revision (commit hash / branch) out of the packaged APK.
             isDebuggable = false
             vcsInfo { include = false }
+            // 64-bit ARM only, the processor of every phone Watube targets: the other ABIs only
+            // shipped more copies of the SQLCipher library (x86 / x86_64 for emulators, 32-bit
+            // ARM for old phones), 5.3 MB of the 15.5 MB APK. Debug builds keep every ABI.
+            ndk { abiFilters += "arm64-v8a" }
             signingConfig = signingConfigs.findByName("release")?.takeIf { it.storeFile != null }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -81,6 +85,9 @@ android {
 
     packaging {
         jniLibs.excludes.add("lib/armeabi-v7a/*_neon.so")
+        // SQLCipher compressed in the APK (2.0 -> 0.97 MB), the user's choice to stay under 9 MB:
+        // Android extracts it once at install (2 MB on disk), nothing changes at run time.
+        jniLibs.useLegacyPackaging = true
         // keep the dex files compressed: on this project they are the bulk of the APK
         // (~80%), so the install/download size drops by ~21 MB at no functional cost
         dex {
@@ -90,6 +97,10 @@ android {
         // serve the full runtime / protoc), and DebugProbesKt.bin is only loaded by the
         // kotlinx-coroutines debug agent: none of them is used at runtime.
         resources.excludes += listOf(
+            // translations of Rhino's internal error messages (never shown, the English base
+            // stays) and of a BouncyCastle certificate path reviewer Watube does not use
+            "org/mozilla/javascript/resources/Messages_*.properties",
+            "org/bouncycastle/x509/CertPathReviewerMessages*.properties",
             "google/protobuf/*.proto",
             "src/google/protobuf/*.proto",
             "**/java_features_proto-descriptor-set.proto.bin",

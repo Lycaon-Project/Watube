@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Settings -->
+<!-- The heading of a group of settings: the section title of the rest of the app (green tick,
+     bold), above the card of its rows (PreferenceCards). -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:accessibilityHeading="true"
+    android:drawableStart="@drawable/watube_section_tick"
+    android:drawablePadding="8dp"
+    android:paddingStart="@dimen/watube_gutter"
+    android:paddingTop="20dp"
+    android:paddingEnd="@dimen/watube_gutter"
+    android:paddingBottom="8dp"
+    android:textAlignment="viewStart"
+    android:textColor="?attr/colorOnSurface"
+    android:textSize="15sp"
+    android:textStyle="bold" />
+<!-- endregion -->

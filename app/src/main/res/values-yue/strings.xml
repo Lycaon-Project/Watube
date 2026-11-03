@@ -72,7 +72,6 @@
     <string name="pauseOnScreenOff_summary">當你部機嘅芒熄咗嘅時候就會自動暫停條片</string>
     <string name="never">永遠</string>
     <string name="playOnBackground">喺背景度播</string>
-    <string name="update_available">版本 %1$s 已經有啦</string>
     <string name="appearance">主題</string>
     <string name="downloads">下載</string>
     <string name="update_summary">檢查更新</string>
@@ -150,7 +149,6 @@
     <string name="share_with_time">分享埋個時間點</string>
     <string name="export_subscriptions">匯出訂閱</string>
     <string name="time_code">時間點（秒）</string>
-    <string name="added_to_playlist">加去 Playlist</string>
     <string name="network_all">全部</string>
     <string name="brightness">光度</string>
     <string name="segment_skipped">跳過嘅部分</string>

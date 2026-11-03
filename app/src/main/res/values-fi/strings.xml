@@ -304,7 +304,6 @@
     <string name="off">Pois</string>
     <string name="manual">Manuaalinen</string>
     <string name="automatic">Automaattinen</string>
-    <string name="color">Väri</string>
     <string name="dubbed_audio_track">dubattu</string>
     <string name="descriptive_audio_track">kuvaileva</string>
     <string name="visibility">Näkyvyys</string>

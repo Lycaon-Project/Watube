@@ -653,13 +653,7 @@ class CustomExoPlayerView(
         BottomSheetItem(
             context.getString(R.string.translation),
             R.drawable.ic_translate,
-            {
-                val captions = player?.let { PlayerHelper.getCurrentPlayedCaptionFormat(it)?.language }
-                    ?.let { Locale.forLanguageTag(it).getDisplayLanguage(Locale.getDefault()) }
-                    ?: context.getString(R.string.none)
-                listOf(getCurrentAudioTrackTitle(), captions)
-                    .joinToString(" · ") { it.replaceFirstChar { c -> c.titlecase(Locale.getDefault()) } }
-            }
+            ::translationSummary
         ) {
             onTranslationClicked()
         },
@@ -671,6 +665,23 @@ class CustomExoPlayerView(
             onStatsClicked()
         }.takeIf { PlayerHelper.statsForNerdsEnabled }
     )
+
+    /** The audio channel and the subtitles played, as the "Translation" option shows them. */
+    fun translationSummary(): String {
+        val captions = player?.let { PlayerHelper.getCurrentPlayedCaptionFormat(it)?.language }
+            ?.let { Locale.forLanguageTag(it).getDisplayLanguage(Locale.getDefault()) }
+            ?: context.getString(R.string.none)
+        return listOf(getCurrentAudioTrackTitle(), captions)
+            .joinToString(" · ") { it.replaceFirstChar { c -> c.titlecase(Locale.getDefault()) } }
+    }
+
+    /** The quality played, as the "Quality" option shows it. */
+    fun qualitySummary(): String = getCurrentResolutionSummary()
+
+    /** The options the cast sheet puts forward: the same sheets as from the player. */
+    fun showTranslationOptions() = onTranslationClicked()
+
+    fun showQualityOptions() = onQualityClicked()
 
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     private fun getCurrentResolutionSummary(): String {

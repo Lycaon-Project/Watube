@@ -67,7 +67,6 @@
     <string name="app_icon">නිරූපකය</string>
     <string name="enabled">සක්‍රිය</string>
     <string name="disabled">අක්‍රිය</string>
-    <string name="update_available">නිකුතු අංකය %1$s ඇත</string>
     <string name="appearance">පෙනුම</string>
     <string name="downloads">බාගත කිරීම්</string>
     <string name="update_summary">යාවත්කාලීන කිරීමට ඹබන්න</string>
@@ -164,7 +163,6 @@
     <string name="navigation_bar">මං සෙවුම් තීරුව</string>
     <string name="playback_pitch">ස්වරය</string>
     <string name="play_next">ඊළඟ වීඩියෝව වාදනය කරන්න</string>
-    <string name="added_to_playlist">වාදන ලැයිස්තුවට එක් කරන ලදී</string>
     <string name="queue">පෝලිම</string>
     <string name="livestreams">සජීවී ප්‍රවාහ</string>
     <string name="defaultIconLight">පෙරනිමි එළිය</string>

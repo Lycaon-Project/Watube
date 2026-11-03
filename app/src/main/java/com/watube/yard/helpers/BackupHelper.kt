@@ -13,6 +13,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.extensions.TAG
+import com.watube.yard.extensions.readAtMost
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.obj.PreferenceItem
@@ -75,7 +76,7 @@ object BackupHelper {
         val input = context.contentResolver.openInputStream(uri)
             ?: throw IOException("backup file unavailable")
         input.use {
-            val bytes = it.readNBytes(MAX_BACKUP_BYTES + 1)
+            val bytes = it.readAtMost(MAX_BACKUP_BYTES + 1)
             if (bytes.size > MAX_BACKUP_BYTES) throw IOException("backup file too large")
             bytes
         }

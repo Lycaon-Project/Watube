@@ -340,7 +340,6 @@
     <string name="export_subscriptions_to">ناردنی هابەشییەکان بۆ</string>
     <string name="show_search_suggestions">پیشاندانی پێشنیارەکانی گەڕان</string>
     <string name="sb_custom_colors">ڕەنگی تایبەتی نیشانەکردن</string>
-    <string name="color">ڕەنگ</string>
     <string name="manual">دەستی</string>
     <string name="sb_custom_colors_summary">پیشاندانی ڕەنگی تایبەت بۆ بەشە پەڕێنراوەکانی سپۆنسەر</string>
     <string name="invalid_color">بەهایەکی نادروستی ڕەنگ نوسراوە!</string>

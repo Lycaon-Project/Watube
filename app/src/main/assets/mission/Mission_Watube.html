@@ -764,6 +764,7 @@
           "Sécurité réseau stricte : le trafic en clair est complètement désactivé, seuls des hôtes de développement locaux sont exemptés.",
           "Aucune sauvegarde cloud : rien n'est envoyé vers un service de sauvegarde en ligne ; le transfert local entre appareils et l'export manuel restent possibles, sans le token de compte.",
           "Aucun code propriétaire Google : Google Play Services et son SDK Cast sont retirés, et la compilation échoue si l'un d'eux revient, même par une dépendance indirecte.",
+          "Diffusion maison Stolm : la télé ne contacte jamais YouTube, la vidéo passe par votre téléphone ; elle suit la piste audio, les sous-titres et la qualité choisis sur le téléphone, et ne reçoit que le titre et la langue des sous-titres.",
           "Connexions chiffrées strictes : TLS 1.2 et 1.3 uniquement, avec des suites de chiffrement modernes à confidentialité persistante.",
           "Captures d'écran : une option masque l'application des captures, des enregistrements d'écran et de l'aperçu des applications récentes.",
           "Réduction de la surface d'attaque : suppression du récepteur de démarrage inutilisé.",
@@ -779,7 +780,8 @@
           "DiffUtil intelligent : les lignes sont identifiées par un identifiant stable, par exemple URL de vidéo ou clé primaire, afin de relier et recharger les miniatures seulement quand le contenu change réellement.",
           "Notifications limitées : les notifications de progression de téléchargement sont plafonnées à 2 mises à jour par seconde.",
           "Gestion mémoire : le back buffer du lecteur est réduit de 3 minutes à 1 minute pour économiser de la RAM sur les appareils modestes.",
-          "Chargeurs unifiés : un chargeur d'images Coil unifié et un cache HTTP partagé sont créés une fois pour tout le cycle de vie de l'application."
+          "Chargeurs unifiés : un chargeur d'images Coil unifié et un cache HTTP partagé sont créés une fois pour tout le cycle de vie de l'application.",
+          "Application légère : un seul APK 64 bits de moins de 9 Mo (15,5 Mo auparavant), sans les copies inutiles pour d'autres processeurs ; rien n'est retiré de l'application."
         ],
         designTitle: "Interface et modernisation",
         designText: "Le README mentionne un nouvel accent aqua/vert par défaut, des formes de composants plus rondes, une barre de navigation basse surélevée et un titre rendu avec un dégradé dynamique dans la barre d'outils et l'écran À propos. Le projet utilise également le design Material 3 Expressive.",
@@ -880,6 +882,7 @@
           "Strict network security: cleartext traffic is completely disabled; only local development hosts are exempted.",
           "No cloud backup: nothing is sent to an online backup service; the local device-to-device transfer and the manual export remain, without the account token.",
           "No proprietary Google code: Google Play Services and its Cast SDK are removed, and the build fails if one of them comes back, even through an indirect dependency.",
+          "Stolm, Watube's own casting: the TV never contacts YouTube, the video goes through your phone; it follows the audio track, subtitles and quality chosen on the phone, and only receives the title and the subtitle language.",
           "Strict encrypted connections: TLS 1.2 and 1.3 only, with modern forward-secret cipher suites.",
           "Screenshots: an option hides the app from screenshots, screen recordings and the recent apps preview.",
           "Attack surface reduction: removal of the unused boot receiver.",
@@ -895,7 +898,8 @@
           "Smart DiffUtil: rows are identified by a stable id, for example video URL or primary key, so lists rebind and thumbnails reload only when content actually changes.",
           "Throttled notifications: download progress notifications are limited to 2 updates per second.",
           "Memory management: the player back buffer was reduced from 3 minutes to 1 minute to save RAM on low-end devices.",
-          "Unified loaders: a unified Coil image loader and a shared HTTP cache are created once for the whole app lifecycle."
+          "Unified loaders: a unified Coil image loader and a shared HTTP cache are created once for the whole app lifecycle.",
+          "A light app: one 64-bit APK under 9 MB (15.5 MB before), without the needless copies for other processors; nothing is removed from the app itself."
         ],
         designTitle: "Interface and modernization",
         designText: "The README mentions a new aqua/green accent as default, rounder component shapes, a raised bottom navigation bar, and a title rendered with a dynamic colour gradient in the toolbar and the About screen. The project also uses Material 3 Expressive design.",
@@ -996,6 +1000,7 @@
           "Strikte netwerkbeveiliging: cleartext-verkeer is volledig uitgeschakeld; alleen lokale ontwikkelhosts zijn vrijgesteld.",
           "Geen cloudback-up: er gaat niets naar een online back-updienst; de lokale overdracht tussen apparaten en de handmatige export blijven, zonder het accounttoken.",
           "Geen propriëtaire Google-code: Google Play Services en de Cast-SDK zijn verwijderd, en de build faalt als een ervan terugkomt, ook via een indirecte afhankelijkheid.",
+          "Stolm, de eigen cast van Watube: de tv neemt nooit contact op met YouTube, de video gaat via je telefoon; hij volgt het audiospoor, de ondertitels en de kwaliteit die je op de telefoon kiest, en ontvangt alleen de titel en de taal van de ondertitels.",
           "Strikte versleutelde verbindingen: alleen TLS 1.2 en 1.3, met moderne cipher suites met forward secrecy.",
           "Schermafbeeldingen: een optie verbergt de app voor schermafbeeldingen, schermopnames en het overzicht van recente apps.",
           "Kleiner aanvalsoppervlak: verwijdering van de ongebruikte boot receiver.",
@@ -1011,7 +1016,8 @@
           "Slimme DiffUtil: rijen worden geïdentificeerd via een stabiele id, bijvoorbeeld video-URL of primaire sleutel, zodat lijsten alleen opnieuw worden gebonden en thumbnails alleen opnieuw worden geladen als de inhoud echt verandert.",
           "Gesnelde meldingen: voortgangsmeldingen van downloads zijn beperkt tot 2 updates per seconde.",
           "Geheugenbeheer: de back buffer van de speler is verkleind van 3 minuten naar 1 minuut om RAM te besparen op zwakkere apparaten.",
-          "Geveregende loaders: een uniforme Coil-image-loader en een gedeelde HTTP-cache worden één keer aangemaakt voor de volledige levenscyclus van de app."
+          "Geveregende loaders: een uniforme Coil-image-loader en een gedeelde HTTP-cache worden één keer aangemaakt voor de volledige levenscyclus van de app.",
+          "Een lichte app: één 64-bit-APK van minder dan 9 MB (eerder 15,5 MB), zonder overbodige kopieën voor andere processors; er is niets uit de app zelf verwijderd."
         ],
         designTitle: "Interface en modernisering",
         designText: "De README noemt een nieuw aqua/groen accent als standaard, rondere vormgeving van componenten, een verhoogde onderste navigatiebalk en een titel met dynamisch kleurverloop in de toolbar en het About-scherm. Het project gebruikt ook het Material 3 Expressive-ontwerp.",
@@ -1112,6 +1118,7 @@
           "Seguridad de red estricta: el tráfico en texto plano está completamente desactivado; solo están exentos hosts de desarrollo locales.",
           "Sin copia de seguridad en la nube: nada se envía a un servicio de copias en línea; la transferencia local entre dispositivos y la exportación manual siguen disponibles, sin el token de la cuenta.",
           "Sin código propietario de Google: Google Play Services y su SDK de Cast se han eliminado, y la compilación falla si alguno vuelve, incluso a través de una dependencia indirecta.",
+          "Stolm, la transmisión propia de Watube: la tele nunca contacta con YouTube, el vídeo pasa por tu teléfono; sigue la pista de audio, los subtítulos y la calidad elegidos en el teléfono, y solo recibe el título y el idioma de los subtítulos.",
           "Conexiones cifradas estrictas: solo TLS 1.2 y 1.3, con conjuntos de cifrado modernos con secreto perfecto hacia adelante.",
           "Capturas de pantalla: una opción oculta la aplicación en capturas, grabaciones de pantalla y en la vista de aplicaciones recientes.",
           "Reducción de la superficie de ataque: eliminación del receptor de arranque sin uso.",
@@ -1127,7 +1134,8 @@
           "DiffUtil inteligente: las filas se identifican mediante un id estable, por ejemplo URL de vídeo o clave primaria, de modo que las listas se vuelven a enlazar y las miniaturas se recargan solo cuando el contenido cambia realmente.",
           "Notificaciones limitadas: las notificaciones de progreso de descarga están limitadas a 2 actualizaciones por segundo.",
           "Gestión de memoria: el búfer posterior del reproductor se redujo de 3 minutos a 1 minuto para ahorrar RAM en dispositivos modestos.",
-          "Cargadores unificados: un cargador de imágenes Coil unificado y una caché HTTP compartida se crean una vez para todo el ciclo de vida de la aplicación."
+          "Cargadores unificados: un cargador de imágenes Coil unificado y una caché HTTP compartida se crean una vez para todo el ciclo de vida de la aplicación.",
+          "Una aplicación ligera: un único APK de 64 bits de menos de 9 MB (antes 15,5 MB), sin las copias inútiles para otros procesadores; no se ha quitado nada de la aplicación."
         ],
         designTitle: "Interfaz y modernización",
         designText: "El README menciona un nuevo acento verde/aguamar por defecto, formas de componentes más redondeadas, una barra de navegación inferior elevada y un título renderizado con un degradado dinámico en la barra de herramientas y la pantalla Acerca de. El proyecto también utiliza el diseño Material 3 Expressive.",
@@ -1228,6 +1236,7 @@
           "Strenge Netzwerksicherheit: Klartextverkehr ist vollständig deaktiviert; nur lokale Entwicklungshosts sind ausgenommen.",
           "Keine Cloud-Sicherung: Nichts wird an einen Online-Sicherungsdienst gesendet; die lokale Übertragung zwischen Geräten und der manuelle Export bleiben, ohne den Konto-Token.",
           "Kein proprietärer Google-Code: Google Play-Dienste und ihr Cast-SDK sind entfernt, und der Build schlägt fehl, falls eines davon zurückkehrt, auch über eine indirekte Abhängigkeit.",
+          "Stolm, Watubes eigenes Casting: Der Fernseher kontaktiert YouTube nie, das Video läuft über dein Telefon; er übernimmt Tonspur, Untertitel und Qualität, die am Telefon gewählt wurden, und erhält nur den Titel und die Sprache der Untertitel.",
           "Strikt verschlüsselte Verbindungen: nur TLS 1.2 und 1.3, mit modernen Cipher-Suites mit Forward Secrecy.",
           "Bildschirmfotos: Eine Option verbirgt die App vor Bildschirmfotos, Bildschirmaufnahmen und der Vorschau der letzten Apps.",
           "Verkleinerte Angriffsfläche: Entfernung des ungenutzten Boot-Receivers.",
@@ -1243,7 +1252,8 @@
           "Intelligentes DiffUtil: Zeilen werden über eine stabile ID identifiziert, zum Beispiel Video-URL oder Primärschlüssel, sodass Listen nur neu gebunden und Miniaturansichten nur neu geladen werden, wenn sich der Inhalt tatsächlich ändert.",
           "Gedrosselte Benachrichtigungen: Download-Fortschrittsbenachrichtigungen sind auf 2 Aktualisierungen pro Sekunde begrenzt.",
           "Speicherverwaltung: Der Back-Buffer des Players wurde von 3 Minuten auf 1 Minute reduziert, um RAM auf schwächeren Geräten zu sparen.",
-          "Vereinheitlichte Loader: Ein vereinheitlichter Coil-Bild-Loader und ein gemeinsamer HTTP-Cache werden einmal für den gesamten App-Lebenszyklus erstellt."
+          "Vereinheitlichte Loader: Ein vereinheitlichter Coil-Bild-Loader und ein gemeinsamer HTTP-Cache werden einmal für den gesamten App-Lebenszyklus erstellt.",
+          "Eine leichte App: ein einziges 64-Bit-APK unter 9 MB (vorher 15,5 MB), ohne überflüssige Kopien für andere Prozessoren; aus der App selbst wurde nichts entfernt."
         ],
         designTitle: "Oberfläche und Modernisierung",
         designText: "Die README erwähnt einen neuen Aqua-/Grün-Akzent als Standard, rundere Komponentenformen, eine angehobene untere Navigationsleiste und einen Titel mit dynamischem Farbverlauf in der Symbolleiste und im „Über“-Bildschirm. Das Projekt verwendet außerdem das Material-3-Expressive-Design.",

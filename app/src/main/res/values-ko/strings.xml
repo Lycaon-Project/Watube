@@ -341,7 +341,6 @@
     <string name="playlist_description">재생목록 설명</string>
     <string name="emptyPlaylistDescription">재생목록 설명은 비워둘 수 없습니다</string>
     <string name="automatic">자동</string>
-    <string name="color">색상</string>
     <string name="group_name_error_empty">이름을 입력하세요</string>
     <string name="registration_disabled">가입 비활성화됨</string>
     <string name="comments_count">댓글 (%1$s)</string>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Stolm -->
+<!-- Stolm: the group of choices put forward while casting (translation, quality) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="20dp" />
+    <solid android:color="?attr/colorSurfaceContainerHigh" />
+</shape>
+<!-- endregion -->

@@ -334,7 +334,6 @@
     <string name="automatic">Otomatis</string>
     <string name="sb_custom_colors_summary">Mengaktifkan segmen warna kustom untuk segmen pemblokiran sponsor</string>
     <string name="invalid_color">Nilai warna yang dimasukkan tidak valid!</string>
-    <string name="color">Warna</string>
     <string name="sb_custom_colors">Warna segmen kustom</string>
     <string name="category_highlight">Tampilkan sorotan video</string>
     <string name="category_highlight_summary">Dapat berupa judul yang ditampilkan, gambar kecil atau bagian video yang paling menarik. Anda dapat melompati ke bagiannya dengan mengetuk pada bagian bab</string>

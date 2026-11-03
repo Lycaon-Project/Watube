@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Privacy -->
+<!-- Divider between the servers of the privacy dashboard, inside the tile padding. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="14dp"
+    android:insetRight="14dp">
+    <shape android:shape="rectangle">
+        <size android:height="1dp" />
+        <solid android:color="?attr/colorOutlineVariant" />
+    </shape>
+</inset>
+<!-- endregion -->

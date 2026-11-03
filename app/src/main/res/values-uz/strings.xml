@@ -266,7 +266,6 @@
     <string name="queue">Navbat</string>
     <string name="sb_custom_colors_summary">SponsorBlock bo‘limlari uchun maxsus rangli segmentlarni yoqadi/o‘chiradi</string>
     <string name="sb_custom_colors">Maxsus bo‘lim ranglari</string>
-    <string name="color">Rang</string>
     <string name="invalid_color">Noto‘g‘ri rang qiymati kiritildi!</string>
     <string name="livestreams">Jonli efirlar</string>
     <string name="defaultIconLight">Standart yorqin</string>

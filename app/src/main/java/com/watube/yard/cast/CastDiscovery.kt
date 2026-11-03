@@ -2,12 +2,10 @@ package com.watube.yard.cast
 
 import android.content.Context
 import android.net.Network
-import android.net.nsd.DiscoveryRequest
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Build
 import android.os.ext.SdkExtensions
-import androidx.annotation.RequiresExtension
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.Dispatchers
@@ -51,11 +49,8 @@ data class CastDevice(
 /**
  * Finds Cast receivers on the Wi-Fi with DNS-SD (`_googlecast._tcp`), through the system's
  * own resolver. Only runs while [devices] is collected, i.e. while the device picker is open:
- * nothing is announced or queried in the background.
- *
- * Where the system has its own picker ([hasSystemPicker]), [pickWithSystemPicker] is used
- * instead: the user chooses in a system dialog and Watube only learns the chosen device, with
- * no access to the rest of the local network (and no permission to ask for, on Android 17).
+ * nothing is announced or queried in the background. On Android 17 this needs the local network
+ * permission, asked by the picker before it searches.
  */
 class CastDiscovery(context: Context) {
     private val nsd = context.getSystemService<NsdManager>()!!
@@ -97,37 +92,6 @@ class CastDiscovery(context: Context) {
         awaitClose { runCatching { nsd.stopServiceDiscovery(listener) } }
     }.distinctUntilChanged()
 
-    /** Shows the system's device picker; null when the user dismisses it. */
-    @RequiresExtension(extension = Build.VERSION_CODES.TIRAMISU, version = PICKER_EXTENSION)
-    suspend fun pickWithSystemPicker(): CastDevice? = pickedService()?.let { toDevice(it) }
-
-    @RequiresExtension(extension = Build.VERSION_CODES.TIRAMISU, version = PICKER_EXTENSION)
-    private suspend fun pickedService(): NsdServiceInfo? = suspendCancellableCoroutine { cont ->
-        val request = DiscoveryRequest.Builder(SERVICE_TYPE)
-            .setFlags(DiscoveryRequest.FLAG_SHOW_PICKER)
-            .setDisplayNameAttribute("fn")
-            .build()
-        val callback = object : NsdManager.ServiceInfoCallback {
-            override fun onServiceUpdated(info: NsdServiceInfo) {
-                if (cont.isActive) cont.resume(info)
-            }
-
-            override fun onServiceInfoCallbackRegistrationFailed(errorCode: Int) {
-                if (cont.isActive) cont.resume(null)
-            }
-
-            override fun onServiceLost() = Unit
-
-            // also called when the picker is dismissed without a choice
-            override fun onServiceInfoCallbackUnregistered() {
-                if (cont.isActive) cont.resume(null)
-            }
-        }
-        nsd.registerServiceInfoCallback(request, executor, callback)
-        // the system unregisters it after a choice: a second unregistration is harmless
-        cont.invokeOnCancellation { runCatching { nsd.unregisterServiceInfoCallback(callback) } }
-    }
-
     private suspend fun resolve(service: NsdServiceInfo): NsdServiceInfo? = suspendCancellableCoroutine { cont ->
         fun deliver(info: NsdServiceInfo?) {
             if (cont.isActive) cont.resume(info)
@@ -166,7 +130,7 @@ class CastDiscovery(context: Context) {
             model = text("md").orEmpty().take(CastTarget.MAX_NAME_LENGTH),
             address = address,
             port = info.port.takeIf { it > 0 } ?: CastChannel.PORT,
-            network = info.network,
+            network = info.networkOrNull(),
             serviceName = info.serviceName.take(CastTarget.MAX_NAME_LENGTH)
         )
     }
@@ -186,18 +150,23 @@ class CastDiscovery(context: Context) {
         addresses.firstOrNull { it is Inet4Address }?.let { return it }
         // before Android 14 the system gives one address: ask the receiver for its IPv4 one
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            withContext(Dispatchers.IO) { CastMdns.ipv4Of(info.serviceName, info.network) }?.let { return it }
+            withContext(Dispatchers.IO) { CastMdns.ipv4Of(info.serviceName, info.networkOrNull()) }?.let { return it }
         }
         return addresses.firstOrNull()
     }
 
     companion object {
         private const val SERVICE_TYPE = "_googlecast._tcp"
-        private const val PICKER_EXTENSION = 22
+        /** NsdServiceInfo.getNetwork: Android 13 with its T extension 3, not Android 12L. */
+        private const val NETWORK_EXTENSION = 3
 
-        /** The system device picker of NsdManager (Android 17, or an updated Android 13+). */
-        val hasSystemPicker: Boolean
-            get() = SdkExtensions.getExtensionVersion(Build.VERSION_CODES.TIRAMISU) >= PICKER_EXTENSION
+        /** The network the receiver was found on, or null where the system cannot tell it. */
+        private fun NsdServiceInfo.networkOrNull(): Network? =
+            if (SdkExtensions.getExtensionVersion(Build.VERSION_CODES.TIRAMISU) >= NETWORK_EXTENSION) {
+                network
+            } else {
+                null
+            }
     }
 }
 // endregion

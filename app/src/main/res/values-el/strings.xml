@@ -88,7 +88,6 @@
     <string name="enabled">Ενεργοποιημένο</string>
     <string name="disabled">Απενεργοποιημένο</string>
     <string name="playOnBackground">Αναπαραγωγή στο παρασκήνιο</string>
-    <string name="update_available">Η έκδοση %1$s είναι διαθέσιμη</string>
     <string name="appearance">Εμφάνιση</string>
     <string name="downloads">Λήψεις</string>
     <string name="update_summary">Έλεγχος για ενημερώσεις</string>

@@ -333,7 +333,6 @@
     <string name="stop">Stopp</string>
     <string name="sb_custom_colors_summary">Veksler egendefinerte fargesegmenter for SponsorBlock-segmenter</string>
     <string name="sb_custom_colors">Egendefinerte segmentfarger</string>
-    <string name="color">Farge</string>
     <string name="invalid_color">Ugyldig farge angitt.</string>
     <string name="automatic">Automatisk</string>
     <string name="chapters_videoHighlight">Videohøydepunkt</string>

@@ -330,7 +330,6 @@
     <string name="invalid_color">Ungültiger Farbwert eingegeben!</string>
     <string name="sb_custom_colors">Abschnittsfarben</string>
     <string name="sb_custom_colors_summary">Abschnitte je nach SponsorBlock-Kategorie farblich markieren</string>
-    <string name="color">Farbe</string>
     <string name="chapters_videoHighlight">Video-Highlight</string>
     <string name="stop">Stopp</string>
     <string name="category_highlight">Video-Highlight anzeigen</string>

@@ -70,15 +70,15 @@
     <string name="music_albums">Albums YouTube Music</string>
     <string name="music_playlists">Playlists YouTube Music</string>
     <string name="category_outro_summary">Infos après la fin. Pas pour les conclusions avec des informations</string>
-    <string name="category_intro_summary">Un intervalle sans contenu réel. Il peut s’agir d’une pause, d’une image statique ou d’une animation répétitive. Ne doit pas être utilisé pour les transitions contenant des informations.</string>
+    <string name="category_intro_summary">Un intervalle sans contenu : pause, image fixe, animation répétée.</string>
     <string name="category_outro">Générique de fin et crédits</string>
     <string name="segment_skipped">Segment ignoré</string>
     <string name="category_selfpromo">Communication non rémunérée / Autopromotion</string>
-    <string name="category_selfpromo_summary">Similaire à « sponsor » à l\'exception de la promotion non rémunérée ou de l\'autopromotion. Cela inclut les sections sur les produits, les dons ou les informations sur les personnes avec lesquelles ils ont collaboré.</string>
+    <string name="category_selfpromo_summary">Promotion non payée ou personnelle : produits dérivés, dons, collaborations.</string>
     <string name="category_intro">Entracte / Animation d’intro</string>
     <string name="license">Licence</string>
-    <string name="category_interaction_summary">Lorsqu’il y a un bref rappel pour aimer, s’abonner ou suivre au milieu du contenu. S’il est long ou porte sur un sujet spécifique, il devrait plutôt s’agir d’autopromotion.</string>
-    <string name="category_sponsor_summary">Communication commerciale, recommandations payées et publicités directes. Il ne s’agit pas d’autopromotion ou d’une véritable mise en avant gratuite de causes, de créateurs, de sites web et de produits.</string>
+    <string name="category_interaction_summary">Court rappel pour aimer, s’abonner ou suivre, au milieu de la vidéo.</string>
+    <string name="category_sponsor_summary">Publicité payée et parrainage rémunéré. Pas l’autopromotion.</string>
     <string name="category_interaction">Rappel d’interaction</string>
     <string name="app_font">Police d’écriture</string>
     <string name="font_system">Système (par défaut)</string>
@@ -115,12 +115,12 @@
     <string name="related_streams_summary">Afficher des flux similaires à côté de ce que vous regardez</string>
     <string name="category_filler">Contenu pour meubler / Blagues</string>
     <string name="category_preview">Aperçu / Récapitulatif</string>
-    <string name="category_filler_summary">Pour les scènes annexes ajoutées uniquement à des fins de remplissage ou d\'humour, non nécessaires à la compréhension du contenu principal de la vidéo</string>
+    <string name="category_filler_summary">Scènes annexes ou humoristiques, inutiles pour suivre la vidéo.</string>
     <string name="category_music_offtopic">Musique : Section non-musicale</string>
     <string name="buffering_goal">Préchargement</string>
     <string name="buffering_goal_summary">Nombre maximal de secondes de vidéo à mettre en mémoire tampon</string>
-    <string name="category_music_offtopic_summary">À utiliser uniquement dans les clips musicaux. Il doit couvrir les parties de la vidéo qui ne font pas partie des mixages officiels. Au final, la vidéo doit ressembler autant que possible à la version mixée de Spotify ou de toute autre version, ou réduire les conversations ou autres distractions.</string>
-    <string name="category_preview_summary">Pour les segments détaillant le contenu futur sans informations supplémentaires. S\'il s\'agit de clips qui n\'apparaissent qu\'ici, il s\'agit très probablement de la mauvaise catégorie.</string>
+    <string name="category_music_offtopic_summary">Clips musicaux : les parties absentes de la version officielle du morceau.</string>
+    <string name="category_preview_summary">Un aperçu du contenu à venir, sans information nouvelle.</string>
     <string name="player_autoplay">Lecture automatique</string>
     <string name="no_audio">Pas d’audio</string>
     <string name="no_video">Pas de vidéo</string>
@@ -162,15 +162,15 @@
     <string name="watch_history_summary">Garder la trace des vidéos regardées localement</string>
     <string name="watch_positions_title">Mémoriser la position courante des lectures</string>
     <string name="reset_watch_positions">Réinitialiser</string>
-    <string name="system_caption_style">Style de légende du système</string>
-    <string name="captions">Légendes</string>
+    <string name="system_caption_style">Style des sous-titres du système</string>
+    <string name="captions">Sous-titres</string>
     <string name="none">Aucun</string>
     <string name="data_saver_mode_summary">Ignorer les miniatures et autres images</string>
     <string name="never">Jamais</string>
     <string name="pure_theme_summary">Économise la batterie sur OLED</string>
     <string name="playerAudioQuality">Qualité audio</string>
     <string name="worst_quality">Plus mauvaise</string>
-    <string name="caption_settings">Légendes</string>
+    <string name="caption_settings">Réglages des sous-titres</string>
     <string name="default_subtitle_language">Langue des sous-titres</string>
     <string name="least_recent">Plus anciens</string>
     <string name="most_views">Plus vus</string>
@@ -378,7 +378,7 @@
     <string name="emptyPlaylistDescription">La description de la playlist ne peut pas être vide</string>
     <string name="change_playlist_description">Modifier la description de la playlist</string>
     <string name="group_name_error_exists">Veuillez choisir un nom unique</string>
-    <string name="dearrow_summary">Afficher des titres et des miniatures plus précis et moins sensationnalistes. Augmente les temps de chargement</string>
+    <string name="dearrow_summary">Titres et miniatures plus fidèles, moins racoleurs. Chargement un peu plus long.</string>
     <string name="default_or_unknown_audio_track">Par défaut</string>
     <string name="resolution_limited">limité</string>
     <string name="tooltip_close">Fermer</string>
@@ -395,7 +395,7 @@
     <string name="tooltip_play">Lire</string>
     <string name="category_highlight">Afficher le moment fort de la vidéo</string>
     <string name="dubbed_audio_track">Doublé</string>
-    <string name="category_highlight_summary">Il peut s\'agir du titre annoncé, de la miniature ou de la partie la plus intéressante de la vidéo. Vous pouvez y accéder en appuyant dessus dans la section des chapitres.</string>
+    <string name="category_highlight_summary">Le moment annoncé ou le plus intéressant, accessible depuis les chapitres.</string>
     <string name="uploader_name">Nom de l’Uploader</string>
     <string name="tooltip_filter">Filtre</string>
     <string name="off">Désactivé</string>
@@ -437,7 +437,6 @@
     <string name="tooltip_sort">Trier</string>
     <string name="tooltip_watch_position">Position de lecture</string>
     <string name="descriptive_audio_track">Description Audio</string>
-    <string name="color">Couleur</string>
     <string name="show_search_suggestions">Suggestions de recherche en ligne</string>
     <string name="no_fullscreen_resolution">Résolution sans plein écran</string>
     <string name="music_artists">Artistes YouTube Music</string>
@@ -521,7 +520,7 @@
     <string name="showing_results_for">Affichage des résultats pour :</string>
     <string name="delete_playlist_include_vidoes">Supprimer également toutes les vidéos de la playlist ?</string>
     <string name="category_hook">Crochet/Salutations</string>
-    <string name="category_hook_summary">Pour les éléments narratifs qui captent l\'attention du spectateur (souvent dès la première scène) en suggérant ou en décrivant des événements qui se dérouleront plus tard dans la même vidéo ou dans des épisodes futurs d\'une série</string>
+    <string name="category_hook_summary">Une accroche qui annonce un moment de la suite pour capter l’attention.</string>
     <string name="checking_frequency_2_hours">2 heures</string>
     <string name="checking_frequency_6_hours">6 heures</string>
     <string name="checking_frequency_12_hours">12 heures</string>
@@ -560,10 +559,10 @@
     <!-- Paramètres Confidentialité -->
     <string name="privacy">Confidentialité</string>
     <string name="privacy_hardening">Renforcement de la confidentialité</string>
-    <string name="privacy_hardening_summary">Bloque l’empreinte liée à la carte SIM, au réseau et à l’appareil : aucune donnée de téléphonie, région neutre pour les tendances, chaînes interrogées dans un ordre aléatoire, WebView durcie</string>
+    <string name="privacy_hardening_summary">Bloque l’empreinte SIM, réseau et appareil : aucune donnée de téléphonie, WebView durcie.</string>
     <string name="privacy_rotation_frequency">Fréquence de rotation</string>
     <string name="private_dns">DNS chiffré</string>
-    <string name="private_dns_summary">Les noms des sites que Watube contacte partent chiffrés vers le résolveur choisi, au lieu de passer en clair sur le réseau. S’il ne répond pas, rien ne part en clair : désactivez cette option pour revenir au DNS du réseau.</string>
+    <string name="private_dns_summary">Les noms des sites partent chiffrés vers le résolveur. S’il ne répond pas, rien ne part en clair.</string>
     <string name="private_dns_resolver">Résolveur DNS</string>
     <string name="private_dns_quad9">Quad9 · Suisse, sans journaux</string>
     <string name="private_dns_mullvad">Mullvad · Suède, sans journaux ni filtrage</string>
@@ -574,14 +573,16 @@
     <string name="rotation_every_24_hours">Toutes les 24 heures</string>
     <string name="rotation_manual">Manuelle uniquement</string>
     <string name="current_sponsorblock_id">ID SponsorBlock actuel</string>
-    <string name="sb_user_id_info">Les soumissions à SponsorBlock utilisent un identifiant aléatoire et rotatif au lieu d’un identifiant d’appareil permanent.</string>
+    <string name="sb_user_id_info">Un identifiant aléatoire et changeant, jamais celui de l’appareil.</string>
     <string name="privacy_neutral_region_country">Pays neutre</string>
     <string name="privacy_neutral_region_country_summary">%1$s. Le Royaume-Uni est le pays commun à tous les utilisateurs : tout autre pays vous distingue d\'eux.</string>
     <string name="privacy_identifiers">Identifiants</string>
     <string name="privacy_category_protection">Protection anti-pistage</string>
+    <string name="privacy_category_screen">Écran et verrouillage</string>
+    <string name="sb_colors_category">Couleurs des segments</string>
     <string name="privacy_category_data">Données de navigation</string>
     <string name="reset_identifiers">Réinitialiser les identifiants et les données WebView</string>
-    <string name="reset_identifiers_summary">Supprime l’ID SponsorBlock, les cookies et le stockage WebView, le cache HTTP et les connexions ouvertes</string>
+    <string name="reset_identifiers_summary">Efface l’ID SponsorBlock, les cookies et le stockage WebView, le cache HTTP.</string>
     <string name="reset_identifiers_dialog_message">Cette action réinitialise votre ID de soumission SponsorBlock, efface les cookies et le stockage WebView ainsi que le cache HTTP, et ferme les connexions ouvertes.</string>
     <string name="sponsorblock_id_rotated">ID SponsorBlock réinitialisé</string>
 
@@ -600,7 +601,7 @@
     <string name="cancel">Annuler</string>
     <string name="dialog_reset">Réinitialiser</string>
     <string name="privacy_neutral_region">Région neutre</string>
-    <string name="privacy_neutral_region_summary">Quand la région des Tendances est sur Automatique, elles sont demandées pour un pays neutre au lieu du pays de votre appareil : le Royaume-Uni, commun à tous les utilisateurs, ou le pays choisi avec la rotation « Manuelle uniquement ». Aucune requête de Watube n\'indique alors votre pays. Votre adresse IP reste visible du serveur (YouTube en mode local, l\'instance Piped sinon) : seul un VPN la masque. Modifie les tendances affichées.</string>
+    <string name="privacy_neutral_region_summary">Les tendances sont demandées pour un pays neutre, pas le vôtre. Votre IP reste visible.</string>
 
     <!-- Chaînes manquantes (utilisées par les paramètres) -->
     <string name="reset">Restaurer les paramètres par défaut</string>
@@ -609,12 +610,12 @@
 
     <!-- Mode touriste -->
     <string name="tourist_mode">Mode touriste</string>
-    <string name="tourist_mode_summary">Aucune trace conservée sur l\'appareil : historique, recherches et positions de lecture ne sont pas enregistrés.</string>
+    <string name="tourist_mode_summary">Aucun historique, aucune recherche ni position de lecture enregistrés.</string>
     <string name="tourist_mode_clear_dialog">L\'activation du mode touriste supprime immédiatement et définitivement votre historique de visionnage, vos recherches récentes et vos positions de lecture. Continuer ?</string>
 
     <!-- Conservation de l'historique de visionnage -->
     <string name="history_retention_title">Historique : conservation automatique</string>
-    <string name="history_retention_summary">Les entrées d\'historique plus vieilles que la période choisie sont supprimées automatiquement, à chaque démarrage de l\'application et après chaque nouvelle entrée.</string>
+    <string name="history_retention_summary">L’historique plus ancien que la période choisie est effacé automatiquement.</string>
     <string name="history_retention_never">Jamais</string>
     <string name="history_retention_days_1">1 jour</string>
     <string name="history_retention_days_7">7 jours</string>
@@ -659,12 +660,12 @@
 <string name="downloads_search_hint">Rechercher dans les téléchargements</string>
 <string name="playlist_search_hint">Rechercher dans la playlist</string>
     <string name="watube_hide_lockscreen">Masquer sur l’écran verrouillé</string>
-    <string name="watube_hide_lockscreen_summary">Les notifications de lecture, de téléchargement et de nouvelles vidéos n’apparaissent pas sur l’écran verrouillé.</string>
+    <string name="watube_hide_lockscreen_summary">Lecture, téléchargements et nouvelles vidéos absents de l’écran verrouillé.</string>
     <string name="watube_hide_recents">Masquer dans les applications récentes</string>
     <string name="watube_hide_recents_summary">L’écran des applications récentes affiche une carte vide au lieu de ce que vous regardiez.</string>
     <string name="watube_block_screenshots">Bloquer les captures d’écran</string>
-    <string name="watube_block_screenshots_summary">Masque Watube des captures, des enregistrements d’écran et de l’aperçu des applications récentes.</string>
-    <string name="watube_search_suggestions_summary">Désactivé : les suggestions viennent de votre historique, sur l’appareil. Activé : ce que vous tapez est envoyé à YouTube (ou à votre instance Piped) au fil de la saisie, jamais les liens, adresses e-mail ni numéros.</string>
+    <string name="watube_block_screenshots_summary">Masque Watube des captures, enregistrements et applications récentes.</string>
+    <string name="watube_search_suggestions_summary">Activé : votre saisie part vers YouTube ou Piped. Désactivé : suggestions de votre historique.</string>
     <!-- Stolm : le Cast de Watube -->
     <string name="stolm_picker_title">Diffuser sur une TV</string>
     <string name="stolm_searching">Recherche des appareils Cast sur ce Wi-Fi…</string>
@@ -682,6 +683,8 @@
     <string name="stolm_playback_failed">La TV n’a pas pu lire cette vidéo. Elle est de retour sur votre téléphone.</string>
     <string name="stolm_tv_cannot_reach_phone">La TV n’a pas pu joindre votre téléphone. Votre Wi-Fi isole peut-être les appareils.</string>
     <string name="stolm_ended">Diffusion terminée. La vidéo est de retour sur votre téléphone.</string>
+    <string name="stolm_local_network_needed">Pour trouver votre TV, Watube a besoin d’accéder aux appareils de votre réseau local.</string>
+    <string name="stolm_allow_local_network">Autoriser</string>
     <!-- Notifications de nouvelles vidéos -->
     <plurals name="new_videos_digest">
         <item quantity="one">%1$d nouvelle vidéo de vos abonnements</item>
@@ -783,7 +786,7 @@
     </plurals>
     <string name="privacy_tile_description">%1$s : %2$s, %3$s</string>
     <string name="clear_everything">Tout effacer maintenant</string>
-    <string name="clear_everything_summary">Historique, recherches, positions de lecture, caches et session du compte, d’un coup. Les abonnements, playlists et téléchargements restent.</string>
+    <string name="clear_everything_summary">Efface historique, recherches, positions, caches et session ; le reste est gardé.</string>
     <string name="clear_everything_dialog">Votre historique de visionnage et de recherche, vos positions de lecture, les caches et la session du compte seront supprimés. Les abonnements, playlists, téléchargements et réglages restent. C’est définitif.</string>
     <string name="clear_everything_confirm">Tout effacer</string>
     <string name="clear_everything_done">Tout a été effacé</string>
@@ -840,7 +843,6 @@
     <string name="external_link_secure">Connexion chiffrée (https)</string>
     <string name="external_link_unencrypted">Lien non chiffré (http) : ce que vous y envoyez et recevez peut être lu sur le réseau</string>
     <string name="external_link_lookalike">Ce nom utilise des lettres d’autres alphabets et peut imiter un site connu. Il s’affiche ainsi : %1$s</string>
-    <string name="external_link_email">Adresse e-mail</string>
     <string name="external_link_open">Ouvrir</string>
     <string name="external_link_copy">Copier le lien</string>
     <plurals name="external_link_trackers">

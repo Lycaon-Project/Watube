@@ -341,7 +341,6 @@
     <string name="sb_custom_colors_summary">SponsorBlock bölümləri üçün fərdi rəng bölümlərin dəyişdirir</string>
     <string name="invalid_color">Yanlış rəng dəyəri daxil edildi!</string>
     <string name="sb_custom_colors">Fərdi bölüm rəngləri</string>
-    <string name="color">Rəng</string>
     <string name="category_highlight">Video vurğulaması göstər</string>
     <string name="category_highlight_summary">Ya reklam olunan başlıq, miniatür və ya videonun ən maraqlı hissəsi ola bilər. Bölümlər bölməsində üzərinə toxunaraq buna keçə bilərsiniz</string>
     <string name="chapters_videoHighlight">Video Vurğulama</string>

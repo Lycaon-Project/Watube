@@ -345,7 +345,6 @@
     <string name="sb_custom_colors">कस्टम सेगमेंट रंग</string>
     <string name="chapters_videoHighlight">वीडियो हाइलाइट</string>
     <string name="stop">रुको</string>
-    <string name="color">रंग</string>
     <string name="category_highlight">वीडियो हाइलाइट दिखाएँ</string>
     <string name="category_highlight_summary">या तो विज्ञापित शीर्षक, थंबनेल या वीडियो का सबसे दिलचस्प हिस्सा हो सकता है। आप अध्याय अनुभाग में इस पर टैप करके इसे छोड़ सकते हैं</string>
     <string name="invalid_color">अमान्य रंग मान दर्ज किया गया!</string>

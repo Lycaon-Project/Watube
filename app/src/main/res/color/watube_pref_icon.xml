@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Settings -->
+<!-- Icon of a settings row: greyed with the row while it is disabled. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="0.38" android:color="@color/watube_nav_active" android:state_enabled="false" />
+    <item android:color="@color/watube_nav_active" />
+</selector>
+<!-- endregion -->

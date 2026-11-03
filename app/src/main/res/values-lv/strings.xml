@@ -355,7 +355,6 @@
     <string name="successfully_removed_from_playlist">\"%1$s\" vienums veiksmīgi noņemts no atskaņošanas saraksta.</string>
     <string name="best_quality">Vislabākā</string>
     <string name="import_temp_playlist">Vai ievietot pagaidu atskaņošanas sarakstu?</string>
-    <string name="color">Krāsa</string>
     <string name="automatic_once">Automātiski vienreiz</string>
     <string name="visibility">Redzamība</string>
     <string name="change_instance">Mainīt serveri (instanci)</string>

@@ -345,7 +345,6 @@
     <string name="sb_custom_colors">自訂區塊色彩</string>
     <string name="invalid_color">輸入了無效色彩值！</string>
     <string name="chapters_videoHighlight">影片精彩片段</string>
-    <string name="color">色彩</string>
     <string name="category_highlight">顯示影片的精彩片段</string>
     <string name="category_highlight_summary">可以是廣告標題、縮圖或影片中最有趣的部分。您可以透過在章節部分點選它來跳到該處</string>
     <string name="continue_watching">繼續觀看</string>

@@ -3,7 +3,7 @@
   <!-- ░░░ HERO ░░░ -->
   <img src="assets/banners/gh-banner.png" width="100%" style="max-width: 920px; border-radius: 18px;" alt="Watube — It's our daily comfort">
 
-  <br><br>
+<br><br>
 
   <img src="assets/icons/Watube.png" width="92" alt="Watube icon" align="center">
 
@@ -49,10 +49,10 @@
     </tr>
   </table>
 
-  
-  <br><br>
 
-  <sub>⚠️ <strong>Nightly builds</strong> ship new features and fixes ahead of the stable channel. They are less tested — use at your own risk.</sub>
+<br><br>
+
+<sub>⚠️ <strong>Nightly builds</strong> ship new features and fixes ahead of the stable channel. They are less tested — use at your own risk.</sub>
 
 </div>
 
@@ -113,6 +113,9 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 
 | Area | What changed |
 | :--- | :--- |
+| ⏭️ **Next video, every time** | With autoplay on, the next suggested video now follows every video, the *Next* button and the notification included; the countdown leads to it again, and a playlist started while another video plays keeps its order. A video no longer hangs on a network without IPv6. |
+| 📺 **Your choices on the TV** | When you cast with **Stolm**, the TV plays the audio track (original or dubbed), the subtitles and the quality you chose on the phone, and *Translation* and *Quality* stay at hand during the cast. The cast window is the same on every Android version, and stopping on the TV brings the video back to your phone. |
+| 🪶 **Lighter app** | One 64-bit APK under 9 MB (it was 15.5 MB): only the code for today's phones is shipped, nothing is removed from the app itself. |
 | 🔎 **Spelling suggestions** | Tapping *Did you mean* or *Showing results for* now runs the search with the corrected spelling (it used to do nothing), and going back skips the misspelled results. |
 | ⏭️ **Quieter SponsorBlock button** | The skip button is a small *Skip* pill on the side, clear of the play button: it shows for a few seconds when a segment starts, then only with the player controls. |
 | 📦 **Up-to-date libraries** | Media3 1.11, current AndroidX, OkHttp 5.5, Coil 3.6 and protobuf 4.36; NewPipeExtractor built from Watube's own fork with the latest caption-track names and the jsoup security fix (CVE-2026-75140). Code and resources left over from Android 12 and older are removed. |

@@ -326,7 +326,6 @@
     <string name="home_tab_content">Giriş sekmesi içeriği</string>
     <string name="stop">Durdur</string>
     <string name="sb_custom_colors">Özelleştirilmiş kısım renkleri</string>
-    <string name="color">Renk</string>
     <string name="invalid_color">Geçersiz renk değeri girildi!</string>
     <string name="alphabetic">Alfabetik</string>
     <string name="manual">El ile</string>

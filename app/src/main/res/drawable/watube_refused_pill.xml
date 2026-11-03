@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Privacy -->
+<!-- "N refused" counter of the network record: a quiet tint of the error color. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="999dp" />
+    <solid android:color="?attr/colorErrorContainer" />
+</shape>
+<!-- endregion -->

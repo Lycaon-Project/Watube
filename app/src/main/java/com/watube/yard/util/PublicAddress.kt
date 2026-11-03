@@ -52,7 +52,8 @@ object PublicAddress {
      * call it off the main thread.
      */
     fun resolvesToPublic(host: String): Boolean = isPublicHost(host) && runCatching {
-        InetAddress.getAllByName(host.trimEnd('.')).all { it.isPublic() }
+        // through the app's encrypted DNS, the very resolver the connection will use
+        PrivateDns.lookup(host.trimEnd('.')).all { it.isPublic() }
     }.getOrDefault(false)
 
     /**

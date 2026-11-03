@@ -350,7 +350,6 @@
     <string name="dearrow_summary">عنوان‌ها و بندانگشتی‌های دقیق‌تر و کم اغراق آمیز را نشان دهید. زمان بار کردن را افزایش می‌دهد</string>
     <string name="stop">توقف</string>
     <string name="sb_custom_colors_summary">بخش‌های رنگی سفارشی را برای بخش‌های SponsorBlock تغییر می‌دهد</string>
-    <string name="color">رنگ</string>
     <string name="invalid_color">مقدار رنگ نامعتبر وارد شده است!</string>
     <string name="category_highlight">نمایش بخش مهم ویدئو</string>
     <string name="category_highlight_summary">هم می‌تواند نام تبلیغاتی، تصویر کوچک یا جالب‌ترین قسمت ویدئو باشد. می‌توانید با لمس آن در بخش فصل‌ها به آن پرش کنید</string>

@@ -1,61 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- region SponsorBlock -->
+<!-- A segment type of SponsorBlock and what to do with it: a settings row (watube_preference),
+     the choice under the text. Beside it, the spinner took the width of its longest option and
+     left the title a few letters per line on a phone. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="56dp"
     android:orientation="vertical"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:paddingTop="10dp"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:paddingBottom="10dp">
+    android:paddingStart="13.5dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="13.5dp"
+    android:paddingBottom="6dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@android:id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@android:id/title"
-            style="?android:attr/preferenceStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fadingEdge="horizontal"
-            android:singleLine="true"
-            android:textAlignment="textStart"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Title" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="-15dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="30dp"
-            android:textAlignment="textEnd" />
-
-    </LinearLayout>
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/watube_pref_title"
+        android:textSize="12.4sp"
+        android:textStyle="bold"
+        tools:text="Sponsor" />
 
     <TextView
         android:id="@android:id/summary"
-        style="?android:attr/preferenceStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:lineSpacingExtra="4dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="14sp"
-        tools:text="Summary" />
+        android:layout_marginTop="1.5dp"
+        android:textColor="@color/watube_pref_summary"
+        android:textSize="10.3sp"
+        tools:text="Paid promotion and paid referrals." />
+
+    <!-- the spinner pads its text: pulled back so that it lines up with the title -->
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="2dp" />
 
 </LinearLayout>
 <!-- endregion -->

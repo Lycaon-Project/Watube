@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Privacy -->
+<!-- Confirmation of a link of a description or a comment before it leaves the app
+     (ExternalLinkSheet): the real destination first, then what to know about it. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/watube_gutter"
+        android:paddingBottom="16dp">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/WatubeSheetTitle"
+            android:accessibilityHeading="true"
+            android:text="@string/external_link_title" />
+
+        <!-- the registrable part in bold, the rest of the name quieter (set in code) -->
+        <TextView
+            android:id="@+id/link_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:breakStrategy="simple"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="shop.example.com" />
+
+        <TextView
+            android:id="@+id/link_secure"
+            style="@style/WatubeLinkNote"
+            android:text="@string/external_link_secure"
+            app:drawableStartCompat="@drawable/ic_locked" />
+
+        <TextView
+            android:id="@+id/link_unencrypted"
+            style="@style/WatubeLinkNote"
+            android:text="@string/external_link_unencrypted"
+            android:textColor="?attr/colorError"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_warning" />
+
+        <TextView
+            android:id="@+id/link_lookalike"
+            style="@style/WatubeLinkNote"
+            android:textColor="?attr/colorError"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_warning"
+            tools:text="@string/external_link_lookalike" />
+
+        <TextView
+            android:id="@+id/link_trackers"
+            style="@style/WatubeLinkNote"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_shield"
+            app:drawableTint="?attr/colorPrimary"
+            tools:text="2 pisteurs retirés : utm_source, fbclid" />
+
+        <!-- the whole link, as it will be opened: data, hence monospace -->
+        <TextView
+            android:id="@+id/link_full"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/watube_code_well"
+            android:breakStrategy="simple"
+            android:fontFamily="monospace"
+            android:maxLines="6"
+            android:padding="12dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textIsSelectable="true"
+            tools:text="https://shop.example.com/item?id=4" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/link_open"
+            style="@style/Widget.Material3.Button"
+            app:iconGravity="textStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:minHeight="48dp"
+            android:text="@string/external_link_open"
+            app:icon="@drawable/ic_open" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/link_copy"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="@string/external_link_copy" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/link_cancel"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="@string/cancel" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+<!-- endregion -->

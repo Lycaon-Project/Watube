@@ -51,7 +51,7 @@ fun shareVideo() { … }
 | **Sleep Timer** | Stopping playback after a set time. | [SleepTimer.kt](app/src/main/java/com/watube/yard/ui/tools/SleepTimer.kt), [sleep_timer_sheet.xml](app/src/main/res/layout/sleep_timer_sheet.xml), [SleepTimerSheet.kt](app/src/main/java/com/watube/yard/ui/sheets/SleepTimerSheet.kt) |
 | **Rest Mode** | Scheduled hours during which nothing plays. | [RestMode.kt](app/src/main/java/com/watube/yard/ui/tools/RestMode.kt), [PlayerSettings.kt](app/src/main/java/com/watube/yard/ui/preferences/PlayerSettings.kt), [player_settings.xml](app/src/main/res/xml/player_settings.xml) |
 | **Watch Positions** | Resuming videos where they were left, and the watched progress bars. | [DatabaseHelper.kt](app/src/main/java/com/watube/yard/db/DatabaseHelper.kt), [SetWatchProgressLength.kt](app/src/main/java/com/watube/yard/ui/extensions/SetWatchProgressLength.kt), [PlayerHelper.kt](app/src/main/java/com/watube/yard/helpers/PlayerHelper.kt) |
-| **Stolm** | Watube's own Cast client: sending the video to a TV. | [CastMediaServer.kt](app/src/main/java/com/watube/yard/cast/CastMediaServer.kt), [StolmPlayer.kt](app/src/main/java/com/watube/yard/cast/StolmPlayer.kt), [CastSession.kt](app/src/main/java/com/watube/yard/cast/CastSession.kt) |
+| **Stolm** | Watube's own Cast client: sending the video to a TV. | [CastMediaServer.kt](app/src/main/java/com/watube/yard/cast/CastMediaServer.kt), [StolmPlayer.kt](app/src/main/java/com/watube/yard/cast/StolmPlayer.kt), [CastSession.kt](app/src/main/java/com/watube/yard/cast/CastSession.kt), [StolmChoices.kt](app/src/main/java/com/watube/yard/cast/StolmChoices.kt) (the phone's audio, quality and subtitles on the TV), [StolmSheet.kt](app/src/main/java/com/watube/yard/ui/sheets/StolmSheet.kt) |
 
 ## Content
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Privacy -->
+<!-- A figure of the privacy dashboard: what it counts, the number, and its context. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/watube_qtile"
+    android:importantForAccessibility="yes"
+    android:orientation="vertical"
+    android:paddingHorizontal="14dp"
+    android:paddingVertical="12dp">
+
+    <TextView
+        android:id="@+id/stat_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        tools:text="Requêtes" />
+
+    <TextView
+        android:id="@+id/stat_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFeatureSettings="tnum"
+        android:importantForAccessibility="no"
+        android:includeFontPadding="false"
+        android:letterSpacing="-0.02"
+        android:maxLines="1"
+        android:textColor="?attr/colorOnSurface"
+        android:textFontWeight="800"
+        android:textSize="26sp"
+        tools:text="312" />
+
+    <TextView
+        android:id="@+id/stat_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:importantForAccessibility="no"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="?attr/colorOutline"
+        android:textSize="12sp"
+        tools:text="depuis l’ouverture" />
+
+</LinearLayout>
+<!-- endregion -->

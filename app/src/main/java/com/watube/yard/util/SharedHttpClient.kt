@@ -44,6 +44,9 @@ object SharedHttpClient {
         .apply { RedirectLimit.install(this) }
         // host names resolved over encrypted DNS, unless the user turned it off
         .dns(PrivateDns)
+        // an https request is never sent on in plain http, whatever a server redirects it to
+        // (a redirect to http://127.0.0.1 would even reach a local service)
+        .followSslRedirects(false)
         .build()
 
     /**

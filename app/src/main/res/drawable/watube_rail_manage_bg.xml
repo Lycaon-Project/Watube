@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Feed -->
+<!-- "Manage" disc at the head of the subscriptions rail: the brand's tonal green, so it reads
+     as an action next to the channel pictures. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="?attr/colorPrimaryContainer" />
+</shape>
+<!-- endregion -->

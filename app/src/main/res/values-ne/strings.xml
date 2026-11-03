@@ -55,7 +55,6 @@
     <string name="sponsorblock_notifications">सूचनाहरू</string>
     <string name="disabled">बन्द</string>
     <string name="playOnBackground">पृष्ठभूमिमा प्ले गर्नुहोस्</string>
-    <string name="update_available">संस्करण %1$s उपलब्ध छ</string>
     <string name="appearance">उपस्थिति</string>
     <string name="empty">तपाईंले प्रयोगकर्ता नाम र पासवर्ड प्रविष्ट गर्नुपर्छ।</string>
     <string name="server_error">...चयन गरिएको सर्भरमा समस्या भएको जस्तो देखिन्छ। अर्को उदाहरण प्रयास गर्नुहोस्।...</string>

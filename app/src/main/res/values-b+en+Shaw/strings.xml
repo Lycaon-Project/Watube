@@ -170,7 +170,6 @@
     <string name="added_to_playlist">𐑨𐑛𐑩𐑛 𐑑 𐑐𐑤𐑱𐑤𐑦𐑕𐑑 %1$s</string>
     <string name="queue">𐑒𐑿</string>
     <string name="sb_custom_colors_summary">𐑑𐑪𐑜𐑩𐑤𐑟 𐑒𐑳𐑕𐑑𐑩𐑥 𐑒𐑳𐑤𐑼 𐑕𐑧𐑜𐑥𐑩𐑯𐑑𐑕 𐑓 ·𐑕𐑐𐑪𐑯𐑕𐑼𐑚𐑤𐑪𐑒 𐑕𐑧𐑜𐑥𐑩𐑯𐑑𐑕</string>
-    <string name="color">𐑒𐑳𐑤𐑼</string>
     <string name="invalid_color">¡𐑦𐑯𐑝𐑨𐑤𐑦𐑛 𐑒𐑳𐑤𐑼 𐑝𐑨𐑤𐑿 𐑧𐑯𐑑𐑼𐑛!</string>
     <string name="defaultIconLight">𐑛𐑦𐑓𐑷𐑤𐑑 𐑤𐑲𐑑</string>
     <string name="playlistCloned">𐑐𐑤𐑱𐑤𐑦𐑕𐑑</string>

@@ -140,6 +140,17 @@ class StolmEndToEndTest {
         assertFalse(StolmStatus.playWhenReadyOf(status("PAUSED")))
     }
 
+    @Test
+    fun aStopOnTheTvEndsTheCastButANewVideoDoesNot() {
+        fun status(state: String, idle: String? = null) = CastMediaStatus(state, 0.0, null, idle, 1.0, 0)
+        // the remote's stop key: the receiver app stays, its media is gone
+        assertTrue(StolmStatus.isStoppedOnTv(status("IDLE", "CANCELLED")))
+        // the previous video, replaced by the next one or by other tracks
+        assertFalse(StolmStatus.isStoppedOnTv(status("IDLE", "INTERRUPTED")))
+        assertFalse(StolmStatus.isStoppedOnTv(status("IDLE", "FINISHED")))
+        assertFalse(StolmStatus.isStoppedOnTv(status("PAUSED")))
+    }
+
     /** A Cast receiver speaking the Default Media Receiver's protocol, on the loopback. */
     private inner class FakeReceiver(
         /** The TLS certificate the device signs for, given its own. */

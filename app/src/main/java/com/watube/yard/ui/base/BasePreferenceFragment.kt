@@ -14,6 +14,7 @@ import com.watube.yard.R
 import com.watube.yard.databinding.DialogTextPreferenceBinding
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.preferences.EditNumberPreference
+import com.watube.yard.ui.preferences.PreferenceCards
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
 // region Settings
@@ -29,6 +30,9 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // the rows of each category in a card, like the settings hub
+        setDivider(null)
+        listView.addItemDecoration(PreferenceCards(requireContext()))
         // add bottom padding to the list, to ensure that the last item is not overlapped by the
         // system bars. Relative to the initial padding: insets are dispatched again on every
         // rotation / bar change, and adding to the current padding made it grow each time.

@@ -330,7 +330,6 @@
     <string name="dearrow">Włącz DeArrow</string>
     <string name="dearrow_summary">Pokaż dokładniejsze i mniej sensacyjne tytuły i miniatury. Wydłuża czas ładowania</string>
     <string name="unknown_audio_language">Nieznany język ścieżki dźwiękowej</string>
-    <string name="color">Kolor</string>
     <string name="invalid_color">Wprowadzono nieprawidłową wartość koloru!</string>
     <string name="change_playlist_description">Zmień opis playlisty</string>
     <string name="emptyPlaylistDescription">Opis playlisty nie może być pusty</string>

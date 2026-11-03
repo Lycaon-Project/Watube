@@ -1,7 +1,9 @@
 package com.watube.yard.cast
 
 import com.watube.yard.api.GenericUserAgentInterceptor
+import com.watube.yard.extensions.readAtMost
 import com.watube.yard.helpers.ProxyHelper
+import com.watube.yard.util.PrivateDns
 import com.watube.yard.util.PublicAddress
 import com.watube.yard.util.PublicAddress.isPublic
 import com.watube.yard.util.RefusedRequestException
@@ -75,7 +77,11 @@ internal class CastMediaServer(
     private class Relayed(val url: String, val audio: Boolean)
     private var nextId = 0
 
-    private class Source(val token: String, val playlistUrl: String)
+    private class Source(val token: String, val playlistUrl: String, val choices: StolmChoices) {
+        /** Read from the master by [segmentFormats]. */
+        @Volatile
+        var options: HlsOptions = HlsOptions.NONE
+    }
 
     init {
         workers.execute(::acceptLoop)
@@ -85,14 +91,26 @@ internal class CastMediaServer(
      * Serves [hlsUrl] under a new token (the previous video stops being reachable) and returns
      * the address the receiver loads.
      */
-    fun publish(hlsUrl: String): String {
+    fun publish(hlsUrl: String, choices: StolmChoices = StolmChoices()): String {
         val token = ByteArray(TOKEN_BYTES).also(SecureRandom()::nextBytes).joinToString("") { "%02x".format(it) }
         synchronized(targets) { targets.clear() }
         prefetched.clear()
         receiverReached = false
-        source = Source(token, hlsUrl)
+        source = Source(token, hlsUrl, choices)
         return "${baseUrl(token)}/$MASTER"
     }
+
+    /**
+     * Serves the subtitles file at [url] to the receiver, for the video [publish] made reachable,
+     * and returns its address. Fetched by the relay like the video: the TV never contacts YouTube.
+     */
+    fun publishSubtitles(url: String): String? {
+        val current = source ?: return null
+        return "${baseUrl(current.token)}/$RELAY/${register(Relayed(url, audio = false))}"
+    }
+
+    /** The audio tracks and heights of the published video, once [segmentFormats] read them. */
+    val options: HlsOptions get() = source?.options ?: HlsOptions.NONE
 
     /**
      * The segment formats of [hlsUrl] as the relay serves them, to tell the receiver: it reads
@@ -104,13 +122,18 @@ internal class CastMediaServer(
     fun segmentFormats(hlsUrl: String): HlsFormats {
         val (masterUrl, master) = fetchPlaylist(hlsUrl) ?: return HlsFormats.DEFAULT
         val castable = HlsVariants.castable(master)
-        // a media playlist, without variants
-        if (!castable.contains(HlsVariants.STREAM_INF)) {
-            return if (castable.contains(MAP_TAG)) HlsFormats.FMP4 else HlsFormats.DEFAULT
+        source?.takeIf { it.playlistUrl == hlsUrl }?.let { current ->
+            current.options = HlsMaster.options(castable)
         }
-        val (tag, uri) = HlsVariants.firstVariant(castable) ?: return HlsFormats.DEFAULT
+        // the variant and audio track the receiver will play
+        val selected = HlsMaster.select(castable, source?.choices ?: StolmChoices())
+        // a media playlist, without variants
+        if (!selected.contains(HlsVariants.STREAM_INF)) {
+            return if (selected.contains(MAP_TAG)) HlsFormats.FMP4 else HlsFormats.DEFAULT
+        }
+        val (tag, uri) = HlsVariants.firstVariant(selected) ?: return HlsFormats.DEFAULT
         val videoFmp4 = masterUrl.resolve(uri)?.let { fetchPlaylist(it.toString()) }?.second?.contains(MAP_TAG) == true
-        val audioUrl = HlsVariants.audioUri(castable, tag)?.let(masterUrl::resolve)
+        val audioUrl = HlsVariants.audioUri(selected, tag)?.let(masterUrl::resolve)
             // audio and video in the same segments
             ?: return if (videoFmp4) HlsFormats.FMP4 else HlsFormats.DEFAULT
         val audio = fetchPlaylist(audioUrl.toString())?.second ?: return HlsFormats(null, video(videoFmp4))
@@ -259,7 +282,15 @@ internal class CastMediaServer(
         text: String, url: String, out: HeadTrackingStream, cors: String?, base: String, headOnly: Boolean,
         audio: Boolean
     ) {
-        val rewritten = HlsRewriter.rewrite(HlsVariants.castable(text), url) { target, audioRendition ->
+        stolmTrace {
+            // the tags of a master, without their addresses (they hold the stream's tokens)
+            text.lines().filter { it.startsWith("#EXT-X-MEDIA:") || it.startsWith(HlsVariants.STREAM_INF) }
+                .joinToString("\n", "relay: master\n") { it.replace(Regex("URI=\"[^\"]*\""), "URI=…") }
+        }
+        // a master gets the phone's choices: its media playlists have nothing to choose from
+        val choices = source?.choices ?: StolmChoices()
+        val playlist = if (audio) text else HlsMaster.select(HlsVariants.castable(text), choices)
+        val rewritten = HlsRewriter.rewrite(playlist, url) { target, audioRendition ->
             "$base/$RELAY/${register(Relayed(target, audio || audioRendition))}"
         }.toByteArray(Charsets.UTF_8)
         writeHead(out, 200, cors, PLAYLIST_TYPE, rewritten.size.toLong(), null)
@@ -434,10 +465,14 @@ internal class CastMediaServer(
         /** Not an address of the local network or of the phone (names are checked by [PublicOnlyDns]). */
         fun isPublicHost(host: String): Boolean = PublicAddress.isPublicHost(host)
 
-        /** Resolutions to a local address are refused: a public name cannot lead to the LAN. */
+        /**
+         * Resolutions to a local address are refused: a public name cannot lead to the LAN. The
+         * names go through the encrypted DNS of the app like every other request (they used to be
+         * asked in clear text to the network's resolver, for every relayed stream host).
+         */
         private object PublicOnlyDns : Dns {
             override fun lookup(hostname: String): List<InetAddress> =
-                Dns.SYSTEM.lookup(hostname).filter { it.isPublic() }
+                PrivateDns.lookup(hostname).filter { it.isPublic() }
                     .ifEmpty { throw UnknownHostException("$hostname has no public address") }
         }
 
@@ -468,7 +503,7 @@ internal class CastMediaServer(
             request(PLAYLIST_TAG.size.toLong()) && rangeEquals(0, PLAYLIST_TAG)
 
         private fun InputStream.readBounded(limit: Int): ByteArray {
-            val bytes = readNBytes(limit + 1)
+            val bytes = readAtMost(limit + 1)
             if (bytes.size > limit) throw IOException("playlist too large")
             return bytes
         }

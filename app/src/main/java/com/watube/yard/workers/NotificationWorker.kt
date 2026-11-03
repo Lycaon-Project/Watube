@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -108,10 +109,14 @@ class NotificationWorker(appContext: Context, parameters: WorkerParameters) :
         }
     }
 
-    private fun canPostNotifications() = ContextCompat.checkSelfPermission(
-        applicationContext,
-        Manifest.permission.POST_NOTIFICATIONS
-    ) == PackageManager.PERMISSION_GRANTED && notificationManager.areNotificationsEnabled()
+    // the permission only exists from Android 13: before, it always reads as denied
+    private fun canPostNotifications() = (
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) && notificationManager.areNotificationsEnabled()
 
     /**
      * check whether new streams are available in subscriptions

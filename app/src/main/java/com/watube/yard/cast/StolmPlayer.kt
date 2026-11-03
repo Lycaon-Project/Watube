@@ -10,6 +10,8 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.SimpleBasePlayer
+import androidx.media3.common.Tracks
+import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -63,10 +65,23 @@ internal class StolmPlayer(
     private var requestedPositionMs: Long? = null
 
     /** The published stream, to load it again (replay after the end, retry after an error). */
-    private class Source(val url: String, val formats: HlsFormats)
+    private class Source(val url: String, val formats: HlsFormats, val subtitles: CastTextTrack?)
+
+    /**
+     * The tracks the TV can play, those it plays selected: the player options of the phone
+     * (quality, audio track, subtitles) list them during the cast.
+     */
+    private var tracks = Tracks.EMPTY
 
     /** The video on the TV, null until the first [load]. */
     val currentItem: StolmItem? get() = item
+
+    /**
+     * The video was stopped from the TV (its remote's stop key): the receiver app stays open
+     * with nothing to play, the cast is over all the same.
+     */
+    var stoppedOnTv = false
+        private set
 
     init {
         scope.launch {
@@ -74,6 +89,7 @@ internal class StolmPlayer(
                 // while a LOAD runs, the end of the previous media is not this one's state
                 if (isLoading || newStatus == null) return@collect
                 status = newStatus
+                stoppedOnTv = StolmStatus.isStoppedOnTv(newStatus)
                 requestedPlayWhenReady = null
                 requestedPositionMs = null
                 invalidateState()
@@ -87,17 +103,29 @@ internal class StolmPlayer(
         }
     }
 
-    /** Plays [newItem], published at [url], from [positionMs]. Throws when the TV refuses it. */
-    suspend fun load(newItem: StolmItem, url: String, positionMs: Long, formats: HlsFormats) {
+    /**
+     * Plays [newItem], published at [url], from [positionMs], with [subtitles] if any; [tracks]
+     * are what the phone shows of it. Throws when the TV refuses it.
+     */
+    suspend fun load(
+        newItem: StolmItem,
+        url: String,
+        positionMs: Long,
+        formats: HlsFormats,
+        subtitles: CastTextTrack? = null,
+        tracks: Tracks = Tracks.EMPTY
+    ) {
         item = newItem
-        source = Source(url, formats)
+        source = Source(url, formats, subtitles)
+        this.tracks = tracks
+        stoppedOnTv = false
         status = null
         isLoading = true
         requestedPlayWhenReady = true
         requestedPositionMs = positionMs.takeUnless { newItem.isLive }
         invalidateState()
         try {
-            session.load(url, CONTENT_TYPE_HLS, newItem.isLive, newItem.title, positionMs / 1000.0, formats)
+            session.load(url, CONTENT_TYPE_HLS, newItem.isLive, newItem.title, positionMs / 1000.0, formats, subtitles)
         } finally {
             isLoading = false
             status = session.mediaStatus.value
@@ -129,6 +157,7 @@ internal class StolmPlayer(
                         .setDurationUs(durationMs?.times(1000) ?: C.TIME_UNSET)
                         .setIsSeekable(!item.isLive)
                         .setIsDynamic(item.isLive)
+                        .setTracks(tracks)
                         .apply { if (item.isLive) setLiveConfiguration(MediaItem.LiveConfiguration.UNSET) }
                         .build()
                 )
@@ -147,6 +176,8 @@ internal class StolmPlayer(
                 }
             )
             .setContentPositionMs(position(status, durationMs))
+            // the quality option shows what the TV plays
+            .setVideoSize(VideoSize(status?.videoWidth ?: 0, status?.videoHeight ?: 0))
             .build()
     }
 
@@ -199,7 +230,7 @@ internal class StolmPlayer(
         val source = source ?: return
         scope.launch {
             // a refused reload leaves the IDLE state on screen: nothing more to do here
-            runCatching { load(item, source.url, positionMs, source.formats) }
+            runCatching { load(item, source.url, positionMs, source.formats, source.subtitles, tracks) }
         }
     }
 
@@ -261,7 +292,8 @@ internal class StolmPlayer(
             COMMAND_PREPARE,
             COMMAND_GET_CURRENT_MEDIA_ITEM,
             COMMAND_GET_TIMELINE,
-            COMMAND_GET_METADATA
+            COMMAND_GET_METADATA,
+            COMMAND_GET_TRACKS
         ).build()
 
         private val COMMANDS = LIVE_COMMANDS.buildUpon().addAll(
@@ -291,6 +323,12 @@ internal object StolmStatus {
         // BUFFERING, LOADING
         else -> Player.STATE_BUFFERING
     }
+
+    /**
+     * Whether the media was stopped on the TV: CANCELLED, or gone from the receiver (an empty
+     * status). A new load ends the previous media as INTERRUPTED instead.
+     */
+    fun isStoppedOnTv(status: CastMediaStatus) = status.playerState == IDLE && status.idleReason == "CANCELLED"
 
     /** Whether the receiver plays (or will once buffered): a load always autoplays. */
     fun playWhenReadyOf(status: CastMediaStatus?): Boolean =

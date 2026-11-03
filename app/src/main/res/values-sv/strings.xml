@@ -214,7 +214,6 @@
     <string name="uploaderAndVideoCount">%1$s • %2$d videor</string>
     <string name="seek_increment">Hoppintervall</string>
     <string name="audio">Ljud</string>
-    <string name="color">Färg</string>
     <string name="deleteAccount">Radera konto</string>
     <string name="pauseOnScreenOff_summary">Pausa uppspelningen när skärmen stängs av</string>
     <string name="watch_positions">Kom ihåg position</string>

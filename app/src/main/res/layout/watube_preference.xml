@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Settings -->
+<!--
+  A row of the settings pages, the same as the rows of the settings hub (settings_category_row):
+  title and short summary, the control at the end. PreferenceCards draws the card around the
+  rows of a category. The ids are the ones androidx.preference binds.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:minHeight="56dp"
+    android:orientation="horizontal"
+    android:paddingStart="13.5dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="13.5dp"
+    android:paddingBottom="12dp">
+
+    <FrameLayout
+        android:id="@id/icon_frame"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/watube_icon_tile"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:tint="@color/watube_pref_icon" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/watube_pref_title"
+            android:textSize="12.4sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1.5dp"
+            android:textColor="@color/watube_pref_summary"
+            android:textSize="10.3sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@android:id/widget_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:gravity="center"
+        android:orientation="vertical" />
+
+</LinearLayout>
+<!-- endregion -->

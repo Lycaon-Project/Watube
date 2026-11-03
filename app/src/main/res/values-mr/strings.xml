@@ -129,7 +129,6 @@
     <string name="defaultIcon">डीफॉल्ट</string>
     <string name="uploaderAndVideoCount">%1$s • %2$d व्हिडिओस</string>
     <string name="sponsorblock_notifications">सूचना</string>
-    <string name="update_available">%1$s आवृत्ती उपलब्ध आहे</string>
     <string name="appearance">अपेअरंस</string>
     <string name="downloads">डाउनलोड</string>
     <string name="update_summary">अपडेट साठी तपासा</string>
@@ -210,7 +209,6 @@
     <string name="queue">रांग</string>
     <string name="hide_watched_from_feed">फीडमधून पाहिलेले व्हिडिओ लपवा</string>
     <string name="push_channel_description">नवीन प्रवाह उपलब्ध असताना सूचना दाखवते.</string>
-    <string name="added_to_playlist">प्लेलिस्टमध्ये जोडले</string>
     <string name="app_backup">ॲप बॅकअप</string>
     <string name="username_email">शिफारस नसलेल्या ई-मेल पत्त्यासह पुढे जायचे?</string>
     <string name="proceed">पुढे जा</string>

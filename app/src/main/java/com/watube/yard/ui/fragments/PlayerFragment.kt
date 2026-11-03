@@ -80,7 +80,6 @@ import com.watube.yard.databinding.FragmentPlayerBinding
 import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.enums.FileType
 import com.watube.yard.enums.PlayerCommand
-import com.watube.yard.cast.CastDiscovery
 import com.watube.yard.cast.CastTarget
 import com.watube.yard.cast.Stolm
 import com.watube.yard.cast.StolmPlayer.Companion.isRemote
@@ -90,6 +89,7 @@ import com.watube.yard.enums.PlayerEvent
 import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.enums.ShareObjectType
 import com.watube.yard.extensions.formatShort
+import com.watube.yard.extensions.navigateVideo
 import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.serializableExtra
 import com.watube.yard.extensions.toID
@@ -135,6 +135,7 @@ import com.watube.yard.ui.sheets.CommentsSheet
 import com.watube.yard.ui.sheets.ExternalLinkSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
 import com.watube.yard.ui.tools.SleepTimer
+import com.watube.yard.util.ExternalLink
 import com.watube.yard.util.OfflineTimeFrameReceiver
 import com.watube.yard.util.OnlineTimeFrameReceiver
 import com.watube.yard.util.PlayingQueue
@@ -266,6 +267,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         maximumFractionDigits = 2
     }
 
+    /**
+     * The video [setPlayerDefaults] last ran for. The same video loaded again (a cast following a
+     * new quality or audio track, a recovered error) keeps the tracks chosen on it: they used to be
+     * reset to the defaults, the TV falling back to automatic quality after each choice.
+     */
+    private var defaultsVideoId: String? = null
+
     private fun setPlayerDefaults() {
         if (!::playerController.isInitialized) return
 
@@ -275,6 +283,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         commentsViewModel.reset()
 
         hideSkipButton()
+
+        val currentVideoId = if (::videoId.isInitialized) videoId else null
+        if (currentVideoId != null && currentVideoId == defaultsVideoId) return
+        defaultsVideoId = currentVideoId
 
         playerController.sendCustomCommand(
             AbstractPlayerService.runPlayerActionCommand,
@@ -581,7 +593,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 hideSkipButton()
 
                 val isTransitioning = playerController.currentTracks.isEmpty
-                if ((PlayingQueue.hasNext() || PlayerHelper.autoPlayEnabled) && autoPlayCountdownEnabled && !isTransitioning) {
+                // hasNext() includes the autoplay suggestion, when autoplay is on; a repeated
+                // video starts again on its own
+                if (PlayingQueue.hasNext() && autoPlayCountdownEnabled && !isTransitioning &&
+                    PlayingQueue.repeatMode != Player.REPEAT_MODE_ONE
+                ) {
                     showAutoPlayCountdown()
                 } else {
                     binding.player.showControllerPermanently()
@@ -1201,7 +1217,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     }
 
     /** Returns false when this screen has no live player left to play [videoId]. */
-    fun playVideo(videoId: String): Boolean {
+    /** [playerData]: see [com.watube.yard.extensions.navigateVideo]. */
+    fun playVideo(videoId: String, playerData: PlayerData? = null): Boolean {
         if (!::playerController.isInitialized || !playerController.isConnected) return false
 
         // Nouvelle vidéo (navigation, file d'attente) : on réarme les garde-fous de
@@ -1213,12 +1230,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             hasReExtractedOnError = false
         }
 
-        playerController.sendCustomCommand(
-            AbstractPlayerService.runPlayerActionCommand,
-            Bundle().apply {
-                putString(PlayerCommand.PLAY_VIDEO_BY_ID.name, videoId)
-            }
-        )
+        playerController.navigateVideo(videoId, playerData)
         return true
     }
 
@@ -1333,6 +1345,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // a new view gets the defaults of its video again
+        defaultsVideoId = null
         handler.removeCallbacks(miniProgressUpdater)
         releaseOrientationHold()
         releasePreviewFrames()
@@ -1832,14 +1846,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private fun initializeStolm() {
         binding.relPlayerCast.setOnClickListener {
             if (!::playerController.isInitialized) return@setOnClickListener
-            if (Stolm.state.value is Stolm.State.Idle && CastDiscovery.hasSystemPicker) {
-                // the system's picker: Watube only learns the device chosen
-                viewLifecycleOwner.lifecycleScope.launch {
-                    CastDiscovery(requireContext()).pickWithSystemPicker()?.let { castTo(it.toTarget().toBundle()) }
-                }
-            } else {
-                StolmSheet.newInstance(playerController.deviceVolume).show(childFragmentManager)
-            }
+            // Watube's own sheet on every Android version (the user's choice over the system
+            // picker of Android 17, which showed a different screen)
+            StolmSheet.newInstance(
+                playerController.deviceVolume,
+                binding.player.translationSummary(),
+                binding.player.qualitySummary()
+            ).show(childFragmentManager)
         }
 
         childFragmentManager.setFragmentResultListener(StolmSheet.REQUEST_KEY, viewLifecycleOwner) { _, result ->
@@ -1849,6 +1862,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             if (result.containsKey(StolmSheet.VOLUME)) {
                 playerController.setDeviceVolume(result.getInt(StolmSheet.VOLUME), 0)
             }
+            // the options put forward during a cast: the player's own sheets, the TV's tracks in them
+            if (result.getBoolean(StolmSheet.TRANSLATION)) binding.player.showTranslationOptions()
+            if (result.getBoolean(StolmSheet.QUALITY)) binding.player.showQualityOptions()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -2095,7 +2111,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         if (videoId.isNullOrEmpty()) {
             // description links are untrusted: never hand a foreign scheme to another app
             val ctx = context ?: return
-            if (!IntentHelper.isAllowedLink(link)) {
+            // a link whose real destination cannot be shown (ExternalLink.parse) is not opened
+            if (!IntentHelper.isAllowedLink(link) || ExternalLink.parse(link) == null) {
                 ctx.toastFromMainThread(R.string.error)
                 return
             }

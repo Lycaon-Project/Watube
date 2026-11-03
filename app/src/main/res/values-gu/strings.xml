@@ -117,7 +117,6 @@
     <string name="checking_frequency">દરેક તપાસી રહ્યું છે…</string>
     <string name="enabled">ચાલુ</string>
     <string name="disabled">બંધ</string>
-    <string name="added_to_playlist">પ્લેલીસ્ટમાં ઉમેરાયેલ</string>
     <string name="category_filler">ફિલર ટેન્જન્ટ/ટુચકાઓ</string>
     <string name="category_preview">પૂર્વદર્શન/રીકેપ</string>
     <string name="category_music_offtopic">સંગીત: બિન-સંગીત વિભાગ</string>
@@ -222,7 +221,6 @@
     <string name="category_music_offtopic_summary">ફક્ત મ્યુઝિક વીડિયોમાં ઉપયોગ માટે. તે વિડિઓના ભાગોને આવરી લેવું જોઈએ, સત્તાવાર મિશ્રણનો ભાગ નહીં. અંતમાં, વિડિઓ સ્પોટિફાઇ અથવા અન્ય કોઈપણ મિશ્રિત સંસ્કરણને શક્ય તેટલી નજીકથી મળતી આવવી જોઈએ, અથવા વાત કરવા અથવા અન્ય વિક્ષેપોને ઘટાડવી જોઈએ</string>
     <string name="category_filler_summary">ફક્ત ફિલર અથવા રમૂજ માટે ઉમેરવામાં આવેલા સ્પર્શકીય દ્રશ્યો માટે વિડિઓની મુખ્ય સામગ્રીને સમજવાની જરૂર નથી</string>
     <string name="category_preview_summary">તેની શ્રેણીમાં આ અથવા ભાવિ વિડિઓઝમાં આગામી સામગ્રીની વિગતો આપતા સેગમેન્ટ્સ માટે, પરંતુ વધારાની માહિતી પ્રદાન કરતા નથી. જો તેમાં માત્ર અહીં જ દેખાતી ક્લિપ્સ નો સમાવેશ થાય છે, તો આ ખોટી કેટેગરી હોવાની સંભાવના છે</string>
-    <string name="update_available">વર્ઝન %1$s ઉપલબ્ધ છે</string>
     <string name="customInstance_summary">ઉમેરો…</string>
     <string name="instance_name">નમૂના નામ</string>
     <string name="invalid_url">મહેરબાની કરીને URL દાખલ કરો જે કામ કરે છે</string>

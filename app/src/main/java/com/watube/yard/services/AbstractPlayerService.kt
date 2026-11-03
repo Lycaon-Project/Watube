@@ -29,19 +29,19 @@ import androidx.media3.session.SessionResult
 import com.watube.yard.R
 import com.watube.yard.api.JsonHelper
 import com.watube.yard.api.obj.Segment
-import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
 import com.watube.yard.enums.PlayerCommand
 import com.watube.yard.enums.PlayerEvent
 import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.extensions.TAG
+import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.parcelableExtra
-import com.watube.yard.extensions.toID
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.extensions.updateParameters
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
 import com.watube.yard.helpers.PrivacyStats
+import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.tools.RestMode
 import com.watube.yard.util.DefaultTrackSelectorWithAudioQualitySupport
@@ -479,11 +479,14 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             }
 
             args.containsKey(PlayerCommand.PLAY_VIDEO_BY_ID.name) -> {
-                navigateVideo(args.getString(PlayerCommand.PLAY_VIDEO_BY_ID.name) ?: return)
+                val videoId = args.getString(PlayerCommand.PLAY_VIDEO_BY_ID.name) ?: return
+                args.parcelable<PlayerData>(IntentData.playerData)?.let(::onOpenedFromScreen)
+                navigateVideo(videoId)
             }
 
             args.containsKey(PlayerCommand.PLAY_NEXT_VIDEO.name) -> {
-                playNextVideo()
+                // sent by the player screen at the end of its autoplay countdown
+                playNextVideo(countdownOver = true)
             }
 
             args.containsKey(PlayerCommand.TOGGLE_AUDIO_ONLY_MODE.name) -> {
@@ -503,6 +506,18 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
                     !args.getBoolean(PlayerCommand.SET_AUTOPLAY_COUNTDOWN_ENABLED.name)
             }
         }
+    }
+
+    /**
+     * A video opened from another screen while this service plays: the videos queued after the
+     * current one give way to it, unless that screen has just set up the queue it starts.
+     *
+     * Done here and not by the screen: the current video is only known for sure here, and the
+     * screen trimmed the queue before the switch, around the video it was replacing.
+     */
+    @CallSuper
+    protected open fun onOpenedFromScreen(playerData: PlayerData) {
+        if (!playerData.keepQueue) PlayingQueue.clearAfterCurrent()
     }
 
     /**
@@ -701,22 +716,22 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
      * If a video ID is explicitly given, it is played next,
      * otherwise a queued video (which includes playlists) is chosen.
      *
-     * If no video is queued and autoplay is enabled, a related video is used.
+     * If no video is queued and autoplay is enabled, the queue gives the related video it keeps.
+     *
+     * @param countdownOver the player screen, which took autoplay over to count down to the next
+     * video first, is done counting: the next video is played this time.
      */
-    fun playNextVideo(videoId: String? = null, relatedStreams: List<StreamItem>? = null) {
+    fun playNextVideo(videoId: String? = null, countdownOver: Boolean = false) {
         if (PlayingQueue.repeatMode == Player.REPEAT_MODE_ONE) {
             activePlayer?.seekTo(0)
             return
         }
 
-        if (!shouldHandleAutoplay) {
+        if (!shouldHandleAutoplay && !countdownOver) {
             return
         }
 
-        val nextVideo = videoId ?: PlayingQueue.getNext()
-        ?: relatedStreams?.firstOrNull { !it.isLive }?.url?.toID()
-            ?.takeIf { PlayerHelper.autoPlayEnabled && PlayerHelper.relatedStreamsEnabled }
-        ?: return
+        val nextVideo = videoId ?: PlayingQueue.getNext() ?: return
 
         navigateVideo(nextVideo)
     }

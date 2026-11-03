@@ -1,6 +1,7 @@
 package com.watube.yard.helpers
 
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -22,9 +23,19 @@ object ScreenPrivacy {
     val isScreenshotBlockingEnabled: Boolean
         get() = PreferenceHelper.getBoolean(PreferenceKeys.BLOCK_SCREENSHOTS, false)
 
-    /** Applies the current setting to [window], so that turning it off takes effect too. */
+    private val isRecentsPreviewHidden: Boolean
+        get() = PreferenceHelper.getBoolean(PreferenceKeys.HIDE_RECENTS_PREVIEW, true)
+
+    /**
+     * Before Android 13 the recent apps preview can only be hidden with FLAG_SECURE, which keeps
+     * the window out of screenshots as well.
+     */
+    private val recentsNeedSecureFlag: Boolean
+        get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && isRecentsPreviewHidden
+
+    /** Applies the current settings to [window], so that turning them off takes effect too. */
     fun applyTo(window: Window) {
-        if (isScreenshotBlockingEnabled) {
+        if (isScreenshotBlockingEnabled || recentsNeedSecureFlag) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
@@ -36,8 +47,11 @@ object ScreenPrivacy {
      * instead of the last frame of the app, which could be a video or a search.
      */
     fun applyRecentsPreviewTo(activity: Activity) {
-        val hide = PreferenceHelper.getBoolean(PreferenceKeys.HIDE_RECENTS_PREVIEW, true)
-        activity.setRecentsScreenshotEnabled(!hide)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.setRecentsScreenshotEnabled(!isRecentsPreviewHidden)
+        } else {
+            applyTo(activity.window)
+        }
     }
 
     /**

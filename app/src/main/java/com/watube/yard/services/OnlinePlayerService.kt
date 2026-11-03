@@ -27,7 +27,9 @@ import com.watube.yard.api.obj.Streams
 import com.watube.yard.cast.CastTarget
 import com.watube.yard.cast.Stolm
 import com.watube.yard.cast.StolmCast
+import com.watube.yard.cast.StolmChoices
 import com.watube.yard.cast.StolmException
+import com.watube.yard.cast.StolmTracks
 import com.watube.yard.cast.chain
 import com.watube.yard.cast.stolmTrace
 import com.watube.yard.constants.IntentData
@@ -55,6 +57,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -93,7 +96,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
         override fun onPlaybackStateChanged(playbackState: Int) {
             when (playbackState) {
                 Player.STATE_ENDED -> {
-                    if (!isTransitioning) playNextVideo(relatedStreams = streams?.relatedStreams)
+                    if (!isTransitioning) playNextVideo()
                 }
 
                 Player.STATE_IDLE -> {
@@ -167,6 +170,9 @@ open class OnlinePlayerService : AbstractPlayerService() {
 
         // start loading the video info while keeping a reference to the job
         // so that it can be canceled once a different video is loaded
+        // this video's, even if another one is opened from a screen while it loads
+        val playlistId = playlistId
+        val channelId = channelId
         fetchVideoInfoJob = scope.launch {
             streams = fetchStreams() ?: return@launch
 
@@ -174,9 +180,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
                 // save the current stream to the queue
                 PlayingQueue.updateCurrent(it)
 
-                if (!PlayingQueue.hasNext()) {
+                // the autoplay suggestion does not count here: the playlist or channel comes first
+                if (!PlayingQueue.hasQueuedNext()) {
                     PlayingQueue.updateQueue(it, playlistId, channelId)
                 }
+                // what autoplay plays once the queue is over, also offered by the next buttons
+                PlayingQueue.setAutoplaySuggestions(streams?.relatedStreams.orEmpty())
 
                 // update feed item with newer information, e.g. more up-to-date views
                 SubscriptionHelper.submitFeedItemChange(it.toFeedItem())
@@ -228,8 +237,17 @@ open class OnlinePlayerService : AbstractPlayerService() {
         }
     }
 
+    override fun onOpenedFromScreen(playerData: PlayerData) {
+        super.onOpenedFromScreen(playerData)
+        // the queue of the new video comes from where it was opened, not from the previous one
+        playlistId = playerData.playlistId
+        channelId = playerData.channelId
+        startTimestampSeconds = playerData.timestamp
+    }
+
     override fun navigateVideo(videoId: String) {
         this.streams = null
+        PlayingQueue.clearAutoplaySuggestion()
 
         super.navigateVideo(videoId)
     }
@@ -240,9 +258,19 @@ open class OnlinePlayerService : AbstractPlayerService() {
     private var stolm: StolmCast? = null
     private var castJob: Job? = null
 
+    /** The video being loaded on the TV, and the track choices it was loaded with. */
+    private var castLoadJob: Job? = null
+    private var castedChoices: StolmChoices? = null
+    private val refreshCast = Runnable { refreshCast() }
+
     private val castListener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
-            if (playbackState == Player.STATE_ENDED) playNextVideo(relatedStreams = streams?.relatedStreams)
+            if (playbackState == Player.STATE_ENDED) playNextVideo()
+            // stopped with the TV's remote: the video comes back to the phone, as when the TV
+            // quits the receiver app (see StolmCast.finished)
+            if (playbackState == Player.STATE_IDLE && stolm?.player?.stoppedOnTv == true) {
+                stopCast(R.string.stolm_ended)
+            }
         }
 
         override fun onPlayerError(error: PlaybackException) = stopCast(R.string.stolm_playback_failed)
@@ -264,8 +292,67 @@ open class OnlinePlayerService : AbstractPlayerService() {
             }
 
             args.containsKey(PlayerCommand.STOP_CAST.name) -> stopCast()
-            else -> super.runPlayerCommand(args)
+
+            // the subtitles listed during a cast are the TV's (see StolmTracks); the screen keeps
+            // sending the id chosen there once the video is back on the phone
+            args.containsKey(PlayerCommand.SET_CAPTION_TRACK.name) &&
+                args.getString(PlayerCommand.SET_CAPTION_TRACK.name).let {
+                    StolmTracks.isTextTrack(it) || (it == null && stolm != null)
+                } -> setCastSubtitles(args.getString(PlayerCommand.SET_CAPTION_TRACK.name))
+
+            else -> {
+                super.runPlayerCommand(args)
+                // a quality or an audio track chosen during a cast goes to the TV; one reload for
+                // the two commands of an audio track
+                if (stolm != null && TRACK_COMMANDS.any(args::containsKey)) {
+                    handler.removeCallbacks(refreshCast)
+                    handler.postDelayed(refreshCast, CAST_REFRESH_DELAY_MS)
+                }
+            }
         }
+    }
+
+    /**
+     * The phone's track choices, for the TV: read from the settings its own player picks its
+     * tracks with, so the TV plays what the phone played (or would play).
+     */
+    private fun castChoices(streams: Streams): StolmChoices {
+        val parameters = trackSelector?.parameters ?: return StolmChoices()
+        val textOff = C.TRACK_TYPE_TEXT in parameters.disabledTrackTypes
+        return StolmChoices.of(
+            audioLanguage = parameters.preferredAudioLanguages.firstOrNull(),
+            dubbed = parameters.preferredAudioRoleFlags and C.ROLE_FLAG_DUB != 0,
+            maxHeight = parameters.maxVideoHeight,
+            textLanguage = parameters.preferredTextLanguages.firstOrNull()?.takeUnless { textOff },
+            autoGeneratedText = parameters.preferredTextRoleFlags and PlayerHelper.ROLE_FLAG_AUTO_GEN_SUBTITLE != 0,
+            subtitles = streams.subtitles
+        )
+    }
+
+    /** Main thread. Subtitles chosen during a cast: kept for the phone too, shown on the TV if casting. */
+    private fun setCastSubtitles(trackId: String?) {
+        val subtitles = StolmTracks.subtitlesOf(trackId, streams?.subtitles.orEmpty())
+        trackSelector?.updateParameters {
+            if (subtitles != null) {
+                setPreferredTextLanguage(subtitles.code)
+                setPreferredTextRoleFlags(StolmTracks.roleFlagsOf(subtitles))
+            }
+            setTrackTypeDisabled(C.TRACK_TYPE_TEXT, subtitles == null)
+        }
+        refreshCast()
+    }
+
+    /** Main thread. The TV plays the current video again with the new track choices, where it was. */
+    private fun refreshCast() {
+        handler.removeCallbacks(refreshCast)
+        val cast = stolm ?: return
+        val current = streams ?: return
+        val choices = castChoices(current)
+        // only a change of what the TV would play: the player screen's defaults for a new video
+        // (original track kind, default quality) often pick the same tracks again
+        if (castedChoices?.let { StolmTracks.samePick(cast.options, it, choices) } == true) return
+        val onTv = cast.player.currentItem?.videoId == videoId
+        loadOnCast(cast, current, if (onTv) cast.player.currentPosition else startPositionMs(0) ?: 0)
     }
 
     /** Moves the current video to [target], from where the phone is. */
@@ -315,15 +402,21 @@ open class OnlinePlayerService : AbstractPlayerService() {
     /** Main thread. A video the TV cannot play ends the cast, with the reason. */
     private fun loadOnCast(cast: StolmCast, streams: Streams, positionMs: Long) {
         val mediaItem = MediaItem.Builder().setMediaId(videoId).setMetadata(streams, videoId).build()
-        castJob = scope.launch(Dispatchers.Main) {
+        val choices = castChoices(streams)
+        castedChoices = choices
+        // a newer load (next video, other tracks) replaces the one still running
+        castLoadJob?.cancel()
+        castLoadJob = scope.launch(Dispatchers.Main) {
             try {
-                cast.play(videoId, streams, mediaItem, positionMs)
+                cast.play(videoId, streams, mediaItem, positionMs, choices)
             } catch (e: StolmException) {
                 stolmTrace { "load failed: ${e.chain()}" }
-                if (stolm === cast) stopCast(e.messageRes)
+                // replaced by a newer load: the failure of this one means nothing
+                if (stolm === cast && isActive) stopCast(e.messageRes)
             } catch (e: IOException) {
                 stolmTrace { "load failed, receiver reached the relay: ${cast.receiverReached}: ${e.chain()}" }
-                if (stolm !== cast) return@launch
+                // replaced by a newer load: the failure of this one means nothing
+                if (stolm !== cast || !isActive) return@launch
                 // the TV never asked the phone for the video: it cannot reach it
                 if (cast.receiverReached) {
                     stopCast(R.string.stolm_playback_failed)
@@ -341,6 +434,10 @@ open class OnlinePlayerService : AbstractPlayerService() {
     private fun stopCast(@StringRes message: Int? = null, endState: Stolm.State = Stolm.State.Idle) {
         castJob?.cancel()
         castJob = null
+        castLoadJob?.cancel()
+        castLoadJob = null
+        castedChoices = null
+        handler.removeCallbacks(refreshCast)
         val cast = stolm
         stolm = null
         if (cast != null) {
@@ -589,4 +686,14 @@ open class OnlinePlayerService : AbstractPlayerService() {
 internal fun shouldStopOnlinePlayerService(player: Player?, playbackState: Int): Boolean {
     return playbackState == Player.STATE_IDLE && player?.playerError == null
 }
+
+/** Player commands changing the tracks: the TV follows them during a cast. */
+private val TRACK_COMMANDS = listOf(
+    PlayerCommand.SET_RESOLUTION.name,
+    PlayerCommand.SET_AUDIO_LANGUAGE.name,
+    PlayerCommand.SET_AUDIO_ROLE_FLAGS.name
+)
+
+/** Two commands make one audio track choice: they are waited for together. */
+private const val CAST_REFRESH_DELAY_MS = 300L
 // endregion

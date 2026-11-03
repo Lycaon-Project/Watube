@@ -24,7 +24,6 @@ import com.watube.yard.ui.activities.ZoomableImageActivity
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.fragments.AudioPlayerFragment
 import com.watube.yard.ui.fragments.PlayerFragment
-import com.watube.yard.util.PlayingQueue
 
 object NavigationHelper {
     // region Channels
@@ -71,8 +70,8 @@ object NavigationHelper {
 
             // the session may have been stopped from outside (notification, media button): the
             // screen is then replaced below by a new player
-            if (!this.playVideo(playerData.videoId.toID())) return@runOnPlayerFragment false
-            PlayingQueue.clearAfterCurrent()
+            // the service trims the queue itself, once it knows which video is the current one
+            if (!this.playVideo(playerData.videoId.toID(), playerData)) return@runOnPlayerFragment false
 
             if (audioOnlyPlayerRequested) {
                 // switch to audio only player
@@ -92,8 +91,7 @@ object NavigationHelper {
             // otherwise, recreate the player
             if (playerData.isOffline != isOffline || playerData.videoId == null) return@runOnAudioPlayerFragment false
 
-            if (!this.playNextVideo(playerData.videoId.toID())) return@runOnAudioPlayerFragment false
-            PlayingQueue.clearAfterCurrent()
+            if (!this.playNextVideo(playerData.videoId.toID(), playerData)) return@runOnAudioPlayerFragment false
 
             if (!audioOnlyPlayerRequested && !audioOnlyMode) {
                 // switch to video only player

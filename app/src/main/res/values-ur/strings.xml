@@ -89,7 +89,6 @@
     <string name="enabled">چالو</string>
     <string name="disabled">بند</string>
     <string name="playOnBackground">پس منظر میں چلائیں</string>
-    <string name="update_available">ورژن %1$s دستیاب ہے</string>
     <string name="appearance">ہئیت</string>
     <string name="resume">شروع کریں</string>
     <string name="player_autoplay">آٹو پلے</string>

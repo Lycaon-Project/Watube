@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Backup & Restore -->
+<!-- The recovery code of a backup, shown once: to copy by hand or into a password manager. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="4dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/recovery_code_message"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+    <!-- monospace: the code is copied character by character, each must stand apart -->
+    <TextView
+        android:id="@+id/recovery_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/watube_code_well"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:letterSpacing="0.06"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="16dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textIsSelectable="false"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        tools:text="7K3M-Q9TX-2HBV-W4PZ-0R8N-JD6C" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/recovery_code_copy"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="@string/recovery_code_copy"
+        app:icon="@drawable/ic_copy" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/recovery_code_noted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"
+        android:text="@string/recovery_code_noted" />
+
+</LinearLayout>
+<!-- endregion -->

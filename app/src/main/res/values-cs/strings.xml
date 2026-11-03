@@ -337,7 +337,6 @@
     <string name="automatic">Automatické</string>
     <string name="sb_custom_colors_summary">Přepne vlastní barvu segmentů pro segmenty SponsorBlock</string>
     <string name="sb_custom_colors">Vlastní barvy segmentů</string>
-    <string name="color">Barva</string>
     <string name="invalid_color">Zadána neplatná hodnota barvy!</string>
     <string name="category_highlight">Zobrazit zvýraznění videa</string>
     <string name="stop">Zastavit</string>
