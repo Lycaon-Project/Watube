@@ -16,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 
+// region Search
 class SearchResultViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     private val args = SearchResultFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
@@ -45,3 +46,4 @@ class SearchResultViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         filterMutableData.value = filter
     }
 }
+// endregion

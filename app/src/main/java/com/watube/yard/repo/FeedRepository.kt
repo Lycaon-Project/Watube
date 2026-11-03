@@ -3,6 +3,7 @@ package com.watube.yard.repo
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.db.obj.SubscriptionsFeedItem
 
+// region Feed
 data class FeedProgress(
     val currentProgress: Int,
     val total: Int
@@ -16,3 +17,4 @@ interface FeedRepository {
     suspend fun removeChannel(channelId: String) {}
     suspend fun submitFeedItemChange(feedItem: SubscriptionsFeedItem) {}
 }
+// endregion

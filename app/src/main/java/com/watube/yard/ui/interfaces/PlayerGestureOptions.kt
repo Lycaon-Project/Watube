@@ -1,5 +1,6 @@
 package com.watube.yard.ui.interfaces
 
+// region Player Gestures
 interface PlayerGestureOptions {
 
     fun onSingleTap(areControlsLocked: Boolean)
@@ -35,3 +36,4 @@ interface PlayerGestureOptions {
      */
     fun getViewMeasures(): Pair<Int, Int>
 }
+// endregion

@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
+// region Stream Sources
 // Based off of https://github.com/TeamPiped/Piped/blob/master/src/utils/DashUtils.js
 
 object DashHelper {
@@ -68,9 +69,9 @@ object DashHelper {
                 continue
             }
 
-            // segments routed through the media proxy of the instance, exactly like the
-            // upstream default: the raw YouTube url is unwrapped first, then re-proxied
-            stream.url = ProxyHelper.rewriteUrlUsingProxyPreference(stream.url.orEmpty())
+            // through the media proxy of the instance in Piped mode (ProxyHelper.streamUrl),
+            // left out when it may not be fetched
+            stream.url = ProxyHelper.streamUrl(stream.url.orEmpty()) ?: continue
 
             val adapSetInfo = adapSetInfos.find { it.mimeType == stream.mimeType }
             if (adapSetInfo != null) {
@@ -86,6 +87,11 @@ object DashHelper {
         }
 
         for (stream in streams.audioStreams) {
+            // through the media proxy of the instance in Piped mode (ProxyHelper.streamUrl),
+            // left out when it may not be fetched. Before the grouping below: the audio streams
+            // joining an existing set kept their raw url
+            stream.url = ProxyHelper.streamUrl(stream.url.orEmpty()) ?: continue
+
             val adapSetInfo =
                 adapSetInfos.find {
                     it.mimeType == stream.mimeType && it.audioTrackId == stream.audioTrackId
@@ -94,10 +100,6 @@ object DashHelper {
                 adapSetInfo.formats.add(stream)
                 continue
             }
-
-            // segments routed through the media proxy of the instance, exactly like the
-            // upstream default: the raw YouTube url is unwrapped first, then re-proxied
-            stream.url = ProxyHelper.rewriteUrlUsingProxyPreference(stream.url.orEmpty())
 
             adapSetInfos.add(
                 AdapSetInfo(
@@ -242,3 +244,4 @@ object DashHelper {
         return representation
     }
 }
+// endregion

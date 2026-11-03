@@ -17,6 +17,7 @@ import com.watube.yard.repo.PipedLocalSubscriptionsRepository
 import com.watube.yard.repo.PipedNoAccountFeedRepository
 import com.watube.yard.repo.SubscriptionsRepository
 
+// region Subscriptions
 object SubscriptionHelper {
     /**
      * The maximum number of channel IDs that can be passed via a GET request for fetching
@@ -40,7 +41,8 @@ object SubscriptionHelper {
     private val localFeedExtraction
         get() = PlayerHelper.fullLocalMode || PreferenceHelper.getBoolean(
             PreferenceKeys.LOCAL_FEED_EXTRACTION,
-            true
+            // the Piped mode keeps the feed behind the instance unless asked otherwise
+            false
         )
     private val token get() = PreferenceHelper.getToken()
     private val subscriptionsRepository: SubscriptionsRepository
@@ -114,3 +116,4 @@ object SubscriptionHelper {
     suspend fun submitSubscriptionChannelInfosChanged(subscriptions: List<Subscription>) =
         subscriptionsRepository.submitSubscriptionChannelInfosChanged(subscriptions)
 }
+// endregion

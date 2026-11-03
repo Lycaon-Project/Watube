@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.PlaylistsHelper
-import com.watube.yard.api.SubscriptionHelper
 import com.watube.yard.api.TrendingCategory
 import com.watube.yard.api.obj.Playlists
 import com.watube.yard.api.obj.StreamItem
@@ -26,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Home
 class HomeViewModel : ViewModel() {
     private val hideWatched
         get() = PreferenceHelper.getBoolean(
@@ -64,7 +64,9 @@ class HomeViewModel : ViewModel() {
             val result = async {
                 awaitAll(
                     async { if (visibleItems.contains(TRENDING)) loadTrending(context) },
-                    async { if (visibleItems.contains(FEATURED)) loadFeed(subscriptionsViewModel) },
+                    async {
+                        if (visibleItems.contains(FEATURED)) loadFeed(context, subscriptionsViewModel)
+                    },
                     async { if (visibleItems.contains(BOOKMARKS)) loadBookmarks() },
                     async { if (visibleItems.contains(PLAYLISTS)) loadPlaylists() },
                     async { if (visibleItems.contains(WATCHING)) loadVideosToContinueWatching() }
@@ -104,10 +106,10 @@ class HomeViewModel : ViewModel() {
         )
     }
 
-    private suspend fun loadFeed(subscriptionsViewModel: SubscriptionsViewModel) {
+    private suspend fun loadFeed(context: Context, subscriptionsViewModel: SubscriptionsViewModel) {
         runSafely(
             onSuccess = { videos -> feed.updateIfChanged(videos) },
-            ioBlock = { tryLoadFeed(subscriptionsViewModel) }
+            ioBlock = { tryLoadFeed(context, subscriptionsViewModel) }
         )
     }
 
@@ -140,13 +142,13 @@ class HomeViewModel : ViewModel() {
             .filterUnwatched(videos.map { it.toStreamItem() })
     }
 
-    private suspend fun tryLoadFeed(subscriptionsViewModel: SubscriptionsViewModel): List<StreamItem> {
-        // use cached feed if available, otherwise load feed from API/database
-        val feed = subscriptionsViewModel.videoFeed.value ?: run {
-            SubscriptionHelper.getFeed(forceRefresh = false).also {
-                subscriptionsViewModel.videoFeed.postValue(it)
-            }
-        }
+    private suspend fun tryLoadFeed(
+        context: Context,
+        subscriptionsViewModel: SubscriptionsViewModel
+    ): List<StreamItem> {
+        // the feed already shown, else the load the subscriptions tab shares (never a second one)
+        val feed = subscriptionsViewModel.videoFeed.value
+            ?: subscriptionsViewModel.fetchFeed(context, forceRefresh = false).await()
 
         return DatabaseHelper.filterByStreamTypeAndWatchPosition(feed, hideWatched, showUpcoming)
     }
@@ -160,3 +162,4 @@ class HomeViewModel : ViewModel() {
         private const val PLAYLISTS = "playlists"
     }
 }
+// endregion

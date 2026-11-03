@@ -14,25 +14,43 @@ import com.watube.yard.api.obj.Streams
 import com.watube.yard.helpers.PlayerHelper
 
 interface MediaServiceRepository {
+    // region Trends
     fun getTrendingCategories(): List<TrendingCategory>
 
     suspend fun getTrending(region: String, category: TrendingCategory): List<StreamItem>
-    suspend fun getStreams(videoId: String): Streams
+    // endregion
 
+    // region Video Player
+    suspend fun getStreams(videoId: String): Streams
+    // endregion
+
+    // region SABR Streaming
     /**
      * A new streaming session for [streams], nothing else fetched again (see
      * [com.watube.yard.player.SabrAttestationException]); null when the backend has none to offer.
      */
     suspend fun renewStreamingSession(videoId: String, streams: Streams): Streams? = null
+    // endregion
+
+    // region Comments
     suspend fun getComments(videoId: String): CommentsPage
+
+    suspend fun getCommentsNextPage(videoId: String, nextPage: String): CommentsPage
+    // endregion
+
+    // region SponsorBlock
     suspend fun getSegments(
         videoId: String,
         category: List<String>,
         actionType: List<String>? = null
     ): SegmentData
+    // endregion
 
+    // region DeArrow
     suspend fun getDeArrowContent(videoId: String): DeArrowContent?
-    suspend fun getCommentsNextPage(videoId: String, nextPage: String): CommentsPage
+    // endregion
+
+    // region Search
     suspend fun getSearchResults(searchQuery: String, filter: String): SearchResult
     suspend fun getSearchResultsNextPage(
         searchQuery: String,
@@ -41,13 +59,21 @@ interface MediaServiceRepository {
     ): SearchResult
 
     suspend fun getSuggestions(query: String): List<String>
+    // endregion
+
+    // region Channels
     suspend fun getChannel(channelId: String): Channel
     suspend fun getChannelTab(data: String, nextPage: String? = null): ChannelTabResponse
     suspend fun getChannelByName(channelName: String): Channel
     suspend fun getChannelNextPage(channelId: String, nextPage: String): Channel
+    // endregion
+
+    // region Playlists
     suspend fun getPlaylist(playlistId: String): Playlist
     suspend fun getPlaylistNextPage(playlistId: String, nextPage: String): Playlist
+    // endregion
 
+    // region Piped Instances
     companion object {
         val instance: MediaServiceRepository
             get() = when {
@@ -56,8 +82,10 @@ interface MediaServiceRepository {
                 else -> PipedMediaServiceRepository()
             }
     }
+    // endregion
 }
 
+// region Trends
 enum class TrendingCategory(@param:StringRes val titleRes: Int) {
     GAMING(R.string.gaming),
     TRAILERS(R.string.trailers),
@@ -65,3 +93,4 @@ enum class TrendingCategory(@param:StringRes val titleRes: Int) {
     MUSIC(R.string.music),
     LIVE(R.string.live)
 }
+// endregion

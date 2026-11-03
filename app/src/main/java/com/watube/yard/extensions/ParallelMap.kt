@@ -5,6 +5,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
+// region Common Utilities
 suspend fun <A, B> List<A>.parallelMap(f: suspend (A) -> B): List<B> = coroutineScope {
     map { async(Dispatchers.IO) { f(it) } }.awaitAll()
 }
+// endregion

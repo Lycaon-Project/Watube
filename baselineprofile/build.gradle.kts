@@ -2,7 +2,7 @@
 plugins {
     // Identique au dépôt amont (Lycaon-Project/Watube @ main) : le plugin
     // com.android.test partage la classe d'agents commune chargée à la racine
-    // (alias androidTest -> même version que AGP, embarquée dans AGP).
+    // (alias androidTest > même version que AGP, embarquée dans AGP).
     alias(libs.plugins.androidTest)
     alias(libs.plugins.baselineprofile)
     // WATUBE FIX : le module contient des sources Kotlin (BaselineProfileGenerator).

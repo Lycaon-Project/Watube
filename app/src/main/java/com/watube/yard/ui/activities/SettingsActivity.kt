@@ -9,6 +9,7 @@ import com.watube.yard.R
 import com.watube.yard.databinding.ActivitySettingsBinding
 import com.watube.yard.ui.base.BaseActivity
 
+// region Settings
 class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,3 +54,4 @@ class SettingsActivity : BaseActivity() {
         const val REDIRECT_TO_NOTIFICATION_SETTINGS = "notification_settings"
     }
 }
+// endregion

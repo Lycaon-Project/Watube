@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
+// region Playlists
 @Serializable
 @Entity
 data class LocalPlaylist(
@@ -13,3 +14,4 @@ data class LocalPlaylist(
     var thumbnailUrl: String = "",
     var description: String? = ""
 )
+// endregion

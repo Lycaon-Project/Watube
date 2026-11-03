@@ -7,6 +7,7 @@ import com.watube.yard.enums.FileType
 import com.watube.yard.extensions.toMillis
 import com.watube.yard.ui.fragments.DownloadTab
 
+// region Downloads
 data class DownloadWithItems(
     @Embedded val download: Download,
     @Relation(
@@ -57,3 +58,4 @@ fun List<DownloadWithItems>.filterByTab(tab: DownloadTab) = filter { dl ->
         DownloadTab.PLAYLIST -> throw IllegalArgumentException("not applicable for playlist tab, playlistId must be passed")
     }
 }
+// endregion

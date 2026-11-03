@@ -3,6 +3,7 @@ package com.watube.yard.player.manifest
 import androidx.media3.common.C.TrackType
 import androidx.media3.common.util.UnstableApi
 
+// region SABR Streaming
 /** Represents a set of interchangeable encoded versions of a media content component.  */
 @UnstableApi
 data class AdaptationSet(
@@ -11,3 +12,4 @@ data class AdaptationSet(
   /** [Representation]s in the adaptation set.  */
   val representations: List<Representation?>
 )
+// endregion

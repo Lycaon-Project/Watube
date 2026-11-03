@@ -21,17 +21,19 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.preferences.InstanceSettings.Companion.INSTANCE_DIALOG_REQUEST_KEY
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
+// region Piped Account
 class LoginDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogLoginBinding.inflate(layoutInflater)
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.login)
             .setPositiveButton(R.string.login, null)
             .setNegativeButton(R.string.register, null)
@@ -78,6 +80,8 @@ class LoginDialog : DialogFragment() {
                 }?.getOrNull() ?: context?.getString(R.string.server_error).orEmpty()
                 context?.toastFromMainDispatcher(errorMessage)
                 return@launch
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.toString())
                 context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
@@ -108,7 +112,7 @@ class LoginDialog : DialogFragment() {
     }
 
     private fun showPrivacyAlertDialog(email: String, password: String) {
-        MaterialAlertDialogBuilder(requireContext())
+        SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.privacy_alert)
             .setMessage(R.string.username_email)
             .setNegativeButton(R.string.proceed) { _, _ ->
@@ -122,3 +126,4 @@ class LoginDialog : DialogFragment() {
         return Patterns.EMAIL_ADDRESS.toRegex().matches(text)
     }
 }
+// endregion

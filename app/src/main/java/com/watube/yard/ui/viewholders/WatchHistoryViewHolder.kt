@@ -4,8 +4,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.databinding.VideoRowBinding
 import kotlinx.coroutines.Job
 
+// region Watch History
 class WatchHistoryViewHolder(
     val binding: VideoRowBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     var bindJob: Job? = null
 }
+// endregion

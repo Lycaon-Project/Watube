@@ -9,6 +9,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.offline.FilterableManifest
 import com.watube.yard.api.obj.Streams
 
+// region SABR Streaming
 /**
  * Represents server adaptive-bitrate streaming media metadata.
  */
@@ -63,3 +64,4 @@ class SabrManifest(
         return this
     }
 }
+// endregion

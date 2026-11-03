@@ -20,7 +20,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PipedAuthApi {
-
+    // region Piped Account
     @POST("login")
     suspend fun login(@Body login: Login): Token
 
@@ -32,7 +32,9 @@ interface PipedAuthApi {
         @Header("Authorization") token: String,
         @Body password: DeleteUserRequest
     )
+    // endregion
 
+    // region Feed
     @GET("feed")
     suspend fun getFeed(@Query("authToken") token: String?): List<StreamItem>
 
@@ -41,7 +43,9 @@ interface PipedAuthApi {
 
     @POST("feed/unauthenticated")
     suspend fun getUnauthenticatedFeed(@Body channels: List<String>): List<StreamItem>
+    // endregion
 
+    // region Subscriptions
     @GET("subscribed")
     suspend fun isSubscribed(
         @Query("channelId") channelId: String,
@@ -77,7 +81,9 @@ interface PipedAuthApi {
         @Header("Authorization") token: String,
         @Body channels: List<String>
     ): Message
+    // endregion
 
+    // region Playlists
     @POST("import/playlist")
     suspend fun clonePlaylist(
         @Header("Authorization") token: String,
@@ -125,4 +131,5 @@ interface PipedAuthApi {
 
     @GET("playlists/{playlistId}")
     suspend fun getPlaylist(@Path("playlistId") playlistId: String): Playlist
+    // endregion
 }

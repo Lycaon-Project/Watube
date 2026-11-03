@@ -17,6 +17,7 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.ui.models.sources.CommentRepliesPagingSource
 
+// region Comments
 class CommentRepliesViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -33,8 +34,7 @@ class CommentRepliesViewModel(
     fun saveToClipboard(context: Context, reply: Comment) {
         ClipboardHelper.save(
             context,
-            text = reply.commentText.orEmpty().parseAsHtml().toString(),
-            notify = true
+            text = reply.commentText.orEmpty().parseAsHtml().toString()
         )
     }
 
@@ -48,3 +48,4 @@ class CommentRepliesViewModel(
         }
     }
 }
+// endregion

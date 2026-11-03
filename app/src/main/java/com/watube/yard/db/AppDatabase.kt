@@ -67,53 +67,71 @@ import com.watube.yard.db.obj.WatchPosition
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
+    // region Watch History
     /**
      * Watch History
      */
     abstract fun watchHistoryDao(): WatchHistoryDao
+    // endregion
 
+    // region Watch Positions
     /**
      * Watch Positions
      */
     abstract fun watchPositionDao(): WatchPositionDao
+    // endregion
 
+    // region Search
     /**
      * Search History
      */
     abstract fun searchHistoryDao(): SearchHistoryDao
+    // endregion
 
+    // region Piped Instances
     /**
      * Custom Instances
      */
     abstract fun customInstanceDao(): CustomInstanceDao
+    // endregion
 
+    // region Subscriptions
     /**
      * Local Subscriptions
      */
     abstract fun localSubscriptionDao(): LocalSubscriptionDao
 
     /**
+     * Subscription groups
+     */
+    abstract fun subscriptionGroupsDao(): SubscriptionGroupsDao
+    // endregion
+
+    // region Playlist Bookmarks
+    /**
      * Bookmarked Playlists
      */
     abstract fun playlistBookmarkDao(): PlaylistBookmarkDao
+    // endregion
 
+    // region Playlists
     /**
      * Local playlists
      */
     abstract fun localPlaylistsDao(): LocalPlaylistsDao
+    // endregion
 
+    // region Downloads
     /**
      * Downloads
      */
     abstract fun downloadDao(): DownloadDao
+    // endregion
 
-    /**
-     * Subscription groups
-     */
-    abstract fun subscriptionGroupsDao(): SubscriptionGroupsDao
-
+    // region Feed
     /**
      * Locally cached subscription feed
      */
     abstract fun feedDao(): SubscriptionsFeedDao
+    // endregion
 }

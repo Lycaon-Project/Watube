@@ -6,16 +6,14 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
-import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.text.HtmlCompat
-import androidx.core.text.parseAsHtml
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.ui.adapters.IconsSheetAdapter
 import com.google.android.material.color.MaterialColors
 
+// region Appearance
 object ThemeHelper {
     /**
      * Set the single app theme ("Material Forest"). It adapts automatically between light
@@ -94,16 +92,6 @@ object ThemeHelper {
         MaterialColors.getColor(context, colorCode, Color.TRANSPARENT)
 
     /**
-     * Get the styled app name
-     */
-    fun getStyledAppName(context: Context): Spanned {
-        val colorPrimary = getThemeColor(context, androidx.appcompat.R.attr.colorPrimaryDark)
-        val hexColor = "#%06X".format(0xFFFFFF and colorPrimary)
-        return "Wa<span style='color:$hexColor'>tube</span>"
-            .parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT)
-    }
-
-    /**
      * True when the UI currently renders with dark surfaces. Material Forest adapts through
      * the day/night resources, so this simply follows the effective night configuration
      * (pure-black / OLED in dark mode is still a dark surface).
@@ -114,3 +102,4 @@ object ThemeHelper {
         return darkModeFlag == Configuration.UI_MODE_NIGHT_YES
     }
 }
+// endregion

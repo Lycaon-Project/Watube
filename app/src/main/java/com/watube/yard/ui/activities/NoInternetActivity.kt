@@ -9,6 +9,7 @@ import com.watube.yard.databinding.ActivityNointernetBinding
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.extensions.onSystemInsets
 
+// region No Internet Screen
 class NoInternetActivity : AbstractPlayerHostActivity() {
     private lateinit var binding: ActivityNointernetBinding
 
@@ -60,3 +61,4 @@ class NoInternetActivity : AbstractPlayerHostActivity() {
     // no text input lives on this screen, so there is never a focus to clear
     override fun clearSearchViewFocus(): Boolean = false
 }
+// endregion

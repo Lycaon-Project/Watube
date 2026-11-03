@@ -9,6 +9,7 @@ import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 
+// region UI Components
 abstract class DynamicLayoutManagerFragment(@LayoutRes layoutResId: Int) : Fragment(layoutResId) {
     abstract fun setLayoutManagers(gridItems: Int)
 
@@ -34,3 +35,4 @@ abstract class DynamicLayoutManagerFragment(@LayoutRes layoutResId: Int) : Fragm
         setLayoutManagers(getGridItemsCount(resources.configuration.orientation))
     }
 }
+// endregion

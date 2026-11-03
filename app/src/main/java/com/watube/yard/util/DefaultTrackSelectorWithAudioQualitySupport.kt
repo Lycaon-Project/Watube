@@ -8,6 +8,7 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.NetworkHelper
 import com.watube.yard.helpers.PreferenceHelper
 
+// region Stream Sources
 /**
  * [DefaultTrackSelector] that automatically chooses the audio quality based on
  * the current preference set in [PreferenceHelper]
@@ -64,3 +65,4 @@ class DefaultTrackSelectorWithAudioQualitySupport
         )
     }
 }
+// endregion

@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.watube.yard.api.obj.StreamItem
 import kotlinx.serialization.Serializable
 
+// region Playlists
 @Serializable
 @Entity
 data class LocalPlaylistItem(
@@ -33,3 +34,4 @@ data class LocalPlaylistItem(
         )
     }
 }
+// endregion

@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region Playlists
 @Serializable
 data class EditPlaylistBody(
     val playlistId: String? = null,
@@ -11,3 +12,4 @@ data class EditPlaylistBody(
     val description: String? = null,
     val index: Int = -1
 )
+// endregion

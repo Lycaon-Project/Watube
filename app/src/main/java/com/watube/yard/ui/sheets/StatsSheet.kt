@@ -9,6 +9,7 @@ import com.watube.yard.extensions.parcelable
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.obj.VideoStats
 
+// region Stats for Nerds
 class StatsSheet : ExpandedBottomSheet(R.layout.dialog_stats) {
     private lateinit var stats: VideoStats
 
@@ -28,3 +29,4 @@ class StatsSheet : ExpandedBottomSheet(R.layout.dialog_stats) {
         binding.videoQuality.setText(stats.videoQuality)
     }
 }
+// endregion

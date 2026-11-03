@@ -25,6 +25,7 @@ import com.watube.yard.util.LinkHandler
 import com.watube.yard.util.TextUtils
 import java.util.Locale
 
+// region Video Details
 class DescriptionLayout(
     context: Context,
     attributeSet: AttributeSet?
@@ -124,7 +125,7 @@ class DescriptionLayout(
     private fun setupDescription(description: String) {
         val descTextView = binding.playerDescription
         // detect whether the description is html formatted
-        if (description.contains("<") && description.contains(">")) {
+        if (isHtml(description)) {
             descTextView.movementMethod = LinkMovementMethodCompat.getInstance()
             descTextView.text = description.replace("</a>", "</a> ")
                 .parseAsHtml(tagHandler = HtmlParser(LinkHandler(handleLink)))
@@ -167,5 +168,15 @@ class DescriptionLayout(
     companion object {
         private const val ANIMATION_DURATION = 250L
         private const val SB_SPONSOR_CATEGORY = "sponsor_category"
+        private val HTML_ENTITY = Regex("&(?:#\\d+|#x\\p{XDigit}+|\\p{Alpha}+);")
+
+        /**
+         * Whether a description is HTML: it has tags, or only escaped characters, as the
+         * extractor escapes a one line description with an "&" and no link to "&amp;".
+         */
+        internal fun isHtml(description: String): Boolean =
+            (description.contains("<") && description.contains(">")) ||
+                HTML_ENTITY.containsMatchIn(description)
     }
 }
+// endregion

@@ -26,6 +26,7 @@ import com.watube.yard.ui.models.CommentRepliesViewModel
 import com.watube.yard.ui.models.CommentsViewModel
 import com.watube.yard.ui.sheets.CommentsSheet
 
+// region Comments
 class CommentsRepliesFragment : Fragment(R.layout.fragment_comments) {
 
     private val viewModel by viewModels<CommentRepliesViewModel> { CommentRepliesViewModel.Factory }
@@ -132,3 +133,4 @@ class CommentsRepliesFragment : Fragment(R.layout.fragment_comments) {
         const val POSITION_START = 0
     }
 }
+// endregion

@@ -13,7 +13,7 @@ import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.BuildConfig
@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region About
 class AboutActivity : BaseActivity() {
     private lateinit var binding: ActivityAboutBinding
 
@@ -50,7 +51,7 @@ class AboutActivity : BaseActivity() {
         binding.aboutTitle.text = "Watube ${BuildConfig.VERSION_NAME}"
         binding.aboutBuild.text = "Build ${BuildConfig.VERSION_CODE} · GPL-3.0"
         binding.aboutTitle.setOnClickListener {
-            ClipboardHelper.save(this, text = versionText, notify = true)
+            ClipboardHelper.save(this, text = versionText)
         }
         binding.aboutLogo.setOnClickListener { shareRepository() }
         binding.checkUpdates.setOnClickListener { checkForUpdates() }
@@ -216,7 +217,7 @@ class AboutActivity : BaseActivity() {
             .use { it.readText() }
             .parseAsHtml(HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH)
 
-        MaterialAlertDialogBuilder(this)
+        SecureAlertDialogBuilder(this)
             .setPositiveButton(getString(R.string.okay)) { _, _ -> }
             .setMessage(licenseHtml)
             .create()
@@ -238,7 +239,7 @@ class AboutActivity : BaseActivity() {
         val message = markdownToHtml(markdown)
             .parseAsHtml(HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH)
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = SecureAlertDialogBuilder(this)
             .setTitle(R.string.about_privacy)
             .setMessage(message)
             .setPositiveButton(R.string.okay) { _, _ -> }
@@ -279,7 +280,7 @@ class AboutActivity : BaseActivity() {
     private fun showLibraries() {
         val entries = LibraryInfo.libraries
 
-        MaterialAlertDialogBuilder(this)
+        SecureAlertDialogBuilder(this)
             .setTitle(R.string.open_source_licenses)
             .setMessage(R.string.open_source_licenses_message)
             .setItems(entries.map { it.label }.toTypedArray()) { _, which ->
@@ -293,7 +294,7 @@ class AboutActivity : BaseActivity() {
     }
 
     private fun showFeatures() {
-        MaterialAlertDialogBuilder(this)
+        SecureAlertDialogBuilder(this)
             .setTitle(R.string.watube_features)
             .setMessage(R.string.watube_features_message)
             .setPositiveButton(R.string.okay) { _, _ -> }
@@ -312,7 +313,7 @@ class AboutActivity : BaseActivity() {
                 "Display: ${metrics.widthPixels}x${metrics.heightPixels}\n" +
                 "Font scale: ${Resources.getSystem().configuration.fontScale}"
 
-        MaterialAlertDialogBuilder(this)
+        SecureAlertDialogBuilder(this)
             .setTitle(R.string.device_info)
             .setMessage(text)
             .setNegativeButton(R.string.copy_tooltip) { _, _ ->
@@ -337,3 +338,4 @@ class AboutActivity : BaseActivity() {
         private const val SUMMARY_CODE_SOURCE = "Lycaon-Project/Watube"
     }
 }
+// endregion

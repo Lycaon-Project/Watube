@@ -11,6 +11,7 @@ import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
+// region Privacy
 private const val HOUR_MILLIS = 60L * 60 * 1000
 
 /**
@@ -20,7 +21,7 @@ private const val HOUR_MILLIS = 60L * 60 * 1000
  * identifier that could be used to link requests coming from this device together:
  *  - SIM / carrier based country detection (see [LocaleHelper.getDetectedCountry])
  *  - the SponsorBlock user id, rotated on the shared [RotationFrequency] schedule
- *  - the neutral region used for trending/home requests (see [getNeutralRegion])
+ *  - the neutral region declared for trending (see [NEUTRAL_REGION])
  *  - the reported User-Agent of third party services (SponsorBlock, DeArrow), which is
  *    normalized to a single generic value instead of leaking package name and version
  *  - WebView level information (see [applyWebViewAntiFingerprinting])
@@ -60,10 +61,7 @@ object PrivacyHelper {
     }
 
     /**
-     * How often the rotating client identifiers (SponsorBlock user id **and** neutral
-     * region) are regenerated. A single shared frequency keeps every identifier in sync
-     * so an observer can never correlate "the id changed" with "the region changed" at
-     * two different points in time.
+     * How often the SponsorBlock user id is regenerated.
      *
      * [MANUAL] never rotates on its own: only an explicit "reset identifiers" action
      * (or a change of this setting) produces a new value.
@@ -80,19 +78,17 @@ object PrivacyHelper {
     }
 
     /**
-     * Countries the neutral region rotates through. Chosen to be large, well supported
-     * trending regions so the visible content stays usable while never pointing back at
-     * the real location of the user (Tor/Mullvad "blend into the crowd" strategy).
+     * Country declared for trending while the region is automatic. It is the one NewPipe
+     * Extractor declares in every other request (with en-GB and UTC+0), so trending says no
+     * more than the rest of the traffic and every user sends the same value. Countries drawn
+     * at random per user used to single each user out among the others instead.
      */
-    private val NEUTRAL_REGIONS = arrayOf(
-        "US", "CA", "GB", "DE", "FR", "NL", "SE", "JP", "AU", "BR", "IN", "IT"
-    )
+    const val NEUTRAL_REGION = "GB"
 
     private const val USER_ID_CHARS =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     private const val MANUAL_CYCLE_STAMP = "manual"
     private val secureRandom = SecureRandom()
-    private val rotationLock = Any()
 
     /**
      * Hardening is on by default: privacy should be opt-out, not opt-in.
@@ -156,8 +152,15 @@ object PrivacyHelper {
      * it is valid for.
      */
     fun storeSponsorBlockUserId(userId: String) {
+        // kept encrypted (see PreferenceHelper.storedForm); when it cannot be, no id is kept
+        // and a fresh one is generated for the next submission
+        val stored = PreferenceHelper.storedForm(PreferenceKeys.SB_USER_ID, userId)
         PreferenceHelper.settings.edit {
-            putString(PreferenceKeys.SB_USER_ID, userId)
+            if (stored == null) {
+                remove(PreferenceKeys.SB_USER_ID)
+            } else {
+                putString(PreferenceKeys.SB_USER_ID, stored)
+            }
             putString(PreferenceKeys.SB_USER_ID_CYCLE, currentCycleStamp())
         }
     }
@@ -192,12 +195,9 @@ object PrivacyHelper {
     val userAgent: String get() = GENERIC_USER_AGENT
 
     /**
-     * Optional "neutral region" mode (Tor/Mullvad style): when enabled, the trending/home
-     * region sent to the backend is picked from [NEUTRAL_REGIONS] instead of the device
-     * locale country, so requests don't reveal where the user actually lives. The region
-     * is re-picked on every rotation cycle, synchronized with the SponsorBlock id.
-     * On by default (hardening is opt-out in this app); it can be toggled in the privacy
-     * settings, as it changes visible content recommendations.
+     * Neutral region (on by default, as hardening is opt-out): trending is requested for
+     * [NEUTRAL_REGION] instead of the device country. It can be turned off in the privacy
+     * settings, as it changes the trending videos shown.
      */
     fun isNeutralRegionEnabled(): Boolean {
         return isHardeningEnabled() &&
@@ -205,39 +205,15 @@ object PrivacyHelper {
     }
 
     /**
-     * The neutral region currently in use, rotating it when the current cycle expired.
-     * Never returns a different value within the same cycle so every screen (home,
-     * trending, cached feeds) agrees on a single region during the whole window.
+     * The neutral country: [NEUTRAL_REGION], or the one the user picked while the rotation is
+     * "manual only" (any other country sets them apart from the other users).
      */
-    fun getNeutralRegion(): String {
-        synchronized(rotationLock) {
-            val cycle = currentCycleStamp()
-            val active = PreferenceHelper.getString(PreferenceKeys.NEUTRAL_REGION_ACTIVE, "")
-            if (active.isNotEmpty() &&
-                PreferenceHelper.getString(PreferenceKeys.NEUTRAL_REGION_CYCLE, "") == cycle
-            ) {
-                return active
-            }
-
-            val next = pickNeutralRegion(active)
-            PreferenceHelper.settings.edit {
-                putString(PreferenceKeys.NEUTRAL_REGION_ACTIVE, next)
-                putString(PreferenceKeys.NEUTRAL_REGION_CYCLE, cycle)
-            }
-            return next
+    fun neutralRegion(): String =
+        if (rotationFrequency() == RotationFrequency.MANUAL) {
+            PreferenceHelper.getString(PreferenceKeys.NEUTRAL_REGION_COUNTRY, NEUTRAL_REGION)
+        } else {
+            NEUTRAL_REGION
         }
-    }
-
-    /**
-     * Drops the neutral region so that the next read picks a brand new one. Used by the
-     * manual "reset identifiers" action.
-     */
-    fun resetNeutralRegion() {
-        PreferenceHelper.settings.edit {
-            remove(PreferenceKeys.NEUTRAL_REGION_ACTIVE)
-            remove(PreferenceKeys.NEUTRAL_REGION_CYCLE)
-        }
-    }
 
     /**
      * Applies Mullvad-browser/Tor inspired WebView hardening where the public Android
@@ -274,16 +250,6 @@ object PrivacyHelper {
     }
 
     /**
-     * Rotates every client side identifier at once (SponsorBlock id + neutral region).
-     * This is the manual rotation action: it is also what drives the "manual only"
-     * frequency, where nothing rotates until the user asks for it.
-     */
-    fun rotateAllIdentifiers() {
-        resetSponsorBlockUserId()
-        resetNeutralRegion()
-    }
-
-    /**
      * Clears everything a WebView may have persisted about the user (cookies and web
      * storage). Called from the manual cache cleanup.
      */
@@ -291,11 +257,5 @@ object PrivacyHelper {
         runCatching { CookieManager.getInstance().removeAllCookies(null) }
         runCatching { WebStorage.getInstance().deleteAllData() }
     }
-
-    private fun pickNeutralRegion(previous: String): String {
-        // both branches must be lists: NEUTRAL_REGIONS is an Array
-        val pool = NEUTRAL_REGIONS.filter { it != previous }
-            .ifEmpty { NEUTRAL_REGIONS.toList() }
-        return pool[secureRandom.nextInt(pool.size)]
-    }
 }
+// endregion

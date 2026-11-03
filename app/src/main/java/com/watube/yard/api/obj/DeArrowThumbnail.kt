@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region DeArrow
 @Serializable
 data class DeArrowThumbnail(
     val UUID: String,
@@ -11,3 +12,4 @@ data class DeArrowThumbnail(
     val timestamp: Float?,
     val votes: Int
 )
+// endregion

@@ -1,5 +1,6 @@
 package com.watube.yard.extensions
 
+// region Common Utilities
 /**
  * Read a string as long as the char is a digit and return the number value as int
  */
@@ -8,3 +9,4 @@ fun String?.getWhileDigit(): Int? {
         char.isDigit()
     }.toIntOrNull()
 }
+// endregion

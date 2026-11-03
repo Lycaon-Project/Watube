@@ -1,6 +1,7 @@
 package com.watube.yard.ui.preferences
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -10,9 +11,15 @@ import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.db.DatabaseHelper
+import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.AppLock
+import com.watube.yard.helpers.ImageHelper
+import com.watube.yard.helpers.LocaleHelper
+import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
+import com.watube.yard.helpers.ScreenPrivacy
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.watube.yard.util.SharedHttpClient
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +33,7 @@ import kotlinx.coroutines.launch
  * merged into the same screen.
  */
 class PrivacySettings : InstanceSettings() {
-
+    // region Privacy
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.privacy_settings, rootKey)
 
@@ -41,12 +48,40 @@ class PrivacySettings : InstanceSettings() {
         }
 
         setupRotationFrequency()
-        setupNeutralRegion()
         setupTouristMode()
+
+        // takes effect at once on this screen; the others pick it up when they come back
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.BLOCK_SCREENSHOTS)
+            ?.setOnPreferenceChangeListener { _, _ ->
+                view?.post { activity?.window?.let(ScreenPrivacy::applyTo) }
+                true
+            }
         refreshIdentifierSummary()
 
+        // the lock needs something to ask for: a fingerprint, a face or a screen lock code
+        findPreference<SwitchPreferenceCompat>(PreferenceKeys.APP_LOCK)
+            ?.setOnPreferenceChangeListener { _, enable ->
+                if (enable != true) return@setOnPreferenceChangeListener true
+                if (!AppLock.canLock(requireContext())) {
+                    Toast.makeText(context, R.string.app_lock_unavailable, Toast.LENGTH_LONG).show()
+                    return@setOnPreferenceChangeListener false
+                }
+                AppLock.onEnabled()
+                true
+            }
+
+        findPreference<Preference>(CLEAR_EVERYTHING)?.setOnPreferenceClickListener {
+            SecureAlertDialogBuilder(requireContext())
+                .setTitle(R.string.clear_everything)
+                .setMessage(R.string.clear_everything_dialog)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.clear_everything_confirm) { _, _ -> clearEverything() }
+                .show()
+            true
+        }
+
         findPreference<Preference>("reset_identifiers")?.setOnPreferenceClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.reset_identifiers)
                 .setMessage(R.string.reset_identifiers_dialog_message)
                 .setNegativeButton(R.string.cancel, null)
@@ -57,8 +92,121 @@ class PrivacySettings : InstanceSettings() {
     }
 
     /**
-     * Local history controls (search history, watch history, positions, bookmarks),
-     * identical to the ones of [HistorySettings] but bound to the merged hub.
+     * "Clear everything now": the watch and search history, the playback positions, the caches,
+     * the account session and the identifiers sent to third parties, in one go. What the user
+     * built on purpose (subscriptions, playlists, downloads, settings) stays.
+     */
+    private fun clearEverything() {
+        val context = requireContext().applicationContext
+        CoroutineScope(Dispatchers.IO).launch {
+            DatabaseHelper.clearBrowsingData()
+            ImageHelper.clearCache(context)
+            PreferenceHelper.setToken("")
+            PrivacyHelper.resetSponsorBlockUserId()
+            PrivacyHelper.clearWebViewData()
+            SharedHttpClient.dropIdleConnections()
+            context.toastFromMainDispatcher(R.string.clear_everything_done)
+        }
+    }
+
+    /**
+     * Single frequency shared by every rotating identifier (SponsorBlock id and neutral
+     * region), so both always rotate at the exact same moment.
+     */
+    private fun setupRotationFrequency() {
+        // the neutral country is picked by hand only while nothing rotates on its own
+        val country = findPreference<ListPreference>(PreferenceKeys.NEUTRAL_REGION_COUNTRY)
+        country?.apply {
+            val countries = LocaleHelper.getAvailableCountries()
+            entries = countries.map { it.name }.toTypedArray()
+            entryValues = countries.map { it.code }.toTypedArray()
+            isVisible = PrivacyHelper.rotationFrequency() == PrivacyHelper.RotationFrequency.MANUAL
+            summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+                getString(R.string.privacy_neutral_region_country_summary, preference.entry)
+            }
+        }
+        findPreference<ListPreference>(PreferenceKeys.PRIVACY_ROTATION_FREQUENCY)?.apply {
+            summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+                val entry = preference.entry ?: return@SummaryProvider null
+                getString(R.string.rotation_frequency_summary, entry)
+            }
+            setOnPreferenceChangeListener { _, newValue ->
+                country?.isVisible = newValue == PrivacyHelper.RotationFrequency.MANUAL.value
+                true
+            }
+        }
+    }
+
+    /**
+     * Tourist mode keeps no browsing trace on the device, so turning it on also offers to
+     * wipe what is already stored. The preference is only persisted once the deletion has
+     * been accepted, otherwise the switch would promise an empty device while keeping data.
+     */
+    private fun setupTouristMode() {
+        val touristMode = findPreference<SwitchPreferenceCompat>(PreferenceKeys.TOURIST_MODE)
+            ?: return
+
+        touristMode.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue != true) return@setOnPreferenceChangeListener true
+
+            SecureAlertDialogBuilder(requireContext())
+                .setTitle(R.string.tourist_mode)
+                .setMessage(R.string.tourist_mode_clear_dialog)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.okay) { _, _ ->
+                    // setChecked() only persists and re-renders the row, it does not call
+                    // the change listener again, so the dialog cannot pop up twice
+                    touristMode.isChecked = true
+                    CoroutineScope(Dispatchers.IO).launch {
+                        DatabaseHelper.clearBrowsingData()
+                    }
+                }
+                .show()
+            false
+        }
+    }
+
+    /**
+     * Shows the SponsorBlock id currently in use (truncated) or the explanation when no
+     * id exists yet (a fresh random one is only generated on the first submission).
+     */
+    private fun refreshIdentifierSummary(notRotatedHint: String? = null) {
+        val idInfo = findPreference<Preference>("sb_user_id_info") ?: return
+        val info = getString(R.string.sb_user_id_info)
+        val currentId = PrivacyHelper.getValidSponsorBlockUserId()?.take(6)?.plus("…")
+
+        idInfo.summary = when {
+            currentId != null -> info + "\n" + currentId
+            notRotatedHint != null -> info + "\n" + notRotatedHint
+            else -> info
+        }
+    }
+
+    /**
+     * Purges every client side identifier that could be used to correlate requests:
+     * SponsorBlock user id (a fresh random one is generated on next use), WebView
+     * cookies/local storage. Downloads, history and
+     * settings are preserved. This is also the manual rotation action for users who
+     * selected the "manual only" frequency.
+     */
+    private fun resetIdentifiers() {
+        PrivacyHelper.resetSponsorBlockUserId()
+        PrivacyHelper.clearWebViewData()
+        // a clean break, like Tor Browser's "new identity": no open connection and no cached
+        // response (ETag / Last-Modified revalidation) carries over to the new identifiers
+        lifecycleScope.launch(Dispatchers.IO) {
+            SharedHttpClient.dropIdleConnections()
+            RetrofitInstance.clearHttpCache()
+        }
+
+        refreshIdentifierSummary(getString(R.string.sponsorblock_id_rotated))
+    }
+    // endregion
+
+    // region Watch History
+    /**
+     * Local history controls (search history, watch history, positions, bookmarks) of
+     * R.xml.history_settings, merged into this hub.
      */
     private fun bindHistoryPreferences() {
         // search history is not recorded anymore once the toggle is off, so the entries
@@ -107,7 +255,7 @@ class PrivacySettings : InstanceSettings() {
     }
 
     private fun showClearDialog(title: Int, actionOnConfirm: suspend () -> Unit) {
-        MaterialAlertDialogBuilder(requireContext())
+        SecureAlertDialogBuilder(requireContext())
             .setTitle(title)
             .setMessage(R.string.irreversible)
             .setNegativeButton(R.string.cancel, null)
@@ -118,122 +266,9 @@ class PrivacySettings : InstanceSettings() {
             }
             .show()
     }
+    // endregion
 
-    /**
-     * Single frequency shared by every rotating identifier (SponsorBlock id and neutral
-     * region), so both always rotate at the exact same moment.
-     */
-    private fun setupRotationFrequency() {
-        findPreference<ListPreference>(PreferenceKeys.PRIVACY_ROTATION_FREQUENCY)?.apply {
-            summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
-                val entry = preference.entry ?: return@SummaryProvider null
-                getString(R.string.rotation_frequency_summary, entry)
-            }
-        }
-    }
-
-    /**
-     * Neutral region switch: the summary keeps showing the explanation and appends the
-     * country currently in use, so the rotation is visible instead of surprising.
-     *
-     * The text is assigned explicitly (instead of a SummaryProvider) because the row has
-     * to be re-rendered after a rotation, and [Preference.notifyChanged] is protected.
-     */
-    private fun setupNeutralRegion() {
-        findPreference<SwitchPreferenceCompat>(PreferenceKeys.PRIVACY_NEUTRAL_REGION)?.apply {
-            isChecked = PrivacyHelper.isNeutralRegionEnabled()
-            summary = neutralRegionSummary(isChecked)
-            setOnPreferenceChangeListener { preference, newValue ->
-                val enabled = newValue == true
-                // starting a new neutral region session always picks a fresh country
-                if (enabled) PrivacyHelper.resetNeutralRegion()
-                // written for the incoming state: the row is re-rendered right after the
-                // value is persisted, so it shows the country that is now active.
-                // hardening off means the region is not applied at all, so no country there
-                preference.summary =
-                    neutralRegionSummary(enabled && PrivacyHelper.isHardeningEnabled())
-                true
-            }
-        }
-    }
-
-    private fun neutralRegionSummary(enabled: Boolean): CharSequence {
-        val base = getString(R.string.privacy_neutral_region_summary)
-        if (!enabled) return base
-        return base + "\n" + getString(
-            R.string.privacy_neutral_region_current,
-            PrivacyHelper.getNeutralRegion()
-        )
-    }
-
-    /**
-     * Tourist mode keeps no browsing trace on the device, so turning it on also offers to
-     * wipe what is already stored. The preference is only persisted once the deletion has
-     * been accepted, otherwise the switch would promise an empty device while keeping data.
-     */
-    private fun setupTouristMode() {
-        val touristMode = findPreference<SwitchPreferenceCompat>(PreferenceKeys.TOURIST_MODE)
-            ?: return
-
-        touristMode.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue != true) return@setOnPreferenceChangeListener true
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.tourist_mode)
-                .setMessage(R.string.tourist_mode_clear_dialog)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.okay) { _, _ ->
-                    // setChecked() only persists and re-renders the row, it does not call
-                    // the change listener again, so the dialog cannot pop up twice
-                    touristMode.isChecked = true
-                    CoroutineScope(Dispatchers.IO).launch {
-                        DatabaseHelper.clearBrowsingData()
-                    }
-                }
-                .show()
-            false
-        }
-    }
-
-    /**
-     * Shows the SponsorBlock id currently in use (truncated) or the explanation when no
-     * id exists yet (a fresh random one is only generated on the first submission).
-     */
-    private fun refreshIdentifierSummary(notRotatedHint: String? = null) {
-        val idInfo = findPreference<Preference>("sb_user_id_info") ?: return
-        val info = getString(R.string.sb_user_id_info)
-        val currentId = PrivacyHelper.getValidSponsorBlockUserId()?.take(6)?.plus("…")
-
-        idInfo.summary = when {
-            currentId != null -> info + "\n" + currentId
-            notRotatedHint != null -> info + "\n" + notRotatedHint
-            else -> info
-        }
-    }
-
-    /**
-     * Purges every client side identifier that could be used to correlate requests:
-     * SponsorBlock user id and neutral region (a fresh random one of each will be
-     * generated on next use), WebView cookies/local storage. Downloads, history and
-     * settings are preserved. This is also the manual rotation action for users who
-     * selected the "manual only" frequency.
-     */
-    private fun resetIdentifiers() {
-        PrivacyHelper.rotateAllIdentifiers()
-        PrivacyHelper.clearWebViewData()
-        // a clean break, like Tor Browser's "new identity": no open connection and no cached
-        // response (ETag / Last-Modified revalidation) carries over to the new identifiers
-        lifecycleScope.launch(Dispatchers.IO) {
-            SharedHttpClient.dropIdleConnections()
-            RetrofitInstance.clearHttpCache()
-        }
-
-        refreshIdentifierSummary(getString(R.string.sponsorblock_id_rotated))
-
-        // the country changed, so the new text differs and re-assigning it re-renders
-        // the row (Preference.notifyChanged() is protected and not usable from here)
-        findPreference<SwitchPreferenceCompat>(PreferenceKeys.PRIVACY_NEUTRAL_REGION)?.let {
-            it.summary = neutralRegionSummary(it.isChecked)
-        }
+    private companion object {
+        const val CLEAR_EVERYTHING = "clear_everything"
     }
 }

@@ -1,6 +1,7 @@
 package com.watube.yard.helpers
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.edit
@@ -13,47 +14,81 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.extensions.TAG
+import com.watube.yard.extensions.readAtMost
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.obj.BackupFile
 import com.watube.yard.obj.PreferenceItem
+import java.io.IOException
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.decodeFromStream
-import kotlinx.serialization.json.encodeToStream
 import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
 
+// region Backup & Restore
 /**
  * Backup and restore the preferences
  */
 object BackupHelper {
+    /** Larger than any real library: a bigger file is not read into memory. */
+    private const val MAX_BACKUP_BYTES = 64 * 1024 * 1024
+
     /**
-     * Write a [BackupFile] containing the database content as well as the preferences
+     * Write a [BackupFile] containing the database content as well as the preferences,
+     * always encrypted (see [BackupCrypto]) with [secret], which is cleared afterwards.
      */
-    @OptIn(ExperimentalSerializationApi::class)
-    suspend fun createAdvancedBackup(context: Context, uri: Uri, backupFile: BackupFile) {
+    suspend fun createAdvancedBackup(
+        context: Context,
+        uri: Uri,
+        backupFile: BackupFile,
+        secret: CharArray,
+        kind: BackupCrypto.SecretKind
+    ) {
         try {
-            context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                JsonHelper.json.encodeToStream(backupFile, outputStream)
+            val json = JsonHelper.json.encodeToString(backupFile).toByteArray()
+            val encrypted = try {
+                BackupCrypto.encrypt(json, secret, kind)
+            } finally {
+                json.fill(0)
             }
+            // "wt": a file chosen again is truncated, old trailing bytes would break the tag
+            val output = context.contentResolver.openOutputStream(uri, "wt")
+                ?: throw IOException("backup destination unavailable")
+            output.use { it.write(encrypted) }
             context.toastFromMainDispatcher(R.string.backup_creation_success)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Error while writing backup: $e")
             context.toastFromMainDispatcher(R.string.backup_creation_failed)
+        } catch (e: OutOfMemoryError) {
+            // the key derivation and the copies of a large library did not fit in this phone
+            Log.e(TAG(), "Not enough memory to write the backup")
+            context.toastFromMainDispatcher(R.string.backup_creation_failed)
+        } finally {
+            secret.fill(Char.MIN_VALUE)
+        }
+    }
+
+    /** The backup file at [uri]: encrypted, or a clear one written by an older version. */
+    suspend fun readBackupFile(context: Context, uri: Uri): ByteArray = withContext(Dispatchers.IO) {
+        val input = context.contentResolver.openInputStream(uri)
+            ?: throw IOException("backup file unavailable")
+        input.use {
+            val bytes = it.readAtMost(MAX_BACKUP_BYTES + 1)
+            if (bytes.size > MAX_BACKUP_BYTES) throw IOException("backup file too large")
+            bytes
         }
     }
 
     /**
-     * Restore data from a [BackupFile]
+     * Restore data from a [BackupFile], given as its JSON (the decrypted content of the file,
+     * or a clear file of an older version)
      */
-    @OptIn(ExperimentalSerializationApi::class)
-    suspend fun restoreAdvancedBackup(context: Context, uri: Uri) = withContext(Dispatchers.IO) {
-        val backupFile = context.contentResolver.openInputStream(uri)?.use {
-            JsonHelper.json.decodeFromStream<BackupFile>(it)
-        } ?: return@withContext
+    suspend fun restoreAdvancedBackup(context: Context, json: ByteArray) = withContext(Dispatchers.IO) {
+        val backupFile = JsonHelper.json.decodeFromString<BackupFile>(json.decodeToString())
 
         // tourist mode keeps browsing data off the device, even while restoring a backup;
         // entries without a watch time are stamped so the retention purge can age them
@@ -94,7 +129,11 @@ object BackupHelper {
         var ignoredSensitive = 0
         var ignoredType = 0
 
-        PreferenceManager.getDefaultSharedPreferences(context).edit(commit = true) {
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
+        // read before clear(): written back unchanged once the backup is imported
+        val keptSecurity = deviceSecurityToKeep(settings.all)
+
+        settings.edit(commit = true) {
             // clear the previous settings
             clear()
 
@@ -105,8 +144,9 @@ object BackupHelper {
                 // (see SENSITIVE_PREFERENCE_KEYS). Without this, a crafted file could point
                 // selectAuthInstance at an attacker server and leak the Piped token, which
                 // is sent as Authorization on the auth endpoints. After clear() these keys
-                // simply fall back to their privacy preserving defaults.
-                if (key != null && key in SENSITIVE_PREFERENCE_KEYS) {
+                // simply fall back to their privacy preserving defaults, except the security
+                // settings of this phone (DEVICE_SECURITY_KEYS), kept as they were.
+                if (!isImportable(key)) {
                     ignoredSensitive++
                     return@forEach
                 }
@@ -148,11 +188,15 @@ object BackupHelper {
                         ) {
                             putStringSet(key, value.split(",").toSet())
                         } else {
-                            putString(key, value)
+                            // encrypted again on this phone (see PreferenceHelper.storedForm)
+                            PreferenceHelper.storedForm(key, value)?.let { putString(key, it) }
                         }
                     }
                 }
             }
+
+            // the security settings of this phone, exactly as they were before the restore
+            keptSecurity.forEach { (key, stored) -> putStored(key, stored) }
         }
 
         if (BuildConfig.DEBUG && (ignoredSensitive > 0 || ignoredType > 0)) {
@@ -209,7 +253,50 @@ object BackupHelper {
         PreferenceKeys.USERNAME,
         // crash logs may contain video ids and urls, they have their own preference file
         PreferenceKeys.ERROR_LOG,
+        // videos already notified: they tell which channels are followed, and are only
+        // useful on the phone that showed the notifications
+        PreferenceKeys.NOTIFIED_VIDEO_IDS,
     )
+
+    /**
+     * Security settings of this phone. A backup never changes them, in either direction:
+     * they are neither exported nor imported, and the restore keeps their current values
+     * instead of letting clear() reset them, so restoring an old or crafted file can not
+     * switch the app lock, the private DNS or the screen protections off.
+     */
+    private val DEVICE_SECURITY_KEYS = setOf(
+        PreferenceKeys.APP_LOCK,
+        PreferenceKeys.APP_LOCK_DELAY,
+        PreferenceKeys.PRIVATE_DNS,
+        PreferenceKeys.PRIVATE_DNS_RESOLVER,
+        PreferenceKeys.BLOCK_SCREENSHOTS,
+        PreferenceKeys.HIDE_LOCKSCREEN_CONTENT,
+        PreferenceKeys.HIDE_RECENTS_PREVIEW,
+    )
+
+    /** Whether a preference read from a backup file may be imported. */
+    internal fun isImportable(key: String?): Boolean =
+        key == null || (key !in SENSITIVE_PREFERENCE_KEYS && key !in DEVICE_SECURITY_KEYS)
+
+    /** Whether a preference of this phone may be written to a backup file. */
+    internal fun isExportable(key: String): Boolean =
+        key !in SENSITIVE_PREFERENCE_KEYS && key !in DEVICE_SECURITY_KEYS
+
+    /** The security settings among [current] preferences, kept through a restore. */
+    internal fun deviceSecurityToKeep(current: Map<String, *>): Map<String, Any?> =
+        current.filterKeys { it in DEVICE_SECURITY_KEYS }
+
+    /** Write back a value read from SharedPreferences.getAll(), in its own type. */
+    private fun SharedPreferences.Editor.putStored(key: String, stored: Any?) {
+        when (stored) {
+            is Boolean -> putBoolean(key, stored)
+            is Int -> putInt(key, stored)
+            is Long -> putLong(key, stored)
+            is Float -> putFloat(key, stored)
+            is String -> putString(key, stored)
+            is Set<*> -> putStringSet(key, stored.filterIsInstance<String>().toSet())
+        }
+    }
 
     /**
      * Type expected for the keys the app reads with a typed getter / preference widget.
@@ -294,8 +381,7 @@ object BackupHelper {
             PreferenceKeys.LANGUAGE,
             PreferenceKeys.LAST_PROXY_FETCH_INSTANCE,
             PreferenceKeys.NAVBAR_ITEMS,
-            PreferenceKeys.NEUTRAL_REGION_ACTIVE,
-            PreferenceKeys.NEUTRAL_REGION_CYCLE,
+            PreferenceKeys.NEUTRAL_REGION_COUNTRY,
             PreferenceKeys.NOTIFICATION_END_TIME,
             PreferenceKeys.NOTIFICATION_START_TIME,
             PreferenceKeys.ORIENTATION,
@@ -370,3 +456,4 @@ object BackupHelper {
         }
     }
 }
+// endregion

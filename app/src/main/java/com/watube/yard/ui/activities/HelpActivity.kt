@@ -14,6 +14,7 @@ import com.watube.yard.R
 import com.watube.yard.databinding.ActivityHelpBinding
 import com.watube.yard.ui.base.BaseActivity
 
+// region About
 /**
  * Watube help page: a self-contained, account-free guide. It lists the most common
  * questions as expandable cards, a few getting-started tips, and a shortcut to the
@@ -87,3 +88,4 @@ class HelpActivity : BaseActivity() {
         )
     }
 }
+// endregion

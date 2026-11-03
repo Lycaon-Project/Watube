@@ -23,7 +23,6 @@ import androidx.media3.exoplayer.source.chunk.InitializationChunk
 import androidx.media3.exoplayer.source.chunk.MediaChunk
 import androidx.media3.exoplayer.source.chunk.MediaChunkIterator
 import androidx.media3.exoplayer.trackselection.ExoTrackSelection
-import androidx.media3.exoplayer.upstream.CmcdConfiguration
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy.FallbackOptions
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy.LoadErrorInfo
@@ -34,6 +33,7 @@ import com.watube.yard.player.parser.PlaybackRequest
 import com.watube.yard.player.parser.SabrClient
 import java.time.Instant
 
+// region SABR Streaming
 /** A default [SabrChunkSource] implementation.  */
 @UnstableApi
 class DefaultSabrChunkSource(
@@ -62,7 +62,6 @@ class DefaultSabrChunkSource(
             elapsedRealtimeOffsetMs: Long,
             transferListener: TransferListener?,
             playerId: PlayerId,
-            cmcdConfiguration: CmcdConfiguration?,
         ): SabrChunkSource {
             val dataSource = dataSourceFactory.createDataSource()
             transferListener?.let { dataSource.addTransferListener(it) }
@@ -398,7 +397,8 @@ class DefaultSabrChunkSource(
             0,
             0,
             numberOfTracks,
-            numberOfExcludedTracks
+            numberOfExcludedTracks,
+            false
         )
     }
 
@@ -457,3 +457,4 @@ class DefaultSabrChunkSource(
         fun getLastAvailableSegmentNum(): Long = chunkIndex!!.length.toLong() - 1
     }
 }
+// endregion

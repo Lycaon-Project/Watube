@@ -15,6 +15,7 @@ import com.watube.yard.databinding.CommentsSheetBinding
 import com.watube.yard.ui.fragments.CommentsMainFragment
 import com.watube.yard.ui.models.CommonPlayerViewModel
 
+// region Comments
 class CommentsSheet : ExpandablePlayerSheet(R.layout.comments_sheet) {
     private var _binding: CommentsSheetBinding? = null
     val binding get() = _binding!!
@@ -90,3 +91,4 @@ class CommentsSheet : ExpandablePlayerSheet(R.layout.comments_sheet) {
         const val DISMISS_SHEET_REQUEST_KEY = "dismiss_sheet_request_key"
     }
 }
+// endregion

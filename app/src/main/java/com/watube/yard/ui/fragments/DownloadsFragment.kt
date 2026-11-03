@@ -58,7 +58,7 @@ import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.DownloadsViewModel
 import com.watube.yard.ui.sheets.BaseBottomSheet
 import com.watube.yard.ui.viewholders.DownloadsViewHolder
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -67,6 +67,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.io.path.fileSize
 
+// region Downloads
 enum class DownloadTab {
     VIDEO,
     AUDIO,
@@ -86,6 +87,7 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
     private var _binding: FragmentDownloadsBinding? = null
     private val binding get() = _binding!!
     private val downloadsViewModel: DownloadsViewModel by activityViewModels()
+    private val downloadExport = DownloadExport(this)
 
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -95,6 +97,7 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDownloadsBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        downloadExport.bind()
 
         binding.downloadsPager.adapter = DownloadsFragmentAdapter(this)
 
@@ -412,7 +415,7 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
     private fun showDeleteAllDialog(context: Context, adapter: DownloadsAdapter) {
         var onlyDeleteWatchedVideos = false
 
-        MaterialAlertDialogBuilder(context)
+        SecureAlertDialogBuilder(context)
             .setTitle(R.string.delete_all)
             .setMultiChoiceItems(
                 arrayOf(getString(R.string.delete_only_watched_videos)),
@@ -662,3 +665,4 @@ class PlaylistDownloadsFragmentPage : Fragment(R.layout.fragment_download_conten
         }
     }
 }
+// endregion

@@ -10,6 +10,7 @@ import com.watube.yard.db.obj.LocalPlaylist
 import com.watube.yard.db.obj.LocalPlaylistItem
 import com.watube.yard.db.obj.LocalPlaylistWithVideos
 
+// region Playlists
 @Dao
 interface LocalPlaylistsDao {
     @Transaction
@@ -41,3 +42,4 @@ interface LocalPlaylistsDao {
     suspend fun getPlaylistVideo(playlistId: String, videoId: String): LocalPlaylistItem?
 
 }
+// endregion

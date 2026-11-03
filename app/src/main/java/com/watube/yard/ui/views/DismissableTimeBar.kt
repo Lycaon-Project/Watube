@@ -14,6 +14,7 @@ import androidx.media3.ui.TimeBar.OnScrubListener
 import com.watube.yard.extensions.dpToPx
 import kotlin.math.abs
 
+// region Video Player
 @UnstableApi
 open class DismissableTimeBar(
     context: Context,
@@ -155,3 +156,4 @@ open class DismissableTimeBar(
         private const val TOUCH_SEEK_LIMIT_BELOW = 200f
     }
 }
+// endregion

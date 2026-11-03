@@ -4,6 +4,7 @@ import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.helpers.PreferenceHelper
 
+// region Feed
 class PipedAccountFeedRepository : FeedRepository {
     override suspend fun getFeed(
         forceRefresh: Boolean,
@@ -14,3 +15,4 @@ class PipedAccountFeedRepository : FeedRepository {
         return RetrofitInstance.authApi.getFeed(token)
     }
 }
+// endregion

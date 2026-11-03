@@ -7,6 +7,7 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.services.DownloadService
 import com.watube.yard.ui.activities.MainActivity
 
+// region Downloads
 class DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val activityIntent = Intent(context, MainActivity::class.java)
@@ -23,3 +24,4 @@ class DownloadReceiver : BroadcastReceiver() {
         context?.startActivity(activityIntent)
     }
 }
+// endregion

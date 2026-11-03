@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.watube.yard.services.DownloadService
 
+// region Media Notification
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == null) return
@@ -29,3 +30,4 @@ class NotificationReceiver : BroadcastReceiver() {
             "com.watube.yard.receivers.NotificationReceiver.ACTION_DOWNLOAD_STOP"
     }
 }
+// endregion

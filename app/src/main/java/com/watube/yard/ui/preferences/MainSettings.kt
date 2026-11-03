@@ -15,6 +15,7 @@ import com.watube.yard.databinding.SettingsCategoryRowBinding
 import com.watube.yard.ui.extensions.padBottomForSystemBars
 import com.watube.yard.ui.activities.AboutActivity
 
+// region Settings
 /**
  * Settings hub index.
  *
@@ -101,3 +102,4 @@ class MainSettings : Fragment() {
         super.onDestroyView()
     }
 }
+// endregion

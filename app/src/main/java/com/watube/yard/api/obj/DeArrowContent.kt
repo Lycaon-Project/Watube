@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region DeArrow
 @Serializable
 data class DeArrowContent(
     val thumbnails: List<DeArrowThumbnail>,
@@ -9,3 +10,4 @@ data class DeArrowContent(
     val randomTime: Float?,
     val videoDuration: Float?
 )
+// endregion

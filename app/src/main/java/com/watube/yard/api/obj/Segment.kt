@@ -9,6 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
+// region SponsorBlock
 // see https://wiki.sponsor.ajay.app/w/API_Docs#GET_/api/skipSegments
 @Serializable
 @Parcelize
@@ -45,3 +46,4 @@ data class Segment(
         const val TYPE_FULL = "full"
     }
 }
+// endregion

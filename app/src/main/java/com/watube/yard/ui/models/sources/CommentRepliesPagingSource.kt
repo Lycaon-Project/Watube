@@ -4,9 +4,11 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.obj.Comment
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// region Comments
 class CommentRepliesPagingSource(
     private val videoId: String,
     private val originalComment: Comment
@@ -26,8 +28,11 @@ class CommentRepliesPagingSource(
             }
 
             LoadResult.Page(replies, null, result.nextpage)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
 }
+// endregion

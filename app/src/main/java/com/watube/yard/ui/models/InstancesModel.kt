@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.net.MalformedURLException
 
+// region Piped Instances
 class InstancesModel : ViewModel() {
     val customInstances = Database.customInstanceDao().getAllFlow()
         .flowOn(Dispatchers.IO)
@@ -47,3 +48,4 @@ class InstancesModel : ViewModel() {
             Database.customInstanceDao().deleteCustomInstance(customInstance)
         }
 }
+// endregion

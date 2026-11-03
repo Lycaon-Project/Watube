@@ -10,10 +10,12 @@ import com.watube.yard.repo.LocalFeedRepository.Companion.CHANNEL_BATCH_DELAY
 import com.watube.yard.repo.LocalFeedRepository.Companion.CHANNEL_BATCH_SIZE
 import com.watube.yard.repo.LocalFeedRepository.Companion.CHANNEL_CHUNK_SIZE
 import com.watube.yard.ui.dialogs.ShareDialog.Companion.YOUTUBE_FRONTEND_URL
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import java.util.concurrent.atomic.AtomicInteger
 
+// region Subscriptions
 class LocalSubscriptionsRepository : SubscriptionsRepository {
     override suspend fun subscribe(
         channelId: String, name: String, uploaderAvatar: String?, verified: Boolean
@@ -60,6 +62,8 @@ class LocalSubscriptionsRepository : SubscriptionsRepository {
 
                     val avatarUrl = channelInfo.avatars.maxByOrNull { it.height }?.url
                     subscribe(channelId, channelInfo.name, avatarUrl, channelInfo.isVerified)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e(TAG(), e.toString())
                     failedChannels.add(channelId)
@@ -104,3 +108,4 @@ class LocalSubscriptionsRepository : SubscriptionsRepository {
         })
     }
 }
+// endregion

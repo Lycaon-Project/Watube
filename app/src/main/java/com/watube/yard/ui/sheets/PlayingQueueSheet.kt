@@ -17,12 +17,13 @@ import com.watube.yard.extensions.toID
 import com.watube.yard.ui.adapters.PlayingQueueAdapter
 import com.watube.yard.ui.dialogs.AddToPlaylistDialog
 import com.watube.yard.util.PlayingQueue
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Playing Queue
 class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
     private var _binding: QueueBottomSheetBinding? = null
     private val binding get() = _binding!!
@@ -58,7 +59,7 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
         updateRepeatButton()
 
         binding.clearQueue.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.tooltip_clear_queue)
                 .setPositiveButton(R.string.okay) { _, _ ->
                     val currentIndex = PlayingQueue.currentIndex()
@@ -119,7 +120,7 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
         )
             .map { requireContext().getString(it) }
             .toTypedArray()
-        MaterialAlertDialogBuilder(requireContext())
+        SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.sort_by)
             .setItems(sortOptions) { _, index ->
                 val newQueue = when (index) {
@@ -156,7 +157,7 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
             getString(R.string.mark_as_unwatched),
             getString(R.string.remove_watched_videos)
         )
-        MaterialAlertDialogBuilder(requireContext())
+        SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.watch_positions)
             .setItems(options) { _, index ->
                 when (index) {
@@ -210,3 +211,4 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
         const val PLAYING_QUEUE_REQUEST_KEY = "playing_queue_request_key"
     }
 }
+// endregion

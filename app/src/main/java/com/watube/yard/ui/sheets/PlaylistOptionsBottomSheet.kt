@@ -26,10 +26,12 @@ import com.watube.yard.ui.dialogs.RenamePlaylistDialog
 import com.watube.yard.ui.dialogs.ShareDialog
 import com.watube.yard.ui.preferences.BackupRestoreSettings
 import com.watube.yard.util.PlayingQueue
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
+// region Playlists
 class PlaylistOptionsBottomSheet : BaseBottomSheet() {
     private lateinit var playlistName: String
     private lateinit var playlistId: String
@@ -177,6 +179,8 @@ class PlaylistOptionsBottomSheet : BaseBottomSheet() {
                         } else {
                             val bookmark = try {
                                 MediaServiceRepository.instance.getPlaylist(playlistId)
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (_: Exception) {
                                 return@withContext
                             }.toPlaylistBookmark(playlistId)
@@ -192,3 +196,4 @@ class PlaylistOptionsBottomSheet : BaseBottomSheet() {
         const val PLAYLIST_OPTIONS_REQUEST_KEY = "playlist_options_request_key"
     }
 }
+// endregion

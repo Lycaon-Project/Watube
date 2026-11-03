@@ -9,6 +9,7 @@ import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
+// region UI Components
 abstract class ExpandablePlayerSheet(@LayoutRes layoutResId: Int) :
     UndimmedBottomSheet(layoutResId) {
     private val commonPlayerViewModel: CommonPlayerViewModel by activityViewModels()
@@ -51,3 +52,4 @@ abstract class ExpandablePlayerSheet(@LayoutRes layoutResId: Int) :
         commonPlayerViewModel.setSheetExpand(null)
     }
 }
+// endregion

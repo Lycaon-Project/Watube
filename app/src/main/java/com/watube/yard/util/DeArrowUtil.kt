@@ -7,7 +7,9 @@ import com.watube.yard.api.obj.DeArrowContent
 import com.watube.yard.api.obj.Streams
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
+import kotlinx.coroutines.CancellationException
 
+// region DeArrow
 object DeArrowUtil {
     /**
      * Wrapper distinguishing "queried, no DeArrow data" from "never queried": storing a
@@ -35,6 +37,8 @@ object DeArrowUtil {
         return try {
             MediaServiceRepository.instance.getDeArrowContent(videoId)
                 .also { cache.put(videoId, CachedContent(it)) }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             // failed lookups are not cached so a network error stays retryable
             Log.e(this::class.java.name, "Failed to fetch DeArrow content (${e.javaClass.simpleName})")
@@ -67,3 +71,4 @@ object DeArrowUtil {
         return extractTitleAndThumbnail(data)
     }
 }
+// endregion

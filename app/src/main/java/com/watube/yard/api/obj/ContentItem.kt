@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region Search
 @Serializable
 data class ContentItem(
     val url: String,
@@ -41,3 +42,4 @@ data class ContentItem(
         isShort = isShort == true
     )
 }
+// endregion

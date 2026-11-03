@@ -15,77 +15,17 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 
 object DatabaseHelper {
-    private const val MAX_SEARCH_HISTORY_SIZE = 20
+    // region Watch Positions
+    private val watchPositionCache = ConcurrentHashMap<String, Long>()
 
-    private const val MILLIS_PER_DAY = 24L * 60 * 60 * 1000
+    @Volatile
+    private var watchPositionCacheLoaded = false
 
     // can only mark as watched if less than 60s remaining
     private const val ABSOLUTE_WATCHED_THRESHOLD = 60.0f
 
     // can only mark as watched if at least 75% watched
     private const val RELATIVE_WATCHED_THRESHOLD = 0.75f
-
-    private val watchPositionCache = ConcurrentHashMap<String, Long>()
-
-    @Volatile
-    private var watchPositionCacheLoaded = false
-
-    suspend fun addToWatchHistory(watchHistoryItem: WatchHistoryItem) =
-        withContext(Dispatchers.IO) {
-            if (PreferenceHelper.isTouristModeEnabled()) return@withContext
-
-            Database.watchHistoryDao().insert(
-                watchHistoryItem.copy(watchedAt = System.currentTimeMillis())
-            )
-            applyWatchHistoryRetention()
-        }
-
-    /**
-     * Deletes every watch history entry older than the configured retention period.
-     * A period of 0 (the default) keeps the whole history.
-     */
-    suspend fun applyWatchHistoryRetention() {
-        val retentionDays = PreferenceHelper.getHistoryRetentionDays()
-        if (retentionDays <= 0) return
-
-        val cutoff = System.currentTimeMillis() - retentionDays * MILLIS_PER_DAY
-        Database.watchHistoryDao().deleteOlderThan(cutoff)
-    }
-
-    /**
-     * Everything a browsing session leaves on the device: watch history, search history
-     * and playback positions. Used when tourist mode gets turned on.
-     */
-    suspend fun clearBrowsingData() = withContext(Dispatchers.IO) {
-        Database.watchHistoryDao().deleteAll()
-        Database.searchHistoryDao().deleteAll()
-        clearWatchPositions()
-    }
-
-    suspend fun getWatchHistoryPage(page: Int, pageSize: Int): List<WatchHistoryItem> {
-        val watchHistoryDao = Database.watchHistoryDao()
-        val historySize = watchHistoryDao.getSize()
-
-        if (historySize < pageSize * (page - 1)) return emptyList()
-
-        val offset = historySize - (pageSize * page)
-        val limit = if (offset < 0) {
-            offset + pageSize
-        } else {
-            pageSize
-        }
-        return watchHistoryDao.getN(limit, maxOf(offset, 0)).reversed()
-    }
-
-    suspend fun addToSearchHistory(searchHistoryItem: SearchHistoryItem) {
-        if (PreferenceHelper.isTouristModeEnabled()) return
-
-        Database.searchHistoryDao().insert(searchHistoryItem)
-
-        if (PreferenceHelper.getBoolean(PreferenceKeys.UNLIMITED_SEARCH_HISTORY, false)) return
-
-        Database.searchHistoryDao().deleteAllExceptLatest(MAX_SEARCH_HISTORY_SIZE)
-    }
 
     suspend fun getWatchPosition(videoId: String): Long? {
         if (watchPositionCacheLoaded) return watchPositionCache[videoId]
@@ -166,7 +106,76 @@ object DatabaseHelper {
     ): Boolean {
         return unfinished xor isVideoWatched(watchHistoryItem.videoId, watchHistoryItem.duration ?: 0)
     }
+    // endregion
 
+    // region Search
+    private const val MAX_SEARCH_HISTORY_SIZE = 20
+
+    suspend fun addToSearchHistory(searchHistoryItem: SearchHistoryItem) {
+        if (PreferenceHelper.isTouristModeEnabled()) return
+
+        Database.searchHistoryDao().insert(searchHistoryItem)
+
+        if (PreferenceHelper.getBoolean(PreferenceKeys.UNLIMITED_SEARCH_HISTORY, false)) return
+
+        Database.searchHistoryDao().deleteAllExceptLatest(MAX_SEARCH_HISTORY_SIZE)
+    }
+    // endregion
+
+    // region Watch History
+    private const val MILLIS_PER_DAY = 24L * 60 * 60 * 1000
+
+    suspend fun addToWatchHistory(watchHistoryItem: WatchHistoryItem) =
+        withContext(Dispatchers.IO) {
+            if (PreferenceHelper.isTouristModeEnabled()) return@withContext
+
+            Database.watchHistoryDao().insert(
+                watchHistoryItem.copy(watchedAt = System.currentTimeMillis())
+            )
+            applyWatchHistoryRetention()
+        }
+
+    /**
+     * Deletes every watch history entry older than the configured retention period.
+     * A period of 0 (the default) keeps the whole history.
+     */
+    suspend fun applyWatchHistoryRetention() {
+        val retentionDays = PreferenceHelper.getHistoryRetentionDays()
+        if (retentionDays <= 0) return
+
+        val cutoff = System.currentTimeMillis() - retentionDays * MILLIS_PER_DAY
+        Database.watchHistoryDao().deleteOlderThan(cutoff)
+    }
+
+    suspend fun getWatchHistoryPage(page: Int, pageSize: Int): List<WatchHistoryItem> {
+        val watchHistoryDao = Database.watchHistoryDao()
+        val historySize = watchHistoryDao.getSize()
+
+        if (historySize < pageSize * (page - 1)) return emptyList()
+
+        val offset = historySize - (pageSize * page)
+        val limit = if (offset < 0) {
+            offset + pageSize
+        } else {
+            pageSize
+        }
+        return watchHistoryDao.getN(limit, maxOf(offset, 0)).reversed()
+    }
+    // endregion
+
+    // region Privacy
+    /**
+     * Everything a browsing session leaves on the device: watch history, search history
+     * and playback positions. Used when tourist mode gets turned on.
+     */
+    suspend fun clearBrowsingData() = withContext(Dispatchers.IO) {
+        Database.watchHistoryDao().deleteAll()
+        Database.searchHistoryDao().deleteAll()
+        clearWatchPositions()
+    }
+    // endregion
+
+    // region Feed
     suspend fun filterByStreamTypeAndWatchPosition(
         streams: List<StreamItem>,
         hideWatched: Boolean,
@@ -187,4 +196,5 @@ object DatabaseHelper {
 
         return filterUnwatched(streamItems)
     }
+    // endregion
 }

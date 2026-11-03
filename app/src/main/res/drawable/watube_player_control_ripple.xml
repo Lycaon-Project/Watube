@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Press feedback of the player's top controls. Bounded to the button by its mask, it is drawn
+     by the button itself, above the video: a borderless ripple is drawn by the first ancestor
+     with a background, which sits under the video surface and hid the ripple there.
+     The mask is a fixed 42dp circle (icon + padding) centred in the button: the buttons are
+     taller than wide (48dp row), and a mask filling the bounds drew an oval. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#3DFFFFFF">
+    <item
+        android:id="@android:id/mask"
+        android:width="42dp"
+        android:height="42dp"
+        android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+</ripple>

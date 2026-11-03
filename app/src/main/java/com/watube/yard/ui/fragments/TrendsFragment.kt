@@ -28,12 +28,13 @@ import com.watube.yard.obj.Country
 import com.watube.yard.ui.adapters.VideoCardsAdapter
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.models.TrendsViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
+// region Trends
 class TrendsFragment : Fragment(R.layout.fragment_trends) {
     private var _binding: FragmentTrendsBinding? = null
     private val binding get() = _binding!!
@@ -101,7 +102,7 @@ class TrendsFragment : Fragment(R.layout.fragment_trends) {
             var selected = countries.indexOfFirst { it.code == currentRegionPref }
             if (selected < 0) selected = 0
 
-            MaterialAlertDialogBuilder(context)
+            SecureAlertDialogBuilder(context)
                 .setTitle(R.string.region)
                 .setSingleChoiceItems(
                     countries.map { it.name }.toTypedArray(),
@@ -243,3 +244,4 @@ class TrendsContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_tre
         viewModel.fetchTrending(requireContext(), category)
     }
 }
+// endregion

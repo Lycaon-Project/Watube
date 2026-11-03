@@ -7,6 +7,7 @@ import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.fragments.AudioPlayerFragment
 import com.watube.yard.ui.fragments.PlayerFragment
 
+// region Video Player
 abstract class AbstractPlayerHostActivity: BaseActivity() {
     abstract fun minimizePlayerContainerLayout()
     abstract fun maximizePlayerContainerLayout()
@@ -54,3 +55,4 @@ abstract class AbstractPlayerHostActivity: BaseActivity() {
         }
     }
 }
+// endregion

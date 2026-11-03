@@ -1,5 +1,6 @@
 package com.watube.yard.enums
 
+// region Media Notification
 enum class PlayerEvent {
     PlayPause,
     Forward,
@@ -9,3 +10,4 @@ enum class PlayerEvent {
     Background,
     Stop
 }
+// endregion

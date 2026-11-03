@@ -17,11 +17,13 @@ import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.parseDurationString
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region DeArrow
 class SubmitDeArrowDialog: DialogFragment() {
     private var videoId: String = ""
     private var currentPosition: Float = 0f
@@ -45,7 +47,7 @@ class SubmitDeArrowDialog: DialogFragment() {
 
         lifecycleScope.launch { fetchDeArrowData() }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setView(binding.root)
             .setPositiveButton(R.string.okay, null)
             .setNegativeButton(R.string.cancel, null)
@@ -74,6 +76,8 @@ class SubmitDeArrowDialog: DialogFragment() {
             withContext(Dispatchers.IO) {
                 MediaServiceRepository.instance.getDeArrowContent(videoId)
             } ?: return
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             return
         }
@@ -101,6 +105,8 @@ class SubmitDeArrowDialog: DialogFragment() {
                 RetrofitInstance.externalApi.submitDeArrow(requestBody)
             }
             context.toastFromMainDispatcher(R.string.success)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
         }
@@ -113,3 +119,4 @@ class SubmitDeArrowDialog: DialogFragment() {
         _binding = null
     }
 }
+// endregion

@@ -11,6 +11,7 @@ import com.watube.yard.ui.extensions.setDrawables
 import com.watube.yard.ui.viewholders.BottomSheetViewHolder
 import com.watube.yard.ui.views.BadgeSpan
 
+// region UI Components
 class BottomSheetAdapter(
     private val items: List<BottomSheetItem>,
     private val listener: (index: Int) -> Unit
@@ -44,3 +45,4 @@ class BottomSheetAdapter(
 
     override fun getItemCount() = items.size
 }
+// endregion

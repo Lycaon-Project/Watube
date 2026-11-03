@@ -4,6 +4,7 @@ import com.watube.yard.db.obj.PlaylistBookmark
 import com.watube.yard.helpers.ProxyHelper
 import kotlinx.serialization.Serializable
 
+// region Playlists
 @Serializable
 data class Playlist(
     val name: String? = null,
@@ -29,3 +30,4 @@ data class Playlist(
         )
     }
 }
+// endregion

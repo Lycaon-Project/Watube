@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Themed (monochrome) layer derived from assets/icons/Watube.png -->
+<!-- region Theming -->
+<!-- Themed (monochrome) layer: the play outline of the interface logo, same geometry as
+     ic_launcher_mark.xml, tinted by the system. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M54,30 C54,30 44,36 40,44 C36,52 36,62 42,70 C46,76 52,79 54,80 C56,79 62,76 66,70 C72,62 72,52 68,44 C64,36 54,30 54,30 Z M54,40 C56,44 58,48 58,54 C58,60 56,64 54,68 C52,64 50,60 50,54 C50,48 52,44 54,40 Z" />
+
+    <group
+        android:scaleX="2.3"
+        android:scaleY="2.3"
+        android:translateX="26.4"
+        android:translateY="26.4">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M8.2,4.9L19.4,12L8.2,19.1Z"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.6" />
+    </group>
 </vector>
+<!-- endregion -->

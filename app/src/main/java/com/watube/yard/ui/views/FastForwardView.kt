@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.watube.yard.databinding.FastForwardViewBinding
 
+// region Player Gestures
 class FastForwardView(
     context: Context,
     attrs: AttributeSet? = null
 ) : LinearLayout(context, attrs) {
     val binding = FastForwardViewBinding.inflate(LayoutInflater.from(context), this, true)
 }
+// endregion

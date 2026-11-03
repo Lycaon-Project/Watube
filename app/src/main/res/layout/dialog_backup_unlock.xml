@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Backup & Restore -->
+<!-- Opening an encrypted backup: its password or recovery code, then a short wait while the
+     key is derived. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="4dp">
+
+    <TextView
+        android:id="@+id/backup_unlock_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:paddingHorizontal="24dp"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/backup_unlock_layout"
+        style="@style/CustomDialogTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/backup_unlock_secret"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoPersonalizedLearning|actionDone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/backup_unlock_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/backup_unlock_opening"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:trackCornerRadius="2dp" />
+
+</LinearLayout>
+<!-- endregion -->

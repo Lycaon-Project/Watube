@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Theming -->
+<!-- Launcher foreground: the very play outline of the home header logo (watube_logo.xml),
+     with its 9BF25C -> 1FD47E gradient, scaled x2.3 from its 24-unit viewport (the share of the tile it takes in the header) and centred in
+     the 108dp adaptive canvas, so it stays inside the 66dp safe zone of every mask. The
+     2.6 stroke closes the inner hole, so the outline is drawn solid as the header shows it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:scaleX="2.3"
+        android:scaleY="2.3"
+        android:translateX="26.4"
+        android:translateY="26.4">
+        <path
+            android:pathData="M8.2,4.9L19.4,12L8.2,19.1Z"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.6">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endColor="#1FD47E"
+                    android:endX="19.4"
+                    android:endY="19.1"
+                    android:startColor="#9BF25C"
+                    android:startX="8.2"
+                    android:startY="4.9"
+                    android:type="linear" />
+            </aapt:attr>
+            <aapt:attr name="android:strokeColor">
+                <gradient
+                    android:endColor="#1FD47E"
+                    android:endX="19.4"
+                    android:endY="19.1"
+                    android:startColor="#9BF25C"
+                    android:startX="8.2"
+                    android:startY="4.9"
+                    android:type="linear" />
+            </aapt:attr>
+        </path>
+    </group>
+</vector>
+<!-- endregion -->

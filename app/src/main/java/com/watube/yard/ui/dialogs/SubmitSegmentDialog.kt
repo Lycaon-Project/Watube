@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
+import com.watube.yard.api.NewPipeMediaServiceRepository
 import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.api.obj.Segment
 import com.watube.yard.constants.IntentData
@@ -19,11 +20,13 @@ import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.parseDurationString
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region SponsorBlock
 class SubmitSegmentDialog : DialogFragment() {
     private var videoId: String = ""
     private var currentPosition: Long = 0
@@ -66,7 +69,7 @@ class SubmitSegmentDialog : DialogFragment() {
             fetchSegments()
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setView(binding.root)
             .setNegativeButton(R.string.cancel, null)
             .show()
@@ -103,7 +106,10 @@ class SubmitSegmentDialog : DialogFragment() {
                 RetrofitInstance.externalApi
                     .submitSegment(videoId, uuid, userAgent, startTime, endTime, category, duration)
             }
+            NewPipeMediaServiceRepository.invalidateSegmentCache()
             context.toastFromMainDispatcher(R.string.segment_submitted)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
@@ -134,7 +140,10 @@ class SubmitSegmentDialog : DialogFragment() {
                     userID = PreferenceHelper.getSponsorBlockUserID(),
                     score = score
                 )
+                NewPipeMediaServiceRepository.invalidateSegmentCache()
                 context.toastFromMainDispatcher(R.string.success)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
             }
@@ -146,6 +155,8 @@ class SubmitSegmentDialog : DialogFragment() {
         val categories = resources.getStringArray(R.array.sponsorBlockSegments).toList()
         segments = try {
             MediaServiceRepository.instance.getSegments(videoId, categories).segments
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             return
@@ -174,3 +185,4 @@ class SubmitSegmentDialog : DialogFragment() {
         _binding = null
     }
 }
+// endregion

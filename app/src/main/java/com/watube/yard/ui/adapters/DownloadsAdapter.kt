@@ -28,7 +28,7 @@ import com.watube.yard.ui.sheets.DownloadOptionsBottomSheet
 import com.watube.yard.ui.sheets.DownloadOptionsBottomSheet.Companion.DELETE_DOWNLOAD_REQUEST_KEY
 import com.watube.yard.ui.viewholders.DownloadsViewHolder
 import com.watube.yard.util.TextUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +36,7 @@ import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 
+// region Downloads
 class DownloadsAdapter(
     private val context: Context,
     private val downloadTab: DownloadTab,
@@ -175,7 +176,7 @@ class DownloadsAdapter(
         // would delete the wrong download
         val item = currentList.getOrNull(position) ?: return
 
-        MaterialAlertDialogBuilder(context)
+        SecureAlertDialogBuilder(context)
             .setTitle(R.string.delete)
             .setMessage(R.string.irreversible)
             .setPositiveButton(R.string.okay) { _, _ ->
@@ -225,3 +226,4 @@ class DownloadsAdapter(
         notifyItemInserted(position)
     }
 }
+// endregion

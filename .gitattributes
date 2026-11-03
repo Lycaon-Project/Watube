@@ -1,1 +1,3 @@
 app/src/main/assets/* linguist-vendored
+# the wrapper runs on Linux CI: keep LF whatever core.autocrlf says
+gradlew text eol=lf

@@ -2,6 +2,7 @@ package com.watube.yard.obj
 
 import kotlinx.serialization.Serializable
 
+// region Backup & Restore
 @Serializable
 data class FreeTubeVideo(
     val videoId: String,
@@ -11,3 +12,4 @@ data class FreeTubeVideo(
     val lengthSeconds: Long,
     val type: String = "video"
 )
+// endregion

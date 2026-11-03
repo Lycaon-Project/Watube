@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
+// region Playlists
 class AddToPlaylistViewModel(
     val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -107,3 +108,4 @@ class AddToPlaylistViewModel(
         }
     }
 }
+// endregion

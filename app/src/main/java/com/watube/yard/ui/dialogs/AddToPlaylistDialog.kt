@@ -14,8 +14,9 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogAddToPlaylistBinding
 import com.watube.yard.extensions.parcelable
 import com.watube.yard.ui.models.AddToPlaylistViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Playlists
 /**
  * Dialog to insert new videos to a playlist
  * videoId: The id of the video to add. If non is provided, insert the whole playing queue
@@ -91,7 +92,7 @@ class AddToPlaylistDialog : DialogFragment() {
             }
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.addToPlaylist)
             .setView(binding.root)
             .show()
@@ -107,3 +108,4 @@ class AddToPlaylistDialog : DialogFragment() {
         const val ADD_TO_PLAYLIST_DIALOG_DISMISSED_KEY = "add_to_playlist_dialog_dismissed"
     }
 }
+// endregion

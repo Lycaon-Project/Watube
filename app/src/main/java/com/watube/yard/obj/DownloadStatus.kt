@@ -1,5 +1,6 @@
 package com.watube.yard.obj
 
+// region Downloads
 sealed class DownloadStatus {
 
     object Completed : DownloadStatus()
@@ -16,3 +17,4 @@ sealed class DownloadStatus {
 
     data class Error(val message: String, val cause: Throwable? = null) : DownloadStatus()
 }
+// endregion

@@ -2,7 +2,7 @@ package com.watube.yard.ui.adapters.callbacks
 
 import androidx.recyclerview.widget.DiffUtil
 
-
+// region UI Components
 @Suppress("FunctionName")
 fun <T> DiffUtilItemCallback(
     areItemsTheSame: (T, T) -> Boolean = ::equals,
@@ -17,3 +17,4 @@ fun <T> DiffUtilItemCallback(
 }
 
 private fun <T> equals(first: T, second: T) = first == second
+// endregion

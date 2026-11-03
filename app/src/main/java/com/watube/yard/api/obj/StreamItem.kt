@@ -10,6 +10,7 @@ import com.watube.yard.helpers.ProxyHelper
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Video Player
 @Serializable
 @Parcelize
 data class StreamItem(
@@ -77,3 +78,4 @@ data class StreamItem(
         const val TYPE_PLAYLIST = "playlist"
     }
 }
+// endregion

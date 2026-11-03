@@ -2,9 +2,11 @@ package com.watube.yard.extensions
 
 import androidx.media3.common.Player
 
+// region Video Player
 /**
  * Forward or rewind by the provided [timeDiff] in milliseconds
  */
 fun Player.seekBy(timeDiff: Long) {
     seekTo(currentPosition + timeDiff)
 }
+// endregion

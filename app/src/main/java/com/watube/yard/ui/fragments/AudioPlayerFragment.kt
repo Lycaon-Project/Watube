@@ -68,16 +68,19 @@ import com.watube.yard.util.PlayingQueue
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
-@UnstableApi
+@androidx.annotation.OptIn(UnstableApi::class)
 class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlayerOptions {
+    // region Background Playback
     private var _binding: FragmentAudioPlayerBinding? = null
-    val binding get() = _binding!!
 
-    private lateinit var audioHelper: AudioHelper
-    private val activity get() = context as AbstractPlayerHostActivity
     private val viewModel: CommonPlayerViewModel by activityViewModels()
-    private val chaptersModel: ChaptersViewModel by activityViewModels()
+    // endregion
 
+    // region Chapters
+    private val chaptersModel: ChaptersViewModel by activityViewModels()
+    // endregion
+
+    // region Background Playback
     // for the transition
     private var transitionStartId = 0
     private var transitionEndId = 0
@@ -86,8 +89,38 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
     /** whether an update of the seek bar / chapter index is already pending */
     private var seekBarUpdateScheduled = false
+    // endregion
+
+    // region Chapters
     private var chapterIndexUpdateScheduled = false
 
+    private fun scheduleChapterIndexUpdate(delayMs: Long) {
+        if (chapterIndexUpdateScheduled || !isPolling) return
+        chapterIndexUpdateScheduled = true
+        handler.postDelayed({
+            chapterIndexUpdateScheduled = false
+            updateChapterIndex()
+        }, delayMs)
+    }
+
+    private fun updateChapterIndex() {
+        if (_binding == null) return
+
+        scheduleChapterIndexUpdate(
+            if (playerController?.isPlaying == true) CHAPTER_UPDATE_INTERVAL_PLAYING
+            else CHAPTER_UPDATE_INTERVAL_PAUSED
+        )
+
+        val currentIndex =
+            PlayerHelper.getCurrentChapterIndex(
+                playerController?.currentPosition ?: return,
+                chaptersModel.chapters
+            )
+        chaptersModel.currentChapterIndex.updateIfChanged(currentIndex ?: return)
+    }
+    // endregion
+
+    // region Background Playback
     /** last values shown in the seek bar labels, used to skip redundant text layouts */
     private var lastDurationText: String? = null
     private var lastPositionText: String? = null
@@ -97,6 +130,10 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
     var isOffline: Boolean = false
         private set
     private var playerController: MediaController? = null
+
+    val binding get() = _binding!!
+
+    private val activity get() = context as AbstractPlayerHostActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +145,9 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
         BackgroundHelper.startMediaService(
             requireContext(),
             if (isOffline) OfflinePlayerService::class.java else OnlinePlayerService::class.java,
+            // the session was stopped from outside: close the screen. killFragment() clears
+            // playerController before its own release, so that one is skipped here.
+            onDisconnected = { if (_binding != null && playerController === it) killFragment(false) },
         ) {
             if (_binding == null) {
                 it.sendCustomCommand(AbstractPlayerService.stopServiceCommand, Bundle.EMPTY)
@@ -324,13 +364,18 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
         viewModel.isFullscreen.value = false
         binding.playerMotionLayout.transitionToEnd()
+        // removed before the transition ends: clear the dim behind the player here
+        activity.minimizePlayerContainerLayout()
         activity.supportFragmentManager.commit {
             remove(this@AudioPlayerFragment)
         }
     }
 
-    fun playNextVideo(videoId: String) {
-        playerController?.navigateVideo(videoId)
+    /** Returns false when this screen has no live player left to play [videoId]. */
+    fun playNextVideo(videoId: String, playerData: PlayerData? = null): Boolean {
+        val controller = playerController?.takeIf { it.isConnected } ?: return false
+        controller.navigateVideo(videoId, playerData)
+        return true
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -454,15 +499,6 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
         }, delayMs)
     }
 
-    private fun scheduleChapterIndexUpdate(delayMs: Long) {
-        if (chapterIndexUpdateScheduled || !isPolling) return
-        chapterIndexUpdateScheduled = true
-        handler.postDelayed({
-            chapterIndexUpdateScheduled = false
-            updateChapterIndex()
-        }, delayMs)
-    }
-
     /**
      * Update the position, duration and text views belonging to the seek bar
      */
@@ -576,6 +612,10 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
             }
             .show(childFragmentManager)
     }
+    // endregion
+
+    // region Player Gestures
+    private lateinit var audioHelper: AudioHelper
 
     override fun onSwipe(distanceY: Float) {
         if (!PlayerHelper.swipeGestureEnabled) return
@@ -614,27 +654,17 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
         binding.volumeTextView.text = "${bar.progress.normalize(0, bar.max, 0, 100)}"
     }
-
-    private fun updateChapterIndex() {
-        if (_binding == null) return
-
-        scheduleChapterIndexUpdate(
-            if (playerController?.isPlaying == true) CHAPTER_UPDATE_INTERVAL_PLAYING
-            else CHAPTER_UPDATE_INTERVAL_PAUSED
-        )
-
-        val currentIndex =
-            PlayerHelper.getCurrentChapterIndex(
-                playerController?.currentPosition ?: return,
-                chaptersModel.chapters
-            )
-        chaptersModel.currentChapterIndex.updateIfChanged(currentIndex ?: return)
-    }
+    // endregion
 
     companion object {
+        // region Background Playback
         private const val SEEK_BAR_UPDATE_INTERVAL_PLAYING = 200L
         private const val SEEK_BAR_UPDATE_INTERVAL_PAUSED = 500L
+        // endregion
+
+        // region Chapters
         private const val CHAPTER_UPDATE_INTERVAL_PLAYING = 200L
         private const val CHAPTER_UPDATE_INTERVAL_PAUSED = 1000L
+        // endregion
     }
 }

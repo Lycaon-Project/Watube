@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region About -->
 <!--
   About screen (mockup "A propos"): green .aboutcard header carrying the version
   read from BuildConfig, then a single .setcard with every entry - the four rows
@@ -209,3 +210,4 @@
     </LinearLayout>
 
 </ScrollView>
+<!-- endregion -->

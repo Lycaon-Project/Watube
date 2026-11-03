@@ -6,6 +6,7 @@ import com.watube.yard.api.obj.Subscription
 import com.watube.yard.db.DatabaseHolder.Database
 import com.watube.yard.db.obj.LocalSubscription
 
+// region Subscriptions
 class PipedLocalSubscriptionsRepository : SubscriptionsRepository {
     override suspend fun subscribe(
         channelId: String, name: String, uploaderAvatar: String?, verified: Boolean
@@ -45,3 +46,4 @@ class PipedLocalSubscriptionsRepository : SubscriptionsRepository {
         return Database.localSubscriptionDao().getAll().map { it.channelId }
     }
 }
+// endregion

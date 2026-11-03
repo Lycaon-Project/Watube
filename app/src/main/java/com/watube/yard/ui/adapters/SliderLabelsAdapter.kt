@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.databinding.SliderLabelItemBinding
 import com.watube.yard.ui.viewholders.SliderLabelViewHolder
 
+// region UI Components
 class SliderLabelsAdapter(
     private val playbackSpeeds: List<Float>,
     private val onItemClick: (Float) -> Unit
@@ -27,3 +28,4 @@ class SliderLabelsAdapter(
         }
     }
 }
+// endregion

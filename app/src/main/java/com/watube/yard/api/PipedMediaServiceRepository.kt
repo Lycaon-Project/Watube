@@ -16,11 +16,14 @@ import com.watube.yard.helpers.PreferenceHelper
 import retrofit2.HttpException
 
 open class PipedMediaServiceRepository : MediaServiceRepository {
+    // region Trends
     override fun getTrendingCategories(): List<TrendingCategory> = emptyList()
 
     override suspend fun getTrending(region: String, category: TrendingCategory): List<StreamItem> =
         api.getTrending(region)
+    // endregion
 
+    // region Video Player
     override suspend fun getStreams(videoId: String): Streams {
         return try {
             api.getStreams(videoId).also {
@@ -36,10 +39,17 @@ open class PipedMediaServiceRepository : MediaServiceRepository {
             throw Exception(errorMessage)
         }
     }
+    // endregion
 
+    // region Comments
     override suspend fun getComments(videoId: String): CommentsPage =
         api.getComments(videoId)
 
+    override suspend fun getCommentsNextPage(videoId: String, nextPage: String): CommentsPage =
+        api.getCommentsNextPage(videoId, nextPage)
+    // endregion
+
+    // region SponsorBlock
     override suspend fun getSegments(
         videoId: String,
         category: List<String>,
@@ -49,13 +59,14 @@ open class PipedMediaServiceRepository : MediaServiceRepository {
         JsonHelper.json.encodeToString(category),
         JsonHelper.json.encodeToString(actionType)
     )
+    // endregion
 
+    // region DeArrow
     override suspend fun getDeArrowContent(videoId: String): DeArrowContent? =
         api.getDeArrowContent(videoId)[videoId]
+    // endregion
 
-    override suspend fun getCommentsNextPage(videoId: String, nextPage: String): CommentsPage =
-        api.getCommentsNextPage(videoId, nextPage)
-
+    // region Search
     override suspend fun getSearchResults(searchQuery: String, filter: String): SearchResult =
         api.getSearchResults(searchQuery, filter)
 
@@ -67,7 +78,9 @@ open class PipedMediaServiceRepository : MediaServiceRepository {
 
     override suspend fun getSuggestions(query: String): List<String> =
         api.getSuggestions(query)
+    // endregion
 
+    // region Channels
     override suspend fun getChannel(channelId: String): Channel =
         api.getChannel(channelId)
 
@@ -79,13 +92,17 @@ open class PipedMediaServiceRepository : MediaServiceRepository {
 
     override suspend fun getChannelNextPage(channelId: String, nextPage: String): Channel =
         api.getChannelNextPage(channelId, nextPage)
+    // endregion
 
+    // region Playlists
     override suspend fun getPlaylist(playlistId: String): Playlist =
         api.getPlaylist(playlistId)
 
     override suspend fun getPlaylistNextPage(playlistId: String, nextPage: String): Playlist =
         api.getPlaylistNextPage(playlistId, nextPage)
+    // endregion
 
+    // region Piped Instances
     companion object {
         val apiUrl get() = PreferenceHelper.getString(PreferenceKeys.FETCH_INSTANCE, PIPED_API_URL)
 
@@ -93,4 +110,5 @@ open class PipedMediaServiceRepository : MediaServiceRepository {
             RetrofitInstance.buildRetrofitInstance<PipedApi>(apiUrl)
         }
     }
+    // endregion
 }

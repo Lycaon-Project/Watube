@@ -54,7 +54,6 @@
     <string name="fail">Failed :(</string>
     <string name="about">About</string>
     <string name="changeLanguage">Language</string>
-    <string name="systemLanguage">System</string>
     <string name="systemDefault">System</string>
     <string name="lightTheme">Light</string>
     <string name="darkTheme">Dark</string>
@@ -89,26 +88,26 @@
     <string name="segment_skipped">Skipped segment</string>
     <string name="category_segments">Segments</string>
     <string name="category_sponsor">Sponsor</string>
-    <string name="category_sponsor_summary">Paid promotion, paid referrals and direct advertisements. Not for self-promotion or free genuine shoutouts to causes, creators, websites, and products</string>
+    <string name="category_sponsor_summary">Paid promotion and paid referrals. Not self-promotion.</string>
     <string name="category_selfpromo">Unpaid/Self Promotion</string>
-    <string name="category_selfpromo_summary">Similar to \"sponsor\" except for unpaid or self promotion. This includes sections about merchandise, donations, or info about who they collaborated with</string>
+    <string name="category_selfpromo_summary">Unpaid or self promotion: merchandise, donations, collaborations.</string>
     <string name="category_interaction">Interaction reminder</string>
-    <string name="category_interaction_summary">When there is a short reminder to like, subscribe or follow in the middle of content. If long or about something specific, it should instead be self promotion</string>
+    <string name="category_interaction_summary">A short reminder to like, subscribe or follow during the video.</string>
     <string name="category_intro">Intermission/Intro Animation</string>
-    <string name="category_intro_summary">An interval without actual content. Could be a pause, static frame, repeating animation. Should not be used for transitions containing info</string>
+    <string name="category_intro_summary">An interval without content: pause, still frame, repeated animation.</string>
     <string name="category_outro">End cards and credits</string>
     <string name="category_outro_summary">Info following the ending. Not for conclusions with info</string>
     <string name="category_filler">Filler Tangent/Jokes</string>
-    <string name="category_filler_summary">For tangential scenes added only for filler or humor not required to understand the main content of the video</string>
+    <string name="category_filler_summary">Side or joke scenes not needed to follow the video.</string>
     <string name="category_music_offtopic">Music: Non-Music Section</string>
-    <string name="category_music_offtopic_summary">Only for use in music videos. It should cover parts of the video not part of official mixes. In the end, the video should resemble the Spotify or any other mixed version as closely as possible, or reduce talking or other distractions</string>
+    <string name="category_music_offtopic_summary">Music videos: the parts that are not in the official track.</string>
     <string name="category_preview">Preview/Recap</string>
-    <string name="category_preview_summary">For segments detailing future content without additional info. If it includes clips that only appear here, this is very likely the wrong category</string>
+    <string name="category_preview_summary">A preview of upcoming content, with nothing new.</string>
     <string name="category_highlight">Show video highlight</string>
-    <string name="category_highlight_summary">Could either be the advertised title, the thumbnail or the most interesting part of the video. You can skip to it by tapping on it in the chapters section</string>
+    <string name="category_highlight_summary">The advertised or most interesting moment, reachable from the chapters.</string>
     <string name="category_exclusive_access">Exclusive Access</string>
     <string name="category_hook">Hook/Greetings</string>
-    <string name="category_hook_summary">For narrative hooks that grab the viewer\'s attention (often as the first scene) by teasing or describing events from later in the same video or future episodes in a series</string>
+    <string name="category_hook_summary">A teaser of a later moment, to catch your attention.</string>
     <string name="license">License</string>
     <string name="app_font">App font</string>
     <string name="font_system">System (default)</string>
@@ -192,7 +191,6 @@
     <string name="auth_instance">Authentication instance</string>
     <string name="auth_instance_summary">Use a different instance for authenticated calls</string>
     <string name="auth_instances">Choose an auth instance</string>
-    <string name="audio_video">Audio and video</string>
     <string name="fullscreen_orientation">Fullscreen orientation</string>
     <string name="aspect_ratio">Video aspect ratio</string>
     <string name="auto_rotation">Auto-rotation</string>
@@ -223,7 +221,6 @@
     <string name="rich_caption_rendering_summary">Render web captions for a more rich and customized experience</string>
     <string name="captions">Captions</string>
     <string name="none">None</string>
-    <string name="general">General</string>
     <string name="caption_settings">Captions</string>
     <string name="playerAudioQuality">Audio quality</string>
     <string name="worst_quality">Worst</string>
@@ -282,7 +279,7 @@
     <string name="open_source_licenses">Open-source licenses</string>
     <string name="open_source_licenses_message">Watube is released under the GPL-3.0 license. This app also bundles the following open-source libraries. Tap an entry to read its license.</string>
     <string name="watube_features">Watube features</string>
-    <string name="watube_features_message">These features are specific to Watube and are not part of the upstream code base:\n\n• Privacy hub: a single screen that groups every anti-fingerprinting switch\n• Hardening enabled by default (privacy is opt-out, not opt-in)\n• Automatic rotation of the SponsorBlock id (12h / 24h / manual)\n• Neutral region mode: the country sent for trending and home rotates through a fixed list\n• One generic User-Agent for every request: API, thumbnails, downloads and third party services\n• No SIM or carrier based country leak\n• WebView hardening: no DOM cache, no third party cookies\n• One tap reset of identifiers (SponsorBlock id + neutral region)\n• Release builds only trust system certificates, user installed CAs are debug only\n• Local Return YouTube Dislike counter</string>
+    <string name="watube_features_message">These features are specific to Watube and are not part of the upstream code base:\n\n• Privacy hub: a single screen that groups every anti-fingerprinting switch\n• Hardening enabled by default (privacy is opt-out, not opt-in)\n• Automatic rotation of the SponsorBlock id (12h / 24h / manual)\n• Neutral region: trending is requested for the United Kingdom, the same country for every user\n• One generic User-Agent for every request: API, thumbnails, downloads and third party services\n• No SIM or carrier based country leak\n• WebView hardening: no DOM cache, no third party cookies\n• One tap reset of identifiers (SponsorBlock id, WebView data)\n• Release builds only trust system certificates, user installed CAs are debug only\n• Local Return YouTube Dislike counter</string>
     <string name="delete">Delete from downloads</string>
     <string name="delete_all">All downloads will be deleted!</string>
     <string name="renamePlaylist">Rename playlist</string>
@@ -291,6 +288,7 @@
     <string name="new_videos_badge">Indicator for new videos</string>
     <string name="new_videos_badge_summary">Show a badge with the amount of new videos if there are some</string>
     <string name="skip_segment">Skip segment</string>
+    <string name="skip_segment_short">Skip</string>
     <string name="local_subscriptions">Local subscriptions</string>
     <string name="preferences">Preferences</string>
     <string name="backup_customInstances">Custom instances</string>
@@ -306,7 +304,6 @@
     <string name="queue">Queue</string>
     <string name="sb_custom_colors_summary">Toggles custom color segments for SponsorBlock segments</string>
     <string name="sb_custom_colors">Custom segment colors</string>
-    <string name="color">Color</string>
     <string name="invalid_color">Invalid color value entered!</string>
     <string name="livestreams">Livestreams</string>
     <string name="courses">Courses</string>
@@ -451,7 +448,7 @@
     <string name="automatic">Automatic</string>
     <string name="automatic_once">Automatic once</string>
     <string name="dearrow">Enable DeArrow</string>
-    <string name="dearrow_summary">Show more accurate and less sensationalist titles and thumbnails. Increases loading times</string>
+    <string name="dearrow_summary">Truer, less sensationalist titles and thumbnails. Slightly slower loading.</string>
     <string name="contribute_to_dearrow">Contribute to DeArrow</string>
     <string name="title">Title</string>
     <string name="thumbnail_time">Thumbnail time</string>
@@ -496,7 +493,7 @@
     <string name="import_format_youtube_csv" translatable="false">YouTube (CSV)</string>
     <string name="import_format_list_of_urls">List of URLs or video IDs</string>
     <string name="home_tab_content">Home tab content</string>
-    <string name="show_search_suggestions">Show search suggestions</string>
+    <string name="show_search_suggestions">Online search suggestions</string>
     <string name="audio_track_format">%1$s - %2$s</string>
     <string name="unknown_audio_language">Unknown audio language</string>
     <string name="unknown_audio_track_type">Unknown audio track type</string>
@@ -539,7 +536,7 @@
     <string name="external_download_provider">External download provider</string>
     <string name="external_download_provider_summary">Enter the package name of the app you want to use for downloading videos. Leave blank to use Watube\'s inbuilt downloader.</string>
     <string name="local_stream_extraction">Local stream extraction</string>
-    <string name="local_stream_extraction_summary">Directly fetch video playback information from YouTube without using Piped.</string>
+    <string name="local_stream_extraction_summary">Videos straight from YouTube instead of through the instance: faster, but YouTube sees your IP address.</string>
     <string name="local_ryd">Local Return Youtube Dislike extractor</string>
     <string name="local_ryd_summary">Directly fetch dislike information from https://returnyoutubedislikeapi.com</string>
     <string name="dialog_play_offline_title">A local version of this video is available.</string>
@@ -547,7 +544,7 @@
     <string name="view_count">%1$s views</string>
     <string name="delete_only_watched_videos">Only delete already watched videos</string>
     <string name="local_feed_extraction">Local feed extraction</string>
-    <string name="local_feed_extraction_summary">Directly fetch the feed from YouTube. This may be significantly slower.</string>
+    <string name="local_feed_extraction_summary">Feed straight from YouTube instead of through the instance: YouTube sees your IP address, and it can be much slower.</string>
     <string name="show_upcoming_videos">Show upcoming videos</string>
     <string name="updating_feed">Updating feed …</string>
     <string name="full_local_mode">Full local mode</string>
@@ -598,7 +595,6 @@
     <string name="tooltip_theme">Change theme</string>
     <string name="tooltip_cast">Cast</string>
     <string name="tooltip_more">More options</string>
-    <string name="toast_cast_unavailable">Cast not available</string>
     <string name="tooltip_create_playlist">Create playlist</string>
     <string name="tooltip_scroll_to_top">Scroll to top</string>
     <string name="also_clear_watch_positions">Also clear watch positions</string>
@@ -623,35 +619,45 @@
     <!-- Privacy settings -->
     <string name="privacy">Privacy</string>
     <string name="privacy_hardening">Privacy hardening</string>
-    <string name="privacy_hardening_summary">Block SIM, network and device-based fingerprinting: generic user agent, no telephony data, hardened WebView for integrity tokens</string>
+    <string name="privacy_hardening_summary">Blocks SIM, network and device fingerprinting: no telephony data, hardened WebView.</string>
     <string name="privacy_rotation_frequency">Rotation frequency</string>
-    <string name="rotation_frequency_summary">%1$s — rotates the SponsorBlock ID and the neutral region together</string>
+    <string name="private_dns">Encrypted DNS</string>
+    <string name="private_dns_summary">Site names go encrypted to the resolver. If it does not answer, nothing goes in clear.</string>
+    <string name="private_dns_resolver">DNS resolver</string>
+    <string name="private_dns_quad9">Quad9 · Switzerland, no logs</string>
+    <string name="private_dns_mullvad">Mullvad · Sweden, no logs, no filtering</string>
+    <string name="private_dns_cloudflare">Cloudflare · fastest, United States</string>
+    <string name="private_dns_dns4eu">DNS4EU · European Union, no filtering</string>
+    <string name="rotation_frequency_summary">%1$s — rotates the SponsorBlock ID</string>
     <string name="rotation_every_12_hours">Every 12 hours</string>
     <string name="rotation_every_24_hours">Every 24 hours</string>
     <string name="rotation_manual">Manual only</string>
     <!-- legacy keys kept so translations in values-* stay valid; superseded by the rotation frequency -->
     <string name="privacy_neutral_region">Neutral region</string>
-    <string name="privacy_neutral_region_summary">Request trending and home feeds from a neutral country instead of your device country, so backends never learn where you live. The country rotates at the frequency selected above. Changes the content you see.</string>
-    <string name="privacy_neutral_region_current">Country in use: %1$s</string>
+    <string name="privacy_neutral_region_summary">Trending is requested for a neutral country, not yours. Your IP stays visible.</string>
     <string name="current_sponsorblock_id">Current SponsorBlock ID</string>
-    <string name="sb_user_id_info">Submissions to SponsorBlock use a random, rotating identifier instead of a persistent device ID.</string>
+    <string name="sb_user_id_info">A random, changing identifier, never the device\'s.</string>
+    <string name="privacy_neutral_region_country">Neutral country</string>
+    <string name="privacy_neutral_region_country_summary">%1$s. The United Kingdom is the country shared by every user: any other one sets you apart from them.</string>
     <string name="privacy_identifiers">Identifiers</string>
     <string name="privacy_category_protection">Anti-tracking protection</string>
+    <string name="privacy_category_screen">Screen and lock</string>
+    <string name="sb_colors_category">Segment colors</string>
     <string name="privacy_category_data">Browsing data</string>
     <string name="reset_identifiers">Reset identifiers and WebView data</string>
-    <string name="reset_identifiers_summary">Delete the SponsorBlock ID, WebView cookies and website storage used for integrity tokens</string>
-    <string name="reset_identifiers_dialog_message">This resets your SponsorBlock submission ID and clears all WebView cookies and storage. Integrity tokens may need to be re-generated on the next video playback.</string>
+    <string name="reset_identifiers_summary">Clears the SponsorBlock ID, WebView cookies and storage, the HTTP cache.</string>
+    <string name="reset_identifiers_dialog_message">This resets your SponsorBlock submission ID, clears the WebView cookies and storage and the HTTP cache, and closes the open connections.</string>
     <string name="sponsorblock_id_rotated">SponsorBlock ID reset</string>
     <string name="dialog_reset">Reset</string>
 
     <!-- Tourist mode -->
     <string name="tourist_mode">Tourist mode</string>
-    <string name="tourist_mode_summary">No trace kept on the device: history, searches and playback positions are not recorded.</string>
+    <string name="tourist_mode_summary">No history, searches or playback positions are recorded.</string>
     <string name="tourist_mode_clear_dialog">Turning on tourist mode immediately and permanently deletes your watch history, recent searches and playback positions. Continue?</string>
 
     <!-- Watch history retention -->
     <string name="history_retention_title">Watch history: automatic retention</string>
-    <string name="history_retention_summary">History entries older than the selected period are deleted automatically, at every app start and after each new entry.</string>
+    <string name="history_retention_summary">History older than the chosen period is deleted automatically.</string>
     <string name="history_retention_never">Never</string>
     <string name="history_retention_days_1">1 day</string>
     <string name="history_retention_days_7">7 days</string>
@@ -686,7 +692,6 @@
     <string name="watube_shortcut_downloads">offline</string>
     <string name="watube_shortcut_privacy_title">Private data</string>
     <string name="watube_shortcut_privacy">never sent</string>
-    <string name="watube_shortcut_privacy_toast">Your data stays on this device</string>
 
     <!-- Solar search pane (.slab labels, .noresult empty state) -->
     <string name="watube_search_recent">Recents</string>
@@ -710,9 +715,192 @@
     <string name="about_privacy">Privacy policy</string>
     <string name="about_report_issue">Report an issue</string>
     <string name="about_mission">Why Watube</string>
-    <string name="about_header_subtitle">Independent LibreTube fork · Local mode by default · optional Piped instances</string>
+    <string name="about_header_subtitle">Checking for updates keeps the app reliable and brings you the latest fixes.</string>
 <string name="search_back">Back</string>
 <string name="search_clear">Clear</string>
 <string name="downloads_search_hint">Search downloads</string>
 <string name="playlist_search_hint">Search in playlist</string>
+    <string name="watube_hide_lockscreen">Hide on the lock screen</string>
+    <string name="watube_hide_lockscreen_summary">Playback, downloads and new videos stay off the lock screen.</string>
+    <string name="watube_hide_recents">Hide from recent apps</string>
+    <string name="watube_hide_recents_summary">The recent apps screen shows a blank card instead of what you were watching.</string>
+    <string name="watube_block_screenshots">Block screenshots</string>
+    <string name="watube_block_screenshots_summary">Hides Watube from screenshots, recordings and recent apps.</string>
+    <string name="watube_search_suggestions_summary">On: what you type goes to YouTube or Piped. Off: suggestions from your history.</string>
+    <!-- Stolm: Watube's own Cast -->
+    <string name="stolm_picker_title">Cast to a TV</string>
+    <string name="stolm_searching">Looking for Cast devices on this Wi-Fi…</string>
+    <string name="stolm_empty">Nothing found yet. The TV and this phone must be on the same Wi-Fi network.</string>
+    <string name="stolm_privacy_note">Watube only talks to devices that prove they are genuine. The video goes through your phone: the TV never contacts YouTube, but it loads Google’s player itself.</string>
+    <string name="stolm_connecting">Connecting to %1$s…</string>
+    <string name="stolm_casting_to">Casting to %1$s</string>
+    <string name="stolm_volume">TV volume</string>
+    <string name="stolm_stop">Stop casting</string>
+    <string name="stolm_wait_for_video">Wait for the video to load, then try again</string>
+    <string name="stolm_no_stream">This video can’t be cast: YouTube offers no stream the TV can read</string>
+    <string name="stolm_not_genuine">This device could not prove it is a genuine Cast device. Nothing was sent to it.</string>
+    <string name="stolm_unreachable">Can’t connect to the TV. Check that it is on and on the same Wi-Fi.</string>
+    <string name="stolm_launch_failed">The TV didn’t start its player. Try again.</string>
+    <string name="stolm_playback_failed">The TV couldn’t play this video. It is back on your phone.</string>
+    <string name="stolm_tv_cannot_reach_phone">The TV couldn’t reach your phone. Your Wi-Fi may keep devices apart.</string>
+    <string name="stolm_ended">Casting ended. The video is back on your phone.</string>
+    <string name="stolm_local_network_needed">To find your TV, Watube needs access to the devices of your local network.</string>
+    <string name="stolm_allow_local_network">Allow</string>
+    <!-- New video notifications -->
+    <plurals name="new_videos_digest">
+        <item quantity="one">%1$d new video from your subscriptions</item>
+        <item quantity="other">%1$d new videos from your subscriptions</item>
+    </plurals>
+    <plurals name="new_videos_digest_channels">
+        <item quantity="one">From %1$d channel</item>
+        <item quantity="other">From %1$d channels</item>
+    </plurals>
+    <string name="new_videos_more">+%1$d more</string>
+    <string name="new_videos_hidden">New videos from your subscriptions</string>
+    <!-- Subscriptions header -->
+    <string name="subs_manage">Manage</string>
+    <string name="subs_manage_description">Manage subscribed channels</string>
+    <string name="subs_sort_filter">Sort and filter</string>
+    <string name="subs_up_to_date">up to date</string>
+    <string name="subs_badge_overflow" translatable="false">%1$d+</string>
+    <string name="subs_only_channel">Only %1$s</string>
+    <plurals name="subs_channel_count">
+        <item quantity="one">%d channel</item>
+        <item quantity="other">%d channels</item>
+    </plurals>
+    <plurals name="subs_new_count">
+        <item quantity="one">%d new</item>
+        <item quantity="other">%d new</item>
+    </plurals>
+    <plurals name="subs_rail_new_videos">
+        <item quantity="one">%1$s, %2$d new video</item>
+        <item quantity="other">%1$s, %2$d new videos</item>
+    </plurals>
+    <string name="subs_rail_action_show">show only this channel</string>
+    <string name="subs_rail_action_open">open the channel</string>
+    <string name="privacy_tab">Dashboard</string>
+    <string name="navbar_max_tabs">Up to %1$d tabs besides Dashboard and Settings</string>
+    <!-- Privacy tab -->
+    <string name="privacy_section_device">On this phone</string>
+    <string name="privacy_network_empty">No request since the app opened.</string>
+    <plurals name="privacy_requests">
+        <item quantity="one">%d request</item>
+        <item quantity="other">%d requests</item>
+    </plurals>
+    <plurals name="privacy_refused">
+        <item quantity="one">%d refused</item>
+        <item quantity="other">%d refused</item>
+    </plurals>
+    <string name="privacy_dashboard_intro">What Watube does for you, in figures. Everything shown here stays on this phone.</string>
+    <string name="privacy_protections_short">protections</string>
+    <string name="privacy_protections_description">%1$d of %2$d protections on</string>
+    <string name="privacy_encrypted_label">of exchanges encrypted</string>
+    <string name="privacy_stat_requests">Requests</string>
+    <string name="privacy_stat_requests_caption">since the app opened</string>
+    <string name="privacy_stat_servers">Servers</string>
+    <string name="privacy_stat_servers_caption">contacted</string>
+    <string name="privacy_stat_skipped">Sponsors skipped</string>
+    <string name="privacy_stat_skipped_caption">with SponsorBlock</string>
+    <string name="privacy_stat_saved">Time saved</string>
+    <string name="privacy_stat_saved_caption">without sponsors</string>
+    <string name="privacy_stat_trackers">Trackers removed</string>
+    <string name="privacy_stat_trackers_caption">from links</string>
+    <string name="privacy_stat_network">Addresses protected</string>
+    <string name="privacy_stat_network_caption">refused or in https</string>
+    <string name="privacy_chart_destinations">Where exchanges go</string>
+    <string name="privacy_cat_youtube">YouTube</string>
+    <string name="privacy_cat_services">SponsorBlock services</string>
+    <string name="privacy_cat_updates">Updates</string>
+    <string name="privacy_cat_other">Other</string>
+    <string name="privacy_chart_activity">Live activity</string>
+    <string name="privacy_activity_caption">Requests every 10 seconds, last 5 minutes</string>
+    <string name="privacy_activity_peak">Peak: %1$d</string>
+    <string name="privacy_activity_description">Live activity, peak of %1$d requests in 10 seconds</string>
+    <string name="privacy_chart_hosts">Most contacted servers</string>
+    <string name="privacy_stat_history">History</string>
+    <string name="privacy_stat_history_caption">videos watched</string>
+    <string name="privacy_stat_searches">Searches</string>
+    <string name="privacy_stat_searches_caption">kept</string>
+    <string name="privacy_stat_positions">Positions</string>
+    <string name="privacy_stat_positions_caption">videos to resume</string>
+    <string name="privacy_stat_cache">Cache</string>
+    <string name="privacy_stat_cache_caption">to load faster</string>
+    <string name="privacy_duration_s">%1$d s</string>
+    <string name="privacy_duration_min">%1$d min</string>
+    <string name="privacy_duration_h">%1$d h %2$02d</string>
+    <string name="privacy_share_percent">%1$d %%</string>
+    <plurals name="privacy_refused_requests">
+        <item quantity="one">%d request blocked</item>
+        <item quantity="other">%d requests blocked</item>
+    </plurals>
+    <plurals name="privacy_requests_unit">
+        <item quantity="one">request</item>
+        <item quantity="other">requests</item>
+    </plurals>
+    <string name="privacy_protections_ratio" translatable="false">%1$d/%2$d</string>
+    <string name="privacy_tile_description">%1$s: %2$s, %3$s</string>
+    <string name="clear_everything">Clear everything now</string>
+    <string name="clear_everything_summary">Clears history, searches, positions, caches and session; the rest is kept.</string>
+    <string name="clear_everything_dialog">Your watch and search history, playback positions, caches and account session will be deleted. Subscriptions, playlists, downloads and settings stay. This cannot be undone.</string>
+    <string name="clear_everything_confirm">Clear everything</string>
+    <string name="clear_everything_done">Everything was cleared</string>
+    <string name="app_lock">Lock the app</string>
+    <string name="app_lock_summary">Asks for your fingerprint, face or screen lock code to open Watube.</string>
+    <string name="app_lock_delay">Lock after</string>
+    <string name="app_lock_delay_now">Immediately</string>
+    <string name="app_lock_delay_30s">30 seconds in the background</string>
+    <string name="app_lock_delay_1min">1 minute in the background</string>
+    <string name="app_lock_delay_5min">5 minutes in the background</string>
+    <string name="app_lock_prompt_title">Unlock Watube</string>
+    <string name="app_lock_prompt_subtitle">Confirm it is you</string>
+    <string name="app_lock_locked">Watube is locked</string>
+    <string name="app_lock_locked_summary">Unlock to see your videos.</string>
+    <string name="app_lock_unlock">Unlock</string>
+    <string name="app_lock_unavailable">Set a screen lock on your phone first.</string>
+    <string name="backup_protect_title">Protect the backup</string>
+    <string name="backup_protect_message">The backup is always encrypted. Choose what will open it.</string>
+    <string name="backup_protect_password_summary">You choose it.</string>
+    <string name="backup_protect_code">Recovery code</string>
+    <string name="backup_protect_code_summary">Watube creates it, you write it down.</string>
+    <string name="backup_password_confirm">Confirm the password</string>
+    <string name="backup_password_helper">At least %d characters</string>
+    <string name="backup_password_too_short">At least %d characters</string>
+    <string name="backup_password_mismatch">The two passwords differ</string>
+    <string name="backup_password_manager_note">Tip: a password manager can create and remember it for you. It is more comfortable day to day.</string>
+    <string name="backup_code_warning">Watube will create a code to write down. Without it, the backup cannot be opened on any phone.</string>
+    <string name="backup_continue">Continue</string>
+    <string name="recovery_code_title">Your recovery code</string>
+    <string name="recovery_code_message">Write it down, or save it in your password manager: it will never be shown again.</string>
+    <string name="recovery_code_copy">Copy the code</string>
+    <string name="recovery_code_label">Watube recovery code</string>
+    <string name="recovery_code_noted">I have written this code down</string>
+    <string name="backup_create">Create the backup</string>
+    <string name="backup_unlock_title">Protected backup</string>
+    <string name="backup_unlock_password_message">Enter the password chosen when the backup was made.</string>
+    <string name="backup_unlock_code_message">Enter the recovery code written down when the backup was made.</string>
+    <string name="backup_unlock_open">Open</string>
+    <string name="backup_unlock_opening">Opening the backup</string>
+    <string name="backup_unlock_wrong_password">Wrong password</string>
+    <string name="backup_unlock_wrong_code">Wrong code</string>
+    <string name="backup_unreadable">This file is not a readable Watube backup.</string>
+    <string name="backup_unencrypted_title">Unencrypted backup</string>
+    <string name="backup_unencrypted_message">This file was made by an older version of Watube, without encryption: anyone who could reach it may have read or changed it. Only restore it if you know it comes from you.</string>
+    <string name="export_download">Export the file</string>
+    <string name="download_export_choose">Which file to export?</string>
+    <string name="download_export_unfinished">This download is not finished</string>
+    <string name="download_exported">File exported. It is no longer encrypted: keep it somewhere safe.</string>
+    <string name="download_export_failed">Could not export the file</string>
+    <string name="download_encrypt_no_space">Not enough free space to finish the download: free some up, it will be finished on the next start</string>
+    <string name="download_no_space">Not enough free space to go on with the download</string>
+    <string name="external_link_title">Open an external link</string>
+    <string name="external_link_destination">Destination: %1$s</string>
+    <string name="external_link_secure">Encrypted connection (https)</string>
+    <string name="external_link_unencrypted">Unencrypted link (http): what you send and receive there can be read on the network</string>
+    <string name="external_link_lookalike">This name uses letters of other alphabets and may imitate a known site. It reads: %1$s</string>
+    <string name="external_link_open">Open</string>
+    <string name="external_link_copy">Copy link</string>
+    <plurals name="external_link_trackers">
+        <item quantity="one">%1$d tracker removed: %2$s</item>
+        <item quantity="other">%1$d trackers removed: %2$s</item>
+    </plurals>
 </resources>

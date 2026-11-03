@@ -3,6 +3,7 @@ package com.watube.yard.ui.extensions
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 
+// region UI Components
 fun TextView.setDrawables(
     start: Int? = null,
     top: Int? = null,
@@ -16,3 +17,4 @@ fun TextView.setDrawables(
         bottom?.let { AppCompatResources.getDrawable(context, it) }
     )
 }
+// endregion

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.watube.yard.db.obj.WatchHistoryItem
 
+// region Watch History
 @Dao
 interface WatchHistoryDao {
     @Query("SELECT * FROM watchHistoryItem")
@@ -30,9 +31,6 @@ interface WatchHistoryDao {
     @Delete
     suspend fun delete(watchHistoryItem: WatchHistoryItem)
 
-    @Query("SELECT * FROM watchHistoryItem LIMIT 1 OFFSET 0")
-    suspend fun getOldest(): WatchHistoryItem
-
     @Query("DELETE FROM watchHistoryItem WHERE videoId = :id")
     suspend fun deleteByVideoId(id: String)
 
@@ -42,3 +40,4 @@ interface WatchHistoryDao {
     @Query("DELETE FROM watchHistoryItem WHERE watchedAt > 0 AND watchedAt < :timestamp")
     suspend fun deleteOlderThan(timestamp: Long)
 }
+// endregion

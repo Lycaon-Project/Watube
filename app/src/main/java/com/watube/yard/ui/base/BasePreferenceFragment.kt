@@ -14,10 +14,12 @@ import com.watube.yard.R
 import com.watube.yard.databinding.DialogTextPreferenceBinding
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.preferences.EditNumberPreference
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.preferences.PreferenceCards
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Settings
 /**
- * PreferenceFragmentCompat using the [MaterialAlertDialogBuilder] instead of the old dialog builder
+ * PreferenceFragmentCompat using the [SecureAlertDialogBuilder] instead of the old dialog builder
  */
 abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
@@ -28,6 +30,9 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // the rows of each category in a card, like the settings hub
+        setDivider(null)
+        listView.addItemDecoration(PreferenceCards(requireContext()))
         // add bottom padding to the list, to ensure that the last item is not overlapped by the
         // system bars. Relative to the initial padding: insets are dispatched again on every
         // rotation / bar change, and adding to the current padding made it grow each time.
@@ -43,12 +48,12 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
         when (preference) {
             /**
-             * Show a [MaterialAlertDialogBuilder] when the preference is a [ListPreference]
+             * Show a [SecureAlertDialogBuilder] when the preference is a [ListPreference]
              */
             is ListPreference -> {
                 // get the index of the previous selected item
                 val prefIndex = preference.entryValues.indexOf(preference.value)
-                MaterialAlertDialogBuilder(requireContext())
+                SecureAlertDialogBuilder(requireContext())
                     .setTitle(preference.title)
                     .setSingleChoiceItems(preference.entries, prefIndex) { dialog, index ->
                         // get the new ListPreference value
@@ -68,7 +73,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
                 val selectedItems = preference.entryValues.map {
                     preference.values.contains(it)
                 }.toBooleanArray()
-                MaterialAlertDialogBuilder(requireContext())
+                SecureAlertDialogBuilder(requireContext())
                     .setTitle(preference.title)
                     .setMultiChoiceItems(preference.entries, selectedItems) { _, _, _ ->
                         val newValues = preference.entryValues
@@ -92,7 +97,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
                     binding.input.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                 }
 
-                MaterialAlertDialogBuilder(requireContext())
+                SecureAlertDialogBuilder(requireContext())
                     .setTitle(preference.title)
                     .setView(binding.root)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -118,3 +123,4 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
         }
     }
 }
+// endregion

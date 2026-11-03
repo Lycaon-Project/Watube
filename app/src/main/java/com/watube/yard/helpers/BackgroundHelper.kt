@@ -29,6 +29,7 @@ import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
 
+// region Background Playback
 /**
  * Helper for starting a new Instance of the [OnlinePlayerService]
  */
@@ -80,9 +81,10 @@ object BackgroundHelper {
         context: Context,
         serviceClass: Class<*>,
         arguments: Bundle = Bundle.EMPTY,
+        onDisconnected: (MediaController) -> Unit = {},
         onController: (MediaController) -> Unit = {}
     ) {
-        connectMediaService(context, serviceClass, arguments, onController, retryCount = 0)
+        connectMediaService(context, serviceClass, arguments, onDisconnected, onController, retryCount = 0)
     }
 
     @OptIn(UnstableApi::class)
@@ -90,6 +92,7 @@ object BackgroundHelper {
         context: Context,
         serviceClass: Class<*>,
         arguments: Bundle,
+        onDisconnected: (MediaController) -> Unit,
         onController: (MediaController) -> Unit,
         retryCount: Int
     ) {
@@ -98,15 +101,20 @@ object BackgroundHelper {
             SessionToken(context, ComponentName(context, serviceClass))
 
         val controllerFuture =
-            MediaController.Builder(context, sessionToken).buildAsync()
+            MediaController.Builder(context, sessionToken)
+                // also called when the controller releases itself: callers check whose release it is
+                .setListener(object : MediaController.Listener {
+                    override fun onDisconnected(controller: MediaController) = onDisconnected(controller)
+                })
+                .buildAsync()
         Futures.addCallback(controllerFuture, object : FutureCallback<MediaController> {
-            override fun onSuccess(result: MediaController?) {
-                val controller = controllerFuture.get()
-                if (!arguments.isEmpty) controller.sendCustomCommand(
+            // Guava 33.7 annotates the result with JSpecify: it is the connected controller
+            override fun onSuccess(result: MediaController) {
+                if (!arguments.isEmpty) result.sendCustomCommand(
                     AbstractPlayerService.startServiceCommand,
                     arguments
                 )
-                onController(controller)
+                onController(result)
             }
 
             // HACK:
@@ -128,6 +136,7 @@ object BackgroundHelper {
                         context,
                         serviceClass,
                         arguments,
+                        onDisconnected,
                         onController,
                         retryCount + 1
                     )
@@ -156,23 +165,7 @@ object BackgroundHelper {
         arguments: Bundle = Bundle.EMPTY,
         onController: (MediaController) -> Unit = {}
     ) {
-        startMediaService(context, getCurrentPlayerServiceClass(), arguments, onController)
-    }
-
-
-    /**
-     * Set the volume of the currently active player
-     *
-     * @param context the current context
-     * @param volume the volume level to set (0.0 to 1.0)
-     */
-    fun setVolume(context: Context, volume: Float) {
-        startCurrentMediaService(context, Bundle.EMPTY) { controller ->
-            try {
-                controller.volume = volume.coerceIn(0f, 1f)
-            } finally {
-                controller.release()
-            }
-        }
+        startMediaService(context, getCurrentPlayerServiceClass(), arguments, onController = onController)
     }
 }
+// endregion

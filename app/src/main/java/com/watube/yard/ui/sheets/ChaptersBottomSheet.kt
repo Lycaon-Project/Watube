@@ -17,6 +17,7 @@ import com.watube.yard.ui.adapters.ChaptersAdapter
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.models.ChaptersViewModel
 
+// region Chapters
 class ChaptersBottomSheet : ExpandablePlayerSheet(R.layout.bottom_sheet) {
     private var _binding: BottomSheetBinding? = null
     private val binding get() = _binding!!
@@ -106,3 +107,4 @@ class ChaptersBottomSheet : ExpandablePlayerSheet(R.layout.bottom_sheet) {
         const val SEEK_TO_POSITION_REQUEST_KEY = "seek_to_position_request_key"
     }
 }
+// endregion

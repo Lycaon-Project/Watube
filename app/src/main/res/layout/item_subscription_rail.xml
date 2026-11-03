@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Feed -->
+<!-- One channel of the subscriptions rail: the avatar, ringed in the accent while it has
+     videos the user has not seen yet, their count, and the channel name. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/watube_rail_item_width"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="4dp">
+
+    <FrameLayout
+        android:layout_width="@dimen/watube_rail_avatar_size"
+        android:layout_height="@dimen/watube_rail_avatar_size">
+
+        <!-- the padding leaves a gap between the ring (stroke) and the picture -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/rail_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:padding="4dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearance="@style/CircleImageView"
+            app:strokeColor="?attr/colorOutlineVariant"
+            app:strokeWidth="2dp" />
+
+        <TextView
+            android:id="@+id/rail_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/watube_rail_badge"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:minWidth="20dp"
+            android:paddingHorizontal="5dp"
+            android:textColor="?attr/colorOnPrimary"
+            android:textFontWeight="800"
+            android:textSize="11sp"
+            android:visibility="gone"
+            tools:text="3"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/rail_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:importantForAccessibility="no"
+        android:maxLines="1"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        tools:text="Linus Tech Tips" />
+
+</LinearLayout>
+<!-- endregion -->

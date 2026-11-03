@@ -3,6 +3,7 @@ package com.watube.yard.obj
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+// region Stats for Nerds
 @Parcelize
 data class VideoStats(
     val videoId: String,
@@ -10,3 +11,4 @@ data class VideoStats(
     var videoQuality: String,
     var audioInfo: String
 ) : Parcelable
+// endregion

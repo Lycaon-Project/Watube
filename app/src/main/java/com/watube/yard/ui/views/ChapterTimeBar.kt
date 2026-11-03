@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.marginLeft
@@ -15,6 +12,7 @@ import androidx.media3.common.util.UnstableApi
 import com.watube.yard.api.obj.ChapterSegment
 import com.watube.yard.extensions.dpToPx
 
+// region Chapters
 /**
  * TimeBar that displays chapters as breaks in the progress bar.
  */
@@ -32,13 +30,7 @@ class ChapterTimeBar(
     // reused on every draw, the time bar redraws while the video plays
     private val chapterRect = Rect()
 
-    private val eraserPaint = Paint().apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            blendMode = BlendMode.CLEAR
-        } else {
-            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        }
-    }
+    private val eraserPaint = Paint().apply { blendMode = BlendMode.CLEAR }
 
     override fun onDraw(canvas: Canvas) {
         // an offscreen layer is only needed to erase the chapter breaks: skipping it when
@@ -85,3 +77,4 @@ class ChapterTimeBar(
         this.chapters = chapters
     }
 }
+// endregion

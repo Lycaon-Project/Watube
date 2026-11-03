@@ -17,7 +17,7 @@ import com.watube.yard.ui.adapters.BottomSheetAdapter
 import kotlinx.coroutines.launch
 import com.watube.yard.ui.extensions.onSystemInsets
 
-
+// region UI Components
 open class BaseBottomSheet(@LayoutRes layoutResId: Int = R.layout.bottom_sheet) : ExpandedBottomSheet(layoutResId) {
 
     private var title: String? = null
@@ -25,6 +25,13 @@ open class BaseBottomSheet(@LayoutRes layoutResId: Int = R.layout.bottom_sheet) 
     private lateinit var listener: (index: Int) -> Unit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // restored by the system after the screen was recreated (rotation, theme): its items and
+        // their action belonged to the screen that is gone, nothing is left to show
+        if (!::items.isInitialized) {
+            dismissAllowingStateLoss()
+            return
+        }
+
         val binding = BottomSheetBinding.bind(view)
 
         if (title != null) {
@@ -83,3 +90,4 @@ open class BaseBottomSheet(@LayoutRes layoutResId: Int = R.layout.bottom_sheet) 
         private val titleMargin = 24f.dpToPx()
     }
 }
+// endregion

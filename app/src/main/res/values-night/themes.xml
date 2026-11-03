@@ -10,6 +10,13 @@
         <item name="switchPreferenceCompatStyle">
             @style/Preference.SwitchPreferenceCompat.Material3
         </item>
+        <!-- the settings pages share the look of the settings hub (watube_preference) -->
+        <item name="preferenceStyle">@style/Preference.Watube</item>
+        <item name="dialogPreferenceStyle">@style/Preference.Watube.Dialog</item>
+        <item name="editTextPreferenceStyle">@style/Preference.Watube.EditText</item>
+        <item name="preferenceScreenStyle">@style/Preference.Watube.Screen</item>
+        <item name="preferenceCategoryStyle">@style/Preference.Watube.Category</item>
+        <item name="seekBarPreferenceStyle">@style/Preference.Watube.SeekBar</item>
 
         <item name="snackbarStyle">@style/snackBarStyle</item>
 

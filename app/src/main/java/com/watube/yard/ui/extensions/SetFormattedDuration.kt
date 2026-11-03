@@ -4,6 +4,7 @@ import android.text.format.DateUtils
 import android.widget.TextView
 import com.watube.yard.R
 
+// region UI Components
 fun TextView.setFormattedDuration(duration: Long, isShort: Boolean?, uploadDate: Long) {
     this.text = when {
         isShort == true -> context.getString(R.string.yt_shorts)
@@ -12,3 +13,4 @@ fun TextView.setFormattedDuration(duration: Long, isShort: Boolean?, uploadDate:
         else -> DateUtils.formatElapsedTime(duration)
     }
 }
+// endregion

@@ -7,10 +7,10 @@ import androidx.media3.datasource.TransferListener
 import androidx.media3.exoplayer.analytics.PlayerId
 import androidx.media3.exoplayer.source.chunk.ChunkSource
 import androidx.media3.exoplayer.trackselection.ExoTrackSelection
-import androidx.media3.exoplayer.upstream.CmcdConfiguration
 import com.watube.yard.player.manifest.SabrManifest
 import com.watube.yard.player.parser.SabrClient
 
+// region SABR Streaming
 /** A [ChunkSource] for Sabr streams.  */
 @UnstableApi
 interface SabrChunkSource : ChunkSource {
@@ -29,7 +29,6 @@ interface SabrChunkSource : ChunkSource {
          * @param transferListener The transfer listener which should be informed of any data transfers.
          * May be null if no listener is available.
          * @param playerId The [PlayerId] of the player using this chunk source.
-         * @param cmcdConfiguration The [CmcdConfiguration] for this chunk source.
          * @return The created [SabrChunkSource].
          */
         fun createSabrChunkSource(
@@ -40,8 +39,7 @@ interface SabrChunkSource : ChunkSource {
             trackType: @TrackType Int,
             elapsedRealtimeOffsetMs: Long,
             transferListener: TransferListener?,
-            playerId: PlayerId,
-            cmcdConfiguration: CmcdConfiguration?
+            playerId: PlayerId
         ): SabrChunkSource?
 
         /**
@@ -70,3 +68,4 @@ interface SabrChunkSource : ChunkSource {
      */
     fun updateTrackSelection(trackSelection: ExoTrackSelection?)
 }
+// endregion

@@ -12,10 +12,11 @@ import com.watube.yard.db.obj.CustomInstance
 import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.ui.models.InstancesModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.net.MalformedURLException
 
+// region Piped Instances
 class CreateCustomInstanceDialog : DialogFragment() {
     val viewModel: InstancesModel by activityViewModels()
 
@@ -37,7 +38,7 @@ class CreateCustomInstanceDialog : DialogFragment() {
             }
         }
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.customInstance)
             .setView(binding.root)
             .setPositiveButton(R.string.addInstance, null)
@@ -61,3 +62,4 @@ class CreateCustomInstanceDialog : DialogFragment() {
             }
     }
 }
+// endregion

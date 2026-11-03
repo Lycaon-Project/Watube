@@ -12,11 +12,72 @@
         <trust-anchors>
             <certificates src="system" />
             <!-- Trusted for diagnostics only, never in release -->
+            <!-- overridePins: the inspection proxy's certificate is accepted for the pinned
+                 services too, the pins still apply to every other authority -->
             <certificates
+                overridePins="true"
                 src="user"
                 tools:ignore="AcceptsUserCertificates" />
         </trust-anchors>
+        <!-- same line as the main config; Android leaves it out for user CAs (the proxy) -->
+        <certificateTransparency enabled="true" />
     </base-config>
+
+    <!--
+      Third party services: on top of TLS 1.3, their certificate must come from one of the
+      authorities they actually use (pinned public keys), not from any of the ~130 authorities
+      the phone trusts. A wrongly issued or forged certificate is refused even if a trusted
+      authority signed it. The pins stop applying after their expiration date rather than
+      locking the services out for good; a release before that date renews them.
+    -->
+    <!-- SponsorBlock, DeArrow, Return YouTube Dislike, default Piped instance (Cloudflare:
+         Google Trust Services, Let's Encrypt or SSL.com) -->
+    <domain-config>
+        <domain includeSubdomains="true">ajay.app</domain>
+        <domain includeSubdomains="true">returnyoutubedislikeapi.com</domain>
+        <domain includeSubdomains="true">kavin.rocks</domain>
+        <pin-set expiration="2027-12-31">
+            <!-- GTS Root R1, R2, R3, R4 and GlobalSign Root CA (cross-signs R4) -->
+            <pin digest="SHA-256">hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc=</pin>
+            <pin digest="SHA-256">Vfd95BwDeSQo+NUYxVEEIlvkOlWY2SalKK1lPhzOx78=</pin>
+            <pin digest="SHA-256">QXnt2YHvdHR3tJYmQIr0Paosp6t/nggsEGD4QJZ3Q0g=</pin>
+            <pin digest="SHA-256">mEflZT5enoR1FuXLgYYGqnVEoZvmf9c2bVBpiOjYQ0c=</pin>
+            <pin digest="SHA-256">K87oWBWM9UZfyddvDfoxL+8lpNyoUB2ptGtn0fv6G2Q=</pin>
+            <!-- ISRG Root X1, X2, YR, YE (Let's Encrypt) -->
+            <pin digest="SHA-256">C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=</pin>
+            <pin digest="SHA-256">diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=</pin>
+            <pin digest="SHA-256">fk6IOKit1ild5647BH06ujSIq5XbCgqlbYl6ANhhi88=</pin>
+            <pin digest="SHA-256">sCkq5UWXjg+7mKu9lMhhYF5bGLsy7VI/UNW3tccdR7w=</pin>
+            <!-- SSL.com Root Certification Authority RSA, ECC -->
+            <pin digest="SHA-256">0cRTd+vc1hjNFlHcLgLCHXUeWqn80bNDH/bs9qMTSPo=</pin>
+            <pin digest="SHA-256">oyD01TTXvpfBro3QSZc1vIlcMjrdLTiL/M9mLCPX+Zo=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- Update check and download (GitHub: Sectigo, formerly DigiCert; release files on
+         Let's Encrypt) -->
+    <domain-config>
+        <domain includeSubdomains="true">github.com</domain>
+        <domain includeSubdomains="true">githubusercontent.com</domain>
+        <pin-set expiration="2027-12-31">
+            <!-- Sectigo Public Server Authentication Root E46, R46 and USERTrust ECC, RSA
+                 (cross-sign them) -->
+            <pin digest="SHA-256">sLVjNUaFYfW7n6EtgBeEpjOlcnBdNPMrZDRF36iwBdE=</pin>
+            <pin digest="SHA-256">Douxi77vs4G+Ib/BogbTFymEYq0QSFXwSgVCaZcI09Q=</pin>
+            <pin digest="SHA-256">ICGRfpgmOUXIWcQ/HXPLQTkFPEFPoDyjvH7ohhQpjzs=</pin>
+            <pin digest="SHA-256">x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=</pin>
+            <!-- DigiCert Global Root CA, G2, G3, High Assurance EV -->
+            <pin digest="SHA-256">r/mIkG3eEpVdm+u/ko/cwxzOMo1bk4TyHIlByibiA5E=</pin>
+            <pin digest="SHA-256">i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=</pin>
+            <pin digest="SHA-256">uUwZgwDOxcBXrQcntwu+kYFpkiVkOaezL0WYEZ3anJc=</pin>
+            <pin digest="SHA-256">WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=</pin>
+            <!-- ISRG Root X1, X2, YR, YE (Let's Encrypt) -->
+            <pin digest="SHA-256">C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=</pin>
+            <pin digest="SHA-256">diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=</pin>
+            <pin digest="SHA-256">fk6IOKit1ild5647BH06ujSIq5XbCgqlbYl6ANhhi88=</pin>
+            <pin digest="SHA-256">sCkq5UWXjg+7mKu9lMhhYF5bGLsy7VI/UNW3tccdR7w=</pin>
+        </pin-set>
+    </domain-config>
 
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="false">localhost</domain>

@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// region Updates
 @Serializable
 @Parcelize
 data class UpdateInfo(
@@ -12,3 +13,4 @@ data class UpdateInfo(
     val body: String,
     @SerialName("html_url") val htmlUrl: String
 ) : Parcelable
+// endregion

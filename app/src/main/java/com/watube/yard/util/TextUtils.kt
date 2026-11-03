@@ -20,11 +20,7 @@ import kotlin.time.Duration
 import kotlinx.datetime.LocalDate as KotlinLocalDate
 
 object TextUtils {
-    /**
-     * Separator used for descriptions
-     */
-    const val SEPARATOR = " • "
-
+    // region Common Utilities
     /**
      * Date time formatter which uses the [FormatStyle.MEDIUM] format style.
      */
@@ -34,6 +30,11 @@ object TextUtils {
      * Date time formatter which doesn't use any forbidden characters for file names like ':'
      */
     private val SAFE_FILENAME_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm_ss")
+
+    /**
+     * Separator used for descriptions
+     */
+    const val SEPARATOR = " • "
 
     /**
      * Localize the date from a date string, using the medium format.
@@ -96,15 +97,6 @@ object TextUtils {
         return Duration.parseOrNull(timeString)?.inWholeMilliseconds?.toFloat()?.div(1000)
     }
 
-    /**
-     * Get video id if the link is a valid youtube video link
-     */
-    fun getVideoIdFromUri(uri: Uri) = when (uri.host) {
-        "www.youtube.com", "m.youtube.com", "piped.video" -> uri.getQueryParameter("v")
-        "youtu.be" -> uri.lastPathSegment
-        else -> null
-    }
-
     fun formatRelativeDate(unixTime: Long): CharSequence {
         val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(unixTime), ZoneId.systemDefault())
         val now = LocalDateTime.now()
@@ -155,4 +147,16 @@ object TextUtils {
     fun getFileSafeTimeStampNow(): String {
         return SAFE_FILENAME_DATETIME_FORMATTER.format(LocalDateTime.now())
     }
+    // endregion
+
+    // region Deep Links
+    /**
+     * Get video id if the link is a valid youtube video link
+     */
+    fun getVideoIdFromUri(uri: Uri) = when (uri.host) {
+        "www.youtube.com", "m.youtube.com", "piped.video" -> uri.getQueryParameter("v")
+        "youtu.be" -> uri.lastPathSegment
+        else -> null
+    }
+    // endregion
 }

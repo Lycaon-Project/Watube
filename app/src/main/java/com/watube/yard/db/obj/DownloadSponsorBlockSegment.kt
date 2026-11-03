@@ -6,6 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.watube.yard.api.obj.Segment
 
+// region Downloads
 @Entity(
     tableName = "downloadSponsorBlockSegment",
     indices = [Index(value = ["videoId"], name = "index_downloadSponsorBlockSegment_videoId")],
@@ -43,3 +44,4 @@ data class DownloadSponsorBlockSegment(
         votes = votes
     )
 }
+// endregion

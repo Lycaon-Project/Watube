@@ -2,6 +2,7 @@
 // ⚠️ IMPORTANT : Le bloc plugins {} DOIT être la TOUTE PREMIÈRE instruction du fichier
 // Il ne doit PAS être à l'intérieur d'un bloc android {}, dependencies {}, ou autre
 
+// region Build
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.androidx.navigation.safeargs)
@@ -23,11 +24,11 @@ android {
 
     defaultConfig {
         applicationId = "com.watube.yard"
-        minSdk = 28
+        minSdk = 32
         targetSdk = 37
 
-        versionCode = 6210
-        versionName = "26.10.4"
+        versionCode = 6211
+        versionName = "26.11"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -42,6 +43,10 @@ android {
             // revision (commit hash / branch) out of the packaged APK.
             isDebuggable = false
             vcsInfo { include = false }
+            // 64-bit ARM only, the processor of every phone Watube targets: the other ABIs only
+            // shipped more copies of the SQLCipher library (x86 / x86_64 for emulators, 32-bit
+            // ARM for old phones), 5.3 MB of the 15.5 MB APK. Debug builds keep every ABI.
+            ndk { abiFilters += "arm64-v8a" }
             signingConfig = signingConfigs.findByName("release")?.takeIf { it.storeFile != null }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -80,6 +85,9 @@ android {
 
     packaging {
         jniLibs.excludes.add("lib/armeabi-v7a/*_neon.so")
+        // SQLCipher compressed in the APK (2.0 -> 0.97 MB), the user's choice to stay under 9 MB:
+        // Android extracts it once at install (2 MB on disk), nothing changes at run time.
+        jniLibs.useLegacyPackaging = true
         // keep the dex files compressed: on this project they are the bulk of the APK
         // (~80%), so the install/download size drops by ~21 MB at no functional cost
         dex {
@@ -89,6 +97,10 @@ android {
         // serve the full runtime / protoc), and DebugProbesKt.bin is only loaded by the
         // kotlinx-coroutines debug agent: none of them is used at runtime.
         resources.excludes += listOf(
+            // translations of Rhino's internal error messages (never shown, the English base
+            // stays) and of a BouncyCastle certificate path reviewer Watube does not use
+            "org/mozilla/javascript/resources/Messages_*.properties",
+            "org/bouncycastle/x509/CertPathReviewerMessages*.properties",
             "google/protobuf/*.proto",
             "src/google/protobuf/*.proto",
             "**/java_features_proto-descriptor-set.proto.bin",
@@ -138,6 +150,14 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment)
+    // app lock (biometric or device credential), AOSP library: no Play Services involved
+    implementation(libs.androidx.biometric)
+    // the Room database is stored encrypted, see db/DatabaseEncryption.kt
+    implementation(libs.sqlcipher.android)
+    // backups are encrypted with a key derived by Argon2id, see helpers/BackupCrypto.kt
+    implementation(libs.bouncycastle.bcprov)
+    // downloads are encrypted, see helpers/DownloadEncryption.kt
+    implementation(libs.tink.android)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.preference)
@@ -162,19 +182,12 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.session)
-
-    /* Google Cast */
-    implementation(libs.google.play.services.cast.framework) {
-        // Google's telemetry transport (Firelog uploads, with its event database, upload jobs
-        // and encoders) is not shipped at all: the few symbols Cast links against are inert
-        // stand-ins, see app/src/main/java/com/google/android/datatransport
-        exclude(group = "com.google.android.datatransport")
-    }
-    implementation(libs.androidx.mediarouter)
+    implementation(libs.androidx.media3.datasource.okhttp)
 
     /* Retrofit and Kotlinx Serialization */
     implementation(libs.square.retrofit)
     implementation(libs.logging.interceptor)
+    implementation(libs.okhttp.dnsoverhttps)
     implementation(libs.kotlinx.serialization)
     implementation(libs.kotlinx.datetime)
     implementation(libs.converter.kotlinx.serialization)
@@ -204,6 +217,13 @@ dependencies {
 
     /* Testing */
     testImplementation(libs.junit)
+
+    /* Security patches of transitive dependencies */
+    constraints {
+        implementation(libs.google.guava) {
+            because("CVE-2026-102554: Media3 still pulls a vulnerable Guava")
+        }
+    }
 }
 
 // Protobuf configuration
@@ -221,14 +241,29 @@ protobuf {
         }
     }
 }
-// Privacy guard: the release build fails when telemetry code is back in the dex, typically after
-// a library update made the obfuscated rules of proguard-rules.pro stale (re-audit them then).
+// endregion
+// region Privacy
+// Privacy guard: no proprietary Google library (Play Services, Firebase, datatransport, Play Core)
+// may be resolved, not even as a transitive dependency of something else.
+val proprietaryGoogleGroups =
+    Regex("""com\.google\.(android\.gms|firebase|android\.datatransport|android\.play)(\..+)?""")
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        check(!proprietaryGoogleGroups.matches(requested.group)) {
+            "Proprietary Google dependency refused: ${requested.group}:${requested.name}"
+        }
+    }
+}
+
+// Privacy guard: the release build fails when proprietary Google code (Play Services, Firebase,
+// datatransport) or telemetry is back in the dex, e.g. pulled in again by a dependency, or after
+// a library update made the Media3 rule of proguard-rules.pro stale (re-audit it then).
 tasks.matching { it.name == "minifyReleaseWithR8" }.configureEach {
     doLast {
         val markers = listOf(
-            "JobInfoSchedulerService", // Google datatransport (Firelog uploads)
-            "IUsageReportingService", // Cast analytics consent
-            "feature_usage_", // Cast feature usage analytics
+            "com/google/android/gms/", // Google Play Services (proprietary)
+            "com/google/firebase/", // Firebase
+            "com/google/android/datatransport/", // Google datatransport (Firelog uploads)
             "IClientTelemetryService", // Play Services client telemetry
             "createPlaybackSession" // Media3 platform diagnostics
         )
@@ -239,3 +274,4 @@ tasks.matching { it.name == "minifyReleaseWithR8" }.configureEach {
         check(found.isEmpty()) { "Telemetry code survived R8: $found, re-audit proguard-rules.pro" }
     }
 }
+// endregion

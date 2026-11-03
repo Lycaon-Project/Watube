@@ -2,60 +2,43 @@ package com.watube.yard.util
 
 import android.os.Handler
 import android.os.Looper
-import java.util.Timer
-import java.util.TimerTask
 
+// region Common Utilities
+/**
+ * Runs [onTick] on the main thread every [delayMillis] while resumed.
+ *
+ * A single handler message, no thread of its own: the former java.util.Timer started a new
+ * thread on every resume (each play after a pause) only to post the tick to the main thread.
+ * It does not start by itself: callers resume it when there is something to tick.
+ */
 class PauseableTimer(
     private val onTick: () -> Unit,
     private val delayMillis: Long = 1000L
 ) {
-    val handler: Handler = Handler(Looper.getMainLooper())
-
-    private var timer: Timer? = null
+    private val handler = Handler(Looper.getMainLooper())
     private var isRunning = false
 
-    // Note: the timer intentionally does NOT start itself. Callers (e.g. the player
-    // service) start it through resume() when there is actually something to tick,
-    // so an idle service never keeps a timer chain alive.
-
-    fun resume() {
-        // only start a single tick chain, otherwise every call would add another one
-        if (isRunning) return
-
-        if (timer == null) {
-            timer = Timer()
+    private val tick = object : Runnable {
+        override fun run() {
+            onTick()
+            handler.postDelayed(this, delayMillis)
         }
-        isRunning = true
-        scheduleNext()
     }
 
-    /**
-     * Schedule the next tick with manual re-scheduling
-     * This avoids the "catch-up" behavior of scheduleAtFixedRate when process is uncached
-     */
-    private fun scheduleNext() {
-        if (!isRunning) return
-
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                handler.post {
-                    onTick()
-                    // Re-schedule for next execution only if still running
-                    if (isRunning) {
-                        scheduleNext()
-                    }
-                }
-            }
-        }, delayMillis)
+    fun resume() {
+        // only one tick chain, otherwise every call would add another one
+        if (isRunning) return
+        isRunning = true
+        handler.postDelayed(tick, delayMillis)
     }
 
     fun pause() {
         isRunning = false
-        timer?.cancel()
-        timer = null
+        handler.removeCallbacks(tick)
     }
 
     fun destroy() {
         pause()
     }
 }
+// endregion

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.watube.yard.extensions.updateIfChanged
 
+// region Video Player
 class CommonPlayerViewModel : ViewModel() {
     val isMiniPlayerVisible = MutableLiveData(false)
     val isFullscreen = MutableLiveData(false)
@@ -15,3 +16,4 @@ class CommonPlayerViewModel : ViewModel() {
         sheetExpand.updateIfChanged(state)
     }
 }
+// endregion

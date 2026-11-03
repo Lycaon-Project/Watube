@@ -6,6 +6,7 @@ import com.watube.yard.api.obj.Subscription
 import com.watube.yard.extensions.toID
 import com.watube.yard.helpers.PreferenceHelper
 
+// region Subscriptions
 class AccountSubscriptionsRepository : SubscriptionsRepository {
     private val token get() = PreferenceHelper.getToken()
 
@@ -41,3 +42,4 @@ class AccountSubscriptionsRepository : SubscriptionsRepository {
         return getSubscriptions().map { it.url.toID() }
     }
 }
+// endregion

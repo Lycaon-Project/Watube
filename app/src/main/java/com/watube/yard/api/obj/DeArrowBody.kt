@@ -2,6 +2,7 @@ package com.watube.yard.api.obj
 
 import kotlinx.serialization.Serializable
 
+// region DeArrow
 @Serializable
 data class DeArrowBody(
     val videoID: String,
@@ -21,3 +22,4 @@ data class DeArrowSubmitTitle(
 data class DeArrowSubmitThumbnail(
     val timestamp: Float
 )
+// endregion

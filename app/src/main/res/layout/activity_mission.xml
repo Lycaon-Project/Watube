@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region About -->
 <!--
   "Pourquoi Watube": a toolbar over the local Mission_Watube.html page. The page
   brings its own theme, the window background only prevents a white flash.
@@ -25,3 +26,4 @@
         android:layout_weight="1" />
 
 </LinearLayout>
+<!-- endregion -->

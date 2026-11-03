@@ -11,6 +11,7 @@ import com.watube.yard.helpers.ThemeHelper
 import com.google.android.material.elevation.SurfaceColors
 import kotlin.math.abs
 
+// region UI Components
 class CustomSwipeToRefresh(context: Context?, attrs: AttributeSet?) :
     SwipeRefreshLayout(context!!, attrs) {
     private val mTouchSlop: Int = ViewConfiguration.get(this.context).scaledTouchSlop
@@ -40,3 +41,4 @@ class CustomSwipeToRefresh(context: Context?, attrs: AttributeSet?) :
         return super.onInterceptTouchEvent(event)
     }
 }
+// endregion

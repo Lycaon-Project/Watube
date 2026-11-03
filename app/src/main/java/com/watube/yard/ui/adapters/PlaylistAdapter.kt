@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Playlists
 data class PlaylistItem(
     val item: StreamItem,
     /**
@@ -130,3 +131,4 @@ class PlaylistAdapter(
         super.onViewRecycled(holder)
     }
 }
+// endregion

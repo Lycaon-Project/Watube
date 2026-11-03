@@ -738,7 +738,7 @@
           "N'envoyer que la quantité minimale de données nécessaire au fonctionnement de l'application, par exemple charger uniquement la vidéo demandée sans suivre le comportement d'utilisation.",
           "Optimiser l'interface et la lecture pour réduire la consommation de batterie, les pics de garbage collection et les traitements inutiles.",
           "Durcir la sécurité en désactivant le trafic en clair, en excluant le token de compte des sauvegardes chiffrées et en retirant un récepteur de démarrage inutilisé.",
-          "Prendre en charge Android 15 et les exigences des versions Android récentes.",
+          "Prendre en charge Android 13 à 17 (Android 13 minimum) et les exigences des versions Android récentes.",
           "Améliorer la stabilité et corriger des bug grâce à des tests complets et à des améliorations de fiabilité.",
           "Fournir des builds Nightly contenant fonctionnalités et correctifs avant la sortie officielle, avec un avertissement explicite sur leur stabilité réduite.",
           "Proposer une maintenance en un geste pour vider le cache d'images, le cache HTTP et le cache résiduel de l'application.",
@@ -762,21 +762,26 @@
         securityTitle: "Durcissement de la sécurité",
         security: [
           "Sécurité réseau stricte : le trafic en clair est complètement désactivé, seuls des hôtes de développement locaux sont exemptés.",
-          "Sauvegardes sécurisées : les sauvegardes d'application chiffrées excluent explicitement le token de compte pour prévenir une usurpation de session.",
+          "Aucune sauvegarde cloud : rien n'est envoyé vers un service de sauvegarde en ligne ; le transfert local entre appareils et l'export manuel restent possibles, sans le token de compte.",
+          "Aucun code propriétaire Google : Google Play Services et son SDK Cast sont retirés, et la compilation échoue si l'un d'eux revient, même par une dépendance indirecte.",
+          "Diffusion maison Stolm : la télé ne contacte jamais YouTube, la vidéo passe par votre téléphone ; elle suit la piste audio, les sous-titres et la qualité choisis sur le téléphone, et ne reçoit que le titre et la langue des sous-titres.",
+          "Connexions chiffrées strictes : TLS 1.2 et 1.3 uniquement, avec des suites de chiffrement modernes à confidentialité persistante.",
+          "Captures d'écran : une option masque l'application des captures, des enregistrements d'écran et de l'aperçu des applications récentes.",
           "Réduction de la surface d'attaque : suppression du récepteur de démarrage inutilisé.",
-          "Mises à jour intelligentes : vérifications automatiques contre Lycaon-Project/Watube, limitées à une fois toutes les 12 heures, plus une vérification manuelle dans les paramètres.",
+          "Mises à jour : vérification automatique des nouvelles versions publiées sur Lycaon-Project/Watube (GitHub), activée par défaut à chaque lancement ; les paramètres permettent de l'espacer (6 h, 12 h, un jour, une semaine) ou de la désactiver, et proposent une vérification manuelle.",
           "Gestion d'erreurs résiliente : fiabilité dans la source de données SABR et le picture-in-picture, avec des boucles de nouvelle tentative bornées pour la connexion au service média et les notifications de flux, au lieu de boucles infinies."
         ],
         performanceTitle: "Optimisations de performance",
         performance: [
           "Polling intelligent de l'UI : les boucles de position, boutons de file, nom de chapitre, barre de progression et index de chapitre ne travaillent que si leur valeur change, ralentissent en pause et s'arrêtent quand le lecteur est détaché.",
           "Rendu sans allocation : les barres de temps SponsorBlock/chapitres n'allouent plus d'objets Paint/Rect à chaque image, éliminant les pics de garbage collection pendant la lecture.",
-          "Recherche amortie : les suggestions sont débouncées à 300 ms au lieu d'envoyer une requête réseau par frappe.",
+          "Suggestions de recherche locales : par défaut, elles viennent de votre historique, sur l'appareil ; en ligne seulement sur option, temporisées, mises en cache, et jamais pour un lien, une adresse e-mail ou un numéro.",
           "Persistence optimisée : la position de visionnage est enregistrée toutes les 5 secondes au lieu de chaque seconde, et immédiatement en pause ou à la fin, puis mise en cache en mémoire pour éviter des requêtes Room lors de l'affichage des listes.",
           "DiffUtil intelligent : les lignes sont identifiées par un identifiant stable, par exemple URL de vidéo ou clé primaire, afin de relier et recharger les miniatures seulement quand le contenu change réellement.",
           "Notifications limitées : les notifications de progression de téléchargement sont plafonnées à 2 mises à jour par seconde.",
           "Gestion mémoire : le back buffer du lecteur est réduit de 3 minutes à 1 minute pour économiser de la RAM sur les appareils modestes.",
-          "Chargeurs unifiés : un chargeur d'images Coil unifié et un cache HTTP partagé sont créés une fois pour tout le cycle de vie de l'application."
+          "Chargeurs unifiés : un chargeur d'images Coil unifié et un cache HTTP partagé sont créés une fois pour tout le cycle de vie de l'application.",
+          "Application légère : un seul APK 64 bits de moins de 9 Mo (15,5 Mo auparavant), sans les copies inutiles pour d'autres processeurs ; rien n'est retiré de l'application."
         ],
         designTitle: "Interface et modernisation",
         designText: "Le README mentionne un nouvel accent aqua/vert par défaut, des formes de composants plus rondes, une barre de navigation basse surélevée et un titre rendu avec un dégradé dynamique dans la barre d'outils et l'écran À propos. Le projet utilise également le design Material 3 Expressive.",
@@ -787,10 +792,10 @@
         vsNewpipeText: "Selon le README, la principale différence avec NewPipe est un focus beaucoup plus fort sur l'expérience utilisateur. Watube utilise Material 3 Expressive, prend en charge SponsorBlock, ReturnYouTubeDislike et DeArrow, et permet une synchronisation via Piped. NewPipe permet en outre d'autres plateformes comme SoundCloud, PeerTube, Bandcamp et media.ccc.de. Les deux projets sont décrits comme d'excellents clients pour regarder YouTube.",
         licenseTitle: "Licence",
         licenseText: "Watube est un logiciel libre : vous pouvez l'utiliser, l'étudier, le partager et le modifier. L'application peut être redistribuée et/ou modifiée selon les termes de la GNU General Public License version 3 ou ultérieure, publiée par la Free Software Foundation.",
-        contributionTitle: "Contribution ia et manuel",
-        contributionText: "Les contributions sont bienvenues. Que ce soit via de l'IA Ou non Par contre ils doivent respecter les conventions kotlin Être testé de manière très minutieuse Pour ce qui est des pers Qui s'épaule avec lia Seuls ces modèles Seront recommandés pour contribuer au projet Claude Opus 5,Claude Fable 5, Mimo 2.6 Flash. Une documentation avec un prompt Sera fourni dans le code source prochainement Permettant D'avoir le contexte dans lequel j'ai entraîné mon modèle A faire des audits Et des correction Avancez dans le cas où une erreur est trop persistante Et nécessi Des diagnostics de contexte Beaucoup plus élevé Que mes compétences actuelles (opencode est recomandé si vous utilisé mimo)",
-        usageTitle: "mon avis sur l'ia et pourquoi je l'autorise ",
-        usageText: "L'ia generative Est intéressent. Mon avis est personnel Y en a qui seront pas d'accord et je comprends Concernant L'intelligence artificielle Je trouve que c'est très intéressant Pour plein de situations différentes Là où en manuels Vous mettrez Très longtemps pour avoir des résultats concrets et risquer beaucoup plus de faire d'erreur Exemple vous êtes dans une situation où vous faites ça toute la journée pendant des mois Ça va Faire un cours au moral Même si vous aimez le projet ça risque d'être redondant et vous lassez du projet C'est pourquoi j'ai autorisé l'usage de l'IA pour les contributions Mais ne doit pas remplacer Le facteur humain Qui a une importance capitale Pour Vérifiez Les audits notamment faits avec l'ia Sont pertinents Ou ont complètement cassé le projet Parce que vous avez négligé le contrôle humain L'objectif En tout cas moi que j'en ai de l'ia C'est que quand j'atteins un certain nombre de modifications à faire Par exemple plus de 20 correctifs Pour les mises à jour majeur Je lui délègue une certaine partie Et moi je prends une autre partie Celle de l'inspection C'est à dire qu'il modifie les parties que je lui ai demandées Mais j'applique aussi un prompt très spécifique Pour limiter Le temps de travail que j'ai à faire pour vérifier Etant donné qu'ils me documentent exactement les pages Qui l'a touché Elle est chez Qui l'a modifié Ou remplacer Ce qui facilite beaucoup mon travail D'ailleurs le prompt sera mis à disposition Si vous êtes très intéressé Pour faciliter la contribution Tout dépendra de vous C'est pour les mises à jour mineures c'est du Manuel Pour leur partie inspection Une modification Exemple correction de bug Mais les audits sont réalisés toujours avec les Ia Avec un prompt de dépassant plus de 47000 lignes lignes Avec tout un schéma de procédé à respecter : D'où l'importance d'utiliser les IA que j'ai recommandées Car sont les seuls à être pertinents et surtout les seuls à respecter les prompts confiées "
+        contributionTitle: "Contribuer : à la main ou avec l'IA",
+        contributionText: "Les contributions sont les bienvenues, qu'elles soient faites à la main ou avec l'aide d'une IA. Dans les deux cas, elles doivent respecter les conventions de code Kotlin et être testées de manière très minutieuse. Si vous vous faites épauler par une IA, seuls deux modèles sont recommandés pour ce projet : Claude Opus 5.5 (Anthropic) et MiMo-V2.6-Flash (Xiaomi) ; avec MiMo, l'outil OpenCode est recommandé. Les autres modèles ne sont pas recommandés. Indiquez dans votre pull request si une IA a été utilisée, et laquelle. Une documentation accompagnée d'un prompt sera bientôt ajoutée au code source : elle donnera le contexte dans lequel je fais travailler l'IA pour les audits et pour les corrections avancées, quand une erreur persiste et demande un diagnostic plus poussé que ce que mes compétences actuelles permettent.",
+        usageTitle: "Mon avis sur l'IA et pourquoi je l'autorise",
+        usageText: "L'IA générative est intéressante. C'est un avis personnel : certains ne seront pas d'accord, et je le comprends. Je la trouve très utile dans beaucoup de situations où, à la main, il faudrait très longtemps pour obtenir des résultats concrets, avec bien plus de risques d'erreur. Imaginez faire la même tâche toute la journée pendant des mois : cela pèse sur le moral et, même si vous aimez le projet, la répétition risque de vous en lasser. C'est pourquoi j'autorise l'IA pour les contributions. Mais elle ne doit pas remplacer le facteur humain, qui reste capital : c'est l'humain qui vérifie que les audits, notamment ceux faits avec l'IA, sont pertinents et n'ont pas cassé le projet faute de contrôle. Ma méthode : quand les modifications s'accumulent, par exemple plus de 20 correctifs pour une mise à jour majeure, je délègue une partie du travail à l'IA et je garde l'inspection pour moi. Elle modifie les parties que je lui ai demandées en suivant un prompt très précis, qui l'oblige à documenter exactement les fichiers qu'elle a touchés, modifiés ou remplacés : mon temps de vérification s'en trouve fortement réduit. Ce prompt sera mis à disposition si cela vous intéresse, pour faciliter vos contributions. Les mises à jour mineures, comme une correction de bug, sont faites et inspectées à la main. Les audits, eux, sont toujours réalisés avec l'IA, à l'aide d'un prompt de plus de 47 000 lignes qui impose toute une procédure. D'où l'importance d'utiliser les modèles que je recommande : d'après mon expérience, ce sont les seuls à s'être montrés pertinents et à respecter les prompts qui leur sont confiés."
       },
 
       en: {
@@ -851,7 +856,7 @@
           "Send only the minimum amount of data required for the app to work, for example loading only the requested video without tracking usage behavior.",
           "Optimize interface and playback to reduce battery consumption, garbage collection spikes and unnecessary processing.",
           "Harden security by disabling cleartext traffic, excluding the account token from encrypted backups and removing an unused boot receiver.",
-          "Support Android 15 and the requirements of recent Android versions.",
+          "Support Android 13 to 17 (Android 13 minimum) and the requirements of recent Android versions.",
           "Improve stability and fix bugs through comprehensive testing and reliability improvements.",
           "Provide nightly builds containing features and fixes before the official release, with an explicit warning about reduced stability.",
           "Offer one-tap maintenance to clear the image cache, HTTP cache and leftover app cache.",
@@ -875,21 +880,26 @@
         securityTitle: "Security hardening",
         security: [
           "Strict network security: cleartext traffic is completely disabled; only local development hosts are exempted.",
-          "Secure backups: encrypted app backups explicitly exclude the account token to prevent session hijacking.",
+          "No cloud backup: nothing is sent to an online backup service; the local device-to-device transfer and the manual export remain, without the account token.",
+          "No proprietary Google code: Google Play Services and its Cast SDK are removed, and the build fails if one of them comes back, even through an indirect dependency.",
+          "Stolm, Watube's own casting: the TV never contacts YouTube, the video goes through your phone; it follows the audio track, subtitles and quality chosen on the phone, and only receives the title and the subtitle language.",
+          "Strict encrypted connections: TLS 1.2 and 1.3 only, with modern forward-secret cipher suites.",
+          "Screenshots: an option hides the app from screenshots, screen recordings and the recent apps preview.",
           "Attack surface reduction: removal of the unused boot receiver.",
-          "Smart updates: automatic update checks against Lycaon-Project/Watube, limited to once every 12 hours, plus a manual check in settings.",
+          "Updates: automatic check for new releases published on Lycaon-Project/Watube (GitHub), on by default at every launch; the settings can space it out (6 h, 12 h, daily, weekly) or turn it off, and offer a manual check.",
           "Resilient error handling: reliable handling in the SABR data source and picture-in-picture, using bounded retry loops for media service connection and feed notifications instead of infinite loops."
         ],
         performanceTitle: "Performance optimizations",
         performance: [
           "Smart UI polling: polling loops for position, queue buttons, chapter name, seek bar and chapter index only do work when their value changes, slow down while paused and stop when the player is detached.",
           "Zero-allocation rendering: SponsorBlock/chapter time bars no longer allocate Paint/Rect objects on every frame, eliminating GC spikes during playback.",
-          "Debounced search: suggestions are debounced by 300 ms instead of firing one network request per keystroke.",
+          "Local search suggestions: by default they come from your own history, on the device; online only when you turn it on, debounced, cached, and never for a link, an e-mail address or a number.",
           "Optimized persistence: watch position is saved every 5 seconds instead of every second, and immediately on pause or end, then cached in memory so list rows do not query Room while binding.",
           "Smart DiffUtil: rows are identified by a stable id, for example video URL or primary key, so lists rebind and thumbnails reload only when content actually changes.",
           "Throttled notifications: download progress notifications are limited to 2 updates per second.",
           "Memory management: the player back buffer was reduced from 3 minutes to 1 minute to save RAM on low-end devices.",
-          "Unified loaders: a unified Coil image loader and a shared HTTP cache are created once for the whole app lifecycle."
+          "Unified loaders: a unified Coil image loader and a shared HTTP cache are created once for the whole app lifecycle.",
+          "A light app: one 64-bit APK under 9 MB (15.5 MB before), without the needless copies for other processors; nothing is removed from the app itself."
         ],
         designTitle: "Interface and modernization",
         designText: "The README mentions a new aqua/green accent as default, rounder component shapes, a raised bottom navigation bar, and a title rendered with a dynamic colour gradient in the toolbar and the About screen. The project also uses Material 3 Expressive design.",
@@ -900,10 +910,10 @@
         vsNewpipeText: "According to the README, the main difference from NewPipe is a much stronger focus on user experience. Watube uses Material 3 Expressive, supports SponsorBlock, ReturnYouTubeDislike and DeArrow, and allows synchronization via Piped. NewPipe also allows other platforms such as SoundCloud, PeerTube, Bandcamp and media.ccc.de. Both projects are described as great clients for watching YouTube.",
         licenseTitle: "License",
         licenseText: "Watube is Free Software: you can use, study, share and modify it. The app can be redistributed and/or modified under the terms of the GNU General Public License version 3 or later published by the Free Software Foundation.",
-        contributionTitle: "Contribution",
-        contributionText: "Contributions are welcome. The README asks to open an issue to discuss proposed changes before implementing them, follow Kotlin coding conventions, use conventional commit messages, test thoroughly and submit a pull request with a clear description. It also states that using AI to generate issue texts or pull requests is not permitted and such contributions will be rejected.",
+        contributionTitle: "Contributing: by hand or with AI",
+        contributionText: "Contributions are welcome, whether written by hand or with the help of an AI. Either way, they must follow the Kotlin coding conventions and be tested very thoroughly. If you work with an AI, only two models are recommended for this project: Claude Opus 5.5 (Anthropic) and MiMo-V2.6-Flash (Xiaomi); with MiMo, the OpenCode tool is recommended. Other models are not recommended. State in your pull request whether an AI was used, and which one. Documentation with a prompt will soon be added to the source code: it will give the context in which I have the AI work on audits and advanced fixes, when an error persists and needs a deeper diagnosis than my current skills allow.",
         usageTitle: "My view on AI and why I allow it",
-        usageText: "Generative AI is interesting. This is my personal opinion and some people will disagree, which I understand. I find AI very useful in many situations where doing things by hand takes a very long time to get concrete results and carries a much higher risk of mistakes — for example, when you repeat the same task all day for months, it wears on your morale and the project becomes tedious even if you love it. That is why I allow the use of AI for contributions. But it must not replace the human factor, which is essential to verify that audits — especially AI-assisted ones — are relevant, rather than quietly breaking the project because human oversight was neglected. My own approach: once I reach a large number of changes (for example more than 20 fixes for a major update), I delegate part of it to AI and keep the inspection part for myself. The AI modifies the parts I ask for, while I apply a very specific prompt so that it documents exactly which pages it touched and what it changed or replaced, which greatly speeds up my review. The prompt will be made available if you are interested, to make contributing easier. Minor updates are done manually. Audits, however, are always carried out with AI, using a prompt of more than 47,000 lines with a full procedure to follow — hence the importance of using the AIs I recommend, as they are the only ones that are reliable and the only ones that respect the prompts given."
+        usageText: "Generative AI is interesting. This is a personal opinion: some will disagree, and I understand that. I find it very useful in many situations where doing things by hand would take a very long time to get concrete results, with a much higher risk of mistakes. Picture doing the same task all day for months: it wears down your morale and, even if you love the project, the repetition may make you tired of it. That is why I allow AI for contributions. But it must not replace the human factor, which remains essential: a human checks that audits, especially AI-assisted ones, are relevant and have not broken the project through lack of oversight. My method: when changes pile up, for example more than 20 fixes for a major update, I delegate part of the work to the AI and keep the inspection for myself. It changes the parts I asked for, following a very precise prompt that makes it document exactly which files it touched, changed or replaced, which greatly cuts my review time. This prompt will be made available if you are interested, to make contributing easier. Minor updates, such as a bug fix, are made and inspected by hand. Audits, however, are always carried out with AI, using a prompt of more than 47,000 lines that sets out a whole procedure. Hence the importance of using the models I recommend: in my experience, they are the only ones that have proven relevant and that respect the prompts they are given."
       },
 
       nl: {
@@ -964,7 +974,7 @@
           "Alleen de minimale hoeveelheid gegevens versturen die nodig is om de app te laten werken, bijvoorbeeld alleen de gevraagde video laden zonder gebruiksgedrag te volgen.",
           "De interface en het afspelen optimaliseren om batterijverbruik, garbage-collection-pieken en onnodige bewerkingen te verminderen.",
           "Beveiliging versterken door cleartext-verkeer uit te schakelen, het accounttoken uit versleutelde back-ups te halen en een ongebruikte boot receiver te verwijderen.",
-          "Android 15 en de vereisten van recente Android-versies ondersteunen.",
+          "Android 13 tot en met 17 (minimaal Android 13) en de vereisten van recente Android-versies ondersteunen.",
           "Stabiliteit verbeteren en bugs oplossen door uitgebreid testen en betrouwbaarheidsverbeteringen.",
           "Nightly-builds leveren met functies en fixes vóór de officiële release, met een expliciete waarschuwing over de lagere stabiliteit.",
           "Een onderhoudsfunctie met één tik aanbieden om de imagecache, HTTP-cache en restanten van de app-cache te wissen.",
@@ -988,21 +998,26 @@
         securityTitle: "Beveiligingshardening",
         security: [
           "Strikte netwerkbeveiliging: cleartext-verkeer is volledig uitgeschakeld; alleen lokale ontwikkelhosts zijn vrijgesteld.",
-          "Beveiligde back-ups: versleutelde app-back-ups sluiten het accounttoken expliciet uit om session hijacking te voorkomen.",
+          "Geen cloudback-up: er gaat niets naar een online back-updienst; de lokale overdracht tussen apparaten en de handmatige export blijven, zonder het accounttoken.",
+          "Geen propriëtaire Google-code: Google Play Services en de Cast-SDK zijn verwijderd, en de build faalt als een ervan terugkomt, ook via een indirecte afhankelijkheid.",
+          "Stolm, de eigen cast van Watube: de tv neemt nooit contact op met YouTube, de video gaat via je telefoon; hij volgt het audiospoor, de ondertitels en de kwaliteit die je op de telefoon kiest, en ontvangt alleen de titel en de taal van de ondertitels.",
+          "Strikte versleutelde verbindingen: alleen TLS 1.2 en 1.3, met moderne cipher suites met forward secrecy.",
+          "Schermafbeeldingen: een optie verbergt de app voor schermafbeeldingen, schermopnames en het overzicht van recente apps.",
           "Kleiner aanvalsoppervlak: verwijdering van de ongebruikte boot receiver.",
-          "Slimme updates: automatische updatecontroles tegen Lycaon-Project/Watube, beperkt tot één keer per 12 uur, plus een handmatige controle in de instellingen.",
+          "Updates: automatische controle op nieuwe releases van Lycaon-Project/Watube (GitHub), standaard ingeschakeld bij elke start; in de instellingen kun je het interval vergroten (6 uur, 12 uur, dagelijks, wekelijks) of de controle uitschakelen, en handmatig controleren.",
           "Veerkrachtige foutafhandeling: betrouwbare afhandeling in de SABR-gegevensbron en picture-in-picture, met begrensde retry-lussen voor verbinding met de mediaservice en feedmeldingen in plaats van oneindige lussen."
         ],
         performanceTitle: "Prestatie-optimalisaties",
         performance: [
           "Slimme UI-polling: polling-lussen voor positie, wachtrijknoppen, hoofdstuknaam, seekbar en hoofdstukindex doen alleen werk wanneer hun waarde verandert, vertragen bij pauze en stoppen wanneer de speler is losgekoppeld.",
           "Zero-allocation rendering: tijdlijnen voor SponsorBlock/hoofdstukken alloceren niet langer Paint-/Rect-objecten bij elk frame, wat GC-pieken tijdens afspelen elimineert.",
-          "Debounce zoekfunctie: suggesties worden met 300 ms gedebounced in plaats van één netwerkverzoek per toetsaanslag.",
+          "Lokale zoeksuggesties: standaard komen ze uit je eigen geschiedenis, op het apparaat; online alleen als je dat inschakelt, vertraagd, gecachet en nooit voor een link, e-mailadres of nummer.",
           "Geoptimaliseerde persistentie: kijkpositie wordt elke 5 seconden opgeslagen in plaats van elke seconde, en onmiddellijk bij pauze of einde, en in geheugen gecached zodat lijstrijen geen Room-query hoeven uit te voeren tijdens binding.",
           "Slimme DiffUtil: rijen worden geïdentificeerd via een stabiele id, bijvoorbeeld video-URL of primaire sleutel, zodat lijsten alleen opnieuw worden gebonden en thumbnails alleen opnieuw worden geladen als de inhoud echt verandert.",
           "Gesnelde meldingen: voortgangsmeldingen van downloads zijn beperkt tot 2 updates per seconde.",
           "Geheugenbeheer: de back buffer van de speler is verkleind van 3 minuten naar 1 minuut om RAM te besparen op zwakkere apparaten.",
-          "Geveregende loaders: een uniforme Coil-image-loader en een gedeelde HTTP-cache worden één keer aangemaakt voor de volledige levenscyclus van de app."
+          "Geveregende loaders: een uniforme Coil-image-loader en een gedeelde HTTP-cache worden één keer aangemaakt voor de volledige levenscyclus van de app.",
+          "Een lichte app: één 64-bit-APK van minder dan 9 MB (eerder 15,5 MB), zonder overbodige kopieën voor andere processors; er is niets uit de app zelf verwijderd."
         ],
         designTitle: "Interface en modernisering",
         designText: "De README noemt een nieuw aqua/groen accent als standaard, rondere vormgeving van componenten, een verhoogde onderste navigatiebalk en een titel met dynamisch kleurverloop in de toolbar en het About-scherm. Het project gebruikt ook het Material 3 Expressive-ontwerp.",
@@ -1013,10 +1028,10 @@
         vsNewpipeText: "Volgens de README is het belangrijkste verschil met NewPipe een veel sterkere focus op gebruikerservaring. Watube gebruikt Material 3 Expressive, ondersteunt SponsorBlock, ReturnYouTubeDislike en DeArrow en maakt synchronisatie via Piped mogelijk. NewPipe staat ook andere platforms toe, zoals SoundCloud, PeerTube, Bandcamp en media.ccc.de. Beide projecten worden beschreven als goede clients om YouTube te kijken.",
         licenseTitle: "Licentie",
         licenseText: "Watube is vrije software: je kunt het gebruiken, bestuderen, delen en wijzigen. De app kan worden gedistribueerd en/of gewijzigd onder de voorwaarden van de GNU General Public License versie 3 of nieuwer, gepubliceerd door de Free Software Foundation.",
-        contributionTitle: "Bijdragen",
-        contributionText: "Bijdragen zijn welkom. De README vraagt om een issue te openen om voorgestelde wijzigingen te bespreken vóór implementatie, de Kotlin-codeconventies te volgen, conventionele commitberichten te gebruiken, zorgvuldig te testen en een pull request in te dienen met een duidelijke beschrijving. Er staat ook dat het gebruik van AI om issue-teksten of pull requests te genereren niet is toegestaan en dat dergelijke bijdragen worden afgewezen.",
+        contributionTitle: "Bijdragen: met de hand of met AI",
+        contributionText: "Bijdragen zijn welkom, of ze nu met de hand zijn geschreven of met hulp van AI. Hoe dan ook moeten ze de Kotlin-codeconventies volgen en zeer grondig getest zijn. Werk je met AI, dan worden voor dit project maar twee modellen aanbevolen: Claude Opus 5.5 (Anthropic) en MiMo-V2.6-Flash (Xiaomi); bij MiMo wordt de tool OpenCode aanbevolen. Andere modellen worden niet aanbevolen. Vermeld in je pull request of er AI is gebruikt, en welke. Binnenkort komt er documentatie met een prompt in de broncode: die geeft de context waarin ik de AI laat werken aan audits en geavanceerde correcties, wanneer een fout hardnekkig blijft en een diepere diagnose vraagt dan mijn huidige vaardigheden toelaten.",
         usageTitle: "Mijn mening over AI en waarom ik het toesta",
-        usageText: "Generatieve AI is interessant. Dit is mijn persoonlijke mening en sommigen zullen het er niet mee eens zijn, wat ik begrijp. Ik vind AI erg nuttig in veel situaties waarin handmatig werk heel lang duurt om concrete resultaten te krijgen en een veel hoger risico op fouten met zich meebrengt — bijvoorbeeld wanneer je maandenlang elke dag dezelfde taak doet, gaat dat ten koste van je moraal en wordt het project saai, zelfs als je ervan houdt. Daarom sta ik het gebruik van AI toe voor bijdragen. Maar het mag de menselijke factor niet vervangen, die essentieel is om te controleren of audits — vooral met AI gemaakte — relevant zijn, in plaats van het project stilletjes te breken doordat menselijk toezicht is verwaarloosd. Mijn aanpak: zodra ik een groot aantal wijzigingen bereik (bijvoorbeeld meer dan 20 correcties voor een grote update), delegeer ik een deel aan AI en houd ik het inspectiedeel zelf. De AI wijzigt de delen die ik vraag, terwijl ik een zeer specifieke prompt gebruik zodat het precies documenteert welke pagina's het heeft aangeraakt en wat het heeft gewijzigd of vervangen, wat mijn controle sterk versnelt. De prompt wordt beschikbaar gesteld als je geïnteresseerd bent, om bijdragen makkelijker te maken. Kleine updates worden handmatig gedaan. Audits worden echter altijd met AI uitgevoerd, met een prompt van meer dan 47.000 regels en een volledige te volgen procedure — vandaar het belang van het gebruik van de AI's die ik aanbeveel, aangezien zij de enige betrouwbare zijn en de enige die de gegeven prompts respecteren."
+        usageText: "Generatieve AI is interessant. Dit is een persoonlijke mening: sommigen zullen het er niet mee eens zijn, en dat begrijp ik. Ik vind het erg nuttig in veel situaties waarin handwerk heel lang zou duren om concrete resultaten te krijgen, met een veel groter risico op fouten. Stel je voor dat je maandenlang de hele dag dezelfde taak doet: dat tast je moreel aan en, zelfs als je van het project houdt, kan de herhaling je ervan doen afhaken. Daarom sta ik AI toe voor bijdragen. Maar AI mag de menselijke factor niet vervangen, die cruciaal blijft: een mens controleert of audits, vooral die met AI, relevant zijn en het project niet hebben gebroken door gebrek aan toezicht. Mijn werkwijze: wanneer de wijzigingen zich opstapelen, bijvoorbeeld meer dan 20 correcties voor een grote update, besteed ik een deel van het werk uit aan de AI en houd ik de inspectie voor mezelf. De AI wijzigt de delen die ik heb gevraagd en volgt daarbij een zeer precieze prompt die haar verplicht exact te documenteren welke bestanden ze heeft aangeraakt, gewijzigd of vervangen, wat mijn controletijd sterk verkort. Deze prompt wordt beschikbaar gesteld als je interesse hebt, om bijdragen te vergemakkelijken. Kleine updates, zoals een bugfix, worden met de hand gemaakt en gecontroleerd. Audits worden echter altijd met AI uitgevoerd, met een prompt van meer dan 47.000 regels die een volledige procedure oplegt. Daarom is het belangrijk de modellen te gebruiken die ik aanbeveel: in mijn ervaring zijn zij de enige die relevant zijn gebleken en de prompts respecteren die ze krijgen."
       },
 
       es: {
@@ -1077,7 +1092,7 @@
           "Enviar solo la cantidad mínima de datos necesaria para que la aplicación funcione, por ejemplo cargar únicamente el vídeo solicitado sin seguir el comportamiento de uso.",
           "Optimizar la interfaz y la reproducción para reducir el consumo de batería, los picos de garbage collection y los procesos innecesarios.",
           "Endurecer la seguridad desactivando el tráfico en texto plano, excluyendo el token de cuenta de las copias de seguridad cifradas y eliminando un receptor de arranque sin uso.",
-          "Compatibilizar Android 15 y los requisitos de versiones recientes de Android.",
+          "Compatibilizar Android 13 a 17 (mínimo Android 13) y los requisitos de versiones recientes de Android.",
           "Mejorar la estabilidad y corregir errores mediante pruebas exhaustivas y mejoras de fiabilidad.",
           "Ofrecer compilaciones Nightly con funciones y correcciones antes del lanzamiento oficial, con una advertencia explícita sobre su menor estabilidad.",
           "Ofrecer un mantenimiento en un toque para borrar la caché de imágenes, la caché HTTP y la caché residual de la aplicación.",
@@ -1101,21 +1116,26 @@
         securityTitle: "Endurecimiento de la seguridad",
         security: [
           "Seguridad de red estricta: el tráfico en texto plano está completamente desactivado; solo están exentos hosts de desarrollo locales.",
-          "Copias de seguridad seguras: las copias de seguridad cifradas de la aplicación excluyen explícitamente el token de cuenta para evitar secuestros de sesión.",
+          "Sin copia de seguridad en la nube: nada se envía a un servicio de copias en línea; la transferencia local entre dispositivos y la exportación manual siguen disponibles, sin el token de la cuenta.",
+          "Sin código propietario de Google: Google Play Services y su SDK de Cast se han eliminado, y la compilación falla si alguno vuelve, incluso a través de una dependencia indirecta.",
+          "Stolm, la transmisión propia de Watube: la tele nunca contacta con YouTube, el vídeo pasa por tu teléfono; sigue la pista de audio, los subtítulos y la calidad elegidos en el teléfono, y solo recibe el título y el idioma de los subtítulos.",
+          "Conexiones cifradas estrictas: solo TLS 1.2 y 1.3, con conjuntos de cifrado modernos con secreto perfecto hacia adelante.",
+          "Capturas de pantalla: una opción oculta la aplicación en capturas, grabaciones de pantalla y en la vista de aplicaciones recientes.",
           "Reducción de la superficie de ataque: eliminación del receptor de arranque sin uso.",
-          "Actualizaciones inteligentes: comprobaciones automáticas frente a Lycaon-Project/Watube, limitadas a una vez cada 12 horas, además de una comprobación manual en ajustes.",
+          "Actualizaciones: comprobación automática de nuevas versiones publicadas en Lycaon-Project/Watube (GitHub), activada por defecto en cada inicio; los ajustes permiten espaciarla (6 h, 12 h, a diario, cada semana) o desactivarla, y ofrecen una comprobación manual.",
           "Manejo de errores resiliente: manejo fiable en la fuente de datos SABR y en picture-in-picture, usando bucles de reintento limitados para la conexión al servicio multimedia y las notificaciones de feeds, en lugar de bucles infinitos."
         ],
         performanceTitle: "Optimizaciones de rendimiento",
         performance: [
           "Polling inteligente de la interfaz: los bucles de posición, botones de cola, nombre de capítulo, barra de búsqueda e índice de capítulos solo trabajan cuando cambia su valor, se ralentizan en pausa y se detienen cuando el reproductor se desconecta.",
           "Renderizado sin asignación: las barras de tiempo de SponsorBlock/capítulos ya no asignan objetos Paint/Rect en cada fotograma, eliminando picos de garbage collection durante la reproducción.",
-          "Búsqueda con debounce: las sugerencias se procesan con un retardo de 300 ms en lugar de enviar una petición de red por pulsación.",
+          "Sugerencias de búsqueda locales: por defecto vienen de tu propio historial, en el dispositivo; en línea solo si lo activas, con retardo, en caché y nunca para un enlace, un correo electrónico o un número.",
           "Persistencia optimizada: la posición de visualización se guarda cada 5 segundos en lugar de cada segundo, e inmediatamente en pausa o al final, y se almacena en caché en memoria para que las filas de listas no consulten Room durante el binding.",
           "DiffUtil inteligente: las filas se identifican mediante un id estable, por ejemplo URL de vídeo o clave primaria, de modo que las listas se vuelven a enlazar y las miniaturas se recargan solo cuando el contenido cambia realmente.",
           "Notificaciones limitadas: las notificaciones de progreso de descarga están limitadas a 2 actualizaciones por segundo.",
           "Gestión de memoria: el búfer posterior del reproductor se redujo de 3 minutos a 1 minuto para ahorrar RAM en dispositivos modestos.",
-          "Cargadores unificados: un cargador de imágenes Coil unificado y una caché HTTP compartida se crean una vez para todo el ciclo de vida de la aplicación."
+          "Cargadores unificados: un cargador de imágenes Coil unificado y una caché HTTP compartida se crean una vez para todo el ciclo de vida de la aplicación.",
+          "Una aplicación ligera: un único APK de 64 bits de menos de 9 MB (antes 15,5 MB), sin las copias inútiles para otros procesadores; no se ha quitado nada de la aplicación."
         ],
         designTitle: "Interfaz y modernización",
         designText: "El README menciona un nuevo acento verde/aguamar por defecto, formas de componentes más redondeadas, una barra de navegación inferior elevada y un título renderizado con un degradado dinámico en la barra de herramientas y la pantalla Acerca de. El proyecto también utiliza el diseño Material 3 Expressive.",
@@ -1126,10 +1146,10 @@
         vsNewpipeText: "Según el README, la principal diferencia con NewPipe es un enfoque mucho más fuerte en la experiencia de usuario. Watube usa Material 3 Expressive, admite SponsorBlock, ReturnYouTubeDislike y DeArrow, y permite sincronización mediante Piped. NewPipe también permite otras plataformas como SoundCloud, PeerTube, Bandcamp y media.ccc.de. Ambos proyectos se describen como excelentes clientes para ver YouTube.",
         licenseTitle: "Licencia",
         licenseText: "Watube es software libre: puedes usarlo, estudiarlo, compartirlo y modificarlo. La aplicación puede redistribuirse y/o modificarse bajo los términos de la GNU General Public License versión 3 o posterior, publicada por la Free Software Foundation.",
-        contributionTitle: "Contribución",
-        contributionText: "Las contribuciones son bienvenidas. El README pide abrir una issue para discutir los cambios propuestos antes de implementarlos, seguir las convenciones de código de Kotlin, usar mensajes de commit convencionales, probar cuidadosamente y enviar una pull request con una descripción clara. También indica que el uso de IA para generar textos de issues o pull requests no está permitido y que tales contribuciones serán rechazadas.",
+        contributionTitle: "Contribuir: a mano o con IA",
+        contributionText: "Las contribuciones son bienvenidas, tanto si se escriben a mano como con ayuda de una IA. En ambos casos deben seguir las convenciones de código de Kotlin y probarse con mucho cuidado. Si trabajas con una IA, solo se recomiendan dos modelos para este proyecto: Claude Opus 5.5 (Anthropic) y MiMo-V2.6-Flash (Xiaomi); con MiMo se recomienda la herramienta OpenCode. Los demás modelos no se recomiendan. Indica en tu pull request si se ha usado una IA, y cuál. Pronto se añadirá al código fuente una documentación con un prompt: dará el contexto en el que hago trabajar a la IA en las auditorías y en las correcciones avanzadas, cuando un error persiste y requiere un diagnóstico más profundo del que permiten mis conocimientos actuales.",
         usageTitle: "Mi opinión sobre la IA y por qué la permito",
-        usageText: "La IA generativa es interesante. Esta es mi opinión personal y algunos no estarán de acuerdo, lo cual entiendo. Encuentro la IA muy útil en muchas situaciones en las que hacerlo manualmente lleva muchísimo tiempo para obtener resultados concretos y conlleva un riesgo mucho mayor de errores — por ejemplo, cuando repites la misma tarea todo el día durante meses, afecta a tu moral y el proyecto se vuelve tedioso aunque te guste. Por eso permito el uso de la IA para las contribuciones. Pero no debe reemplazar el factor humano, que es esencial para verificar que las auditorías — especialmente las asistidas por IA — son pertinentes, en lugar de romper el proyecto silenciosamente por haber descuidado la supervisión humana. Mi enfoque: cuando llego a un gran número de cambios (por ejemplo, más de 20 correcciones para una actualización mayor), delego una parte a la IA y me reservo la parte de inspección. La IA modifica las partes que le pido, mientras yo aplico un prompt muy específico para que documente exactamente qué páginas tocó y qué cambió o reemplazó, lo que acelera mucho mi revisión. El prompt se pondrá a disposición si te interesa, para facilitar la contribución. Las actualizaciones menores se hacen manualmente. Sin embargo, las auditorías siempre se realizan con IA, usando un prompt de más de 47 000 líneas con todo un procedimiento a seguir — de ahí la importancia de usar las IA que recomiendo, ya que son las únicas fiables y las únicas que respetan los prompts proporcionados."
+        usageText: "La IA generativa es interesante. Es una opinión personal: algunos no estarán de acuerdo, y lo entiendo. La encuentro muy útil en muchas situaciones en las que, a mano, se tardaría muchísimo en obtener resultados concretos, con un riesgo de error mucho mayor. Imagina hacer la misma tarea todo el día durante meses: acaba afectando a la moral y, aunque te guste el proyecto, la repetición puede hacer que te canses de él. Por eso permito la IA en las contribuciones. Pero no debe sustituir al factor humano, que sigue siendo fundamental: es una persona quien comprueba que las auditorías, sobre todo las hechas con IA, son pertinentes y no han roto el proyecto por falta de control. Mi método: cuando los cambios se acumulan, por ejemplo más de 20 correcciones para una actualización mayor, delego una parte del trabajo en la IA y me reservo la inspección. La IA modifica las partes que le he pedido siguiendo un prompt muy preciso que la obliga a documentar exactamente qué archivos ha tocado, modificado o sustituido, lo que reduce mucho mi tiempo de revisión. Este prompt se pondrá a disposición si te interesa, para facilitar las contribuciones. Las actualizaciones menores, como la corrección de un error, se hacen y se revisan a mano. Las auditorías, en cambio, siempre se realizan con IA, con un prompt de más de 47 000 líneas que impone todo un procedimiento. De ahí la importancia de usar los modelos que recomiendo: según mi experiencia, son los únicos que han demostrado ser pertinentes y que respetan los prompts que se les confían."
       },
 
       de: {
@@ -1190,7 +1210,7 @@
           "Nur die minimale Datenmenge senden, die für den Betrieb der App nötig ist, zum Beispiel nur das angeforderte Video laden, ohne das Nutzungsverhalten zu verfolgen.",
           "Oberfläche und Wiedergabe optimieren, um Batterieverbrauch, Garbage-Collection-Spitzen und unnötige Verarbeitung zu reduzieren.",
           "Die Sicherheit härten, indem Klartextverkehr deaktiviert, der Konto-Token aus verschlüsselten Backups ausgeschlossen und ein ungenutzter Boot-Receiver entfernt wird.",
-          "Android 15 und Anforderungen aktueller Android-Versionen unterstützen.",
+          "Android 13 bis 17 (mindestens Android 13) und Anforderungen aktueller Android-Versionen unterstützen.",
           "Stabilität verbessern und Fehler beheben durch umfassendes Testen und Zuverlässigkeitsverbesserungen.",
           "Nightly-Builds mit Funktionen und Korrekturen vor der offiziellen Veröffentlichung bereitstellen, mit ausdrücklichem Hinweis auf geringere Stabilität.",
           "Eine Ein-Tipp-Wartung anbieten, um Bildercache, HTTP-Cache und Rest-Cache der App zu leeren.",
@@ -1214,21 +1234,26 @@
         securityTitle: "Sicherheitshärtung",
         security: [
           "Strenge Netzwerksicherheit: Klartextverkehr ist vollständig deaktiviert; nur lokale Entwicklungshosts sind ausgenommen.",
-          "Sichere Backups: Verschlüsselte App-Backups schließen den Konto-Token ausdrücklich aus, um Session-Hijacking zu verhindern.",
+          "Keine Cloud-Sicherung: Nichts wird an einen Online-Sicherungsdienst gesendet; die lokale Übertragung zwischen Geräten und der manuelle Export bleiben, ohne den Konto-Token.",
+          "Kein proprietärer Google-Code: Google Play-Dienste und ihr Cast-SDK sind entfernt, und der Build schlägt fehl, falls eines davon zurückkehrt, auch über eine indirekte Abhängigkeit.",
+          "Stolm, Watubes eigenes Casting: Der Fernseher kontaktiert YouTube nie, das Video läuft über dein Telefon; er übernimmt Tonspur, Untertitel und Qualität, die am Telefon gewählt wurden, und erhält nur den Titel und die Sprache der Untertitel.",
+          "Strikt verschlüsselte Verbindungen: nur TLS 1.2 und 1.3, mit modernen Cipher-Suites mit Forward Secrecy.",
+          "Bildschirmfotos: Eine Option verbirgt die App vor Bildschirmfotos, Bildschirmaufnahmen und der Vorschau der letzten Apps.",
           "Verkleinerte Angriffsfläche: Entfernung des ungenutzten Boot-Receivers.",
-          "Intelligente Updates: automatische Update-Prüfungen gegenüber Lycaon-Project/Watube, begrenzt auf einmal alle 12 Stunden, plus eine manuelle Prüfung in den Einstellungen.",
+          "Updates: automatische Prüfung auf neue Releases von Lycaon-Project/Watube (GitHub), standardmäßig bei jedem Start aktiv; in den Einstellungen lässt sie sich seltener ausführen (alle 6 Std., alle 12 Std., täglich, wöchentlich) oder abschalten, außerdem gibt es eine manuelle Prüfung.",
           "Robuste Fehlerbehandlung: zuverlässige Behandlung in der SABR-Datenquelle und im Picture-in-Picture-Modus mit begrenzten Wiederholungsschleifen für die Verbindung zum Mediendienst und Feed-Benachrichtigungen statt unendlicher Schleifen."
         ],
         performanceTitle: "Leistungsoptimierungen",
         performance: [
           "Intelligentes UI-Polling: Polling-Schleifen für Position, Warteschlangen-Buttons, Kapitelname, Seek-Bar und Kapitelindex arbeiten nur, wenn sich ihr Wert ändert, werden im Pausierzustand verlangsamt und gestoppt, wenn der Player getrennt ist.",
           "Zero-Allocation-Rendering: SponsorBlock-/Kapitel-Zeitleisten alloziieren nicht mehr bei jedem Frame Paint-/Rect-Objekte, wodurch GC-Spitzen während der Wiedergabe eliminiert werden.",
-          "Entprellte Suche: Suchvorschläge werden mit 300 ms verzögert, statt pro Tastenanschlag eine Netzwerkanfrage zu senden.",
+          "Lokale Suchvorschläge: Standardmäßig stammen sie aus deinem eigenen Verlauf auf dem Gerät; online nur, wenn du es einschaltest, verzögert, zwischengespeichert und nie für einen Link, eine E-Mail-Adresse oder eine Nummer.",
           "Optimierte Persistenz: Die Wiedergabeposition wird alle 5 Sekunden statt jede Sekunde gespeichert und sofort bei Pause oder Ende, dann im Speicher gecacht, damit Listenzeilen beim Binden keine Room-Abfrage ausführen müssen.",
           "Intelligentes DiffUtil: Zeilen werden über eine stabile ID identifiziert, zum Beispiel Video-URL oder Primärschlüssel, sodass Listen nur neu gebunden und Miniaturansichten nur neu geladen werden, wenn sich der Inhalt tatsächlich ändert.",
           "Gedrosselte Benachrichtigungen: Download-Fortschrittsbenachrichtigungen sind auf 2 Aktualisierungen pro Sekunde begrenzt.",
           "Speicherverwaltung: Der Back-Buffer des Players wurde von 3 Minuten auf 1 Minute reduziert, um RAM auf schwächeren Geräten zu sparen.",
-          "Vereinheitlichte Loader: Ein vereinheitlichter Coil-Bild-Loader und ein gemeinsamer HTTP-Cache werden einmal für den gesamten App-Lebenszyklus erstellt."
+          "Vereinheitlichte Loader: Ein vereinheitlichter Coil-Bild-Loader und ein gemeinsamer HTTP-Cache werden einmal für den gesamten App-Lebenszyklus erstellt.",
+          "Eine leichte App: ein einziges 64-Bit-APK unter 9 MB (vorher 15,5 MB), ohne überflüssige Kopien für andere Prozessoren; aus der App selbst wurde nichts entfernt."
         ],
         designTitle: "Oberfläche und Modernisierung",
         designText: "Die README erwähnt einen neuen Aqua-/Grün-Akzent als Standard, rundere Komponentenformen, eine angehobene untere Navigationsleiste und einen Titel mit dynamischem Farbverlauf in der Symbolleiste und im „Über“-Bildschirm. Das Projekt verwendet außerdem das Material-3-Expressive-Design.",
@@ -1239,10 +1264,10 @@
         vsNewpipeText: "Laut README besteht der Hauptunterschied zu NewPipe in einem deutlich stärkeren Fokus auf Benutzererfahrung. Watube verwendet Material 3 Expressive, unterstützt SponsorBlock, ReturnYouTubeDislike und DeArrow und ermöglicht Synchronisierung über Piped. NewPipe erlaubt zusätzlich andere Plattformen wie SoundCloud, PeerTube, Bandcamp und media.ccc.de. Beide Projekte werden als gute Clients zum Ansehen von YouTube beschrieben.",
         licenseTitle: "Lizenz",
         licenseText: "Watube ist freie Software: Du kannst sie verwenden, studieren, teilen und ändern. Die App kann unter den Bedingungen der GNU General Public License Version 3 oder neuer, veröffentlicht von der Free Software Foundation, weitergegeben und/oder geändert werden.",
-        contributionTitle: "Mitwirkung",
-        contributionText: "Beiträge sind willkommen. Die README bittet, vor der Implementierung ein Issue zu öffnen, um vorgeschlagene Änderungen zu besprechen, den Kotlin-Coding-Konventionen zu folgen, konventionelle Commit-Nachrichten zu verwenden, gründlich zu testen und eine Pull Request mit klarer Beschreibung einzureichen. Es steht auch, dass die Verwendung von KI zum Generieren von Issue-Texten oder Pull Requests nicht erlaubt ist und solche Beiträge abgelehnt werden.",
+        contributionTitle: "Mitwirken: von Hand oder mit KI",
+        contributionText: "Beiträge sind willkommen, ob von Hand geschrieben oder mit Hilfe einer KI. In jedem Fall müssen sie den Kotlin-Coding-Konventionen folgen und sehr gründlich getestet sein. Wenn du mit einer KI arbeitest, werden für dieses Projekt nur zwei Modelle empfohlen: Claude Opus 5.5 (Anthropic) und MiMo-V2.6-Flash (Xiaomi); für MiMo wird das Tool OpenCode empfohlen. Andere Modelle werden nicht empfohlen. Gib in deinem Pull Request an, ob eine KI verwendet wurde, und welche. Bald kommt eine Dokumentation mit einem Prompt in den Quellcode: Sie beschreibt den Kontext, in dem ich die KI für Audits und fortgeschrittene Korrekturen arbeiten lasse, wenn ein Fehler hartnäckig bleibt und eine tiefere Diagnose braucht, als meine aktuellen Kenntnisse erlauben.",
         usageTitle: "Meine Meinung zur KI und warum ich sie erlaube",
-        usageText: "Generative KI ist interessant. Das ist meine persönliche Meinung, und manche werden anderer Meinung sein, was ich verstehe. Ich finde KI in vielen Situationen sehr nützlich, in denen manuelles Arbeiten sehr lange dauert, um konkrete Ergebnisse zu erzielen, und ein viel höheres Fehlerrisiko birgt — zum Beispiel, wenn man monatelang jeden Tag dieselbe Aufgabe macht, geht das auf die Moral und das Projekt wird eintönig, selbst wenn man es liebt. Deshalb erlaube ich den Einsatz von KI für Beiträge. Aber sie darf den menschlichen Faktor nicht ersetzen, der unerlässlich ist, um zu überprüfen, ob Audits — besonders KI-gestützte — relevant sind, anstatt das Projekt stillschweigend zu zerstören, weil die menschliche Kontrolle vernachlässigt wurde. Mein Ansatz: Sobald ich eine große Zahl an Änderungen erreiche (zum Beispiel mehr als 20 Korrekturen für ein großes Update), delegiere ich einen Teil an die KI und behalte den Inspektionsteil für mich. Die KI ändert die Teile, die ich verlange, während ich einen sehr spezifischen Prompt verwende, damit sie genau dokumentiert, welche Seiten sie berührt und was sie geändert oder ersetzt hat, was meine Überprüfung stark beschleunigt. Der Prompt wird bei Interesse bereitgestellt, um das Beitragen zu erleichtern. Kleinere Updates werden manuell gemacht. Audits werden jedoch immer mit KI durchgeführt, mit einem Prompt von mehr als 47.000 Zeilen und einem vollständigen Verfahren — daher die Wichtigkeit, die von mir empfohlenen KIs zu verwenden, da sie die einzigen zuverlässigen sind und die einzigen, die die vorgegebenen Prompts respektieren."
+        usageText: "Generative KI ist interessant. Das ist eine persönliche Meinung: Manche werden anderer Meinung sein, und das verstehe ich. Ich finde sie in vielen Situationen sehr nützlich, in denen man von Hand sehr lange bräuchte, um konkrete Ergebnisse zu erzielen, und dabei viel eher Fehler macht. Stell dir vor, du machst monatelang den ganzen Tag dieselbe Aufgabe: Das zehrt an der Moral, und selbst wenn du das Projekt magst, kann dich die Wiederholung davon abbringen. Deshalb erlaube ich KI für Beiträge. Sie darf aber den menschlichen Faktor nicht ersetzen, der entscheidend bleibt: Ein Mensch prüft, ob Audits, gerade solche mit KI, relevant sind und das Projekt nicht mangels Kontrolle kaputt gemacht haben. Meine Methode: Wenn sich Änderungen häufen, zum Beispiel mehr als 20 Korrekturen für ein großes Update, übertrage ich einen Teil der Arbeit an die KI und behalte die Prüfung für mich. Sie ändert die Teile, um die ich sie gebeten habe, und folgt dabei einem sehr genauen Prompt, der sie verpflichtet, genau zu dokumentieren, welche Dateien sie angefasst, geändert oder ersetzt hat – das verkürzt meine Prüfzeit erheblich. Dieser Prompt wird bei Interesse zur Verfügung gestellt, um Beiträge zu erleichtern. Kleinere Updates, etwa eine Fehlerkorrektur, werden von Hand umgesetzt und geprüft. Audits werden dagegen immer mit KI durchgeführt, mit einem Prompt von mehr als 47.000 Zeilen, der ein ganzes Verfahren vorgibt. Deshalb ist es wichtig, die von mir empfohlenen Modelle zu verwenden: Nach meiner Erfahrung sind sie die einzigen, die sich als geeignet erwiesen haben und die ihnen anvertrauten Prompts einhalten."
       }
     };
 
@@ -1274,7 +1299,7 @@
       });
 
       document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
-        const key = el.dataset.i18mAria;
+        const key = el.dataset.i18nAria;
         const value = dict[key] !== undefined ? dict[key] : translations.en[key];
         if (value != null) {
           el.setAttribute('aria-label', value);

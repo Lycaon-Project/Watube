@@ -2,9 +2,11 @@ package com.watube.yard.obj
 
 import kotlinx.serialization.Serializable
 
+// region Backup & Restore
 @Serializable
 data class PipedPlaylistFile(
     val format: String = "Piped",
     val version: Int = 1,
     val playlists: List<PipedImportPlaylist> = emptyList()
 )
+// endregion

@@ -1,6 +1,6 @@
 // ============================================================================
 // Watube Settings — build system based on LibreTube upstream, tuned for
-// Android Studio sync + AGP 9.4.1 / Gradle 9.7 performance.
+// Android Studio sync + AGP 9.5.0 / Gradle 9.8 performance.
 // ============================================================================
 
 @file:Suppress("UnstableApiUsage")
@@ -53,7 +53,7 @@ dependencyResolutionManagement {
             forRepository { maven("https://jitpack.io") }
             filter {
                 includeGroup("com.github.TeamNewPipe")
-                includeGroup("com.github.libre-tube")
+                includeGroup("com.github.Lycaon-Project")
             }
         }
 

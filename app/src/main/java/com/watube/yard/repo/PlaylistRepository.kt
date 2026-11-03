@@ -5,6 +5,7 @@ import com.watube.yard.api.obj.Playlists
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.obj.PipedImportPlaylist
 
+// region Playlists
 interface PlaylistRepository {
     suspend fun getPlaylist(playlistId: String): Playlist
     suspend fun getPlaylists(): List<Playlists>
@@ -17,3 +18,4 @@ interface PlaylistRepository {
     suspend fun createPlaylist(playlistName: String): String?
     suspend fun deletePlaylist(playlistId: String): Boolean
 }
+// endregion

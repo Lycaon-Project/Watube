@@ -22,6 +22,7 @@ import com.watube.yard.ui.adapters.CommentsPagingAdapter
 import com.watube.yard.ui.models.CommentsViewModel
 import com.watube.yard.ui.sheets.CommentsSheet
 
+// region Comments
 class CommentsMainFragment : Fragment(R.layout.fragment_comments) {
 
     private val viewModel: CommentsViewModel by activityViewModels()
@@ -141,3 +142,4 @@ class CommentsMainFragment : Fragment(R.layout.fragment_comments) {
         private const val POSITION_START = 0
     }
 }
+// endregion

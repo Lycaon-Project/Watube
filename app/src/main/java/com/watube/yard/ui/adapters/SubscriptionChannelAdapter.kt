@@ -17,6 +17,7 @@ import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.sheets.ChannelOptionsBottomSheet
 import com.watube.yard.ui.viewholders.SubscriptionChannelViewHolder
 
+// region Subscriptions
 class SubscriptionChannelAdapter :
     ListAdapter<Subscription, SubscriptionChannelViewHolder>(
         DiffUtilItemCallback(areItemsTheSame = { oldItem, newItem ->
@@ -77,3 +78,4 @@ class SubscriptionChannelAdapter :
         }
     }
 }
+// endregion

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Return YouTube Dislike
 @Serializable
 @Parcelize
 data class VoteInfo(
@@ -15,3 +16,4 @@ data class VoteInfo(
     val viewCount: Long,
     val deleted: Boolean
 ) : Parcelable
+// endregion

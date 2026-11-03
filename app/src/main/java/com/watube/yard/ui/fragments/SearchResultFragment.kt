@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
+// region Search
 class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_search_result) {
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
@@ -44,25 +45,6 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSearchResultBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
-
-        // Persistent search bar: keeps the query visible, animates in, and re-opens the
-        // editable search on tap (back to the search input, which still holds the query).
-        binding.resultSearchText.text = args.query
-        binding.resultSearchBar.setOnClickListener {
-            val nav = findNavController()
-            if (nav.previousBackStackEntry?.destination?.id == R.id.searchFragment) {
-                nav.popBackStack()
-            } else {
-                nav.navigate(R.id.openSearch)
-            }
-        }
-        if (savedInstanceState == null) {
-            binding.resultSearchBar.apply {
-                alpha = 0f
-                translationY = -16f * resources.displayMetrics.density
-                animate().alpha(1f).translationY(0f).setDuration(220L).start()
-            }
-        }
 
         // Persistent search bar: keeps the query visible, animates in, and re-opens the
         // editable search on tap (back to the search input, which still holds the query).
@@ -160,18 +142,20 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
 
         viewModel.searchSuggestion.observe(viewLifecycleOwner) { suggestion ->
             binding.searchSuggestionContainer.isVisible = suggestion != null
-            binding.searchSuggestionContainer.setOnClickListener(null)
             if (suggestion == null) return@observe
 
             val (suggestion, corrected) = suggestion
             binding.searchSuggestion.text = suggestion
-            binding.searchSuggestionLabel.text = if (corrected) {
-                getString(R.string.showing_results_for)
-            } else {
-                binding.searchSuggestionContainer.setOnClickListener {
-                    mainActivity.openSearchResults(suggestion)
-                }
-                getString(R.string.did_you_mean)
+            binding.searchSuggestionLabel.setText(
+                if (corrected) R.string.showing_results_for else R.string.did_you_mean
+            )
+            // "did you mean" and "showing results for" both search the suggested spelling (its
+            // own text in the search bar and the history), in place of the misspelled results
+            // so that going back does not land on them again
+            binding.searchSuggestionContainer.setOnClickListener {
+                val main = mainActivity
+                findNavController().popBackStack()
+                main.openSearchResults(suggestion)
             }
         }
 
@@ -192,3 +176,4 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
         _binding = null
     }
 }
+// endregion

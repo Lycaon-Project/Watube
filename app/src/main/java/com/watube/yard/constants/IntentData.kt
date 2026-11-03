@@ -1,5 +1,6 @@
 package com.watube.yard.constants
 
+// region Navigation
 object IntentData {
     const val downloadData = "downloadData"
     const val playerData = "playerData"
@@ -28,6 +29,7 @@ object IntentData {
     const val duration = "duration"
     const val appUpdateChangelog = "updateChangelog"
     const val appUpdateURL = "updateURL"
+    const val historyStatusFilter = "historyStatusFilter"
     const val backupFile = "backupFile"
     const val playlistTask = "playlistTask"
     const val loginTask = "loginTask"
@@ -63,3 +65,4 @@ object IntentData {
     const val audioOnly = "audioOnly"
     const val category = "category"
 }
+// endregion

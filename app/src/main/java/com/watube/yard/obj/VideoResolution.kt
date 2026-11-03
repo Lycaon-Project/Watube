@@ -2,6 +2,7 @@ package com.watube.yard.obj
 
 import kotlin.math.abs
 
+// region Playback Options
 data class VideoResolution(
     val name: String,
     val resolution: Int,
@@ -36,3 +37,4 @@ data class VideoResolution(
             VideoResolution(qualityLabel(height), height, qualityBadge(height))
     }
 }
+// endregion

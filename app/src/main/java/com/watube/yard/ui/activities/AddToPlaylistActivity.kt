@@ -13,10 +13,12 @@ import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.dialogs.AddToPlaylistDialog
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Playlists
 class AddToPlaylistActivity : BaseActivity() {
     override val isDialogActivity: Boolean = true
 
@@ -41,6 +43,8 @@ class AddToPlaylistActivity : BaseActivity() {
             val videoInfo = if (PreferenceHelper.getToken().isEmpty()) {
                 try {
                     MediaServiceRepository.instance.getStreams(videoId).toStreamItem(videoId)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     // Log the exception for better debugging
                     Log.e(TAG, "Failed to fetch stream info", e)
@@ -68,3 +72,4 @@ class AddToPlaylistActivity : BaseActivity() {
         private const val TAG = "AddToPlaylistActivity"
     }
 }
+// endregion

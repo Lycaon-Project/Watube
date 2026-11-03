@@ -1,6 +1,7 @@
 package com.watube.yard.player
 
 import android.os.Looper
+import androidx.media3.common.AdPlaybackState
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaLibraryInfo
@@ -18,12 +19,12 @@ import androidx.media3.exoplayer.source.MediaPeriod
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MediaSource.MediaPeriodId
 import androidx.media3.exoplayer.upstream.Allocator
-import androidx.media3.exoplayer.upstream.CmcdConfiguration
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import com.watube.yard.player.manifest.SabrManifest
 import com.watube.yard.player.parser.SabrClient
 
+// region SABR Streaming
 /** A Sabr [MediaSource].  */
 @UnstableApi
 class SabrMediaSource(
@@ -32,7 +33,6 @@ class SabrMediaSource(
     private val sabrClient: SabrClient,
     private val chunkSourceFactory: SabrChunkSource.Factory,
     private val compositeSequenceableLoaderFactory: CompositeSequenceableLoaderFactory,
-    private val cmcdConfiguration: CmcdConfiguration?,
     private val drmSessionManager: DrmSessionManager,
     private val loadErrorHandlingPolicy: LoadErrorHandlingPolicy,
 ) : BaseMediaSource() {
@@ -43,15 +43,9 @@ class SabrMediaSource(
 
     /** Factory for [SabrMediaSource]s.  */
     class Factory(private val manifest: SabrManifest) : MediaSource.Factory {
-        private var cmcdConfigurationFactory: CmcdConfiguration.Factory? = null
         private var drmSessionManagerProvider: DrmSessionManagerProvider = DefaultDrmSessionManagerProvider()
         private val compositeSequenceableLoaderFactory= DefaultCompositeSequenceableLoaderFactory()
         private var loadErrorHandlingPolicy: LoadErrorHandlingPolicy = SabrLoadErrorHandlingPolicy()
-
-        override fun setCmcdConfigurationFactory(cmcdConfigurationFactory: CmcdConfiguration.Factory): Factory =
-            this.apply {
-                this.cmcdConfigurationFactory = cmcdConfigurationFactory
-            }
 
         override fun setDrmSessionManagerProvider(
             drmSessionManagerProvider: DrmSessionManagerProvider,
@@ -69,7 +63,6 @@ class SabrMediaSource(
          */
         override fun createMediaSource(mediaItem: MediaItem): SabrMediaSource {
             checkNotNull(mediaItem.localConfiguration)
-            val cmcdConfiguration = cmcdConfigurationFactory?.createCmcdConfiguration(mediaItem)
             val sabrClient = SabrClient(manifest)
 
             return SabrMediaSource(
@@ -78,7 +71,6 @@ class SabrMediaSource(
                 sabrClient,
                 DefaultSabrChunkSource.Factory(SabrDataSource.Factory(sabrClient)),
                 compositeSequenceableLoaderFactory,
-                cmcdConfiguration,
                 drmSessionManagerProvider.get(mediaItem),
                 loadErrorHandlingPolicy
             )
@@ -136,7 +128,6 @@ class SabrMediaSource(
                 periodIndex,
                 chunkSourceFactory,
                 mediaTransferListener,
-                cmcdConfiguration,
                 drmSessionManager,
                 drmEventDispatcher,
                 loadErrorHandlingPolicy,
@@ -194,7 +185,9 @@ class SabrMediaSource(
                 uid,
                 0,
                 Util.msToUs(manifest.durationMs),
-                Util.msToUs(0) - offsetInFirstPeriodUs
+                Util.msToUs(0) - offsetInFirstPeriodUs,
+                AdPlaybackState.NONE,
+                false
             )
         }
 
@@ -243,8 +236,10 @@ class SabrMediaSource(
  * sat buffering for ~40 s before the error): it is fatal at once, so that the service replaces the
  * session right away (see [SabrSessionRenewals]).
  */
+@UnstableApi
 private class SabrLoadErrorHandlingPolicy : DefaultLoadErrorHandlingPolicy() {
     override fun getRetryDelayMsFor(loadErrorInfo: LoadErrorHandlingPolicy.LoadErrorInfo): Long =
         if (loadErrorInfo.exception is SabrAttestationException) C.TIME_UNSET
         else super.getRetryDelayMsFor(loadErrorInfo)
 }
+// endregion

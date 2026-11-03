@@ -7,6 +7,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import org.xml.sax.Attributes
 
+// region Video Details
 class LinkHandler(
     private val clickCallback: (String) -> Unit
 ) {
@@ -53,3 +54,4 @@ class LinkHandler(
         )
     }
 }
+// endregion

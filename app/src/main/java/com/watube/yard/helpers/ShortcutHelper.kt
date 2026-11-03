@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// region App Shortcuts
 object ShortcutHelper {
 
     private fun createShortcut(context: Context, appShortcut: TopLevelDestination): ShortcutInfoCompat {
@@ -37,3 +38,4 @@ object ShortcutHelper {
         }
     }
 }
+// endregion

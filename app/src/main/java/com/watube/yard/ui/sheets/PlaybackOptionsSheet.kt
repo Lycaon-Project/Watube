@@ -22,6 +22,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.log
 import kotlin.math.pow
 
+// region Playback Options
 class PlaybackOptionsSheet(
     private val player: MediaController
 ) : ExpandedBottomSheet(R.layout.playback_bottom_sheet) {
@@ -185,3 +186,4 @@ class PlaybackOptionsSheet(
         private const val SEMITONES_IN_ONE_OCTAVE = 12.0f
     }
 }
+// endregion

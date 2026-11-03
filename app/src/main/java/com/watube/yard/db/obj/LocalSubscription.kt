@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.watube.yard.ui.dialogs.ShareDialog
 import kotlinx.serialization.Serializable
 
+// region Subscriptions
 @Serializable
 @Entity(tableName = "localSubscription")
 data class LocalSubscription(
@@ -24,3 +25,4 @@ data class LocalSubscription(
         verified: Boolean = false
     ) : this(channelId, "${ShareDialog.YOUTUBE_FRONTEND_URL}/channel/$channelId", name, avatar, verified)
 }
+// endregion

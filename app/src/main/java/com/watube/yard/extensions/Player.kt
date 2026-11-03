@@ -2,6 +2,7 @@ package com.watube.yard.extensions
 
 import androidx.media3.common.Player
 
+// region Video Player
 fun Player.togglePlayPauseState() {
     when {
         playerError != null -> {
@@ -18,3 +19,4 @@ fun Player.togglePlayPauseState() {
         else -> pause()
     }
 }
+// endregion

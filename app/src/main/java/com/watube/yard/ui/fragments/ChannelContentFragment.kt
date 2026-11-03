@@ -25,10 +25,12 @@ import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.extensions.addOnBottomReachedListener
 import com.watube.yard.ui.models.ChannelViewModel
 import com.watube.yard.ui.models.sources.ChannelTabPagingSource
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Channels
 class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_channel_content) {
     private var _binding: FragmentChannelContentBinding? = null
     private val binding get() = _binding!!
@@ -76,6 +78,8 @@ class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_ch
                 lifecycleScope.launch(Dispatchers.IO) {
                     val resp = try {
                        MediaServiceRepository.instance.getChannelNextPage(channelId, nextPage!!)
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (_: Exception) {
                         return@launch
                     } finally {
@@ -126,3 +130,4 @@ class ChannelContentFragment : DynamicLayoutManagerFragment(R.layout.fragment_ch
         _binding = null
     }
 }
+// endregion

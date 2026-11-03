@@ -6,7 +6,9 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.watube.yard.WatubeApp
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
+// region Database
 object DatabaseHolder {
     private const val DATABASE_NAME = "LibreTubeDatabase"
 
@@ -101,7 +103,14 @@ object DatabaseHolder {
     }
 
     val Database by lazy {
-        Room.databaseBuilder(WatubeApp.instance, AppDatabase::class.java, DATABASE_NAME)
+        val context = WatubeApp.instance
+        // encrypted at rest (see DatabaseEncryption); a database still in clear text is
+        // converted once, before Room opens it
+        val passphrase =
+            DatabaseEncryption.prepare(context, context.getDatabasePath(DATABASE_NAME))
+
+        Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+            .apply { passphrase?.let { openHelperFactory(SupportOpenHelperFactory(it)) } }
             .addMigrations(
                 MIGRATION_11_12,
                 MIGRATION_12_13,
@@ -116,3 +125,4 @@ object DatabaseHolder {
             .build()
     }
 }
+// endregion

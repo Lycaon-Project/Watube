@@ -5,8 +5,10 @@ import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import com.watube.yard.ui.base.BasePreferenceFragment
 
+// region Settings
 /**
  * [EditTextPreference] that only allows numeric input.
  * The actual functionality is done in [BasePreferenceFragment].
  */
 class EditNumberPreference(context: Context, attributeSet: AttributeSet?): EditTextPreference(context, attributeSet)
+// endregion

@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.watube.yard.db.obj.LocalSubscription
 
+// region Subscriptions
 @Dao
 interface LocalSubscriptionDao {
     @Query("SELECT * FROM localSubscription")
@@ -33,3 +34,4 @@ interface LocalSubscriptionDao {
     @Query("SELECT EXISTS(SELECT * FROM localSubscription WHERE channelId = :channelId)")
     suspend fun includes(channelId: String): Boolean
 }
+// endregion

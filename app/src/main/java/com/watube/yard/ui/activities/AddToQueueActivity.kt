@@ -7,6 +7,7 @@ import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.util.PlayingQueue
 
+// region Playing Queue
 /**
  * Receives a text by the intent and attempts to add it to the playing queue
  * If no video is playing currently,the queue will be left unchanged and the main activity is being resumed
@@ -37,3 +38,4 @@ class AddToQueueActivity : BaseActivity() {
         finish()
     }
 }
+// endregion

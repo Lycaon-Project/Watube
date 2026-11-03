@@ -8,6 +8,7 @@ import androidx.core.content.getSystemService
 import com.watube.yard.enums.NotificationId
 import com.watube.yard.helpers.BackgroundHelper
 
+// region Video Player
 class OnClearFromRecentService : Service() {
     private var nManager: NotificationManager? = null
 
@@ -28,3 +29,4 @@ class OnClearFromRecentService : Service() {
         stopSelf()
     }
 }
+// endregion

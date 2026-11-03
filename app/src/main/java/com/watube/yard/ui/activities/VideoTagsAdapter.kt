@@ -7,6 +7,7 @@ import com.watube.yard.databinding.VideoTagRowBinding
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.viewholders.VideoTagsViewHolder
 
+// region Video Details
 class VideoTagsAdapter : ListAdapter<String, VideoTagsViewHolder>(DiffUtilItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoTagsViewHolder {
@@ -27,3 +28,4 @@ class VideoTagsAdapter : ListAdapter<String, VideoTagsViewHolder>(DiffUtilItemCa
         }
     }
 }
+// endregion

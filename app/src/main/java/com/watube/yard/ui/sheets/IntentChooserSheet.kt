@@ -8,6 +8,7 @@ import com.watube.yard.databinding.BottomSheetBinding
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.ui.adapters.IntentChooserAdapter
 
+// region Share
 class IntentChooserSheet : BaseBottomSheet() {
     private lateinit var url: String
 
@@ -24,3 +25,4 @@ class IntentChooserSheet : BaseBottomSheet() {
         binding.optionsRecycler.adapter = IntentChooserAdapter(packages, url)
     }
 }
+// endregion

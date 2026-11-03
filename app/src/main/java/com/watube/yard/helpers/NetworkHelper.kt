@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.core.content.getSystemService
 
+// region Networking
 object NetworkHelper {
     /**
      * Detect whether network is available
@@ -43,3 +44,4 @@ object NetworkHelper {
         return connectivityManager.isActiveNetworkMetered
     }
 }
+// endregion

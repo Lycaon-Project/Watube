@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Appearance -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -56,11 +57,14 @@
 
     <PreferenceCategory app:title="@string/layout">
 
+        <!-- region Navigation -->
         <Preference
             android:icon="@drawable/ic_home"
             app:key="navbar_items"
             app:title="@string/navigation_bar" />
+        <!-- endregion -->
 
+        <!-- region Home -->
         <MultiSelectListPreference
             android:entries="@array/homeTabItems"
             android:entryValues="@array/homeTabItemsValues"
@@ -68,12 +72,15 @@
             android:key="home_tab_content"
             android:title="@string/home_tab_content"
             app:defaultValue="@array/homeTabItemsValues" />
+        <!-- endregion -->
+        <!-- region Search -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_search"
             android:summary="@string/persistent_search_bar_summary"
             app:key="persistent_search_bar"
             app:title="@string/persistent_search_bar" />
+        <!-- endregion -->
 
         <ListPreference
             android:icon="@drawable/ic_grid"
@@ -97,13 +104,16 @@
 
     <PreferenceCategory app:title="@string/location">
 
+        <!-- region Settings -->
         <ListPreference
             android:icon="@drawable/ic_translate"
             app:defaultValue="sys"
             app:key="language"
             app:title="@string/changeLanguage"
             app:useSimpleSummaryProvider="true" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
 </PreferenceScreen>
+<!-- endregion -->

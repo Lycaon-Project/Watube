@@ -17,16 +17,18 @@ import com.watube.yard.databinding.DialogDeleteAccountBinding
 import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.preferences.InstanceSettings
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Piped Account
 class DeleteAccountDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogDeleteAccountBinding.inflate(layoutInflater)
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setView(binding.root)
             .setPositiveButton(R.string.deleteAccount, null)
             .setNegativeButton(R.string.cancel, null)
@@ -56,6 +58,8 @@ class DeleteAccountDialog : DialogFragment() {
             withContext(Dispatchers.IO) {
                 RetrofitInstance.authApi.deleteAccount(token, DeleteUserRequest(password))
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
             Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_SHORT).show()
@@ -69,3 +73,4 @@ class DeleteAccountDialog : DialogFragment() {
         )
     }
 }
+// endregion

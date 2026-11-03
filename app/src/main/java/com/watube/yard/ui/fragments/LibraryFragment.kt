@@ -34,10 +34,12 @@ import com.watube.yard.ui.dialogs.CreatePlaylistDialog
 import com.watube.yard.ui.dialogs.CreatePlaylistDialog.Companion.CREATE_PLAYLIST_DIALOG_REQUEST_KEY
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.sheets.BaseBottomSheet
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Library
 class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
@@ -175,9 +177,9 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
                 binding.libraryScroll.smoothScrollTo(0, binding.playlistsSection.top)
             }
         }
+        // the tile leads to the privacy tab, which shows what the app keeps and sends
         binding.shortcutPrivacy.root.setOnClickListener {
-            Toast.makeText(context, R.string.watube_shortcut_privacy_toast, Toast.LENGTH_SHORT)
-                .show()
+            findNavController().navigate(R.id.privacyFragment)
         }
 
         refreshHistoryCount()
@@ -224,6 +226,8 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
                     withContext(Dispatchers.IO) {
                         PlaylistsHelper.getPlaylists()
                     }
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e(TAG(), e.toString())
                     Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_SHORT).show()
@@ -255,3 +259,4 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
         playlistsAdapter.submitList(playlists)
     }
 }
+// endregion

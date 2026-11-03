@@ -5,6 +5,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import com.watube.yard.extensions.dpToPx
 import com.watube.yard.ui.views.CustomExoPlayerView
 
+// region Fullscreen
 /**
  * A class that handles the scale animation in [CustomExoPlayerView] when entering/exiting
  * fullscreen using the swipe gesture.
@@ -104,3 +105,4 @@ class FullscreenGestureAnimationController(
         private val SCALE_FACTOR = MAXIMUM_SCALE_DIFF_PERCENTAGE / SWIPE_DISTANCE_THRESHOLD
     }
 }
+// endregion

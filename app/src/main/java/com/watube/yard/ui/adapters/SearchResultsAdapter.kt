@@ -38,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Search
 class SearchResultsAdapter(
     private val timeStamp: Long = 0
 ) : PagingDataAdapter<ContentItem, SearchViewHolder>(
@@ -251,3 +252,4 @@ class SearchResultsAdapter(
         }
     }
 }
+// endregion

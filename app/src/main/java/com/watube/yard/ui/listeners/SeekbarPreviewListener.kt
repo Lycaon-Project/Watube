@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.absoluteValue
 
+// region Seekbar Preview
 @UnstableApi
 class SeekbarPreviewListener(
     private val timeFrameReceiver: TimeFrameReceiver,
@@ -107,3 +108,4 @@ class SeekbarPreviewListener(
         const val MIN_PADDING = 20
     }
 }
+// endregion

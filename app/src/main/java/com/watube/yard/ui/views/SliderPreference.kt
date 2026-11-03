@@ -8,9 +8,10 @@ import com.watube.yard.R
 import com.watube.yard.databinding.DialogSliderBinding
 import com.watube.yard.extensions.round
 import com.watube.yard.helpers.PreferenceHelper
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlin.math.roundToInt
 
+// region Settings
 /**
  * Preference that includes a slider
  */
@@ -72,7 +73,7 @@ class SliderPreference(
 
         updateCurrentValueText()
 
-        MaterialAlertDialogBuilder(context)
+        SecureAlertDialogBuilder(context)
             .setTitle(title)
             .setView(sliderBinding.root)
             .setNegativeButton(R.string.cancel, null)
@@ -97,3 +98,4 @@ class SliderPreference(
         return currentValue.round(2).toString()
     }
 }
+// endregion

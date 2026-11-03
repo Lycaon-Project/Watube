@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import androidx.core.view.updateLayoutParams
 
+// region UI Components
 /**
  * A bottom sheet that allows touches on its top/background
  */
@@ -74,3 +75,4 @@ abstract class UndimmedBottomSheet(@LayoutRes layoutResId: Int) : ExpandedBottom
     abstract fun getDragHandle(): View
     abstract fun getBottomSheet(): FrameLayout
 }
+// endregion

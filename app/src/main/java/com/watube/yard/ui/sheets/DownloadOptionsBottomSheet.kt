@@ -21,6 +21,7 @@ import com.watube.yard.ui.fragments.DownloadTab
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.PlayingQueueMode
 
+// region Downloads
 class DownloadOptionsBottomSheet : BaseBottomSheet() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val streamItem = arguments?.parcelable<StreamItem>(IntentData.streamItem)!!
@@ -31,6 +32,8 @@ class DownloadOptionsBottomSheet : BaseBottomSheet() {
         val options = mutableListOf(
             R.string.playOnBackground,
             R.string.share,
+            // downloads are encrypted: a clear copy to use them outside of Watube
+            R.string.export_download,
             R.string.delete
         )
 
@@ -74,6 +77,14 @@ class DownloadOptionsBottomSheet : BaseBottomSheet() {
                     newShareDialog.show(parentFragmentManager, null)
                 }
 
+                R.string.export_download -> {
+                    setFragmentResult(
+                        EXPORT_DOWNLOAD_REQUEST_KEY,
+                        bundleOf(IntentData.videoId to videoId)
+                    )
+                    dialog?.dismiss()
+                }
+
                 R.string.delete -> {
                     setFragmentResult(DELETE_DOWNLOAD_REQUEST_KEY, bundleOf())
                     dialog?.dismiss()
@@ -94,5 +105,7 @@ class DownloadOptionsBottomSheet : BaseBottomSheet() {
 
     companion object {
         const val DELETE_DOWNLOAD_REQUEST_KEY = "delete_download_request_key"
+        const val EXPORT_DOWNLOAD_REQUEST_KEY = "export_download_request_key"
     }
 }
+// endregion

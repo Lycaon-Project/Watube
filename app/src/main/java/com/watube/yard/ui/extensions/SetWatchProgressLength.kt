@@ -12,6 +12,7 @@ import androidx.core.view.updateLayoutParams
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.helpers.ThemeHelper
 
+// region Watch Positions
 /**
  * Shows the already watched time under the video
  * @param videoId The id of the video to inspect
@@ -49,3 +50,4 @@ fun View.setWatchProgressLength(videoId: String, duration: Long) {
 
     isVisible = true
 }
+// endregion

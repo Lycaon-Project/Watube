@@ -2,7 +2,9 @@ package com.watube.yard.extensions
 
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 
+// region Playback Options
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 inline fun DefaultTrackSelector.updateParameters(
     actions: DefaultTrackSelector.Parameters.Builder.() -> Unit
 ) = setParameters(buildUponParameters().apply(actions))
+// endregion

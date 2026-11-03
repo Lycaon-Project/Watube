@@ -22,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// region Playlist Bookmarks
 class PlaylistBookmarkAdapter: ListAdapter<PlaylistBookmark, PlaylistBookmarkViewHolder>(
     DiffUtilItemCallback(
         areItemsTheSame = { oldItem, newItem -> oldItem.playlistId == newItem.playlistId }
@@ -88,3 +89,4 @@ class PlaylistBookmarkAdapter: ListAdapter<PlaylistBookmark, PlaylistBookmarkVie
         }
     }
 }
+// endregion

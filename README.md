@@ -3,7 +3,7 @@
   <!-- ░░░ HERO ░░░ -->
   <img src="assets/banners/gh-banner.png" width="100%" style="max-width: 920px; border-radius: 18px;" alt="Watube — It's our daily comfort">
 
-  <br><br>
+<br><br>
 
   <img src="assets/icons/Watube.png" width="92" alt="Watube icon" align="center">
 
@@ -21,14 +21,14 @@
 
   <!-- ░░░ TECH / STATUS BADGES ░░░ -->
   <p>
-    <img src="https://img.shields.io/badge/Platform-Android%209%E2%80%9316-00C9A7?style=for-the-badge&logo=android&logoColor=white" alt="Android 9 to 16">
-    <img src="https://img.shields.io/badge/Kotlin-100%25-00C9A7?style=for-the-badge&logo=kotlin&logoColor=white" alt="100% Kotlin">
-    <img src="https://img.shields.io/badge/Material_3-Expressive-00C9A7?style=for-the-badge&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
+    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-1FD47E?style=for-the-badge&labelColor=15181C&logo=android&logoColor=white" alt="Android 13 to 17">
+    <img src="https://img.shields.io/badge/Kotlin-100%25-1FD47E?style=for-the-badge&labelColor=15181C&logo=kotlin&logoColor=white" alt="100% Kotlin">
+    <img src="https://img.shields.io/badge/Material_3-Expressive-1FD47E?style=for-the-badge&labelColor=15181C&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
   </p>
   <p>
-    <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-2EA043?style=for-the-badge&logo=gnu&logoColor=white" alt="GPL-v3"></a>
-    <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
-    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.10.4-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Latest release 26.10.2"></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-1FD47E?style=for-the-badge&labelColor=15181C&logo=gnu&logoColor=white" alt="GPL-v3"></a>
+    <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-15181C?style=for-the-badge&labelColor=0E1013&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
+    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.11-1FD47E?style=for-the-badge&labelColor=15181C&logo=github&logoColor=white" alt="Latest release 26.11"></a>
   </p>
 
   <br>
@@ -47,21 +47,12 @@
         </a>
       </td>
     </tr>
-    <tr>
-      <td align="center">
-        <a href="#"><img src="assets/badges/fdrload.png" alt="Get it on F-Droid (soon)" height="62"></a>
-      </td>
-      <td align="center">
-        <a href="#"><img src="assets/badges/izzyload.png" alt="Get it on IzzyOnDroid (soon)" height="62"></a>
-      </td>
-    </tr>
   </table>
 
-  <a href="#"><img src="assets/badges/tgload.png" alt="Join us on Telegram" height="54"></a>
 
-  <br><br>
+<br><br>
 
-  <sub>⚠️ <strong>Nightly builds</strong> ship new features and fixes ahead of the stable channel. They are less tested — use at your own risk.</sub>
+<sub>⚠️ <strong>Nightly builds</strong> ship new features and fixes ahead of the stable channel. They are less tested — use at your own risk.</sub>
 
 </div>
 
@@ -122,6 +113,20 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 
 | Area | What changed |
 | :--- | :--- |
+| ⏭️ **Next video, every time** | With autoplay on, the next suggested video now follows every video, the *Next* button and the notification included; the countdown leads to it again, and a playlist started while another video plays keeps its order. A video no longer hangs on a network without IPv6. |
+| 📺 **Your choices on the TV** | When you cast with **Stolm**, the TV plays the audio track (original or dubbed), the subtitles and the quality you chose on the phone, and *Translation* and *Quality* stay at hand during the cast. The cast window is the same on every Android version, and stopping on the TV brings the video back to your phone. |
+| 🪶 **Lighter app** | One 64-bit APK under 9 MB (it was 15.5 MB): only the code for today's phones is shipped, nothing is removed from the app itself. |
+| 🔎 **Spelling suggestions** | Tapping *Did you mean* or *Showing results for* now runs the search with the corrected spelling (it used to do nothing), and going back skips the misspelled results. |
+| ⏭️ **Quieter SponsorBlock button** | The skip button is a small *Skip* pill on the side, clear of the play button: it shows for a few seconds when a segment starts, then only with the player controls. |
+| 📦 **Up-to-date libraries** | Media3 1.11, current AndroidX, OkHttp 5.5, Coil 3.6 and protobuf 4.36; NewPipeExtractor built from Watube's own fork with the latest caption-track names and the jsoup security fix (CVE-2026-75140). Code and resources left over from Android 12 and older are removed. |
+| 🚫 **No proprietary Google code** | Google Play Services and its Cast SDK are **removed**: nothing in Watube talks to Play Services any more, and the build **refuses** them, even as an indirect dependency. Casting uses **Stolm**, Watube's own client written from the open Cast protocol: it only talks to devices that prove they are genuine, and the video reaches the TV through your phone, never from YouTube directly. |
+| 🔒 **Privacy by default** | Search suggestions come from your own history, on the device; online suggestions are an opt-in and never sent for a link, an e-mail address or a number. Nothing goes to a cloud backup. Connections use TLS 1.2/1.3 only. An option hides the app from screenshots and recordings. |
+| 🎬 **Player polish** | In fullscreen landscape the seek bar sits back at the bottom edge, and the top buttons show their press ripple above the video instead of behind it. |
+| 📱 **Android 13 or newer** | Watube now requires **Android 13** (API 33); older versions are no longer supported. |
+| 🛡️ **Telemetry deleted, not disabled** | The platform playback metrics of Media3 are **cut out of the release build**, and the build **fails** if they come back. |
+| ▶️ **Steadier playback** | A video no longer stops with a *source error* about a minute in: the streaming session is renewed with a single player request — no integrity token, no Google code running on the device. |
+| 🌍 **Neutral region** | With the Trends region on *Automatic*, trending is requested for the **United Kingdom** — the same country for every user — instead of your device's country. Another country can be picked by hand. |
+| 🖐️ **Fullscreen & feed** | Swipe up or down on the player to enter or leave fullscreen (on by default). The subscription feed loads each channel once, so its progress bar no longer jumps backwards. |
 | 🎚️ **True quality ladder** | The resolution picker now mirrors YouTube's real tiers — **2160p 4K · 1440p · 1080p HD · 720p · 480p · 360p · 240p · 144p** — and **only offers tiers the source stream actually provides** (no more phantom values like "2026p"). *Automatique* stays on top and adapts to your connection. |
 | 🔁 **No more playback loops** | A stream error no longer traps the player in an endless "source error → restart" cycle. Watube now **re-extracts a fresh stream once per video**, then surfaces the error cleanly instead of spinning forever. |
 | 🔇 **Clean video switching** | Jumping to another video no longer lets the **previous audio bleed over the new one** — the old track is stopped and cleared before the next begins. |
@@ -136,14 +141,14 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1.jpg" width="19%" alt="Home" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_2.jpg" width="19%" alt="Feed" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_3.jpg" width="19%" alt="Subscriptions" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4.jpg" width="19%" alt="Library" style="border-radius: 14px;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_9.jpg" width="19%" alt="Channel" style="border-radius: 14px;">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="19%" alt="Home">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="19%" alt="Player">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="19%" alt="Subscriptions">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="19%" alt="Search">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="19%" alt="Privacy">
 </div>
 
-<div align="center"><sub>More shots in <a href="SCREEN_SHOT.md">the gallery →</a></sub></div>
+<div align="center"><sub>The essentials only, the rest is yours to discover. · L'essentiel seulement, le reste est à découvrir.<br><a href="SCREEN_SHOT.md">Larger view →</a></sub></div>
 
 <br>
 
@@ -163,7 +168,8 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 | :--- | :--- |
 | **Smart UI polling** | Player-UI loops (`position`, queue buttons, chapter name, seek bar, chapter index) only do work when a value actually changes, slow down while paused, and stop entirely once the player detaches. |
 | **Zero-allocation rendering** | SponsorBlock / chapter time-bars no longer allocate `Paint`/`Rect` every frame — no GC spikes during playback. |
-| **Debounced search** | Suggestions are debounced (300 ms) instead of one network request per keystroke. |
+| **Quiet search** | Suggestions are local by default; online ones (opt-in) are debounced (300 ms) and cached, so fixing a typo asks nothing again. |
+| **No duplicate lookups** | SponsorBlock badges are fetched once per hash prefix and shared by every row on screen; the update check runs once per start of the app. |
 | **Optimised persistence** | Watch position is saved every 5 s (and instantly on pause/end) and cached in memory, so list rows never block on Room while binding. |
 | **Smart DiffUtil** | Rows are keyed by a stable id (video url, primary key…), so lists rebind and reload thumbnails only when content truly changed. |
 | **Throttled notifications** | Download-progress notifications are capped at 2 updates/second. |
@@ -175,10 +181,10 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 <summary><b>🛡️ Quality, security & maintenance</b></summary>
 <br>
 
-- **Strict network security** — cleartext traffic fully disabled (only local dev hosts are exempt).
-- **Secure backups** — encrypted backups explicitly exclude the account token to prevent session hijacking.
+- **Strict network security** — cleartext traffic fully disabled (only local dev hosts are exempt), TLS 1.2/1.3 with forward-secret ciphers only.
+- **No cloud backup** — nothing is sent to an online backup service; the local device-to-device transfer and the in-app export remain, without the account token.
 - **Smaller attack surface** — the unused boot receiver was removed.
-- **Smart updates** — checks against [Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest) at most once every 12 h, plus an on-demand check in settings.
+- **Update check** — looks for new [Lycaon-Project/Watube](https://github.com/Lycaon-Project/Watube/releases/latest) releases once per start of the app (on by default); *Settings → General* can space it out (6 h, 12 h, daily, weekly) or turn it off, and an on-demand check is available.
 - **One-tap maintenance** — *Settings → Maintenance → Clear cache* wipes the image, HTTP and leftover app caches at once.
 - **Resilient error handling** — the SABR data source, picture-in-picture, media-service connection and feed notifications use **bounded** retry loops, never infinite ones.
 - **Unified loaders** — a single Coil image loader and a shared HTTP cache are created once for the whole app lifecycle.
@@ -204,8 +210,8 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 | **Language** | Kotlin 2.3.20 — 100% Kotlin, 0 Java |
 | **UI** | Material 3 Expressive, View system |
 | **Playback** | AndroidX Media3 / ExoPlayer |
-| **Build** | Gradle 9.8.0 · AGP 9.4.1 · JDK 21 |
-| **SDK** | minSdk 28 (Android 9) · compile/target SDK 37 (Android 16) |
+| **Build** | Gradle 9.8.2 · AGP 9.5.0 · JDK 21 |
+| **SDK** | minSdk 33 (Android 13) · compile/target SDK 37 (Android 17) |
 
 </details>
 
@@ -248,20 +254,28 @@ Think of it as the same promise, tuned for *daily comfort*.
 
 ## 🤝 Contributing
 
-Ideas, bug reports, design, code cleanup or deep changes — all welcome.
+Ideas, bug reports, design, code cleanup or deep changes — all welcome. Read the **[contribution guide](CONTRIBUTING.md)** before you start. Every feature's code is marked with its name: the **[feature index](FEATURES.md)** tells you what to search for (`region Share`, `region Stolm`…).
+
+> [!IMPORTANT]
+> **🤖 AI policy — AI-assisted contributions are accepted.**
+> - ✅ **Recommended models:** **Claude Opus 5.5** (Anthropic) and **MiMo-V2.6-Flash** (Xiaomi, with [OpenCode](https://opencode.ai)).
+> - ⚠️ **Any other model:** not recommended.
+> - 🧑‍💻 **A human stays in charge:** read, understand and test everything the AI wrote, and state in your pull request which model you used.
+>
+> Why, and how the maintainer works with AI: **[AI policy](CONTRIBUTING.md#ai-policy)**.
 
 ```text
 1.  Open an issue        → discuss before you build
 2.  Fork & branch        → git checkout -b feature/your-feature-name
-3.  Follow the style     → Kotlin official coding conventions
+3.  Follow the style     → Kotlin conventions, code in its feature region (FEATURES.md)
 4.  Test thoroughly      → make sure it actually works
-5.  Open a pull request  → with a clear description
+5.  Open a pull request  → clear description + AI model used, if any
 ```
 
 **Commit style** — [conventional commits](https://www.conventionalcommits.org/) (`feat`, `fix`, `refactor`, `ci`, `chore`), e.g. `feat: add support for 120Hz displays`. Code follows the [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html).
 
 > [!WARNING]
-> Issues that bypass the template are closed. **AI-generated issue text or pull requests are not accepted.**
+> Issues that bypass the template are closed.
 
 <br>
 

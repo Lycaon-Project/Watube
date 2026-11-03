@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="646" height="250" viewBox="0 0 646 250">
+  <title>JOIN US · Telegram</title>
+  <defs>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9BF25C"/><stop offset="1" stop-color="#1FD47E"/></linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A1E23"/><stop offset="1" stop-color="#121519"/></linearGradient>
+    <clipPath id="clip"><rect width="646" height="250" rx="44"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="646" height="250" fill="url(#face)"/>
+    <rect y="238" width="646" height="12" fill="url(#bar)"/>
+  </g>
+  <rect x="1.5" y="1.5" width="643" height="247" rx="42.5" fill="none" stroke="#2C3038" stroke-width="3"/>
+  <g transform="translate(64,59.0)"><path d="M8 58 112 14 92 112 62 88 48 108 44 80z" fill="#F1F3F5"/><path d="M44 80 100 26 62 88z" fill="#C9CED6"/></g>
+  <text x="226" y="126" font-family="Figtree, 'Segoe UI', Roboto, Arial, sans-serif" font-size="60" font-weight="800" letter-spacing="0.5" fill="#F1F3F5">JOIN US</text>
+  <text x="228" y="174" font-family="Figtree, 'Segoe UI', Roboto, Arial, sans-serif" font-size="34" font-weight="600" fill="#35E08C">Telegram</text>
+</svg>

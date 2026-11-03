@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.withTransaction
 import com.watube.yard.R
+import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.FragmentWatchHistoryBinding
 import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.DatabaseHolder.Database
@@ -31,11 +32,12 @@ import com.watube.yard.ui.extensions.addOnBottomReachedListener
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.WatchHistoryModel
 import com.watube.yard.util.PlayingQueue
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Watch History
 class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watch_history) {
     private var _binding: FragmentWatchHistoryBinding? = null
     private val binding get() = _binding!!
@@ -89,6 +91,11 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
             }
         })
 
+        if (savedInstanceState == null) {
+            arguments?.getInt(IntentData.historyStatusFilter, -1)
+                ?.takeIf { it >= 0 }
+                ?.let(viewModel::showOnly)
+        }
         binding.chipContinue.isChecked = viewModel.selectedStatusFilter in arrayOf(0, 1)
         binding.chipFinished.isChecked = viewModel.selectedStatusFilter in arrayOf(0, 2)
 
@@ -96,7 +103,7 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         val selected = booleanArrayOf(false)
 
         binding.clear.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            SecureAlertDialogBuilder(requireContext())
                 .setTitle(R.string.clear_history)
                 .setMultiChoiceItems(watchPositionItem, selected) { _, index, newValue ->
                     selected[index] = newValue
@@ -182,3 +189,4 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         _binding = null
     }
 }
+// endregion

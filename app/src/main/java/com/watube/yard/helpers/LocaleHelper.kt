@@ -1,35 +1,14 @@
 package com.watube.yard.helpers
 
 import android.content.Context
-import android.os.Build
 import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
 import androidx.core.os.ConfigurationCompat
-import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.obj.Country
 import java.util.Locale
 
+// region Settings
 object LocaleHelper {
-    @Deprecated("Only used for SDKs below 33 for compatibility")
-    fun getAppLocale(): Locale {
-        val languageName = PreferenceHelper.getString(PreferenceKeys.LANGUAGE, "sys")
-        return when {
-            languageName == "sys" -> Locale.getDefault()
-            else -> getLocaleFromAndroidCode(languageName)
-        }
-    }
-
-    fun isPerAppLocaleSettingSupported(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-    }
-
-    /**
-     * Android resource qualifiers (pt-rBR, b+es+419) as BCP 47 tags (pt-BR, es-419). The Locale
-     * constructors are deprecated, and they read b+es+419 or b+en+Shaw as a language of its own.
-     */
-    fun getLocaleFromAndroidCode(code: String): Locale =
-        Locale.forLanguageTag(code.removePrefix("b+").replace('+', '-').replace("-r", "-"))
-
     /**
      * Watube anti-fingerprinting (inspired by Mullvad Browser / Tor Browser policies):
      * when privacy hardening is enabled, the SIM and cellular-network country are never
@@ -71,3 +50,4 @@ object LocaleHelper {
             .sortedBy { it.name }
     }
 }
+// endregion

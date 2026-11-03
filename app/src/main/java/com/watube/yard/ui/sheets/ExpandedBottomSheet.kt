@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.watube.yard.ui.extensions.toggleSystemBars
 import com.watube.yard.ui.models.CommonPlayerViewModel
 
+// region UI Components
 open class ExpandedBottomSheet(@LayoutRes layoutResId: Int) :
     BottomSheetDialogFragment(layoutResId) {
     private val bottomSheet: FrameLayout? get() = dialog?.findViewById(R.id.design_bottom_sheet)
@@ -65,3 +66,4 @@ open class ExpandedBottomSheet(@LayoutRes layoutResId: Int) :
         }
     }
 }
+// endregion

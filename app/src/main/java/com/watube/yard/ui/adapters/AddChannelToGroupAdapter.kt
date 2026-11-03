@@ -8,6 +8,7 @@ import com.watube.yard.db.obj.SubscriptionGroup
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.viewholders.AddChannelToGroupViewHolder
 
+// region Subscriptions
 class AddChannelToGroupAdapter(
     private val channelId: String
 ) : ListAdapter<SubscriptionGroup, AddChannelToGroupViewHolder>(
@@ -41,3 +42,4 @@ class AddChannelToGroupAdapter(
         }
     }
 }
+// endregion

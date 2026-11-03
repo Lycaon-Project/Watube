@@ -3,6 +3,7 @@ package com.watube.yard.parcelable
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+// region Downloads
 @Parcelize
 data class DownloadData(
     val videoId: String,
@@ -13,3 +14,4 @@ data class DownloadData(
     val audioLanguage: String?,
     val subtitleCode: String?
 ) : Parcelable
+// endregion

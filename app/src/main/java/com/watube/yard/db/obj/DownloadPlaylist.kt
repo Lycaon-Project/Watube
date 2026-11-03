@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.nio.file.Path
 
+// region Downloads
 @Entity(tableName = "downloadPlaylist")
 data class DownloadPlaylist(
     @PrimaryKey(autoGenerate = false)
@@ -49,3 +50,4 @@ data class DownloadPlaylistWithDownloadWithItems(
     )
     val downloadVideos: List<DownloadWithItems>
 )
+// endregion

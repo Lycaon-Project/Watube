@@ -28,10 +28,12 @@ import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.models.ChannelViewModel
 import com.watube.yard.ui.sheets.ChannelOptionsBottomSheet
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Channels
 class ChannelFragment : Fragment(R.layout.fragment_channel) {
     private var _binding: FragmentChannelBinding? = null
     private val binding get() = _binding!!
@@ -117,6 +119,8 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
                     MediaServiceRepository.instance.getChannelByName(channelName!!)
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
             context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
@@ -245,7 +249,6 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
                 override fun onPageSelected(position: Int) {
                     val chip = binding.tabParent.getChildAt(position) as? Chip ?: return
                     if (!chip.isChecked) chip.isChecked = true
-                    // keep the active chip visible in the horizontal scroller
                     binding.tabScroll.smoothScrollTo(chip.left - chip.paddingLeft, 0)
                 }
             })
@@ -271,3 +274,4 @@ class ChannelContentAdapter(
         )
     }
 }
+// endregion

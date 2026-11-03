@@ -18,11 +18,24 @@ import retrofit2.create
 import java.io.File
 
 object RetrofitInstance {
-    const val PIPED_API_URL = "https://pipedapi.kavin.rocks"
+    // region Networking
+    val apiLazyMgr = resettableManager()
+    val kotlinxConverterFactory = JsonHelper.json
+        .asConverterFactory("application/json".toMediaType())
 
-    /** Shared http cache: avoids re-downloading trending feeds, configs, suggestions, ... */
-    const val HTTP_CACHE_DIR = "http_cache"
-    private const val HTTP_CACHE_MAX_BYTES = 20L * 1024 * 1024
+    private val cacheLock = Any()
+
+    @Volatile
+    private var httpCache: Cache? = null
+
+    @Volatile
+    private var httpClientInstance: OkHttpClient? = null
+    // endregion
+
+    // region Piped Account
+    val authApi by resettableLazy(apiLazyMgr) {
+        buildRetrofitInstance<PipedAuthApi>(authUrl)
+    }
 
     val authUrl
         get() = if (
@@ -38,18 +51,26 @@ object RetrofitInstance {
         } else {
             PipedMediaServiceRepository.apiUrl
         }
+    // endregion
 
-    val apiLazyMgr = resettableManager()
-    val kotlinxConverterFactory = JsonHelper.json
-        .asConverterFactory("application/json".toMediaType())
+    // region Networking
+    // the url provided here isn't actually used anywhere in the external api
+    // SponsorBlock, DeArrow, Return YouTube Dislike and GitHub: TLS 1.3 only
+    val externalApi by resettableLazy(apiLazyMgr) {
+        buildRetrofitInstance<ExternalApi>(PIPED_API_URL, knownHostsClient())
+    }
 
-    private val cacheLock = Any()
+    /**
+     * [ExternalApi.getInstanceConfig] only: a Piped instance can be self-hosted behind a server
+     * without TLS 1.3, it keeps the shared TLS 1.2 / 1.3 client.
+     */
+    val instanceConfigApi by resettableLazy(apiLazyMgr) {
+        buildRetrofitInstance<ExternalApi>(PIPED_API_URL)
+    }
 
-    @Volatile
-    private var httpCache: Cache? = null
-
-    @Volatile
-    private var httpClientInstance: OkHttpClient? = null
+    /** Shared http cache: avoids re-downloading trending feeds, configs, suggestions, ... */
+    const val HTTP_CACHE_DIR = "http_cache"
+    private const val HTTP_CACHE_MAX_BYTES = 20L * 1024 * 1024
 
     val httpClient: OkHttpClient
         get() = httpClientInstance ?: synchronized(cacheLock) {
@@ -79,15 +100,9 @@ object RetrofitInstance {
             cacheDirectory.mkdirs()
             apiLazyMgr.reset()
         }
-    }
-
-    val authApi by resettableLazy(apiLazyMgr) {
-        buildRetrofitInstance<PipedAuthApi>(authUrl)
-    }
-
-    // the url provided here isn't actually used anywhere in the external api
-    val externalApi by resettableLazy(apiLazyMgr) {
-        buildRetrofitInstance<ExternalApi>(PIPED_API_URL)
+        // the SponsorBlock answers kept in memory go too: "clear cache" and "new identity"
+        // must leave no recent video prefix behind
+        NewPipeMediaServiceRepository.invalidateSegmentCache()
     }
 
     /**
@@ -111,10 +126,23 @@ object RetrofitInstance {
         return httpClient.build()
     }
 
-    inline fun <reified T: Any> buildRetrofitInstance(apiUrl: String): T = Retrofit.Builder()
+    /** [httpClient] restricted to TLS 1.3: same cache, pool and interceptors. */
+    private fun knownHostsClient(): OkHttpClient = httpClient.newBuilder()
+        .connectionSpecs(listOf(SharedHttpClient.TLS_1_3_ONLY))
+        .build()
+
+    inline fun <reified T: Any> buildRetrofitInstance(
+        apiUrl: String,
+        client: OkHttpClient = httpClient,
+    ): T = Retrofit.Builder()
         .baseUrl(apiUrl)
-        .client(httpClient)
+        .client(client)
         .addConverterFactory(kotlinxConverterFactory)
         .build()
         .create<T>()
+    // endregion
+
+    // region Piped Instances
+    const val PIPED_API_URL = "https://pipedapi.kavin.rocks"
+    // endregion
 }

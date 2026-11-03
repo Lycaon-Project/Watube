@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+// region Playlists
 @Serializable
 @Parcelize
 data class Playlists(
@@ -13,3 +14,4 @@ data class Playlists(
     val thumbnail: String? = null,
     val videos: Long = 0
 ) : Parcelable
+// endregion

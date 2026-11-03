@@ -14,6 +14,7 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.google.android.material.R
 
+// region SponsorBlock
 /**
  * TimeBar that can be marked with SponsorBlock Segments
  */
@@ -78,3 +79,4 @@ open class MarkableTimeBar(
         segments = listOf()
     }
 }
+// endregion

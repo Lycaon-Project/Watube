@@ -7,6 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
+// region Subscriptions
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 @Entity(tableName = "subscriptionGroups")
@@ -18,3 +19,4 @@ data class SubscriptionGroup(
     var channels: List<String> = listOf(),
     var index: Int = 0
 )
+// endregion

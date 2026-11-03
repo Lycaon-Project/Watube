@@ -12,12 +12,13 @@ import com.watube.yard.db.obj.DownloadPlaylistWithDownload
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// region Downloads
 class DownloadPlaylistViewHolder(val binding: PlaylistsRowBinding) :
     RecyclerView.ViewHolder(binding.root)
 
@@ -94,7 +95,7 @@ class DownloadPlaylistAdapter(
     fun showDeleteDialog(context: Context, position: Int) {
         var includeVideos = false
 
-        MaterialAlertDialogBuilder(context)
+        SecureAlertDialogBuilder(context)
             .setTitle(R.string.deletePlaylist)
             .setMultiChoiceItems(
                 arrayOf(context.getString(R.string.delete_playlist_include_vidoes)),
@@ -115,3 +116,4 @@ class DownloadPlaylistAdapter(
         notifyItemInserted(position)
     }
 }
+// endregion

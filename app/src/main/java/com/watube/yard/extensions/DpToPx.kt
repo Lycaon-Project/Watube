@@ -3,9 +3,11 @@ package com.watube.yard.extensions
 import android.content.res.Resources
 import androidx.core.util.TypedValueCompat
 
+// region UI Components
 /**
  * Convert dp to pixels
  */
 fun Float.dpToPx(): Int {
     return (TypedValueCompat.dpToPx(this, Resources.getSystem().displayMetrics) + 0.5f).toInt()
 }
+// endregion

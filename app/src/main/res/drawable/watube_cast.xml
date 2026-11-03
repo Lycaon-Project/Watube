@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Mockup #i-cast: stroke cast glyph (2px, round caps), home header action button.
-  The app ships no cast stack, the button shows a toast instead (documented gap).
+  Also the Stolm (own Cast) button of the player.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"

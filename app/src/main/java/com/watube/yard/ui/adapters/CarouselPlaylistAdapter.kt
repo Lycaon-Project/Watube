@@ -14,6 +14,7 @@ import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
 import com.watube.yard.ui.viewholders.CarouselPlaylistViewHolder
 
+// region Home
 data class CarouselPlaylist(
     val id: String,
     val title: String?,
@@ -60,3 +61,4 @@ class CarouselPlaylistAdapter : ListAdapter<CarouselPlaylist, CarouselPlaylistVi
         }
     }
 }
+// endregion

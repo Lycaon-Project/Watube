@@ -1,5 +1,6 @@
 package com.watube.yard.enums
 
+// region Video Player
 enum class PlayerCommand {
     SKIP_SILENCE,
     SET_VIDEO_TRACK_TYPE_DISABLED,
@@ -11,5 +12,12 @@ enum class PlayerCommand {
     PLAY_NEXT_VIDEO,
     PLAY_VIDEO_BY_ID,
     SET_AUTOPLAY_COUNTDOWN_ENABLED,
-    TOGGLE_AUDIO_ONLY_MODE
+    TOGGLE_AUDIO_ONLY_MODE,
+
+    /** Stolm: casts the current video to the receiver in the bundle (a CastTarget). */
+    CAST_TO,
+
+    /** Stolm: brings the video back to the phone. */
+    STOP_CAST
 }
+// endregion

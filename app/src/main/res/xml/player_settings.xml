@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- region Settings -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/gestures">
 
+        <!-- region Player Gestures -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_swipe_gesture"
             android:summary="@string/swipe_controls_summary"
             app:key="player_swipe_controls"
             app:title="@string/swipe_controls" />
+        <!-- endregion -->
 
+        <!-- region Fullscreen -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_fullscreen"
             app:key="fullscreen_gestures"
             app:title="@string/fullscreen_gestures" />
+        <!-- endregion -->
 
+        <!-- region Player Gestures -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_pinch_gesture"
             android:summary="@string/pinch_control_summary"
             app:key="player_pinch_control"
             app:title="@string/pinch_control" />
+        <!-- endregion -->
 
+        <!-- region Player Gestures -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_skip"
             android:summary="@string/double_tap_seek_summary"
             app:key="double_tap_seek"
             app:title="@string/double_tap_seek" />
+        <!-- endregion -->
 
+        <!-- region Player Gestures -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_time_outlined"
             android:summary="@string/long_press_fast_forward_summary"
             app:key="long_press_fast_forward"
             app:title="@string/long_press_fast_forward" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/behavior">
 
+        <!-- region Video Player -->
         <com.watube.yard.ui.views.SliderPreference
             android:icon="@drawable/ic_skip"
             app:defValue="10.0"
@@ -50,7 +62,9 @@
             app:title="@string/seek_increment"
             app:valueFrom="5.0"
             app:valueTo="60.0" />
+        <!-- endregion -->
 
+        <!-- region Fullscreen -->
         <SwitchPreferenceCompat
             android:disableDependentsState="true"
             android:icon="@drawable/ic_rotating_circle"
@@ -58,7 +72,9 @@
             app:defaultValue="false"
             app:key="auto_fullscreen"
             app:title="@string/autoRotatePlayer" />
+        <!-- endregion -->
 
+        <!-- region Fullscreen -->
         <ListPreference
             android:dependency="auto_fullscreen"
             android:icon="@drawable/ic_flip"
@@ -68,27 +84,34 @@
             app:key="fullscreen_orientation"
             app:title="@string/fullscreen_orientation"
             app:useSimpleSummaryProvider="true" />
+        <!-- endregion -->
 
+        <!-- region Autoplay -->
         <SwitchPreferenceCompat
             android:icon="@drawable/ic_speed"
             android:summary="@string/autoplay_countdown_summary"
             app:defaultValue="false"
             app:key="autoplay_countdown"
             app:title="@string/autoplay_countdown" />
+        <!-- endregion -->
 
+        <!-- region Picture-in-Picture -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_open"
             android:summary="@string/auto_pip_summary"
             app:key="auto_pip"
             app:title="@string/auto_pip" />
+        <!-- endregion -->
 
+        <!-- region Background Playback -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_headphones"
             android:summary="@string/audio_only_mode_summary"
             android:title="@string/audio_only_mode"
             app:key="audio_only_mode" />
+        <!-- endregion -->
 
         <ListPreference
             android:defaultValue="@string/config_default_orientation_pref"
@@ -103,65 +126,84 @@
 
     <PreferenceCategory app:title="@string/rest_mode">
 
+        <!-- region Sleep Timer -->
         <Preference
             android:icon="@drawable/ic_sleep"
             app:key="sleep_timer"
             app:title="@string/sleep_timer" />
+        <!-- endregion -->
 
+        <!-- region Sleep Timer -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_sleep"
             app:key="sleep_timer_all_videos"
             app:title="@string/sleep_timer_all_videos" />
+        <!-- endregion -->
 
+        <!-- region Rest Mode -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/watube_moon"
             android:summary="@string/rest_mode_schedule_summary"
             app:key="rest_mode_schedule"
             app:title="@string/rest_mode_schedule" />
+        <!-- endregion -->
 
+        <!-- region Rest Mode -->
         <MultiSelectListPreference
             android:dependency="rest_mode_schedule"
             android:icon="@drawable/ic_time_outlined"
             app:key="rest_mode_days"
             app:title="@string/rest_mode_days" />
+        <!-- endregion -->
 
+        <!-- region Rest Mode -->
         <Preference
             android:dependency="rest_mode_schedule"
             android:icon="@drawable/ic_time"
             app:key="rest_mode_start"
             app:title="@string/rest_mode_start" />
+        <!-- endregion -->
 
+        <!-- region Rest Mode -->
         <Preference
             android:dependency="rest_mode_schedule"
             android:icon="@drawable/ic_time"
             app:key="rest_mode_end"
             app:title="@string/rest_mode_end" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/captions">
 
+        <!-- region Captions -->
         <SwitchPreferenceCompat
             android:icon="@drawable/ic_caption"
             app:defaultValue="true"
             app:key="system_caption_style"
             app:title="@string/system_caption_style" />
+        <!-- endregion -->
 
+        <!-- region Captions -->
         <Preference
             android:dependency="system_caption_style"
             android:icon="@drawable/ic_settings"
             app:key="caption_settings"
             app:title="@string/caption_settings" />
+        <!-- endregion -->
 
+        <!-- region Captions -->
         <SwitchPreferenceCompat
             android:icon="@drawable/ic_caption"
             android:summary="@string/rich_caption_rendering_summary"
             app:defaultValue="false"
             app:key="rich_caption_rendering"
             app:title="@string/rich_caption_rendering" />
+        <!-- endregion -->
 
+        <!-- region Captions -->
         <com.watube.yard.ui.views.SliderPreference
             android:icon="@drawable/ic_text"
             android:key="captions_size"
@@ -170,59 +212,75 @@
             app:stepSize="1"
             app:valueFrom="8"
             app:valueTo="30" />
+        <!-- endregion -->
 
+        <!-- region Captions -->
         <ListPreference
             android:defaultValue=""
             android:icon="@drawable/ic_caption"
             app:key="default_subtitle"
             app:title="@string/default_subtitle_language" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/misc">
 
+        <!-- region Playback Options -->
         <com.watube.yard.ui.preferences.EditNumberPreference
             android:icon="@drawable/ic_time"
             app:defaultValue="50"
             app:key="buffering_goal"
             app:summary="@string/buffering_goal_summary"
             app:title="@string/buffering_goal" />
+        <!-- endregion -->
 
+        <!-- region Picture-in-Picture -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_headphones"
             android:summary="@string/alternative_pip_controls_summary"
             app:key="alternative_pip_controls"
             app:title="@string/alternative_pip_controls" />
+        <!-- endregion -->
 
+        <!-- region Fullscreen -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_fullscreen"
             android:title="@string/auto_fullscreen_shorts"
             app:key="auto_fullscreen_shorts" />
+        <!-- endregion -->
 
+        <!-- region Video Player -->
         <SwitchPreferenceCompat
             android:icon="@drawable/ic_pause_filled"
             android:summary="@string/pauseOnScreenOff_summary"
             app:defaultValue="false"
             app:key="pause_screen_off"
             app:title="@string/pauseOnScreenOff" />
+        <!-- endregion -->
 
+        <!-- region Playback Options -->
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_play_circle"
             android:summary="@string/play_automatically_summary"
             app:key="play_automatically"
             app:title="@string/play_automatically" />
+        <!-- endregion -->
 
+        <!-- region Stats for Nerds -->
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_info"
             android:summary="@string/stats_for_nerds_summary"
             app:key="stats_for_nerds"
             app:title="@string/show_stats_for_nerds" />
+        <!-- endregion -->
 
     </PreferenceCategory>
 
 
 </PreferenceScreen>
+<!-- endregion -->

@@ -7,8 +7,9 @@ import androidx.fragment.app.DialogFragment
 import com.watube.yard.R
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.helpers.PreferenceHelper
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Crash Reports
 class ErrorDialog : DialogFragment() {
     @SuppressLint("PrivateResource")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -16,13 +17,14 @@ class ErrorDialog : DialogFragment() {
         // reset the error log
         PreferenceHelper.saveErrorLog("")
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.error_occurred)
             .setMessage(errorLog)
             .setNegativeButton(R.string.okay, null)
             .setPositiveButton(androidx.preference.R.string.copy) { _, _ ->
-                ClipboardHelper.save(requireContext(), text = errorLog, notify = true)
+                ClipboardHelper.save(requireContext(), text = errorLog)
             }
             .show()
     }
 }
+// endregion

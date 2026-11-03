@@ -11,14 +11,15 @@ import com.watube.yard.R
 import com.watube.yard.constants.IntentData
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.preferences.InstanceSettings
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Piped Account
 class LogoutDialog : DialogFragment() {
     @SuppressLint("SetTextI18n")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val user = PreferenceHelper.getUsername()
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.logout)
             .setMessage(getString(R.string.already_logged_in) + " ($user)")
             .setPositiveButton(R.string.logout) { _, _ ->
@@ -32,3 +33,4 @@ class LogoutDialog : DialogFragment() {
             .show()
     }
 }
+// endregion

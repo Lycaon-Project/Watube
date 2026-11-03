@@ -5,6 +5,7 @@ import com.watube.yard.ui.fragments.DownloadSortingOrder
 import com.watube.yard.ui.fragments.DownloadTab
 import kotlinx.parcelize.Parcelize
 
+// region Video Player
 @Parcelize
 data class PlayerData(
     val videoId: String?,
@@ -17,3 +18,4 @@ data class PlayerData(
     val downloadTab: DownloadTab? = null,
     val downloadSortingOrder: DownloadSortingOrder? = null,
 ) : Parcelable
+// endregion

@@ -24,9 +24,9 @@ import com.watube.yard.ui.activities.ZoomableImageActivity
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.fragments.AudioPlayerFragment
 import com.watube.yard.ui.fragments.PlayerFragment
-import com.watube.yard.util.PlayingQueue
 
 object NavigationHelper {
+    // region Channels
     fun navigateChannel(context: Context, channelUrlOrId: String?) {
         if (channelUrlOrId == null) return
 
@@ -45,7 +45,9 @@ object NavigationHelper {
             Log.e(TAG(), "Failed to minimize player while navigating to channel", e)
         }
     }
+    // endregion
 
+    // region Video Player
     /**
      * Navigate to the given video using the other provided parameters as well
      * If the audio only mode is enabled, play it in the background, else as a normal video
@@ -66,25 +68,20 @@ object NavigationHelper {
             // otherwise, recreate the player
             if (playerData.isOffline != isOffline || playerData.videoId == null) return@runOnPlayerFragment false
 
-            try {
-                PlayingQueue.clearAfterCurrent()
-                this.playVideo(playerData.videoId.toID())
+            // the session may have been stopped from outside (notification, media button): the
+            // screen is then replaced below by a new player
+            // the service trims the queue itself, once it knows which video is the current one
+            if (!this.playVideo(playerData.videoId.toID(), playerData)) return@runOnPlayerFragment false
 
-                if (audioOnlyPlayerRequested) {
-                    // switch to audio only player
-                    this.switchToAudioMode()
-                } else {
-                    // maximize player
-                    this.binding.playerMotionLayout.transitionToStart()
-                }
-
-                true
-            } catch (e: Exception) {
-                // Log the exception for debugging
-                Log.e(TAG(), "Failed to reuse running player, recreating", e)
-                this.onDestroy()
-                false
+            if (audioOnlyPlayerRequested) {
+                // switch to audio only player
+                this.switchToAudioMode()
+            } else {
+                // maximize player
+                this.binding.playerMotionLayout.transitionToStart()
             }
+
+            true
         }
         if (attachedToRunningPlayer) return
 
@@ -94,8 +91,7 @@ object NavigationHelper {
             // otherwise, recreate the player
             if (playerData.isOffline != isOffline || playerData.videoId == null) return@runOnAudioPlayerFragment false
 
-            PlayingQueue.clearAfterCurrent()
-            this.playNextVideo(playerData.videoId.toID())
+            if (!this.playNextVideo(playerData.videoId.toID(), playerData)) return@runOnAudioPlayerFragment false
 
             if (!audioOnlyPlayerRequested && !audioOnlyMode) {
                 // switch to video only player
@@ -124,33 +120,6 @@ object NavigationHelper {
         }
     }
 
-    fun navigatePlaylist(context: Context, playlistUrlOrId: String?, playlistType: PlaylistType) {
-        if (playlistUrlOrId == null) return
-
-        val activity = ContextHelper.unwrapActivity<MainActivity>(context)
-        activity.navController.navigate(
-            NavDirections.openPlaylist(playlistUrlOrId.toID(), playlistType)
-        )
-    }
-
-    /**
-     * Start the audio player fragment
-     */
-    fun openAudioPlayerFragment(
-        context: Context,
-        offlinePlayer: Boolean = false,
-        minimizeByDefault: Boolean = false
-    ) {
-        val activity = ContextHelper.unwrapActivity<BaseActivity>(context)
-        activity.supportFragmentManager.commitNow {
-            val args = Bundle().apply {
-                putBoolean(IntentData.minimizeByDefault, minimizeByDefault)
-                putBoolean(IntentData.offlinePlayer, offlinePlayer)
-            }
-            replace<AudioPlayerFragment>(R.id.container, args = args)
-        }
-    }
-
     /**
      * Starts the video player fragment for an already existing media session
      */
@@ -169,7 +138,40 @@ object NavigationHelper {
             replace<PlayerFragment>(R.id.container, args = bundle)
         }
     }
+    // endregion
 
+    // region Playlists
+    fun navigatePlaylist(context: Context, playlistUrlOrId: String?, playlistType: PlaylistType) {
+        if (playlistUrlOrId == null) return
+
+        val activity = ContextHelper.unwrapActivity<MainActivity>(context)
+        activity.navController.navigate(
+            NavDirections.openPlaylist(playlistUrlOrId.toID(), playlistType)
+        )
+    }
+    // endregion
+
+    // region Background Playback
+    /**
+     * Start the audio player fragment
+     */
+    fun openAudioPlayerFragment(
+        context: Context,
+        offlinePlayer: Boolean = false,
+        minimizeByDefault: Boolean = false
+    ) {
+        val activity = ContextHelper.unwrapActivity<BaseActivity>(context)
+        activity.supportFragmentManager.commitNow {
+            val args = Bundle().apply {
+                putBoolean(IntentData.minimizeByDefault, minimizeByDefault)
+                putBoolean(IntentData.offlinePlayer, offlinePlayer)
+            }
+            replace<AudioPlayerFragment>(R.id.container, args = args)
+        }
+    }
+    // endregion
+
+    // region Image Loading
     /**
      * Open a large, zoomable image preview
      */
@@ -178,7 +180,9 @@ object NavigationHelper {
         intent.putExtra(IntentData.bitmapUrl, url)
         context.startActivity(intent)
     }
+    // endregion
 
+    // region Navigation
     /**
      * Needed due to different MainActivity Aliases because of the app icons
      */
@@ -193,4 +197,5 @@ object NavigationHelper {
         // kill the old application
         Process.killProcess(Process.myPid())
     }
+    // endregion
 }

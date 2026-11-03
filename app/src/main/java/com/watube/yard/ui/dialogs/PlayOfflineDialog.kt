@@ -10,8 +10,9 @@ import com.watube.yard.R
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogPlayOfflineBinding
 import com.watube.yard.util.TextUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 
+// region Offline Playback
 class PlayOfflineDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -24,7 +25,7 @@ class PlayOfflineDialog : DialogFragment() {
                 TextUtils.SEPARATOR + it
             })
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(R.string.dialog_play_offline_title)
             .setView(binding.root)
             .setPositiveButton(R.string.yes) { _, _ ->
@@ -46,3 +47,4 @@ class PlayOfflineDialog : DialogFragment() {
         const val PLAY_OFFLINE_DIALOG_REQUEST_KEY = "play_offline_dialog_request_key"
     }
 }
+// endregion

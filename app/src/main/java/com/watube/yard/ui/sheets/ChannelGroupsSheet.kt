@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// region Subscriptions
 class ChannelGroupsSheet : ExpandedBottomSheet(R.layout.dialog_subscription_groups) {
     private val viewModel: SubscriptionsViewModel by activityViewModels()
 
@@ -57,3 +58,4 @@ class ChannelGroupsSheet : ExpandedBottomSheet(R.layout.dialog_subscription_grou
         }
     }
 }
+// endregion

@@ -14,6 +14,7 @@ import com.watube.yard.player.parser.SabrClient
 import com.watube.yard.player.parser.Segment
 import okio.BufferedSink
 
+// region Downloads
 data class SabrDownloaderHandle(
     val sabrClient: SabrClient,
     @param:SuppressLint("UnsafeOptInUsageError")
@@ -96,3 +97,4 @@ class SabrDownloadProvider(
         }
     }
 }
+// endregion

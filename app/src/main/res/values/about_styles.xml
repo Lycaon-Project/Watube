@@ -2,7 +2,7 @@
 <!--
   About screen styles, kept out of values/style.xml (owned by the parallel Solar
   refactor). Geometry follows the mockup: .aboutcard (1.2rem padding, r-l radius,
-  accent gradient) and .setcard (one card, rows split by 1dp dividers).
+  flat accent-container green) and .setcard (one card, rows split by 1dp dividers).
 -->
 <resources>
 

@@ -20,10 +20,11 @@ import com.watube.yard.extensions.serializable
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.obj.ShareData
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
+// region Share
 class ShareDialog : DialogFragment() {
     private lateinit var id: String
     private lateinit var shareObjectType: ShareObjectType
@@ -94,7 +95,7 @@ class ShareDialog : DialogFragment() {
 
         binding.linkPreview.text = generateLinkText(binding)
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return SecureAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.share))
             .setView(binding.root)
             .setPositiveButton(R.string.share) { _, _ ->
@@ -138,3 +139,4 @@ class ShareDialog : DialogFragment() {
         const val YOUTUBE_SHORT_URL = "https://youtu.be"
     }
 }
+// endregion
