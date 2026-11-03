@@ -207,7 +207,7 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 | **Language** | Kotlin 2.3.20 — 100% Kotlin, 0 Java |
 | **UI** | Material 3 Expressive, View system |
 | **Playback** | AndroidX Media3 / ExoPlayer |
-| **Build** | Gradle 9.8.0 · AGP 9.4.1 · JDK 21 |
+| **Build** | Gradle 9.8.2 · AGP 9.5.0 · JDK 21 |
 | **SDK** | minSdk 33 (Android 13) · compile/target SDK 37 (Android 17) |
 
 </details>

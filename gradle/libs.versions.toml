@@ -2,9 +2,12 @@
 appcompat = "1.8.0"
 core = "1.19.1"
 documentfile = "1.1.0"
-gradle = "9.4.1"
+# AGP 9.5.0 (2026-10-28): taken at 6 days old, a one-off exception to the 7-day rule asked by
+# the owner; needs Gradle >= 9.6.0, fixes the Gradle 9.8 setVisible() deprecations and the L8
+# step that overwrote the R8 mapping.txt
+gradle = "9.5.0"
 junit = "4.13.2"
-# AGP 9.4.1 asks for KGP 2.2.10; the serialization plugin declared at the root raises the
+# AGP 9.5.0 asks for KGP 2.2.10; the serialization plugin declared at the root raises the
 # whole build classpath to this version (check with `gradlew buildEnvironment`).
 # KSP 2.3.x is versioned on its own, no longer "<kotlin>-<ksp>".
 kotlin = "2.4.21"
@@ -22,8 +25,10 @@ navigation = "2.10.2"
 # + 6d92d7d4 (2026-10-27): NewPipeExtractor dev merged (n-sig, clients, mocks, deps), tracking
 # parameters stripped from links, googlevideo.com-only streaming URLs, checked DASH redirects,
 # SABR URL crash fixed; 0c55ba6c: documentation.
+# + baa26ae8 (2026-11-03): upstream #1555 comment avatar size read from the =s<N> URL parameter,
+# hardened (https only, no overflow, missing URL gives no avatar); gson 2.15.0 (tests only).
 # Full commit hash: JitPack keeps a "not found" answer per version string.
-newpipeextractor = "0c318bdb70a29068f85e9eccf71bd73100fed6e6"
+newpipeextractor = "baa26ae8d9dda77684544f30272bd84cd867c699"
 # same JSON library as the extractor ships (its runtime dependency), for the player response
 nanojson = "e9d656ddb49a412a5a0a5d5ef20ca7ef09549996"
 preference = "1.2.1"
