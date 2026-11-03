@@ -73,7 +73,7 @@ class BackupDialog : DialogFragment() {
             // still present in the default preferences after an app update) nor the
             // instance / privacy settings that would be dropped on restore anyway
             file.preferences = PreferenceHelper.settings.all
-                .filterKeys { it !in BackupHelper.SENSITIVE_PREFERENCE_KEYS }
+                .filterKeys { BackupHelper.isExportable(it) }
                 .map { (key, stored) ->
                     // encrypted with a key of this phone only: written readable, the restore
                     // encrypts it again on the phone it lands on

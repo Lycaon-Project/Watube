@@ -1,6 +1,7 @@
 package com.watube.yard.helpers
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.edit
@@ -128,7 +129,11 @@ object BackupHelper {
         var ignoredSensitive = 0
         var ignoredType = 0
 
-        PreferenceManager.getDefaultSharedPreferences(context).edit(commit = true) {
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
+        // read before clear(): written back unchanged once the backup is imported
+        val keptSecurity = deviceSecurityToKeep(settings.all)
+
+        settings.edit(commit = true) {
             // clear the previous settings
             clear()
 
@@ -139,8 +144,9 @@ object BackupHelper {
                 // (see SENSITIVE_PREFERENCE_KEYS). Without this, a crafted file could point
                 // selectAuthInstance at an attacker server and leak the Piped token, which
                 // is sent as Authorization on the auth endpoints. After clear() these keys
-                // simply fall back to their privacy preserving defaults.
-                if (key != null && key in SENSITIVE_PREFERENCE_KEYS) {
+                // simply fall back to their privacy preserving defaults, except the security
+                // settings of this phone (DEVICE_SECURITY_KEYS), kept as they were.
+                if (!isImportable(key)) {
                     ignoredSensitive++
                     return@forEach
                 }
@@ -188,6 +194,9 @@ object BackupHelper {
                     }
                 }
             }
+
+            // the security settings of this phone, exactly as they were before the restore
+            keptSecurity.forEach { (key, stored) -> putStored(key, stored) }
         }
 
         if (BuildConfig.DEBUG && (ignoredSensitive > 0 || ignoredType > 0)) {
@@ -248,6 +257,46 @@ object BackupHelper {
         // useful on the phone that showed the notifications
         PreferenceKeys.NOTIFIED_VIDEO_IDS,
     )
+
+    /**
+     * Security settings of this phone. A backup never changes them, in either direction:
+     * they are neither exported nor imported, and the restore keeps their current values
+     * instead of letting clear() reset them, so restoring an old or crafted file can not
+     * switch the app lock, the private DNS or the screen protections off.
+     */
+    private val DEVICE_SECURITY_KEYS = setOf(
+        PreferenceKeys.APP_LOCK,
+        PreferenceKeys.APP_LOCK_DELAY,
+        PreferenceKeys.PRIVATE_DNS,
+        PreferenceKeys.PRIVATE_DNS_RESOLVER,
+        PreferenceKeys.BLOCK_SCREENSHOTS,
+        PreferenceKeys.HIDE_LOCKSCREEN_CONTENT,
+        PreferenceKeys.HIDE_RECENTS_PREVIEW,
+    )
+
+    /** Whether a preference read from a backup file may be imported. */
+    internal fun isImportable(key: String?): Boolean =
+        key == null || (key !in SENSITIVE_PREFERENCE_KEYS && key !in DEVICE_SECURITY_KEYS)
+
+    /** Whether a preference of this phone may be written to a backup file. */
+    internal fun isExportable(key: String): Boolean =
+        key !in SENSITIVE_PREFERENCE_KEYS && key !in DEVICE_SECURITY_KEYS
+
+    /** The security settings among [current] preferences, kept through a restore. */
+    internal fun deviceSecurityToKeep(current: Map<String, *>): Map<String, Any?> =
+        current.filterKeys { it in DEVICE_SECURITY_KEYS }
+
+    /** Write back a value read from SharedPreferences.getAll(), in its own type. */
+    private fun SharedPreferences.Editor.putStored(key: String, stored: Any?) {
+        when (stored) {
+            is Boolean -> putBoolean(key, stored)
+            is Int -> putInt(key, stored)
+            is Long -> putLong(key, stored)
+            is Float -> putFloat(key, stored)
+            is String -> putString(key, stored)
+            is Set<*> -> putStringSet(key, stored.filterIsInstance<String>().toSet())
+        }
+    }
 
     /**
      * Type expected for the keys the app reads with a typed getter / preference widget.

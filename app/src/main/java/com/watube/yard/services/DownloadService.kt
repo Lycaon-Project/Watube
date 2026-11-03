@@ -244,7 +244,8 @@ class DownloadService : LifecycleService() {
         thumbnailTargetPath: Path
     ) {
         coroutineScope {
-            launch {
+            // SponsorBlock turned off: the video id is not sent to it for downloads either
+            if (PlayerHelper.sponsorBlockEnabled) launch {
                 val segmentData = try {
                     val categories = PlayerHelper.getSponsorBlockCategories()
                     MediaServiceRepository.instance.getSegments(videoId, categories.map { it.key })

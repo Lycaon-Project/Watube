@@ -682,9 +682,10 @@ class SabrClient private constructor(
 
         /**
          * Whether [candidate] is a URL a SABR request may be sent to: https only and within
-         * the YouTube/Google host family (the redirect comes from the response body).
+         * the YouTube/Google host family. Checked for the first URL too, which a Piped
+         * instance supplies, not only for the redirects found in the response body.
          */
-        private fun isTrustedStreamUrl(candidate: String): Boolean {
+        internal fun isTrustedStreamUrl(candidate: String): Boolean {
             val httpUrl = candidate.toHttpUrlOrNull() ?: return false
             if (!httpUrl.isHttps) return false
             val host = httpUrl.host.lowercase()

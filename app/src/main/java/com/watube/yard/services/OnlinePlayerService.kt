@@ -48,6 +48,7 @@ import com.watube.yard.player.SabrAttestationException
 import com.watube.yard.player.SabrMediaSource
 import com.watube.yard.player.SabrSessionRenewals
 import com.watube.yard.player.manifest.SabrManifest
+import com.watube.yard.player.parser.SabrClient
 import com.watube.yard.util.DeArrowUtil
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.SharedHttpClient
@@ -545,8 +546,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
 
         when {
             // SABR
-            // skip SABR for livestreams, as the player impl has no support for it
-            !streams.isLive && streams.serverAbrStreamingUrl != null && streams.videoPlaybackUstreamerConfig != null -> {
+            // skip SABR for livestreams, as the player impl has no support for it, and for a
+            // URL outside YouTube's servers (a Piped instance supplies it): the other streams
+            // are used instead of sending the requests, and the user's IP, anywhere else
+            !streams.isLive && streams.serverAbrStreamingUrl != null &&
+                streams.videoPlaybackUstreamerConfig != null &&
+                SabrClient.isTrustedStreamUrl(streams.serverAbrStreamingUrl) -> {
                 val sabrMediaSourceFactory = SabrMediaSource.Factory(
                     SabrManifest(videoId, streams)
                 )
