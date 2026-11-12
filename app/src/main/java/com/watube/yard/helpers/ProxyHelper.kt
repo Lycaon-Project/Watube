@@ -6,6 +6,7 @@ import com.watube.yard.api.PipedMediaServiceRepository
 import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.extensions.TAG
+import com.watube.yard.util.LocalInstanceRouter
 import com.watube.yard.util.PublicAddress
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,8 @@ object ProxyHelper {
     private val YOUTUBE_MEDIA_DOMAINS =
         listOf("ytimg.com", "ggpht.com", "googleusercontent.com", "googlevideo.com")
 
-    private val LOOPBACK_HOSTS = setOf("localhost", "127.0.0.1", "::1")
+    private const val YOUTUBE_SITE = "youtube.com"
+
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val isFetching = AtomicBoolean(false)
@@ -91,7 +93,7 @@ object ProxyHelper {
         val reachable = when {
             // resolved here (Dispatchers.IO): a public looking name can point at the LAN
             url.isHttps -> url.host == instanceHost || PublicAddress.resolvesToPublic(url.host)
-            else -> url.host in LOOPBACK_HOSTS
+            else -> LocalInstanceRouter.isLocalInstance(url)
         }
         return reachable && !isYouTubeMedia(url.host)
     }
@@ -112,6 +114,29 @@ object ProxyHelper {
 
     private fun isYouTubeMedia(host: String) =
         YOUTUBE_MEDIA_DOMAINS.any { host == it || host.endsWith(".$it") }
+
+    /**
+     * Whether the cast relay may fetch [url] (after [streamUrl]): YouTube's media and subtitle
+     * hosts over https on port 443, or the very host and port of the selected instance or of its
+     * media proxy. Nothing else, so that a playlist sent by a hostile instance cannot make the
+     * phone, with its real address, contact a host of its choosing.
+     */
+    fun isRelayTarget(url: HttpUrl): Boolean =
+        if (usesInstance) {
+            isRelayTarget(url, PipedMediaServiceRepository.apiUrl.toHttpUrlOrNull(), currentProxy())
+        } else {
+            isRelayTarget(url, null, null)
+        }
+
+    /** [isRelayTarget] with the instance and its proxy given (null in full local mode). */
+    internal fun isRelayTarget(url: HttpUrl, instance: HttpUrl?, proxy: HttpUrl?): Boolean {
+        if (!url.isHttps) return false
+        if (url.port == HTTPS_PORT && (isYouTubeMedia(url.host) || isYouTubePage(url.host))) return true
+        return listOfNotNull(instance, proxy).any { it.isHttps && it.host == url.host && it.port == url.port }
+    }
+
+    /** Subtitles are served by youtube.com itself (/api/timedtext). */
+    private fun isYouTubePage(host: String) = host == YOUTUBE_SITE || host.endsWith(".$YOUTUBE_SITE")
 
     /**
      * The URL an image is loaded from, null when it must not be loaded (Piped modes while the

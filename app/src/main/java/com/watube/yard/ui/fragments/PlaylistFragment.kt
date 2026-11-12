@@ -46,6 +46,7 @@ import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.PlaylistAdapter
 import com.watube.yard.ui.adapters.PlaylistItem
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.base.BottomBarOverlay
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.extensions.addOnBottomReachedListener
 import com.watube.yard.ui.models.CommonPlayerViewModel
@@ -122,7 +123,7 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
         }
 
         commonPlayerViewModel.isMiniPlayerVisible.observe(viewLifecycleOwner) {
-            binding.playlistRecView.updatePadding(bottom = if (it) 64f.dpToPx() else 0)
+            BottomBarOverlay.setExtraBottom(binding.playlistRecView, if (it) 64f.dpToPx() else 0)
         }
 
         // manually restore the recyclerview state due to https://github.com/material-components/material-components-android/issues/3473

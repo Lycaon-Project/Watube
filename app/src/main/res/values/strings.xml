@@ -206,6 +206,8 @@
     <string name="autoRotatePlayer_summary">Fullscreen playback when the device gets turned</string>
     <string name="pure_theme">Deep black (OLED)</string>
     <string name="pure_theme_summary">Saves battery on OLED screens</string>
+    <string name="efecto_off">Disable Efecto</string>
+    <string name="efecto_off_summary">Removes the blur under the navigation bar and the mini player</string>
     <string name="text_size">Text size</string>
     <string name="feed_density">Feed density</string>
     <string name="density_cozy">Cozy</string>
@@ -715,6 +717,8 @@
     <string name="about_privacy">Privacy policy</string>
     <string name="about_report_issue">Report an issue</string>
     <string name="about_mission">Why Watube</string>
+    <string name="vireoboo_name" translatable="false">VireoBoo</string>
+    <string name="vireoboo_found">Congratulations, you found me!</string>
     <string name="about_header_subtitle">Checking for updates keeps the app reliable and brings you the latest fixes.</string>
 <string name="search_back">Back</string>
 <string name="search_clear">Clear</string>
@@ -888,7 +892,25 @@
     <string name="export_download">Export the file</string>
     <string name="download_export_choose">Which file to export?</string>
     <string name="download_export_unfinished">This download is not finished</string>
-    <string name="download_exported">File exported. It is no longer encrypted: keep it somewhere safe.</string>
+    <string name="download_exported">Exported to %1$s. It is no longer encrypted: keep it somewhere safe.</string>
+    <string name="download_already_readable">This file is already readable, in %1$s</string>
+    <plurals name="playlist_exported">
+        <item quantity="one">%1$d file exported to %2$s, folder “%3$s”</item>
+        <item quantity="other">%1$d files exported to %2$s, folder “%3$s”</item>
+    </plurals>
+    <string name="download_folder">Destination folder</string>
+    <string name="download_folder_summary">%1$s, with a Video and an Audio folder</string>
+    <string name="download_folder_message">Choose the folder your downloads go to. It holds a Video and an Audio folder, which your other apps and your file manager can open.</string>
+    <string name="download_folder_current">Current folder: %1$s</string>
+    <string name="download_folder_default">Watube folder</string>
+    <string name="download_folder_pick">Choose another folder…</string>
+    <string name="download_folder_pick_hint">Any folder of the phone or of a memory card</string>
+    <string name="download_folder_unavailable">This folder can no longer be reached, choose another one</string>
+    <string name="download_folder_video">Video</string>
+    <string name="download_folder_audio">Audio</string>
+    <string name="download_readable">Save readable</string>
+    <string name="download_readable_summary">New downloads stay in the destination folder, readable by your other apps and your file manager</string>
+    <string name="download_readable_warning">Downloads saved this way are not encrypted: any app allowed to read your files can open them. Downloads already made stay encrypted, use Export the file to get a readable copy.</string>
     <string name="download_export_failed">Could not export the file</string>
     <string name="download_encrypt_no_space">Not enough free space to finish the download: free some up, it will be finished on the next start</string>
     <string name="download_no_space">Not enough free space to go on with the download</string>

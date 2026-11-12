@@ -57,12 +57,25 @@
             android:layout_height="@dimen/watube_mini_player_height"
             android:layout_marginStart="@dimen/watube_mini_player_margin_start"
             android:layout_marginEnd="@dimen/watube_nav_inset"
+            android:layout_marginBottom="@dimen/watube_mini_player_gap"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHorizontal_bias="0.5"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintVertical_bias="1.0" />
+        <!-- The details under the video end with the card once docked: running on to the
+             bottom of the window, their opaque background filled the gap under the card and
+             drew a line there (black in the dark themes). -->
+        <Constraint
+            android:id="@+id/player_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="@id/main_container"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintHorizontal_bias="0.5"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/main_container" />
         <!-- The video sits inside the rounded card (inset on its three sides) instead of
              covering its corner and stroke: a 16:9 thumbnail with concentric corners. -->
         <Constraint

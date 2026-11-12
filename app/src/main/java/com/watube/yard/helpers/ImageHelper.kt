@@ -34,6 +34,7 @@ import com.watube.yard.api.RetrofitInstance
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toAndroidUri
 import com.watube.yard.util.DataSaverMode
+import com.watube.yard.util.LocalInstanceRouter
 import com.watube.yard.util.SharedHttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -83,7 +84,8 @@ object ImageHelper {
             .crossfade(true)
             .components {
                 add(
-                    OkHttpNetworkFetcherFactory(httpClient.build())
+                    // a proxy running on the phone itself is reached in plain http
+                    OkHttpNetworkFetcherFactory(LocalInstanceRouter(httpClient.build()))
                 )
                 // thumbnails of the downloads are stored encrypted
                 add(EncryptedFileFetcher.Factory())

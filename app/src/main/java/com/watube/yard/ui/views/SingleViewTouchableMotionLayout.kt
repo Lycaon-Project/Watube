@@ -2,6 +2,7 @@ package com.watube.yard.ui.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -10,7 +11,9 @@ import android.view.View
 import android.view.ViewConfiguration
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.TransitionAdapter
+import androidx.constraintlayout.widget.ConstraintSet
 import com.watube.yard.R
+import com.watube.yard.ui.activities.AbstractPlayerHostActivity
 
 // region Mini Player
 class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeSet? = null) :
@@ -49,6 +52,27 @@ class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeS
                     .forEach { it.onTransitionCompleted(p0, p1) }
             }
         })
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        generateSequence(context) { (it as? ContextWrapper)?.baseContext }
+            .filterIsInstance<AbstractPlayerHostActivity>()
+            .firstOrNull()
+            ?.let { setMiniPlayerStartInset(it.miniPlayerStartInset) }
+    }
+
+    /**
+     * Keeps the docked mini player clear of a navigation rail that takes [inset] pixels at the
+     * start of the window, on top of its own margin. Applied at once when it is docked.
+     */
+    fun setMiniPlayerStartInset(inset: Int) {
+        val docked = getConstraintSet(R.id.end) ?: return
+        val id = viewToDetectTouch?.id ?: return
+        val margin = resources.getDimensionPixelSize(R.dimen.watube_mini_player_margin_start) + inset
+        if (docked.getConstraint(id)?.layout?.startMargin == margin) return
+        docked.setMargin(id, ConstraintSet.START, margin)
+        updateState(R.id.end, docked)
     }
 
     override fun setTransitionListener(listener: TransitionListener?) {

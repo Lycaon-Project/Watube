@@ -21,6 +21,13 @@
             app:key="pure_theme"
             app:title="@string/pure_theme" />
 
+        <SwitchPreferenceCompat
+            android:icon="@drawable/ic_glass"
+            android:summary="@string/efecto_off_summary"
+            app:defaultValue="false"
+            app:key="efecto_off"
+            app:title="@string/efecto_off" />
+
         <SeekBarPreference
             android:icon="@drawable/ic_text"
             android:key="font_scale"
@@ -71,7 +78,7 @@
             android:icon="@drawable/ic_awesome"
             android:key="home_tab_content"
             android:title="@string/home_tab_content"
-            app:defaultValue="@array/homeTabItemsValues" />
+            app:defaultValue="@array/homeTabItemsDefault" />
         <!-- endregion -->
         <!-- region Search -->
         <SwitchPreferenceCompat
@@ -84,18 +91,18 @@
 
         <ListPreference
             android:icon="@drawable/ic_grid"
-            app:defaultValue="@integer/grid_items"
-            app:entries="@array/grid"
-            app:entryValues="@array/grid"
+            app:defaultValue="auto"
+            app:entries="@array/grid_labels"
+            app:entryValues="@array/grid_values"
             app:key="grid"
             app:title="@string/grid"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             android:icon="@drawable/ic_grid"
-            app:defaultValue="@integer/grid_items_landscape"
-            app:entries="@array/grid"
-            app:entryValues="@array/grid"
+            app:defaultValue="auto"
+            app:entries="@array/grid_labels"
+            app:entryValues="@array/grid_values"
             app:key="grid_landscape"
             app:title="@string/grid_landscape"
             app:useSimpleSummaryProvider="true" />

@@ -27,10 +27,12 @@ import com.watube.yard.extensions.setOnDismissListener
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.WatchHistoryAdapter
+import com.watube.yard.ui.base.BottomBarOverlay
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.extensions.addOnBottomReachedListener
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.WatchHistoryModel
+import com.watube.yard.ui.views.Efecto
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -57,8 +59,16 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         _binding = FragmentWatchHistoryBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
+        // the history runs on under the filter, which shows it through Efecto's glass
+        val header = binding.watchHistoryAppBar
+        Efecto.runUnder(header, binding.watchHistoryBackdrop, binding.watchHistoryRecView) {
+            header.height
+        }
+
         commonPlayerViewModel.isMiniPlayerVisible.observe(viewLifecycleOwner) { isMiniPlayerVisible ->
-            _binding?.watchHistoryRecView?.updatePadding(bottom = if (isMiniPlayerVisible) 64f.dpToPx() else 0)
+            _binding?.watchHistoryRecView?.let {
+                BottomBarOverlay.setExtraBottom(it, if (isMiniPlayerVisible) 64f.dpToPx() else 0)
+            }
             _binding?.playAll?.updateLayoutParams<MarginLayoutParams> {
                 bottomMargin = (if (isMiniPlayerVisible) 64f else 16f).dpToPx()
             }
@@ -182,6 +192,12 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         super.onConfigurationChanged(newConfig)
         // manually restore the recyclerview state due to https://github.com/material-components/material-components-android/issues/3473
         binding.watchHistoryRecView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Efecto may have been switched in the settings meanwhile
+        _binding?.let { Efecto.applyToHeader(it.watchHistoryAppBar, it.watchHistoryBackdrop) }
     }
 
     override fun onDestroyView() {

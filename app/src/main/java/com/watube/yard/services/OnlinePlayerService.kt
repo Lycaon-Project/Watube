@@ -57,6 +57,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -459,7 +460,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
         message?.let { toastFromMainThread(it) }
     }
 
-    override fun onRelease() = stopCast()
+    override fun onRelease() {
+        stopCast()
+        // nothing loaded for this service may outlive it: an extraction finishing later would
+        // drive a released player
+        scope.cancel()
+    }
     // endregion
 
     // region SABR Streaming

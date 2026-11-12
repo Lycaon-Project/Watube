@@ -80,4 +80,19 @@ class ExternalLinkTest {
         // IDNA 2003 turns ß into ss, a browser opens xn--fa-hia.de
         assertNull(ExternalLink.parse("https://faß.de/"))
     }
+
+    @Test
+    fun cleaningNeverChangesTheOpenedHost() {
+        listOf(
+            "https://www.amazon.fr/dp/B00X?tag=affiliate-21&ref_=abc&th=1",
+            "https://www.reddit.com/r/x/comments/y/?share_id=z&utm_medium=android_app",
+            "https://user@shop.example.com:8443/item?utm_source=yt&id=4#top",
+        ).forEach { original ->
+            val link = ExternalLink.parse(original)!!
+            val opened = java.net.URI(link.url)
+            val shown = java.net.URI(original)
+            assertEquals(original, shown.rawAuthority, opened.rawAuthority)
+            assertEquals(original, shown.scheme, opened.scheme)
+        }
+    }
 }

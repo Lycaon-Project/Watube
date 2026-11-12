@@ -24,11 +24,15 @@ android {
 
     defaultConfig {
         applicationId = "com.watube.yard"
-        minSdk = 32
+        minSdk = 31
         targetSdk = 37
 
-        versionCode = 6211
-        versionName = "26.11"
+        // The express release after 26.11 carries the name of its mascot, VireoBoo: shown next to
+        // the version ("Watube 26.12 · Vireo", About and settings), never in versionName, which
+        // the in-app update check compares with the name of the latest GitHub release.
+        versionCode = 6212
+        versionName = "26.12"
+        buildConfigField("String", "RELEASE_NAME", "\"Vireo\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -57,6 +61,15 @@ android {
         getByName("debug") {
             isDebuggable = true
             applicationIdSuffix = ".debug"
+        }
+
+        // Measures (memory, CPU, frames) on the release code itself: shrunk by R8 and not
+        // debuggable, but signed with the debug key and installed next to the real release.
+        create("benchmark") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            applicationIdSuffix = ".bench"
+            matchingFallbacks += "release"
         }
     }
 

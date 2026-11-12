@@ -34,6 +34,7 @@ import com.watube.yard.ui.fragments.DownloadsFragmentPage.Companion.sortDownload
 import com.watube.yard.util.PlayingQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
@@ -103,6 +104,9 @@ open class OfflinePlayerService : AbstractPlayerService() {
 
         fillQueue()
     }
+
+    /** Nothing started for this service outlives it. */
+    override fun onRelease() = scope.cancel()
 
     override fun getIntentActivity(): Class<*> {
         return if (noInternetService) NoInternetActivity::class.java else MainActivity::class.java

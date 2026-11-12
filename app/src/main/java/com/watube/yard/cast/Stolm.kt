@@ -5,6 +5,7 @@ import android.net.InetAddresses
 import android.net.Network
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.util.Log
@@ -204,12 +205,24 @@ internal class StolmCast private constructor(
     private fun asWebVtt(url: String): String? =
         url.toHttpUrlOrNull()?.newBuilder()?.setQueryParameter("fmt", "vtt")?.build()?.toString()
 
+    /**
+     * A WifiLock has no timeout of its own: it gets the wake lock's safety net, so that both go
+     * together however long a cast is left on.
+     */
+    private val lockTimeout = Handler(Looper.getMainLooper())
+    private val expireWifiLock = Runnable { if (wifiLock.isHeld) wifiLock.release() }
+
     private fun holdLocks() {
         if (!wakeLock.isHeld) wakeLock.acquire(MAX_LOCK_MS)
-        if (!wifiLock.isHeld) wifiLock.acquire()
+        if (!wifiLock.isHeld) {
+            wifiLock.acquire()
+            lockTimeout.removeCallbacks(expireWifiLock)
+            lockTimeout.postDelayed(expireWifiLock, MAX_LOCK_MS)
+        }
     }
 
     private fun releaseLocks() {
+        lockTimeout.removeCallbacks(expireWifiLock)
         if (wakeLock.isHeld) wakeLock.release()
         if (wifiLock.isHeld) wifiLock.release()
     }
@@ -262,20 +275,25 @@ internal class StolmCast private constructor(
                 throw StolmException(R.string.stolm_unreachable, e)
             }
             stolmTrace { "authenticated ${address.hostAddress}:${target.port} from ${channel.localAddress.hostAddress}" }
+            // closed with the channel when the launch fails: its socket and threads must not outlive it
+            var server: CastMediaServer? = null
             try {
                 val session = CastSession.start(channel)
-                val server = withContext(Dispatchers.IO) {
-                    CastMediaServer(channel.localAddress, channel.remoteAddress)
+                // kept inside the block: a cancellation on the way back must not lose it
+                val relay = withContext(Dispatchers.IO) {
+                    CastMediaServer(channel.localAddress, channel.remoteAddress).also { server = it }
                 }
                 val player = withContext(Dispatchers.Main) {
                     StolmPlayer(looper, session, seekIncrementMs, onStopRequested)
                 }
-                return withContext(Dispatchers.Main) { StolmCast(context, target, session, server, player) }
+                return withContext(Dispatchers.Main) { StolmCast(context, target, session, relay, player) }
             } catch (e: CancellationException) {
+                server?.close()
                 channel.close()
                 throw e
             } catch (e: Exception) {
                 stolmTrace { "launch failed: ${e.chain()}" }
+                server?.close()
                 channel.close()
                 throw e as? StolmException ?: StolmException(R.string.stolm_launch_failed, e)
             }

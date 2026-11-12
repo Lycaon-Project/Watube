@@ -4,6 +4,9 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.LinearGradient
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.Shader
 import android.os.Bundle
 import android.view.KeyEvent
@@ -44,6 +47,7 @@ import com.watube.yard.db.DatabaseHelper
 import com.watube.yard.db.obj.SearchHistoryItem
 import com.watube.yard.enums.ImportFormat
 import com.watube.yard.enums.TopLevelDestination
+import com.watube.yard.helpers.GridColumns
 import com.watube.yard.helpers.ImportHelper
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.NavBarHelper
@@ -53,14 +57,18 @@ import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.dialogs.ImportTempPlaylistDialog
-import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.extensions.onSystemInsets
 import com.watube.yard.ui.fragments.DownloadsFragment
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.preferences.BackupRestoreSettings
 import com.watube.yard.ui.preferences.BackupRestoreSettings.Companion.FILETYPE_ANY
+import com.watube.yard.util.MediaIds
 import com.watube.yard.util.UpdateChecker
+import com.watube.yard.ui.base.BottomBarOverlay
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import com.watube.yard.ui.base.ThemeTransition
+import com.watube.yard.ui.views.GlassBackground
+import com.watube.yard.ui.views.SingleViewTouchableMotionLayout
 import com.google.android.material.navigation.NavigationBarView
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -68,12 +76,6 @@ import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 // region Navigation
-/** Tablets (smallest width >= 600dp) use a navigation rail; phones keep the bottom bar in landscape */
-private const val EXPANDED_WIDTH_DP = 600
-
-/** Mirrors the 80dp width of the nav rail declared in res/layout/activity_main.xml */
-private const val EXPANDED_RAIL_WIDTH_DP = 80f
-
 /** Player progress at which the bottom bar is fully pushed off screen */
 private const val BAR_HIDDEN_PROGRESS = 0.01f
 
@@ -87,9 +89,21 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     /** set once the navigation rail listeners are attached, so config changes don't stack them */
     private var railNavWired = false
+
+    /** New videos of the subscriptions feed shown as a badge on its tab (0: no badge). */
+    private var newVideosCount = 0
     // endregion
 
     // region Appearance
+    /** Keeps the lists of the screens clear of the floating bottom bar they run under. */
+    private val bottomBarOverlay = BottomBarOverlay(R.id.fragment)
+
+    /** Glass of the bottom bar while the setting is on, else null (its plain fill). */
+    private var glassBar: GlassBackground? = null
+
+    /** Glass setting applied last, to follow a change made in the settings. */
+    private var glassBarApplied: Boolean? = null
+
     /** Night state the views were inflated with, see [onConfigurationChanged] */
     private var inflatedNightUiMode = false
 
@@ -112,10 +126,8 @@ class MainActivity : AbstractPlayerHostActivity() {
     private fun applyBottomBarNightStyle() {
         val nightMode = isNightUiMode()
 
-        binding.bottomNav.setBackgroundResource(
-            if (nightMode) R.drawable.watube_bottom_nav_background_night
-            else R.drawable.watube_bottom_nav_background
-        )
+        val background = if (nightMode) R.drawable.watube_bottom_nav_background_night
+        else R.drawable.watube_bottom_nav_background
 
         val tint = if (nightMode) {
             ColorStateList(
@@ -128,8 +140,90 @@ class MainActivity : AbstractPlayerHostActivity() {
         } else {
             AppCompatResources.getColorStateList(this, R.color.watube_bottom_nav_item_tint)
         }
-        binding.bottomNav.itemIconTintList = tint
-        binding.bottomNav.itemTextColor = tint
+        // the rail is the same bar stood on its side
+        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+            bar.setBackgroundResource(background)
+            bar.itemIconTintList = tint
+            bar.itemTextColor = tint
+        }
+        // tone and ground of the glass follow the theme
+        applyBottomBarGlass()
+    }
+
+    /**
+     * Frosted glass for the bottom bar (Appearance > Glass effect, on by default): the bar
+     * shows the screens under it blurred instead of its plain fill. The rail is not over the
+     * screens and keeps its fill.
+     */
+    private fun applyBottomBarGlass() {
+        glassBar?.release()
+        glassBar = null
+        val enabled = !PreferenceHelper.getBoolean(PreferenceKeys.EFECTO_OFF, false)
+        glassBarApplied = enabled
+        val night = isNightUiMode()
+        val plain = if (night) R.drawable.watube_bottom_nav_background_night
+        else R.drawable.watube_bottom_nav_background
+        val glaze = AppCompatResources.getDrawable(this, plain)?.mutate() as? LayerDrawable
+        if (enabled && glaze != null) {
+            glassBar = GlassBackground(
+                source = binding.backdrop,
+                host = binding.bottomNav,
+                glaze = glaze,
+                tone = getColor(if (night) R.color.watube_nav_scrim_night else R.color.watube_nav_scrim),
+                ground = ThemeHelper.getThemeColor(this, android.R.attr.colorBackground),
+                night = night,
+                blurRadius = resources.getDimension(R.dimen.watube_glass_blur_radius),
+                cornerRadius = resources.getDimension(R.dimen.watube_bottom_nav_radius),
+            ).also { binding.bottomNav.background = it }
+        } else {
+            binding.bottomNav.setBackgroundResource(plain)
+        }
+        updateBottomBarOverlay()
+        refreshMiniPlayerGlass()
+    }
+
+    /** The docked mini player's card in glass, behind the same switch as the bottom bar. */
+    override fun miniPlayerBackground(card: View): Drawable? {
+        if (glassBar == null) return null
+        val glaze = AppCompatResources.getDrawable(this, R.drawable.watube_miniplayer_background)
+            ?.mutate() as? LayerDrawable ?: return null
+        val night = isNightUiMode()
+        return GlassBackground(
+            source = binding.backdrop,
+            host = card,
+            glaze = glaze,
+            tone = if (night) getColor(R.color.watube_nav_scrim_night)
+            else ThemeHelper.getThemeColor(this, com.google.android.material.R.attr.colorSurfaceContainer),
+            ground = ThemeHelper.getThemeColor(this, android.R.attr.colorBackground),
+            night = night,
+            blurRadius = resources.getDimension(R.dimen.watube_glass_blur_radius),
+            cornerRadius = resources.getDimension(R.dimen.watube_card_radius),
+            // under the full player the card is covered by the video
+            isShown = { playerContainerProgress > 0f },
+        )
+    }
+
+    /** Gives the mini player on show the card matching the glass setting. */
+    private fun refreshMiniPlayerGlass() {
+        listOfNotNull(
+            binding.container.findViewById<View>(R.id.main_container),
+            // the audio player's card is a plain surface while it is expanded
+            binding.container.findViewById<View>(R.id.audio_player_container)
+                ?.takeIf { it.background !is ColorDrawable },
+        ).forEach { card ->
+            card.background = miniPlayerBackground(card)
+                ?: AppCompatResources.getDrawable(this, R.drawable.watube_miniplayer_background)
+        }
+    }
+
+    /**
+     * The screens are recorded for the glass only while a glass shows them: the bottom bar on
+     * screen, or the docked mini player (beside the rail, the bar is hidden).
+     */
+    private fun updateBackdropRecording() {
+        val miniPlayerDocked = playerContainerProgress > 0f && binding.container.childCount > 0
+        binding.backdrop.isRecording =
+            glassBar != null && (bottomBarOverlay.height > 0 || miniPlayerDocked)
     }
 
     /**
@@ -143,6 +237,7 @@ class MainActivity : AbstractPlayerHostActivity() {
      * --acc-text is selected here: watube_nav_active (#2C674A) by day, watube_acc_text
      * (#59E6A1) at night.
      */
+    /** The new sun / moon turns into place, a beat after the content starts coming out. */
     private fun applyBrandHeader() {
         binding.themeToggle.setImageResource(
             if (isNightUiMode()) R.drawable.watube_sun else R.drawable.watube_moon
@@ -212,6 +307,8 @@ class MainActivity : AbstractPlayerHostActivity() {
             return
         }
 
+        // before the navigation host creates its first screen
+        bottomBarOverlay.attach(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         inflatedNightUiMode = isNightUiMode()
@@ -247,11 +344,15 @@ class MainActivity : AbstractPlayerHostActivity() {
                         }
                         applyPlayerContainerProgress()
                     }
-                    with(binding.navRail) {
+                    binding.navRail.let { rail ->
                         // the rail starts below the app bar, which already clears the status
-                        // bar: a top inset here pushed the last tab (settings) off a landscape
-                        // phone screen
-                        setPadding(paddingLeft, 0, paddingRight, systemBarInsets.bottom)
+                        // bar, and floats at the same height above the bottom edge as the
+                        // bar and the mini player
+                        val params = rail.layoutParams as ViewGroup.MarginLayoutParams
+                        if (params.bottomMargin != navBarBottomInset) {
+                            params.bottomMargin = navBarBottomInset
+                            rail.layoutParams = params
+                        }
                     }
                     binding.root.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
@@ -261,33 +362,35 @@ class MainActivity : AbstractPlayerHostActivity() {
         binding.bottomNav.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
             if (bottom - top != oldBottom - oldTop) applyPlayerContainerProgress()
         }
+        // the screens run on under the bar: their lists follow every change of the room it
+        // takes (its height, the system bars, every tab hidden, the rail taking over); a
+        // layout pass that changed none of it costs one comparison
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener { updateBottomBarOverlay() }
 
         applyBottomBarNightStyle()
 
         // Header brand: icon + fallback colour first, then the gradient, which needs a
         // laid out text box and is therefore refreshed from the layout listener.
         applyBrandHeader()
+        // rebuilt by a theme switch: the sun / moon turns in as the new theme comes out
         binding.brandWord.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             applyBrandWordGradient()
         }
-        // Mockup #themeBtn flips light/dark in place. MainActivity declares uiMode in
-        // configChanges, so AppCompat would only patch Resources and leave every already
-        // inflated view on the previous theme: store the value Settings > Appearance
-        // writes and reuse the restart dialog the app already shows for theme changes.
+        // Mockup #themeBtn flips light/dark in place, with no restart: every screen is
+        // rebuilt in the new theme and this one dissolves into it (ThemeTransition).
+        // The value is the one Settings > Appearance writes.
         binding.themeToggle.setOnClickListener {
             val switchingToLight = isNightUiMode()
-            PreferenceHelper.putString(
-                PreferenceKeys.THEME_MODE,
-                if (switchingToLight) "L" else "D"
-            )
-            // OLED / pure black only applies in dark mode: disable it when going light
-            if (switchingToLight) {
-                PreferenceHelper.putBoolean(PreferenceKeys.PURE_THEME, false)
+            ThemeTransition.switchTheme(this) {
+                PreferenceHelper.putString(
+                    PreferenceKeys.THEME_MODE,
+                    if (switchingToLight) "L" else "D"
+                )
+                // OLED / pure black only applies in dark mode: disable it when going light
+                if (switchingToLight) {
+                    PreferenceHelper.putBoolean(PreferenceKeys.PURE_THEME, false)
+                }
             }
-            RequireRestartDialog().show(
-                supportFragmentManager,
-                RequireRestartDialog::class.java.name
-            )
         }
         // The bell opens the notification settings (which channels notify on new streams),
         // the only place the app actually manages notifications.
@@ -343,7 +446,9 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         if (binding.bottomNav.menu.children.none { it.itemId == startFragmentId }) deselectBottomBarItems()
 
-        setupExpandedLayout()
+        // the bottom bar menu was just built above: building it a second time cost about a
+        // fifth of a second at each launch and at each theme switch
+        setupExpandedLayout(bottomMenuBuilt = true)
 
         // setupWithNavController only checks the item of a new destination, it never
         // repairs a bar desynced by a menu rebuild or a state restore: converge both
@@ -390,18 +495,21 @@ class MainActivity : AbstractPlayerHostActivity() {
     }
 
     /**
-     * Adaptive navigation: tablets and unfolded foldables (>= 600dp of width, the
-     * Material "expanded" breakpoint) swap the bottom bar for a navigation rail pinned
-     * to the start edge. Phones keep the exact previous behaviour.
+     * Adaptive navigation: every window at least 600dp wide (Material's medium width: a
+     * phone turned sideways, a tablet, an unfolded foldable) swaps the bottom bar for the
+     * floating navigation rail at the start edge. A phone held upright keeps the bottom bar.
      *
      * Idempotent, because it is called again on every configuration change: MainActivity
      * declares `orientation` in its configChanges, so rotating never recreates it.
+     * [bottomMenuBuilt] skips rebuilding the bottom bar menu when the caller just built it.
      */
-    private fun setupExpandedLayout() {
-        val expanded = resources.configuration.smallestScreenWidthDp >= EXPANDED_WIDTH_DP
+    private fun setupExpandedLayout(bottomMenuBuilt: Boolean = false) {
+        // the width of the window, not of the device: a phone turned sideways is as wide as a
+        // small tablet, and the bottom bar took a quarter of its short height from the videos
+        val expanded = resources.configuration.screenWidthDp >= GridColumns.MEDIUM_WIDTH_DP
 
         binding.navRail.isVisible = false
-        setContentMarginStart(0f)
+        setRailSpace(0)
 
         if (!expanded) {
             // compact layout: bring the bottom bar back, the nav preference still
@@ -411,10 +519,12 @@ class MainActivity : AbstractPlayerHostActivity() {
             // or a launch while the device was turned) left it gone for good once back in
             // portrait - no bar, no way to navigate.
             binding.bottomNav.isVisible = true
-            try {
-                NavBarHelper.applyNavBarStyle(binding.bottomNav)
-            } catch (_: Exception) {
-                // a corrupted nav preference must never hide the bar
+            if (!bottomMenuBuilt) {
+                try {
+                    NavBarHelper.applyNavBarStyle(binding.bottomNav)
+                } catch (_: Exception) {
+                    // a corrupted nav preference must never hide the bar
+                }
             }
             // the bar was gone while the player docked: re-place both for its real height
             binding.bottomNav.post { applyPlayerContainerProgress() }
@@ -430,6 +540,8 @@ class MainActivity : AbstractPlayerHostActivity() {
         } catch (_: Exception) {
             // a corrupted nav preference must never keep the rail from working
         }
+        // the rail menu was just built: it carries the new videos badge too
+        showNewVideosBadge()
 
         // "hide every tab" makes applyNavBarStyle drop the bar: keep it that way
         if (!binding.navRail.isVisible) return
@@ -443,16 +555,27 @@ class MainActivity : AbstractPlayerHostActivity() {
             }
         }
 
-        // keep the content clear of the rail
-        setContentMarginStart(EXPANDED_RAIL_WIDTH_DP)
+        // keep the content and the docked mini player clear of the rail and its margin
+        setRailSpace(
+            resources.getDimensionPixelSize(R.dimen.watube_nav_inset) +
+                resources.getDimensionPixelSize(R.dimen.watube_nav_rail_width)
+        )
     }
 
-    /** Keeps the fragment container clear of the navigation rail (0dp on phones) */
-    private fun setContentMarginStart(widthDp: Float) {
+    /**
+     * Keeps the fragment container and the docked mini player clear of the navigation rail,
+     * which takes [space] pixels at the start of the window (0 with the bottom bar).
+     */
+    private fun setRailSpace(space: Int) {
         (binding.fragment.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
-            layoutParams.marginStart = (widthDp * resources.displayMetrics.density).toInt()
-            binding.fragment.layoutParams = layoutParams
+            if (layoutParams.marginStart != space) {
+                layoutParams.marginStart = space
+                binding.fragment.layoutParams = layoutParams
+            }
         }
+        miniPlayerStartInset = space
+        binding.container.findViewById<SingleViewTouchableMotionLayout>(R.id.playerMotionLayout)
+            ?.setMiniPlayerStartInset(space)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -507,8 +630,8 @@ class MainActivity : AbstractPlayerHostActivity() {
 
     private fun navigateToBottomSelectedItem(item: MenuItem): Boolean {
         if (item.itemId == R.id.subscriptionsFragment) {
-            binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
-            binding.navRail.removeBadge(R.id.subscriptionsFragment)
+            newVideosCount = 0
+            showNewVideosBadge()
         }
 
         // settings are hosted by their own activity, not by this nav graph: the tab must never
@@ -592,6 +715,12 @@ class MainActivity : AbstractPlayerHostActivity() {
         super.onResume()
         pipRelaunchPending = false
         syncBottomBarSelection()
+        // the glass may have been switched in the settings
+        if (::binding.isInitialized &&
+            glassBarApplied != !PreferenceHelper.getBoolean(PreferenceKeys.EFECTO_OFF, false)
+        ) {
+            applyBottomBarGlass()
+        }
     }
     // endregion
 
@@ -624,6 +753,15 @@ class MainActivity : AbstractPlayerHostActivity() {
         }
         binding.container.translationY = -shift *
             ((progress - CONTAINER_LIFT_START) / (1f - CONTAINER_LIFT_START)).coerceIn(0f, 1f)
+        updateBackdropRecording()
+    }
+
+    /** The room the floating bottom bar and the gap under it take over the screens. */
+    private fun updateBottomBarOverlay() {
+        val bar = binding.bottomNav
+        val room = if (bar.isVisible && bar.height > 0) bar.height + navBarBottomInset else 0
+        bottomBarOverlay.update(this, room)
+        updateBackdropRecording()
     }
 
     override fun minimizePlayerContainerLayout() {
@@ -661,26 +799,35 @@ class MainActivity : AbstractPlayerHostActivity() {
             val lastSeenVideoIndex = feed.orEmpty()
                 .filter { !it.isUpcoming }
                 .indexOfFirst { it.uploaded <= lastCheckedFeedTime }
-            if (lastSeenVideoIndex < 1) {
-                // nothing new: drop a badge left over from a previous feed
-                binding.bottomNav.removeBadge(R.id.subscriptionsFragment)
-                binding.navRail.removeBadge(R.id.subscriptionsFragment)
-                return@observe
-            }
+            // nothing new (index below 1) drops a badge left over from a previous feed
+            newVideosCount = lastSeenVideoIndex.coerceAtLeast(0)
+            showNewVideosBadge()
+        }
+    }
 
-            // the badge is mirrored on both bars: only one of them is visible at a time
-            listOf(binding.bottomNav, binding.navRail).forEach { bar ->
-                bar.getOrCreateBadge(R.id.subscriptionsFragment).apply {
-                    number = lastSeenVideoIndex
-                    backgroundColor = ThemeHelper.getThemeColor(
-                        this@MainActivity,
-                        androidx.appcompat.R.attr.colorPrimary
-                    )
-                    badgeTextColor = ThemeHelper.getThemeColor(
-                        this@MainActivity,
-                        com.google.android.material.R.attr.colorOnPrimary
-                    )
-                }
+    /**
+     * Shows [newVideosCount] on the subscriptions tab, or no badge at 0. The badge is mirrored
+     * on both bars, only one of them being visible at a time; a bar without that tab (the rail
+     * of a phone, never built, or a tab the user removed) gets none, Material refusing a badge
+     * for an item that is not in the menu.
+     */
+    private fun showNewVideosBadge() {
+        listOf(binding.bottomNav, binding.navRail).forEach { bar ->
+            if (bar.menu.findItem(R.id.subscriptionsFragment) == null) return@forEach
+            if (newVideosCount < 1) {
+                bar.removeBadge(R.id.subscriptionsFragment)
+                return@forEach
+            }
+            bar.getOrCreateBadge(R.id.subscriptionsFragment).apply {
+                number = newVideosCount
+                backgroundColor = ThemeHelper.getThemeColor(
+                    this@MainActivity,
+                    androidx.appcompat.R.attr.colorPrimary
+                )
+                badgeTextColor = ThemeHelper.getThemeColor(
+                    this@MainActivity,
+                    com.google.android.material.R.attr.colorOnPrimary
+                )
             }
         }
     }
@@ -829,7 +976,7 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         // Run a search query passed by the intent (search_query links). It used to be
         // parked until the next menu rebuild, which could drop it on onNewIntent().
-        intent?.getStringExtra(IntentData.query)?.let {
+        intent?.getStringExtra(IntentData.query)?.let(MediaIds::query)?.let {
             openSearchResults(it)
         }
 
@@ -871,22 +1018,23 @@ class MainActivity : AbstractPlayerHostActivity() {
      * @return Whether the method handled the event and triggered the navigation to a new fragment
      */
     fun navigateToMediaByIntent(intent: Intent, actionBefore: () -> Unit = {}): Boolean {
-        intent.getStringExtra(IntentData.channelId)?.let {
+        // MainActivity is exported: the IDs may come from any app, only well-formed ones are used
+        intent.getStringExtra(IntentData.channelId)?.let(MediaIds::channelId)?.let {
             actionBefore()
             navController.navigate(NavDirections.openChannel(channelId = it))
             return true
         }
-        intent.getStringExtra(IntentData.channelName)?.let {
+        intent.getStringExtra(IntentData.channelName)?.let(MediaIds::channelName)?.let {
             actionBefore()
             navController.navigate(NavDirections.openChannel(channelName = it))
             return true
         }
-        intent.getStringExtra(IntentData.playlistId)?.let {
+        intent.getStringExtra(IntentData.playlistId)?.let(MediaIds::playlistId)?.let {
             actionBefore()
             navController.navigate(NavDirections.openPlaylist(playlistId = it))
             return true
         }
-        intent.getStringArrayExtra(IntentData.videoIds)?.let {
+        intent.getStringArrayExtra(IntentData.videoIds)?.let(MediaIds::videoIds)?.let {
             actionBefore()
             ImportTempPlaylistDialog()
                 .apply {
@@ -899,7 +1047,7 @@ class MainActivity : AbstractPlayerHostActivity() {
             return true
         }
 
-        intent.getStringExtra(IntentData.videoId)?.let {
+        intent.getStringExtra(IntentData.videoId)?.let(MediaIds::videoId)?.let {
             if (binding.bottomNav.menu.isNotEmpty()) {
                 // the bottom navigation bar has to be created before opening the video
                 // otherwise the player layout measures aren't calculated properly

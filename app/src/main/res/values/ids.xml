@@ -3,4 +3,12 @@
     <!-- View tag holding the id a row is currently bound to, so an async result can
          never be applied to a row that has been recycled for another item. -->
     <item name="bound_item_id" type="id" />
+    <!-- BottomBarOverlay: a list's own bottom padding, the screen's extra room, the bar's -->
+    <item name="bottom_bar_base_padding" type="id" />
+    <item name="bottom_bar_extra_padding" type="id" />
+    <item name="bottom_bar_overlay_height" type="id" />
+    <!-- View tag holding the beat of an upcoming pill (UpcomingBadgeMotion). -->
+    <item name="upcoming_badge_motion" type="id" />
+    <!-- View tag holding whether a header was last given Efecto's glass (Efecto). -->
+    <item name="watube_efecto_state" type="id" />
 </resources>

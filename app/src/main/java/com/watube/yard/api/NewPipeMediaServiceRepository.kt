@@ -145,7 +145,7 @@ fun InfoItem.toContentItem() = when (this) {
         thumbnail = thumbnails.maxByOrNull { it.height }?.url.orEmpty(),
         title = name,
         uploaderAvatar = uploaderAvatars.maxByOrNull { it.height }?.url.orEmpty(),
-        uploaderUrl = uploaderUrl.toID(),
+        uploaderUrl = uploaderUrl?.toID(),
         uploaderName = uploaderName,
         uploaded = uploadDate?.offsetDateTime()?.toInstant()?.toEpochMilli() ?: -1,
         isShort = isShortFormContent,
@@ -212,8 +212,17 @@ fun ListLinkHandler.toTabDataString() = JsonHelper.json.encodeToString(
     TabData(originalUrl, url, id, contentFilters, sortFilter)
 )
 
+// A stored tab string is local data that may be old or damaged: refuse it cleanly instead of
+// passing nulls to the extractor (its link handler fields are non-null).
 fun String.toListLinkHandler() = with(JsonHelper.json.decodeFromString<TabData>(this)) {
-    ListLinkHandler(originalUrl, url, id, contentFilters, sortFilter)
+    val tabUrl = requireNotNull(url) { "Stored channel tab has no URL" }
+    ListLinkHandler(
+        originalUrl ?: tabUrl,
+        tabUrl,
+        requireNotNull(id) { "Stored channel tab has no id" },
+        contentFilters.orEmpty(),
+        sortFilter.orEmpty()
+    )
 }
 // endregion
 
@@ -234,7 +243,7 @@ fun ChannelInfo.toChannel() = Channel(
 // region Playlists
 fun PlaylistInfo.toPlaylist() = Playlist(
     name = name,
-    description = description?.content,
+    description = description.content,
     thumbnailUrl = thumbnails.maxByOrNull { it.height }?.url,
     uploaderUrl = uploaderUrl.toID(),
     bannerUrl = banners.maxByOrNull { it.height }?.url,
@@ -248,12 +257,12 @@ fun PlaylistInfo.toPlaylist() = Playlist(
 
 // region Comments
 fun CommentsInfoItem.toComment() = Comment(
-    author = uploaderName,
-    commentId = commentId,
+    author = uploaderName.orEmpty(),
+    commentId = commentId.orEmpty(),
     commentText = commentText.content,
-    commentedTime = textualUploadDate,
+    commentedTime = textualUploadDate.orEmpty(),
     commentedTimeMillis = uploadDate?.offsetDateTime()?.toEpochSecond()?.times(1000),
-    commentorUrl = uploaderUrl.toID(),
+    commentorUrl = uploaderUrl?.toID().orEmpty(),
     hearted = isHeartedByUploader,
     creatorReplied = hasCreatorReply(),
     likeCount = likeCount.toLong(),
@@ -286,7 +295,7 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
         val kioskList = NewPipeExtractorInstance.extractor.kioskList
         kioskList.forceContentCountry(ContentCountry(region))
 
-        val kioskId = trendingCategories[category]
+        val kioskId = requireNotNull(trendingCategories[category]) { "Unknown trending category" }
         val extractor = kioskList.getExtractorById(kioskId, null)
         extractor.fetchPage()
 
@@ -331,7 +340,8 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
                     it.urlTexts
                 )
             },
-            visibility = resp.privacy.name.lowercase(),
+            // Privacy can be missing from the response: keep the model default ("public")
+            visibility = resp.privacy?.name?.lowercase() ?: "public",
             // Watube 27A1 fix: the livestream flag was never reliably mapped from NewPipe,
             // so live videos could be treated as VODs -> DASH/HLS selection went down the
             // wrong branch and playback failed with a source error.
@@ -342,15 +352,16 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
                 // fallback for extractors that leave the duration unset/zero for live content
                 (resp.duration <= 0 && resp.streamType !in NON_LIVE_TYPES),
             duration = resp.duration,
-            uploadTimestamp = resp.uploadDate.offsetDateTime().toInstant().toKotlinInstant(),
-            uploaded = resp.uploadDate.offsetDateTime().toEpochSecond() * 1000,
+            // No upload date (e.g. some live streams): leave both unset instead of crashing
+            uploadTimestamp = resp.uploadDate?.offsetDateTime()?.toInstant()?.toKotlinInstant(),
+            uploaded = resp.uploadDate?.offsetDateTime()?.toEpochSecond()?.times(1000),
             thumbnailUrl = resp.thumbnails.maxBy { it.height }.url,
             relatedStreams = resp.relatedItems
                 .filterIsInstance<StreamInfoItem>()
                 .map { item -> item.toStreamItem() },
             chapters = resp.streamSegments.map {
                 ChapterSegment(
-                    title = it.title,
+                    title = it.title.orEmpty(),
                     image = it.previewUrl.orEmpty(),
                     start = it.startTimeSeconds.toLong()
                 )
@@ -465,7 +476,7 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
         val queryHandler = NewPipeExtractorInstance.extractor.searchQHFactory.fromQuery(
             searchQuery,
             listOf(filter),
-            null
+            ""
         )
         val searchInfo = SearchInfo.getInfo(NewPipeExtractorInstance.extractor, queryHandler)
 
@@ -485,7 +496,7 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
         val queryHandler = NewPipeExtractorInstance.extractor.searchQHFactory.fromQuery(
             searchQuery,
             listOf(filter),
-            null
+            ""
         )
         val searchInfo = SearchInfo.getMoreItems(
             NewPipeExtractorInstance.extractor,
@@ -598,7 +609,9 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
     // region Comments
     override suspend fun getComments(videoId: String): CommentsPage {
         val url = "${YOUTUBE_FRONTEND_URL}/watch?v=$videoId"
+        // YouTube always has a comments extractor; null only for services without comments
         val commentsInfo = CommentsInfo.getInfo(url)
+            ?: return CommentsPage(disabled = true)
 
         return CommentsPage(
             nextpage = commentsInfo.nextPage?.toNextPageString(),

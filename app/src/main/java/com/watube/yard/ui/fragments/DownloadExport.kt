@@ -1,10 +1,7 @@
 package com.watube.yard.ui.fragments
 
 import android.content.Context
-import android.net.Uri
-import android.provider.DocumentsContract
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.watube.yard.R
@@ -14,27 +11,25 @@ import com.watube.yard.db.obj.DownloadItem
 import com.watube.yard.enums.FileType
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.DownloadDestination
 import com.watube.yard.helpers.DownloadEncryption
+import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.watube.yard.ui.sheets.DownloadOptionsBottomSheet
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.nio.file.Path
+import java.io.IOException
 
 // region Downloads
 /**
- * "Export the file" of a download: a clear copy of one of its files, written where the user
- * chooses. Downloads are stored encrypted (see DownloadEncryption), this is the way to use one
- * outside of Watube. Created with its [fragment], before the fragment is created.
+ * "Export the file" of a download, and of a whole downloaded playlist: a clear copy written to
+ * the destination folder (see DownloadDestination), where the other apps and the file manager
+ * reach it. Downloads are stored encrypted (see DownloadEncryption), this is the way to use one
+ * outside of Watube.
  */
 class DownloadExport(private val fragment: Fragment) {
-    private var source: Path? = null
-    private val createFile = fragment.registerForActivityResult(CreateDocument(MIME_TYPE)) {
-        onDestination(it)
-    }
-
     /** Follows the "export" action of the download options while the fragment's view lives. */
     fun bind() {
         fragment.requireActivity().supportFragmentManager.setFragmentResultListener(
@@ -45,18 +40,17 @@ class DownloadExport(private val fragment: Fragment) {
 
     private fun export(videoId: String) {
         fragment.lifecycleScope.launch {
-            val files = withContext(Dispatchers.IO) {
-                Database.downloadDao().findById(videoId)?.downloadItems.orEmpty()
-                    .filter { it.isFinished }
-            }
+            val download = withContext(Dispatchers.IO) { Database.downloadDao().findById(videoId) }
+            val files = download?.downloadItems.orEmpty().filter { it.isFinished }
+            val title = download?.download?.title
             val context = fragment.context ?: return@launch
             when (files.size) {
                 0 -> context.toastFromMainDispatcher(R.string.download_export_unfinished)
-                1 -> chooseDestination(files.single())
+                1 -> exportFile(title, files.single())
                 else -> SecureAlertDialogBuilder(context)
                     .setTitle(R.string.download_export_choose)
                     .setItems(files.map { labelOf(context, it) }.toTypedArray()) { _, which ->
-                        chooseDestination(files[which])
+                        exportFile(title, files[which])
                     }
                     .setNegativeButton(R.string.cancel, null)
                     .show()
@@ -76,36 +70,78 @@ class DownloadExport(private val fragment: Fragment) {
         return if (detail.isEmpty()) kind else "$kind · $detail"
     }
 
-    private fun chooseDestination(file: DownloadItem) {
-        source = file.path
-        createFile.launch(file.fileName)
-    }
-
-    private fun onDestination(uri: Uri?) {
-        val source = source ?: return
-        this.source = null
+    private fun exportFile(title: String?, file: DownloadItem) {
         val appContext = fragment.context?.applicationContext ?: return
-        if (uri == null) return
-
-        // started even if the screen closes meanwhile: the file the picker created gets filled
+        // started even if the screen closes meanwhile: the copy is not left cut short
         fragment.lifecycleScope.launch(Dispatchers.IO, start = CoroutineStart.ATOMIC) {
-            val exported = runCatching {
-                val output = appContext.contentResolver.openOutputStream(uri, "wt")
-                    ?: error("export destination unavailable")
-                output.use { DownloadEncryption.decryptTo(source, it) }
-            }.onFailure {
-                Log.e(TAG(), "Could not export a download", it)
-                // no cut-short clear copy is left behind where the user put it
-                runCatching { DocumentsContract.deleteDocument(appContext.contentResolver, uri) }
-            }.isSuccess
+            // kept readable already (Save readable): a second copy would only take room
+            if (!DownloadEncryption.isEncrypted(file.path) && DownloadHelper.isStored(appContext, file.path)) {
+                val folder = file.path.parent?.let { DownloadDestination.locate(appContext, it) }.orEmpty()
+                appContext.toastFromMainDispatcher(
+                    appContext.getString(R.string.download_already_readable, folder)
+                )
+                return@launch
+            }
+            val where = try {
+                DownloadDestination.export(
+                    appContext,
+                    file.path,
+                    file.type,
+                    DownloadDestination.fileNameOf(title, file)
+                )
+            } catch (e: IOException) {
+                Log.e(TAG(), "Could not export a download", e)
+                null
+            }
             appContext.toastFromMainDispatcher(
-                if (exported) R.string.download_exported else R.string.download_export_failed
+                where?.let { appContext.getString(R.string.download_exported, it) }
+                    ?: appContext.getString(R.string.download_export_failed)
             )
         }
     }
 
-    private companion object {
-        const val MIME_TYPE = "application/octet-stream"
+    /**
+     * Exports every finished file of the downloaded playlist [playlistId], in a folder named
+     * after the playlist within the Video and Audio folders.
+     */
+    fun exportPlaylist(playlistId: String) {
+        val appContext = fragment.context?.applicationContext ?: return
+        fragment.lifecycleScope.launch(Dispatchers.IO, start = CoroutineStart.ATOMIC) {
+            val playlist = Database.downloadDao().getDownloadPlaylistByIdIncludingItems(playlistId)
+            val group = playlist.downloadPlaylist.title
+            var exported = 0
+            var failed = 0
+            playlist.downloadVideos.forEach { video ->
+                video.downloadItems.filter { it.isFinished }.forEach { file ->
+                    try {
+                        DownloadDestination.export(
+                            appContext,
+                            file.path,
+                            file.type,
+                            DownloadDestination.fileNameOf(video.download.title, file),
+                            group
+                        )
+                        exported++
+                    } catch (e: IOException) {
+                        Log.e(TAG(), "Could not export a file of a playlist", e)
+                        failed++
+                    }
+                }
+            }
+            val message = when {
+                exported > 0 -> appContext.resources.getQuantityString(
+                    R.plurals.playlist_exported,
+                    exported,
+                    exported,
+                    DownloadDestination.describe(appContext),
+                    group
+                )
+
+                failed > 0 -> appContext.getString(R.string.download_export_failed)
+                else -> appContext.getString(R.string.download_export_unfinished)
+            }
+            appContext.toastFromMainDispatcher(message)
+        }
     }
 }
 // endregion

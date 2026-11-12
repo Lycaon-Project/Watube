@@ -67,7 +67,18 @@
         <item>240p</item>
         <item>144p</item>
     </string-array>
-    <string-array name="grid">
+    <!-- Video grid columns: automatic (GridColumns.AUTO, following the window) or a number -->
+    <string-array name="grid_labels">
+        <item>@string/automatic</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="grid_values" translatable="false">
+        <item>auto</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -214,6 +225,12 @@
         <item>trending</item>
         <item>bookmarks</item>
         <item>playlists</item>
+    </string-array>
+
+    <!-- Home sections shown until the user picks others: the subscriptions feed only, so a
+         first look at the home screen is not crowded -->
+    <string-array name="homeTabItemsDefault" translatable="false">
+        <item>featured</item>
     </string-array>
 
     <string-array name="sb_skip_options">

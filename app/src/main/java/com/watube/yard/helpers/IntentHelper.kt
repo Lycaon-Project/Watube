@@ -14,6 +14,7 @@ import com.watube.yard.R
 import com.watube.yard.constants.IntentData
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.ui.sheets.IntentChooserSheet
+import com.watube.yard.util.MediaIds
 import com.watube.yard.util.TextUtils.toTimeInSeconds
 
 // region Share
@@ -78,7 +79,8 @@ object IntentHelper {
     fun resolveType(uri: Uri) = resolveType(Intent(), uri)
 
     /**
-     * Resolve the uri and return a bundle with the arguments
+     * Resolve the uri and return a bundle with the arguments. An ID without the shape YouTube
+     * gives it is left out (see [MediaIds]): the app then simply opens.
      */
     fun resolveType(intent: Intent, uri: Uri) = with(intent) {
         // an opaque uri (shared text such as "look: abc") has no path nor query: reading its
@@ -90,28 +92,28 @@ object IntentHelper {
         val channelSegment = uri.pathSegments.getOrNull(1)
         when {
             lastSegment == "results" -> {
-                putExtra(IntentData.query, uri.getQueryParameter("search_query"))
+                putExtra(IntentData.query, MediaIds.query(uri.getQueryParameter("search_query")))
             }
             firstSegment == "channel" && channelSegment != null -> {
-                putExtra(IntentData.channelId, channelSegment)
+                putExtra(IntentData.channelId, MediaIds.channelId(channelSegment))
             }
             (firstSegment == "c" || firstSegment == "user") && channelSegment != null -> {
-                putExtra(IntentData.channelName, channelSegment)
+                putExtra(IntentData.channelName, MediaIds.channelName(channelSegment))
             }
             firstSegment?.startsWith("@") == true -> {
-                putExtra(IntentData.channelName, firstSegment)
+                putExtra(IntentData.channelName, MediaIds.channelName(firstSegment))
             }
             lastSegment == "playlist" -> {
-                putExtra(IntentData.playlistId, uri.getQueryParameter("list"))
+                putExtra(IntentData.playlistId, MediaIds.playlistId(uri.getQueryParameter("list")))
             }
             lastSegment == "watch_videos" -> {
                 putExtra(IntentData.playlistName, uri.getQueryParameter("title"))
-                val videoIds = uri.getQueryParameter("video_ids")?.split(",")
-                putExtra(IntentData.videoIds, videoIds?.toTypedArray())
+                val videoIds = uri.getQueryParameter("video_ids")?.split(",")?.toTypedArray()
+                putExtra(IntentData.videoIds, MediaIds.videoIds(videoIds))
             }
             else -> {
                 val id = if (lastSegment == "watch") uri.getQueryParameter("v") else lastSegment
-                putExtra(IntentData.videoId, id)
+                putExtra(IntentData.videoId, MediaIds.videoId(id))
                 putExtra(IntentData.timeStamp, uri.getQueryParameter("t")?.toTimeInSeconds())
             }
         }

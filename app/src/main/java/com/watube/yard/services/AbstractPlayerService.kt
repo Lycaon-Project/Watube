@@ -434,9 +434,11 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
                 args.getBoolean(PlayerCommand.SKIP_SILENCE.name)
 
             args.containsKey(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name) -> trackSelector?.updateParameters {
+                // the audio-only player never gets the picture back from a screen showing up
                 setTrackTypeDisabled(
                     C.TRACK_TYPE_VIDEO,
-                    args.getBoolean(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name)
+                    args.getBoolean(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name) ||
+                        isAudioOnlyPlayer
                 )
             }
 

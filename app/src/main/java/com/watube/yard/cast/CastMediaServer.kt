@@ -455,10 +455,13 @@ internal class CastMediaServer(
                 (url.host == RECEIVER_SITE || url.host.endsWith(".$RECEIVER_SITE"))
         }
 
-        /** Every relayed address is public https, in pure Piped mode through the instance proxy. */
+        /**
+         * Every relayed address is public https, in pure Piped mode through the instance proxy,
+         * and on YouTube or the selected instance only ([ProxyHelper.isRelayTarget]).
+         */
         fun defaultRoute(url: String): String? {
             val target = ProxyHelper.streamUrl(url)?.toHttpUrlOrNull() ?: return null
-            if (target.scheme != "https" || !isPublicHost(target.host)) return null
+            if (!isPublicHost(target.host) || !ProxyHelper.isRelayTarget(target)) return null
             return target.toString()
         }
 

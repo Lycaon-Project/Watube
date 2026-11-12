@@ -14,7 +14,9 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.adapters.IconsSheetAdapter
+import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.base.BasePreferenceFragment
+import com.watube.yard.ui.base.ThemeTransition
 import com.watube.yard.ui.dialogs.NavBarOptionsDialog
 import com.watube.yard.ui.dialogs.RequireRestartDialog
 import com.watube.yard.ui.sheets.IconsBottomSheet
@@ -22,22 +24,37 @@ import java.util.Locale
 
 // region Appearance
 class AppearanceSettings : BasePreferenceFragment() {
+    /**
+     * Applies a theme change at once, with no restart: [apply] writes it, then every screen
+     * is rebuilt in the new theme, this one dissolving into it.
+     */
+    private fun switchTheme(apply: () -> Unit) {
+        val screen = activity as? BaseActivity ?: return apply()
+        ThemeTransition.switchTheme(screen, apply)
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.appearance_settings, rootKey)
 
         val themeToggle = findPreference<ListPreference>(PreferenceKeys.THEME_MODE)
         themeToggle?.setOnPreferenceChangeListener { _, newValue ->
+            val mode = newValue as? String ?: return@setOnPreferenceChangeListener false
             // OLED / pure black only makes sense in dark mode: switching to light turns it off
-            if (newValue == "L") {
+            val goingLight = mode == "L"
+            if (goingLight) {
                 findPreference<SwitchPreferenceCompat>(PreferenceKeys.PURE_THEME)?.isChecked = false
             }
-            RequireRestartDialog().show(childFragmentManager, RequireRestartDialog::class.java.name)
+            switchTheme {
+                PreferenceHelper.putString(PreferenceKeys.THEME_MODE, mode)
+                if (goingLight) PreferenceHelper.putBoolean(PreferenceKeys.PURE_THEME, false)
+            }
             true
         }
 
         val pureTheme = findPreference<SwitchPreferenceCompat>(PreferenceKeys.PURE_THEME)
-        pureTheme?.setOnPreferenceChangeListener { _, _ ->
-            RequireRestartDialog().show(childFragmentManager, RequireRestartDialog::class.java.name)
+        pureTheme?.setOnPreferenceChangeListener { _, newValue ->
+            val pure = newValue as? Boolean ?: return@setOnPreferenceChangeListener false
+            switchTheme { PreferenceHelper.putBoolean(PreferenceKeys.PURE_THEME, pure) }
             true
         }
 

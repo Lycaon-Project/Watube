@@ -181,9 +181,13 @@ class SabrClient private constructor(
     private var fatalError: SabrError? = null
     private val dispatcher = Dispatchers.IO.limitedParallelism(1)
 
-    /** Audio format video format */
+    /**
+     * Audio format, then optional video format: both set by the playback thread, read by the
+     * loader building each request, hence volatile.
+     */
+    @Volatile
     private var audioFormat: Representation? = null
-    /** Optional video format */
+    @Volatile
     private var videoFormat: Representation? = null
 
     constructor(manifest: SabrManifest) : this(
@@ -268,6 +272,16 @@ class SabrClient private constructor(
         } else if (MimeTypes.isVideo(representation.format.containerMimeType)) {
             videoFormat = representation
         }
+    }
+
+    /**
+     * Asks the server for the sound only, as the audio-only player does, once the video track is
+     * turned off (screen hidden, audio mode): Media3 then stops reading the video, but SABR sends
+     * every track the request names, so the video would still be downloaded to be thrown away.
+     * [selectFormat] brings it back when the track is selected again.
+     */
+    fun deselectVideo() {
+        videoFormat = null
     }
 
     /**

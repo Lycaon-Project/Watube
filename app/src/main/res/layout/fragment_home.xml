@@ -43,6 +43,7 @@
                 app:strokeWidth="1dp">
 
                 <LinearLayout
+                    android:id="@+id/search_pill_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -102,8 +103,10 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Chips de filtres horizontales sous le header (style communautaire) -->
+            <!-- Chips de filtres horizontales sous le header (style communautaire). On a short
+                 window HomeWindowLayout puts them beside the search pill, on the same row -->
             <HorizontalScrollView
+                android:id="@+id/filter_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fillViewport="true"
@@ -173,7 +176,10 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:strokeWidth="0dp">
 
+                            <!-- Thumbnail under its text; side by side on a wide, short
+                                 window (HomeWindowLayout) -->
                             <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/hero_body"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 

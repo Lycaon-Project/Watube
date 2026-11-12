@@ -23,6 +23,7 @@ import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.bindUpcomingBadge
 import com.watube.yard.ui.extensions.setFormattedDuration
 import com.watube.yard.ui.extensions.setWatchProgressLength
 import com.watube.yard.ui.sheets.VideoOptionsBottomSheet
@@ -108,11 +109,18 @@ class VideoCardsAdapter(private val columnWidthDp: Float? = null) :
             watchProgress.setWatchProgressLength(videoId, video.duration ?: 0L)
 
             textViewTitle.text = video.title
+            // an upcoming video shows its date in the pill under this line, not in it
+            val isUpcoming = video.isUpcoming
             textViewChannel.text = TextUtils.formatViewsString(
                 root.context,
                 video.views ?: -1,
-                video.uploaded,
+                if (isUpcoming) 0L else video.uploaded,
                 video.uploaderName
+            )
+            upcomingBadge.bindUpcomingBadge(
+                videoId,
+                video.uploaded.takeIf { isUpcoming },
+                textViewChannel
             )
 
             video.duration?.let {

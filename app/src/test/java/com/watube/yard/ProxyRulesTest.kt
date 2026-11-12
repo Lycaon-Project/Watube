@@ -3,7 +3,9 @@ package com.watube.yard
 import com.watube.yard.helpers.ProxyHelper
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /** Where YouTube media may be fetched from in the Piped modes (ProxyHelper). */
@@ -37,6 +39,29 @@ class ProxyRulesTest {
         assertEquals(dearrow, ProxyHelper.throughProxy(dearrow) { null })
         val lookAlike = "https://evilytimg.com/vi/abc.jpg"
         assertEquals(lookAlike, ProxyHelper.throughProxy(lookAlike) { null })
+    }
+
+    @Test
+    fun relayFetchesYouTubeAndTheSelectedInstanceOnly() {
+        val instance = "https://pipedapi.example.org".toHttpUrl()
+        fun allowed(url: String, local: Boolean = false) = if (local) {
+            ProxyHelper.isRelayTarget(url.toHttpUrl(), null, null)
+        } else {
+            ProxyHelper.isRelayTarget(url.toHttpUrl(), instance, proxy)
+        }
+        assertTrue(allowed("https://manifest.googlevideo.com/api/manifest/hls_variant/x", local = true))
+        assertTrue(allowed("https://rr1---sn-a1.googlevideo.com/videoplayback?id=1", local = true))
+        assertTrue(allowed("https://www.youtube.com/api/timedtext?v=abc&fmt=vtt", local = true))
+        assertTrue(allowed("https://pipedproxy.example.org/api/manifest/hls_variant/x?host=manifest.googlevideo.com"))
+        assertTrue(allowed("https://pipedapi.example.org/x.m3u8"))
+        // a host or a port picked by a hostile playlist
+        assertFalse(allowed("https://attacker.example/x.ts"))
+        assertFalse(allowed("https://rr1---sn-a1.googlevideo.com:8443/videoplayback"))
+        assertFalse(allowed("https://pipedproxy.example.org:8443/x.ts"))
+        assertFalse(allowed("http://rr1---sn-a1.googlevideo.com/videoplayback"))
+        assertFalse(allowed("https://evilgooglevideo.com/videoplayback"))
+        // the instance and its proxy are trusted in the Piped modes only
+        assertFalse(allowed("https://pipedproxy.example.org/x.ts", local = true))
     }
 
     @Test

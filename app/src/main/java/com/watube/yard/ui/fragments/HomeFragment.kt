@@ -1,6 +1,7 @@
 package com.watube.yard.ui.fragments
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -66,9 +67,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val bookmarkAdapter = CarouselPlaylistAdapter()
     private val playlistAdapter = CarouselPlaylistAdapter()
 
+    /** Fits the header, the hero and the feed to the window, see [HomeWindowLayout]. */
+    private var windowLayout: HomeWindowLayout? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        windowLayout = HomeWindowLayout(binding)
 
         binding.bookmarksRV.layoutManager = CarouselLayoutManager(UncontainedCarouselStrategy())
         binding.playlistsRV.layoutManager = CarouselLayoutManager(UncontainedCarouselStrategy())
@@ -213,15 +218,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        setGutterMargins(binding.searchPill)
         setGutterMargins(binding.heroContainer)
-
-        binding.filterChips.setPaddingRelative(
-            pad,
-            binding.filterChips.paddingTop,
-            pad,
-            binding.filterChips.paddingBottom
-        )
 
         listOf(
             binding.watchingTitle,
@@ -252,12 +249,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ).forEach { rows ->
             rows.setPaddingRelative(rowPadding, rows.paddingTop, rowPadding, rows.paddingBottom)
         }
+
+        // the search pill and the chips take the gutter too, laid out for the window
+        windowLayout?.apply(resources.configuration, pad)
+    }
+
+    /** Rotations reach this screen without rebuilding it (MainActivity handles them). */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (_binding != null) applyFeedDensity()
     }
 
     // --- filter chips: one checkable chip per home section -------------------
 
     private fun enabledSections(): Set<String> {
-        val defaults = resources.getStringArray(R.array.homeTabItemsValues)
+        val defaults = resources.getStringArray(R.array.homeTabItemsDefault)
         return PreferenceHelper.getStringSet(HOME_TAB_CONTENT, defaults.toSet())
     }
 
@@ -368,13 +374,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        windowLayout = null
         _binding = null
     }
 
     private fun fetchHomeFeed() {
         binding.nothingHere.isGone = true
-        val defaultItems = resources.getStringArray(R.array.homeTabItemsValues)
-        val visibleItems = PreferenceHelper.getStringSet(HOME_TAB_CONTENT, defaultItems.toSet())
+        val visibleItems = enabledSections()
 
         homeViewModel.loadHomeFeed(
             context = requireContext(),

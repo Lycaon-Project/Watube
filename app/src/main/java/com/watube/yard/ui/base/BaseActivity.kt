@@ -52,6 +52,15 @@ open class BaseActivity : AppCompatActivity() {
     // Référence au listener pour pouvoir le nettoyer
     private var insetsListener: View.OnApplyWindowInsetsListener? = null
 
+    /** The theme switch (ThemeTransition.generation) this screen was built under. */
+    var themeGeneration = 0
+        private set
+
+    /** Day or night, as this screen was built (Configuration.UI_MODE_NIGHT_*). */
+    private var builtNight = Configuration.UI_MODE_NIGHT_UNDEFINED
+
+    /** A rebuild is on its way: further requests (AppCompat, the theme switch) add nothing. */
+    private var rebuilding = false
     override fun onCreate(savedInstanceState: Bundle?) {
         // Appliquer le thème uniquement si nécessaire
         applyThemeIfNeeded()
@@ -62,12 +71,20 @@ open class BaseActivity : AppCompatActivity() {
         // Détecter les cutouts de manière asynchrone pour ne pas bloquer le premier rendu
         setupCutoutDetection()
 
-        // Activer edge to edge uniquement si pas en mode dialog
+        super.onCreate(savedInstanceState)
+
+        // Activer edge to edge uniquement si pas en mode dialog. After super.onCreate: a
+        // screen that handles uiMode itself (MainActivity) only gets its day/night resources
+        // there, and the bars took their style from the old theme when rebuilt by a theme
+        // switch (dark status icons on the dark theme, a light scrim behind the buttons).
         if (!isDialogActivity) {
             enableEdgeToEdge()
         }
 
-        super.onCreate(savedInstanceState)
+        themeGeneration = ThemeTransition.generation
+        builtNight = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (savedInstanceState != null) refreshWindowBackground()
+        ThemeTransition.onCreated(this)
         ScreenPrivacy.applyTo(window)
         ScreenPrivacy.applyRecentsPreviewTo(this)
         supportFragmentManager.registerFragmentLifecycleCallbacks(ScreenPrivacy.dialogWatcher, true)
@@ -142,9 +159,46 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Android keeps the window of a screen rebuilt in front, and with it the background of
+     * the theme it was built with: after a theme switch the gaps between the cards of a
+     * screen stayed in the old colour. The rebuilt screen takes the one of its new theme.
+     */
+    private fun refreshWindowBackground() {
+        theme.obtainStyledAttributes(intArrayOf(android.R.attr.windowBackground)).use {
+            it.getDrawable(0)?.let(window::setBackgroundDrawable)
+        }
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // the content is in place: lay the old screen over it and open the new theme
+        ThemeTransition.onPostCreated(this)
+    }
+
     override fun onStart() {
         super.onStart()
+        // the theme changed while this screen was away (a screen opened mid-switch)
+        if (themeGeneration != ThemeTransition.generation) recreate()
         AppLock.onStart(this)
+    }
+
+    override fun recreate() {
+        if (rebuilding) return
+        rebuilding = true
+        super.recreate()
+    }
+
+    /**
+     * The screens that keep their views across a day/night change (uiMode in the manifest)
+     * would stay in the old colours when the system switches in the "follow the system"
+     * mode: they rebuild, fading from the old look.
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (ThemeTransition.nightChanged(this, newConfig, builtNight)) {
+            ThemeTransition.followSystem(this)
+        }
     }
 
     override fun onStop() {
@@ -171,6 +225,7 @@ open class BaseActivity : AppCompatActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
+        ThemeTransition.onDestroyed(this)
         if (insetsListener != null) {
             window.decorView.setOnApplyWindowInsetsListener(null)
             insetsListener = null

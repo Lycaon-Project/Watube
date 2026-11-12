@@ -9,7 +9,9 @@ import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Binder
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -119,26 +121,34 @@ class DownloadService : LifecycleService() {
         IS_DOWNLOAD_RUNNING = true
         notifyForeground()
         sendBroadcast(Intent(ACTION_SERVICE_STARTED).setPackage(packageName))
+        registerNetworkChangedCallback()
     }
 
     /**
      * Listen for network changes and pause the download if the network connection becomes metered
      */
-    fun registerNetworkChangedCallback() {
-        val connectivityManager = getSystemService<ConnectivityManager>()
-        connectivityManager?.registerDefaultNetworkCallback(object :
-            ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                super.onAvailable(network)
+    private val networkChangedCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
 
-                // pause all downloads when switching to an unmetered connection
-                if (NetworkHelper.isNetworkMetered(this@DownloadService)) {
-                    for (download in downloadQueue.keyIterator()) {
-                        pause(download)
-                    }
+            // pause all downloads when switching to a metered connection
+            if (NetworkHelper.isNetworkMetered(this@DownloadService)) {
+                for (download in downloadQueue.keyIterator()) {
+                    pause(download)
                 }
             }
-        })
+        }
+    }
+
+    /**
+     * Registered once for the life of the service, then unregistered in [onDestroy]: registering
+     * it at each start command, as before, piled up callbacks that each outlived the service.
+     * Delivered on the main thread, where the other pause requests (notification actions) arrive
+     * too, rather than on Android's own connectivity thread.
+     */
+    private fun registerNetworkChangedCallback() {
+        getSystemService<ConnectivityManager>()
+            ?.registerDefaultNetworkCallback(networkChangedCallback, Handler(Looper.getMainLooper()))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -150,8 +160,6 @@ class DownloadService : LifecycleService() {
             ACTION_DOWNLOAD_STOP -> stop(downloadId!!)
             ACTION_RESUME_ALL -> resumeAll()
         }
-
-        registerNetworkChangedCallback()
 
         val downloadData = intent?.parcelableExtra<DownloadData>(IntentData.downloadData)
             ?: return START_NOT_STICKY
@@ -371,7 +379,7 @@ class DownloadService : LifecycleService() {
         }
 
         // a download complete but not encrypted yet (the app was stopped in between) too
-        if (completed || item.isFinished && !DownloadEncryption.isEncrypted(item.path)) {
+        if (completed || item.isFinished && !DownloadHelper.isStored(this@DownloadService, item.path)) {
             finishDownload(item, notificationBuilder)
         }
         downloadQueue[item.id] = false
@@ -721,7 +729,7 @@ class DownloadService : LifecycleService() {
             return false
         }
         if (!goesOn) {
-            if (DownloadEncryption.isEncrypted(item.path)) {
+            if (DownloadHelper.isStored(this, item.path)) {
                 setPauseNotification(notificationBuilder, item, true)
                 _downloadFlow.emit(item.id to DownloadStatus.Completed)
             } else {
@@ -768,6 +776,10 @@ class DownloadService : LifecycleService() {
     }
 
     override fun onDestroy() {
+        runCatching {
+            getSystemService<ConnectivityManager>()
+                ?.unregisterNetworkCallback(networkChangedCallback)
+        }
         downloadQueue.clear()
         IS_DOWNLOAD_RUNNING = false
         sendBroadcast(Intent(ACTION_SERVICE_STOPPED).setPackage(packageName))

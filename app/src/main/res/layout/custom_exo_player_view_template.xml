@@ -27,6 +27,15 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:contentDescription="@null"/>
+        <!-- The last frame seen, over the video while it comes back from the background
+             (VideoReturnFrame); hidden the rest of the time. -->
+        <ImageView android:id="@+id/return_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:visibility="gone"/>
 
         <androidx.media3.ui.SubtitleView android:id="@id/exo_subtitles"
             android:layout_width="match_parent"

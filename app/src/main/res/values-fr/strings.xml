@@ -168,6 +168,8 @@
     <string name="data_saver_mode_summary">Ignorer les miniatures et autres images</string>
     <string name="never">Jamais</string>
     <string name="pure_theme_summary">Économise la batterie sur OLED</string>
+    <string name="efecto_off">Désactiver Efecto</string>
+    <string name="efecto_off_summary">Retire le flou sous la barre de navigation et la bulle vidéo</string>
     <string name="playerAudioQuality">Qualité audio</string>
     <string name="worst_quality">Plus mauvaise</string>
     <string name="caption_settings">Réglages des sous-titres</string>
@@ -654,6 +656,7 @@
     <string name="about_privacy">Politique de confidentialité</string>
     <string name="about_report_issue">Signaler un problème</string>
     <string name="about_mission">Pourquoi Watube</string>
+    <string name="vireoboo_found">Félicitations, tu m’as trouvé !</string>
     <string name="about_header_subtitle">En vérifiant les mises à jour, vous vous assurez de la qualité de l’app et d’avoir les derniers correctifs.</string>
 <string name="search_back">Retour</string>
 <string name="search_clear">Effacer</string>
@@ -834,7 +837,26 @@
     <string name="export_download">Exporter le fichier</string>
     <string name="download_export_choose">Quel fichier exporter ?</string>
     <string name="download_export_unfinished">Ce téléchargement n’est pas terminé</string>
-    <string name="download_exported">Fichier exporté. Il n’est plus chiffré : rangez-le en lieu sûr.</string>
+    <string name="download_exported">Exporté dans %1$s. Il n’est plus chiffré : rangez-le en lieu sûr.</string>
+    <string name="download_already_readable">Ce fichier est déjà lisible, dans %1$s</string>
+    <plurals name="playlist_exported">
+        <item quantity="one">%1$d fichier exporté dans %2$s, dossier « %3$s »</item>
+        <item quantity="many">%1$d fichiers exportés dans %2$s, dossier « %3$s »</item>
+        <item quantity="other">%1$d fichiers exportés dans %2$s, dossier « %3$s »</item>
+    </plurals>
+    <string name="download_folder">Dossier destination</string>
+    <string name="download_folder_summary">%1$s, avec un dossier Vidéo et un dossier Audio</string>
+    <string name="download_folder_message">Choisissez votre dossier de préférence pour les téléchargements. Il contient un dossier Vidéo et un dossier Audio, accessibles depuis vos autres applis et le gestionnaire de fichiers.</string>
+    <string name="download_folder_current">Dossier actuel : %1$s</string>
+    <string name="download_folder_default">Dossier Watube</string>
+    <string name="download_folder_pick">Choisir un autre dossier…</string>
+    <string name="download_folder_pick_hint">N’importe quel dossier du téléphone ou d’une carte mémoire</string>
+    <string name="download_folder_unavailable">Ce dossier n’est plus accessible, choisissez-en un autre</string>
+    <string name="download_folder_video">Vidéo</string>
+    <string name="download_folder_audio">Audio</string>
+    <string name="download_readable">Enregistrer en clair</string>
+    <string name="download_readable_summary">Les nouveaux téléchargements restent dans le dossier destination, lisibles par vos autres applis et le gestionnaire de fichiers</string>
+    <string name="download_readable_warning">Les téléchargements enregistrés ainsi ne sont pas chiffrés : toute appli autorisée à lire vos fichiers peut les ouvrir. Les téléchargements déjà faits restent chiffrés : utilisez Exporter le fichier pour en obtenir une copie lisible.</string>
     <string name="download_export_failed">Échec de l’export du fichier</string>
     <string name="download_encrypt_no_space">Espace libre insuffisant pour terminer le téléchargement : libérez de la place, il sera terminé au prochain démarrage</string>
     <string name="download_no_space">Espace libre insuffisant pour poursuivre le téléchargement</string>

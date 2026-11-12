@@ -1,7 +1,9 @@
 package com.watube.yard.ui.activities
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.view.MenuItem
+import android.view.View
 import com.watube.yard.R
 import com.watube.yard.ui.base.BaseActivity
 import com.watube.yard.ui.fragments.AudioPlayerFragment
@@ -9,11 +11,24 @@ import com.watube.yard.ui.fragments.PlayerFragment
 
 // region Video Player
 abstract class AbstractPlayerHostActivity: BaseActivity() {
+    /**
+     * Room the docked mini player leaves at its start for the navigation rail beside it, in
+     * pixels (0 with the bottom bar). A player reads it when it is attached.
+     */
+    var miniPlayerStartInset = 0
+        protected set
+
     abstract fun minimizePlayerContainerLayout()
     abstract fun maximizePlayerContainerLayout()
     abstract fun setPlayerContainerProgress(progress: Float)
 
     abstract fun clearSearchViewFocus(): Boolean
+
+    /**
+     * Background for the docked mini player's [card] while the glass effect is on, or null to
+     * keep its glossy card (the default, and the only choice where no screen runs under it).
+     */
+    open fun miniPlayerBackground(card: View): Drawable? = null
 
 
     /**

@@ -94,27 +94,54 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Adaptive navigation: only used on tablets / unfolded foldables (>= 600dp),
-         where MainActivity hides the bottom bar and shows this rail instead.
-         It starts below the toolbar so the app bar keeps its full width -->
+    <!-- Adaptive navigation: used in every wide window (>= 600dp: a phone turned sideways,
+         a tablet), where MainActivity hides the bottom bar and shows this rail instead, so
+         the content keeps the whole height. It is the floating bar stood on its side: same
+         surface, hairline, corners, shadow, pill and labels, held off the screen edges by the
+         same gaps. It starts below the header and only grows as tall as its tabs; on a short
+         screen (a phone held sideways with large text) it scrolls instead of hiding a tab.
+         MainActivity sets the bottom gap from the system bars.
+         It has no menu here: MainActivity builds it only when the rail shows, so a phone
+         never spends the time to inflate tabs it cannot see (a fifteenth of a second per
+         launch) -->
     <com.google.android.material.navigationrail.NavigationRailView
         android:id="@+id/navRail"
-        android:layout_width="80dp"
-        android:layout_height="0dp"
-        android:background="?attr/colorSurfaceContainer"
+        android:layout_width="@dimen/watube_nav_rail_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/watube_nav_inset"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/watube_nav_bottom_inset"
+        android:paddingBottom="6dp"
+        android:background="@drawable/watube_bottom_nav_background"
+        android:elevation="6dp"
+        android:outlineProvider="none"
         android:visibility="gone"
+        app:activeIndicatorLabelPadding="4dp"
+        app:collapsedItemMinHeight="48dp"
+        app:contentMarginTop="6dp"
+        app:itemActiveIndicatorStyle="@style/WatubeBottomNavActiveIndicator"
+        app:itemIconSize="17.3dp"
+        app:itemIconTint="@color/watube_bottom_nav_item_tint"
+        app:itemMinHeight="48dp"
+        app:itemPaddingBottom="4dp"
+        app:itemPaddingTop="4dp"
+        app:itemSpacing="0dp"
         app:itemTextAppearanceActive="@style/WatubeBottomNavLabel"
         app:itemTextAppearanceInactive="@style/WatubeBottomNavLabel"
+        app:itemTextColor="@color/watube_bottom_nav_item_tint"
         app:labelMaxLines="1"
         app:labelVisibilityMode="labeled"
+        app:menuGravity="top"
+        app:paddingBottomSystemWindowInsets="false"
+        app:paddingStartSystemWindowInsets="false"
         app:paddingTopSystemWindowInsets="false"
-        app:contentMarginTop="8dp"
-        app:itemSpacing="0dp"
         app:scrollingEnabled="true"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        app:menu="@menu/bottom_menu"
+        app:layout_constraintVertical_bias="0"
+        tools:menu="@menu/bottom_menu"
         tools:visibility="visible" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -126,6 +153,7 @@
         android:layout_marginEnd="@dimen/watube_nav_inset"
         android:background="@drawable/watube_bottom_nav_background"
         android:elevation="6dp"
+        android:outlineProvider="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -144,16 +172,23 @@
         app:labelVisibilityMode="labeled"
         tools:menu="@menu/bottom_menu" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <!-- The screens, recorded once per frame for the glass of the bottom bar -->
+    <com.watube.yard.ui.views.BackdropFrameLayout
+        android:id="@+id/backdrop"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true" />
+    </com.watube.yard.ui.views.BackdropFrameLayout>
 
     <FrameLayout
         android:id="@+id/container"

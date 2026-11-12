@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <integer name="grid_items">1</integer>
-    <integer name="grid_items_landscape">2</integer>
-
     <!-- Solar spacing: pad (1.1rem) and cgap (1.15rem) of the mockup -->
     <dimen name="watube_gutter">15dp</dimen>
     <dimen name="watube_cgap">15dp</dimen>
@@ -11,6 +8,13 @@
     <!-- Collapsed mini player: 56dp card holding a 16:9 video inset by 6dp, whose corner
          radius is the card radius minus the inset so both curves stay concentric. -->
     <dimen name="watube_mini_player_margin_start">@dimen/watube_nav_inset</dimen>
+    <!-- Hairline gap between the docked mini player and the bottom bar (or the bottom of the
+         window), the same in every theme: player_scene / audio_player_scene end states -->
+    <dimen name="watube_mini_player_gap">1.5dp</dimen>
+    <!-- Glass of the bottom bar (GlassBackground): blur of the screens under it, and the
+         pill's corners, the same as in watube_bottom_nav_background -->
+    <dimen name="watube_glass_blur_radius">20dp</dimen>
+    <dimen name="watube_bottom_nav_radius">25dp</dimen>
     <dimen name="watube_mini_player_height">56dp</dimen>
     <dimen name="watube_mini_player_video_inset">6dp</dimen>
     <dimen name="watube_mini_player_video_height">44dp</dimen>
@@ -19,6 +23,9 @@
     <!-- Floating bar offset from the screen bottom: kept clear of the physical screen
          edge / gesture area so nothing is clipped by rounded device corners. -->
     <dimen name="watube_nav_bottom_inset">22dp</dimen>
+    <!-- Navigation rail of the wide windows (a phone turned sideways, a tablet): the floating
+         bar stood on its side, as wide as a tab of the bottom bar. -->
+    <dimen name="watube_nav_rail_width">72dp</dimen>
 
     <!-- Mockup chip geometry: .42rem/.95rem padding and .83rem label (visual pill
          height, the 48dp touch target is added by Chip itself) -->
@@ -44,4 +51,11 @@
     <dimen name="watube_rail_avatar_size">58dp</dimen>
     <dimen name="watube_rail_ring">2dp</dimen>
     <dimen name="watube_rail_ring_selected">2.5dp</dimen>
+    <!-- the compact selection of the subscriptions header, pinned while the feed scrolls -->
+    <dimen name="watube_subs_compact_bar_height">60dp</dimen>
+    <dimen name="watube_subs_compact_group_max_width">140dp</dimen>
+    <dimen name="watube_rail_item_width_compact">50dp</dimen>
+    <dimen name="watube_rail_avatar_size_compact">44dp</dimen>
+    <!-- space under the last line of a feed row: the meta line, or the upcoming pill -->
+    <dimen name="watube_row_bottom_space">16dp</dimen>
 </resources>

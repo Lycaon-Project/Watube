@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.children
 import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +42,7 @@ import com.watube.yard.ui.sheets.ChannelGroupsSheet
 import com.watube.yard.ui.sheets.FilterSortBottomSheet
 import com.watube.yard.ui.sheets.FilterSortBottomSheet.Companion.FILTER_SORT_REQUEST_KEY
 import com.watube.yard.ui.sheets.SubscriptionsBottomSheet
+import com.watube.yard.ui.views.Efecto
 import com.watube.yard.util.PlayingQueue
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +68,7 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
     private var feedAdapter = VideoCardsAdapter()
     private val railAdapter = SubscriptionRailAdapter(::onRailChannelSelected)
+    private val compactRailAdapter = SubscriptionRailAdapter(::onRailChannelSelected, compact = true)
 
     private var selectedSortOrder = PreferenceHelper.getInt(PreferenceKeys.FEED_SORT_ORDER, 0)
         set(value) {
@@ -106,9 +109,17 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
         binding.subFeed.adapter = feedAdapter
 
-        // Check if the AppBarLayout is fully expanded
-        binding.subscriptionsAppBar.addOnOffsetChangedListener { _, verticalOffset ->
+        // the feed runs on under the compact bar, which shows it through Efecto's glass
+        val compactBar = resources.getDimensionPixelSize(R.dimen.watube_subs_compact_bar_height)
+        Efecto.runUnder(binding.subscriptionsAppBar, binding.subBackdrop, binding.subFeed) {
+            compactBar
+        }
+
+        // Check if the AppBarLayout is fully expanded, and fold the header with the scroll
+        binding.subscriptionsAppBar.addOnOffsetChangedListener { appBar, verticalOffset ->
             isAppBarFullyExpanded = verticalOffset == 0
+            val range = appBar.totalScrollRange
+            applyHeaderFold(if (range > 0) -verticalOffset / range.toFloat() else 0f)
         }
 
         // Determine if the child can scroll up
@@ -197,11 +208,24 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         binding.subsRail.adapter = railAdapter
         // the adapter dims the other channels itself: item animations would reset that alpha
         binding.subsRail.itemAnimator = null
+        binding.subsRailCompact.adapter = compactRailAdapter
+        binding.subsRailCompact.itemAnimator = null
+        // drawn as the selected chip of the full header (selected is not an XML attribute)
+        binding.subsGroupCompact.isSelected = true
+        binding.subsGroupCompact.setOnClickListener {
+            binding.subscriptionsAppBar.setExpanded(true, true)
+        }
+        // the chevron is the chip's end icon: it answers the same way as the chip
+        binding.subsGroupCompact.setOnCloseIconClickListener {
+            binding.subscriptionsAppBar.setExpanded(true, true)
+        }
         ViewCompat.setAccessibilityDelegate(binding.manageSubs, ButtonRoleDelegate)
         railAdapter.selectedId = viewModel.selectedRailChannel
+        compactRailAdapter.selectedId = viewModel.selectedRailChannel
 
         binding.channelGroups.setOnCheckedStateChangeListener { group, _ ->
             selectedFilterGroup = group.children.indexOfFirst { it.id == group.checkedChipId } - 1 // 0th index is "all" button
+            updateCompactGroup()
 
             lifecycleScope.launch {
                 showFeed(restoreScrollState = false)
@@ -264,9 +288,16 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Efecto may have been switched in the settings meanwhile
+        _binding?.let { Efecto.applyToHeader(it.subscriptionsAppBar, it.subBackdrop) }
+    }
+
     override fun onDestroyView() {
         // the adapters outlive the view: detach them so they do not keep the old view tree
         _binding?.subsRail?.adapter = null
+        _binding?.subsRailCompact?.adapter = null
         _binding?.subFeed?.adapter = null
         super.onDestroyView()
         _binding = null
@@ -351,6 +382,34 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         // only show "ungrouped" chip category if there actually are any ungrouped subscriptions
         // not sure if it's worth loading them here
         binding.channelGroups.addView(binding.chipUngrouped)
+        updateCompactGroup()
+    }
+
+    /** The pinned bar names the group in view; a tap on it brings the whole header back. */
+    private fun updateCompactGroup() {
+        val binding = _binding ?: return
+        val groups = binding.channelGroups
+        val name = groups.findViewById<Chip>(groups.checkedChipId)?.text ?: getString(R.string.all)
+        binding.subsGroupCompact.text = name
+        binding.subsGroupCompact.contentDescription = "${getString(R.string.channel_groups)}, $name"
+    }
+
+    /**
+     * Folds the header with the scroll ([fraction]: 0 open, 1 folded). The full header fades
+     * out while it leaves, then the compact bar fades in and settles from slightly above. The
+     * scroll drives it (alpha and translation only, no layout pass), so it follows the finger;
+     * the snap of the app bar finishes it when the finger lifts.
+     */
+    private fun applyHeaderFold(fraction: Float) {
+        val binding = _binding ?: return
+        val leaving = ((fraction - HEADER_FADE_START) / HEADER_FADE_SPAN).coerceIn(0f, 1f)
+        binding.subsExpanded.alpha = 1f - leaving
+        binding.subsExpanded.isInvisible = leaving >= 1f
+        val arriving = ((fraction - COMPACT_FADE_START) / (1f - COMPACT_FADE_START)).coerceIn(0f, 1f)
+        binding.subsCompactBar.alpha = arriving
+        binding.subsCompactBar.translationY =
+            -(1f - arriving) * COMPACT_SLIDE_DP * resources.displayMetrics.density
+        binding.subsCompactBar.isInvisible = arriving <= 0f
     }
 
     private fun List<StreamItem>.filterByGroup(groupIndex: Int): List<StreamItem> {
@@ -372,6 +431,7 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
     private fun onRailChannelSelected(channel: RailChannel?) {
         viewModel.selectedRailChannel = channel?.id
         railAdapter.selectedId = channel?.id
+        compactRailAdapter.selectedId = channel?.id
         lifecycleScope.launch { showFeed(restoreScrollState = false) }
     }
 
@@ -409,9 +469,12 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
             viewModel.selectedRailChannel = null
         }
         railAdapter.selectedId = viewModel.selectedRailChannel
+        compactRailAdapter.selectedId = viewModel.selectedRailChannel
         railAdapter.submitList(channels)
+        compactRailAdapter.submitList(channels)
 
         binding.subsRailRow.isVisible = channels.isNotEmpty()
+        binding.subsRailCompact.isVisible = channels.isNotEmpty()
         updateSummary(channels)
     }
 
@@ -541,6 +604,13 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         const val SUMMARY_SEPARATOR = " · "
         const val SUMMARY_NAME_MAX_LENGTH = 22
         const val ELLIPSIS = "…"
+
+        // header fold: the full header is gone by 75 % of the fold, the compact bar arrives
+        // over the last 45 %, so the two overlap a little instead of leaving a blank instant
+        const val HEADER_FADE_START = 0.25f
+        const val HEADER_FADE_SPAN = 0.5f
+        const val COMPACT_FADE_START = 0.55f
+        const val COMPACT_SLIDE_DP = 8f
     }
 }
 // endregion

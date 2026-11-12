@@ -23,7 +23,9 @@ class DownloadPlaylistViewHolder(val binding: PlaylistsRowBinding) :
     RecyclerView.ViewHolder(binding.root)
 
 class DownloadPlaylistAdapter(
-    val navigateToPlaylist: (playlist: DownloadPlaylistWithDownload) -> Unit
+    val navigateToPlaylist: (playlist: DownloadPlaylistWithDownload) -> Unit,
+    /** Long press on a playlist: its options, [position] for [showDeleteDialog]. */
+    val showOptions: (playlist: DownloadPlaylistWithDownload, position: Int) -> Unit
 ) :
     ListAdapter<DownloadPlaylistWithDownload, DownloadPlaylistViewHolder>(
         DiffUtilItemCallback<DownloadPlaylistWithDownload>(
@@ -56,6 +58,10 @@ class DownloadPlaylistAdapter(
 
             root.setOnClickListener {
                 navigateToPlaylist(item)
+            }
+            root.setOnLongClickListener {
+                showOptions(item, holder.bindingAdapterPosition)
+                true
             }
         }
     }

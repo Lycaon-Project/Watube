@@ -11,6 +11,21 @@
             android:key="external_download_provider"
             android:summary="@string/external_download_provider_summary"
             android:title="@string/external_download_provider" />
+
+        <!-- where downloads can be reached from the other apps: Download/Watube by default -->
+        <Preference
+            android:icon="@drawable/ic_download_folder"
+            android:key="download_folder"
+            android:persistent="false"
+            android:title="@string/download_folder" />
+
+        <!-- off by default: downloads stay encrypted, only exports are readable -->
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_unlocked"
+            android:key="download_readable"
+            android:summary="@string/download_readable_summary"
+            android:title="@string/download_readable" />
         <!-- endregion -->
 
     </PreferenceCategory>

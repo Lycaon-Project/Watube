@@ -35,6 +35,7 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.LoadControl
 import androidx.media3.exoplayer.Renderer
+import androidx.media3.exoplayer.metadata.MetadataOutput
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.text.TextOutput
 import androidx.media3.exoplayer.text.TextRenderer
@@ -54,6 +55,7 @@ import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.extensions.seekBy
 import com.watube.yard.extensions.togglePlayPauseState
 import com.watube.yard.obj.VideoStats
+import com.watube.yard.util.LocalInstanceRouter
 import com.watube.yard.util.SharedHttpClient
 import com.watube.yard.util.TextUtils
 import kotlinx.coroutines.CoroutineScope
@@ -328,6 +330,17 @@ object PlayerHelper {
                 @Suppress("DEPRECATION")
                 (out.last() as? TextRenderer)?.experimentalSetLegacyDecodingEnabled(true)
             }
+
+            // No metadata renderer: the app never reads the timed metadata of a stream (the ID3
+            // tags of the HLS live streams). Once enabled, such a renderer would wake the playback
+            // thread every 10 ms for nothing.
+            override fun buildMetadataRenderers(
+                context: Context,
+                output: MetadataOutput,
+                outputLooper: Looper,
+                extensionRendererMode: Int,
+                out: ArrayList<Renderer>
+            ) = Unit
         }
         return renderersFactory
     }
@@ -344,7 +357,8 @@ object PlayerHelper {
     @OptIn(UnstableApi::class)
     fun mediaDataSourceFactory(context: Context): DataSource.Factory = DefaultDataSource.Factory(
         context,
-        OkHttpDataSource.Factory(mediaHttpClient).setUserAgent(PrivacyHelper.userAgent)
+        OkHttpDataSource.Factory(LocalInstanceRouter(mediaHttpClient))
+            .setUserAgent(PrivacyHelper.userAgent)
     )
 
     private val mediaHttpClient by lazy {

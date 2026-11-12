@@ -37,5 +37,13 @@ class ExtractorNetworkPolicyTest {
             "https://192.168.1.1/"
         ).forEach { assertFalse(it, ExtractorNetworkPolicy.isAllowed(it.toHttpUrl())) }
     }
+
+    @Test
+    fun `only policy hosts are looked up`() {
+        listOf("www.youtube.com", "youtu.be", "youtubei.googleapis.com", "rr1---sn-a1.googlevideo.com", "www.google.com")
+            .forEach { assertTrue(it, ExtractorNetworkPolicy.isAllowedHost(it)) }
+        listOf("evil.example", "youtube.com.evil.example", "notyoutube.com", "googlevideo.com.evil.example", "google.com", "192.168.1.1")
+            .forEach { assertFalse(it, ExtractorNetworkPolicy.isAllowedHost(it)) }
+    }
 }
 // endregion
