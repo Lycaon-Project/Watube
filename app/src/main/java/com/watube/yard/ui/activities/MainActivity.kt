@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.graphics.LinearGradient
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.Shader
 import android.os.Bundle
@@ -67,6 +68,7 @@ import com.watube.yard.util.UpdateChecker
 import com.watube.yard.ui.base.BottomBarOverlay
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.watube.yard.ui.base.ThemeTransition
+import com.watube.yard.ui.base.TopBarOverlay
 import com.watube.yard.ui.views.GlassBackground
 import com.watube.yard.ui.views.SingleViewTouchableMotionLayout
 import com.google.android.material.navigation.NavigationBarView
@@ -97,6 +99,9 @@ class MainActivity : AbstractPlayerHostActivity() {
     // region Appearance
     /** Keeps the lists of the screens clear of the floating bottom bar they run under. */
     private val bottomBarOverlay = BottomBarOverlay(R.id.fragment)
+
+    /** Starts the screens below the top bar, except those that run on under it. */
+    private val topBarOverlay = TopBarOverlay(R.id.fragment)
 
     /** Glass of the bottom bar while the setting is on, else null (its plain fill). */
     private var glassBar: GlassBackground? = null
@@ -165,6 +170,10 @@ class MainActivity : AbstractPlayerHostActivity() {
         else R.drawable.watube_bottom_nav_background
         val glaze = AppCompatResources.getDrawable(this, plain)?.mutate() as? LayerDrawable
         if (enabled && glaze != null) {
+            // the XML fill is the plain one (Efecto off): the glass keeps its own, lighter one
+            glaze.setGlassFill(
+                getColorStateList(if (night) R.color.watube_nav_scrim_night else R.color.watube_nav_scrim)
+            )
             glassBar = GlassBackground(
                 source = binding.backdrop,
                 host = binding.bottomNav,
@@ -188,6 +197,11 @@ class MainActivity : AbstractPlayerHostActivity() {
         val glaze = AppCompatResources.getDrawable(this, R.drawable.watube_miniplayer_background)
             ?.mutate() as? LayerDrawable ?: return null
         val night = isNightUiMode()
+        glaze.setGlassFill(
+            getColorStateList(
+                if (night) R.color.watube_miniplayer_glass_night else R.color.watube_miniplayer_glass_fill
+            )
+        )
         return GlassBackground(
             source = binding.backdrop,
             host = card,
@@ -201,6 +215,11 @@ class MainActivity : AbstractPlayerHostActivity() {
             // under the full player the card is covered by the video
             isShown = { playerContainerProgress > 0f },
         )
+    }
+
+    /** Gives the fill layer of a glass glaze ([R.id.watube_glass_fill]) the [fill] tone. */
+    private fun LayerDrawable.setGlassFill(fill: ColorStateList) {
+        (findDrawableByLayerId(R.id.watube_glass_fill) as? GradientDrawable)?.color = fill
     }
 
     /** Gives the mini player on show the card matching the glass setting. */
@@ -240,7 +259,7 @@ class MainActivity : AbstractPlayerHostActivity() {
     /** The new sun / moon turns into place, a beat after the content starts coming out. */
     private fun applyBrandHeader() {
         binding.themeToggle.setImageResource(
-            if (isNightUiMode()) R.drawable.watube_sun else R.drawable.watube_moon
+            if (isNightUiMode()) R.drawable.watube_top_light else R.drawable.watube_top_dark
         )
         binding.brandWord.setTextColor(
             getColor(
@@ -309,6 +328,7 @@ class MainActivity : AbstractPlayerHostActivity() {
 
         // before the navigation host creates its first screen
         bottomBarOverlay.attach(this)
+        topBarOverlay.attach(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         inflatedNightUiMode = isNightUiMode()
@@ -365,7 +385,10 @@ class MainActivity : AbstractPlayerHostActivity() {
         // the screens run on under the bar: their lists follow every change of the room it
         // takes (its height, the system bars, every tab hidden, the rail taking over); a
         // layout pass that changed none of it costs one comparison
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener { updateBottomBarOverlay() }
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            updateBottomBarOverlay()
+            topBarOverlay.update(this, binding.appBarLayout.height)
+        }
 
         applyBottomBarNightStyle()
 

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.util.Log
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainThread
+import com.watube.yard.helpers.ErrorMessages
 
 // region Picture-in-Picture
 object PictureInPictureCompat {
@@ -35,7 +36,7 @@ object PictureInPictureCompat {
                 // some devices claim to support PiP, but produce an exception when using PiP
                 // https://github.com/libre-tube/LibreTube/issues/8163
                 Log.e(TAG(), e.stackTraceToString())
-                activity.toastFromMainThread(e.localizedMessage.orEmpty())
+                activity.toastFromMainThread(ErrorMessages.of(e))
             }
         }
     }
@@ -47,7 +48,7 @@ object PictureInPictureCompat {
         } catch (e: IllegalStateException) {
             // some devices claim to support PiP, but throw when entering it
             Log.e(TAG(), "Failed to enter picture-in-picture mode", e)
-            activity.toastFromMainThread(e.localizedMessage.orEmpty())
+            activity.toastFromMainThread(ErrorMessages.of(e))
         }
     }
 }

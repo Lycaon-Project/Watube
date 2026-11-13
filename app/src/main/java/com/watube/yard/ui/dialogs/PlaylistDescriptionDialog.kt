@@ -16,6 +16,7 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogTextPreferenceBinding
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet.Companion.PLAYLIST_OPTIONS_REQUEST_KEY
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.CancellationException
@@ -78,7 +79,7 @@ class PlaylistDescriptionDialog : DialogFragment() {
                             throw e
                         } catch (e: Exception) {
                             Log.e(TAG(), e.toString())
-                            e.localizedMessage?.let { appContext.toastFromMainDispatcher(it) }
+                            appContext.toastFromMainDispatcher(ErrorMessages.of(e))
                             return@launch
                         }
                         if (success) {

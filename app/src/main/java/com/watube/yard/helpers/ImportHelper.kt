@@ -58,9 +58,7 @@ object ImportHelper {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
-            e.localizedMessage?.let {
-                context.toastFromMainDispatcher(it)
-            }
+            context.toastFromMainDispatcher(ErrorMessages.of(e))
         }
     }
 
@@ -263,9 +261,7 @@ object ImportHelper {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.toString())
-            e.localizedMessage?.let {
-                context.toastFromMainDispatcher(it)
-            }
+            context.toastFromMainDispatcher(ErrorMessages.of(e))
         }
     }
 

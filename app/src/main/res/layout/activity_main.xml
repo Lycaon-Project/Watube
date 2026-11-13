@@ -14,6 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:outlineProvider="none"
+        android:translationZ="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -52,6 +54,7 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
+            <!-- the three actions in the filled, rounded icons of the bottom bar, 16dp -->
             <ImageButton
                 android:id="@+id/themeToggle"
                 android:layout_width="@dimen/watube_ib_size"
@@ -59,8 +62,8 @@
                 android:layout_marginStart="5.4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/tooltip_theme"
-                android:padding="8dp"
-                android:src="@drawable/watube_moon"
+                android:padding="8.5dp"
+                android:src="@drawable/watube_top_dark"
                 android:tooltipText="@string/tooltip_theme"
                 app:tint="?attr/colorOnSurfaceVariant" />
 
@@ -70,10 +73,10 @@
                 android:layout_height="@dimen/watube_ib_size"
                 android:layout_marginStart="5.4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/notifications"
-                android:padding="8dp"
-                android:src="@drawable/watube_bell"
-                android:tooltipText="@string/notifications"
+                android:contentDescription="@string/settings_data_maintenance"
+                android:padding="8.5dp"
+                android:src="@drawable/watube_top_maintenance"
+                android:tooltipText="@string/settings_data_maintenance"
                 app:tint="?attr/colorOnSurfaceVariant" />
 
             <!-- The app has no user account, so the former profile avatar is replaced by
@@ -86,8 +89,8 @@
                 android:layout_marginStart="5.4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/tooltip_more"
-                android:padding="8dp"
-                android:src="@drawable/ic_three_dots"
+                android:padding="8.5dp"
+                android:src="@drawable/watube_top_more"
                 android:tooltipText="@string/tooltip_more"
                 app:tint="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
@@ -172,7 +175,9 @@
         app:labelVisibilityMode="labeled"
         tools:menu="@menu/bottom_menu" />
 
-    <!-- The screens, recorded once per frame for the glass of the bottom bar -->
+    <!-- The screens, recorded once per frame for the glass of the bottom bar. They start at
+         the top of the window, under the top bar: TopBarOverlay moves each one below it,
+         except the screens whose own glass header runs on under it -->
     <com.watube.yard.ui.views.BackdropFrameLayout
         android:id="@+id/backdrop"
         android:layout_width="0dp"
@@ -180,7 +185,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment"

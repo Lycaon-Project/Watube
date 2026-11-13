@@ -94,6 +94,14 @@
     <!-- Night sibling of watube_nav_scrim (values-night is out of the editable set):
          the mockup dark nav tone rgba(15,17,20) at 84 % -->
     <color name="watube_nav_scrim_night">#D60F1114</color>
+    <!-- The same tones as the plain fill of the floating surfaces with Efecto off (bottom
+         bar, mini player): at 92 %, a little less see-through than under the glass, since
+         nothing is blurred any more; the rows under them still show faintly -->
+    <color name="watube_nav_plain">#EBFAFAF7</color>
+    <color name="watube_nav_plain_night">#EB0F1114</color>
+    <!-- Night fill of the mini player: under the glass (88 %), and plain with Efecto off -->
+    <color name="watube_miniplayer_glass_night">#E00F1114</color>
+    <color name="watube_miniplayer_plain_night">#EB0F1114</color>
     <!-- Brand tile behind the home header .mark: the acc token at 8% over transparent -->
     <color name="watube_mark_bg">#1435E08C</color>
     <color name="watube_chip_fill">#E8EAE4</color>

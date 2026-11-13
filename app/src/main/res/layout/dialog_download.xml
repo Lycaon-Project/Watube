@@ -1,60 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- region Downloads -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Download sheet of one video (DownloadDialog): the video, Video / Audio only, one card per
+     quality, the rarer choices folded under More options, and one button. It opens at once:
+     placeholder cards pulse until the qualities arrive. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingHorizontal="20dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/video_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textSize="16sp" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/already_downloaded_card"
-        style="@style/Widget.Material3.CardView.Filled"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
-        android:visibility="gone"
-        app:cardBackgroundColor="?attr/colorErrorContainer">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/watube_gutter"
+        android:paddingBottom="16dp">
 
-        <TextView
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginVertical="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/video_thumbnail"
+                android:layout_width="104dp"
+                android:layout_height="58dp"
+                android:background="@color/watube_chip_fill"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/WatubeDownloadThumbnail" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/video_title"
+                    style="@style/WatubeSheetTitle"
+                    android:layout_width="match_parent"
+                    android:accessibilityHeading="true"
+                    android:textSize="16sp"
+                    tools:text="Lofi hip hop radio - beats to relax/study to" />
+
+                <TextView
+                    android:id="@+id/video_uploader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Lofi Girl" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/already_downloaded"
+            style="@style/WatubeLinkNote"
             android:text="@string/already_downloaded"
-            android:textColor="?attr/colorOnErrorContainer" />
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_download_filled"
+            app:drawableTint="?attr/colorOnSurfaceVariant"
+            tools:visibility="visible" />
 
-    </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/download_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:checkedButton="@+id/mode_video"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-    <com.watube.yard.ui.views.DropdownMenu
-        android:id="@+id/video_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hint="@string/video"
-        app:icon="@drawable/ic_video" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mode_video"
+                style="@style/WatubeDownloadToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="@string/video"
+                app:icon="@drawable/ic_video" />
 
-    <com.watube.yard.ui.views.DropdownMenu
-        android:id="@+id/audio_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hint="@string/audio"
-        app:icon="@drawable/ic_audio" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mode_audio"
+                style="@style/WatubeDownloadToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="@string/download_audio_only"
+                app:icon="@drawable/ic_audio" />
 
-    <com.watube.yard.ui.views.DropdownMenu
-        android:id="@+id/subtitle_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hint="@string/captions"
-        app:icon="@drawable/ic_caption" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
-</LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="-5dp"
+            android:layout_marginTop="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/quality_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
+
+            <LinearLayout
+                android:id="@+id/quality_skeleton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="noHideDescendants"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/watube_download_skeleton" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/watube_download_skeleton" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/watube_download_skeleton" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/watube_download_skeleton" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/quality_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/quality_error_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/download_qualities_failed"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/quality_retry"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:minHeight="48dp"
+                    android:text="@string/retry" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/more_options"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:minHeight="48dp"
+            android:text="@string/download_more_options"
+            android:visibility="gone"
+            app:icon="@drawable/ic_arrow_down"
+            app:iconGravity="end"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/options_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.watube.yard.ui.views.DropdownMenu
+                android:id="@+id/codec_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/download_video_codec"
+                app:icon="@drawable/ic_video" />
+
+            <com.watube.yard.ui.views.DropdownMenu
+                android:id="@+id/audio_track_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/audio_language"
+                app:icon="@drawable/ic_region" />
+
+            <com.watube.yard.ui.views.DropdownMenu
+                android:id="@+id/subtitle_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/captions"
+                app:icon="@drawable/ic_caption" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/download_button"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:enabled="false"
+            android:fontFeatureSettings="tnum"
+            android:text="@string/download"
+            app:icon="@drawable/ic_download"
+            app:iconGravity="textStart" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
 <!-- endregion -->

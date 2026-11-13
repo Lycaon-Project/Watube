@@ -55,7 +55,10 @@
 
             <!-- Over the feed, which runs on under the compact bar once the header is folded:
                  Efecto's glass (or the page tone, a little see-through) is given by
-                 SubscriptionsFragment -->
+                 SubscriptionsFragment. The screen runs on under the app's top bar too: the
+                 collapsing part gets the bar's height as its top padding and on top of its
+                 folded height (UnderTopBar), so one surface goes from the top of the window down
+                 to the compact selection -->
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/subscriptions_app_bar"
                 android:layout_width="match_parent"

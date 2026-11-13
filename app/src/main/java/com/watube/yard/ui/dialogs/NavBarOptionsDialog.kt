@@ -22,6 +22,7 @@ class NavBarOptionsDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = SimpleOptionsRecyclerBinding.inflate(layoutInflater)
         val options = NavBarHelper.getNavBarItemPreference(requireContext())
+            .filter { (itemId, _) -> NavBarHelper.isOffered(itemId) }
         val adapter = NavBarOptionsAdapter(
             options.map { (itemId, isVisible) ->
                 NavBarItem(

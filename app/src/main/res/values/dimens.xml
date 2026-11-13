@@ -2,6 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Solar spacing: pad (1.1rem) and cgap (1.15rem) of the mockup -->
     <dimen name="watube_gutter">15dp</dimen>
+    <!-- cover grids: the gutter less the 4dp side padding of each playlist_cover tile, so
+         the covers line up with the section titles -->
+    <dimen name="watube_cover_grid_padding">11dp</dimen>
     <dimen name="watube_cgap">15dp</dimen>
     <dimen name="watube_card_radius">17.5dp</dimen>
     <dimen name="watube_nav_inset">10dp</dimen>
@@ -14,6 +17,12 @@
     <!-- Glass of the bottom bar (GlassBackground): blur of the screens under it, and the
          pill's corners, the same as in watube_bottom_nav_background -->
     <dimen name="watube_glass_blur_radius">20dp</dimen>
+    <!-- Soft lower edge of the headers floating over a list (Efecto): the glass, or the plain
+         fill with Efecto off, fades out over this height instead of stopping on a hard line -->
+    <dimen name="watube_glass_header_fade">9dp</dimen>
+    <!-- The same edge on the plain fill, Efecto off: shorter, the solid tone reads as a shadow
+         over the rows when it fades over the glass's height -->
+    <dimen name="watube_plain_header_fade">6dp</dimen>
     <dimen name="watube_bottom_nav_radius">25dp</dimen>
     <dimen name="watube_mini_player_height">56dp</dimen>
     <dimen name="watube_mini_player_video_inset">6dp</dimen>

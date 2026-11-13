@@ -305,12 +305,21 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
     // endregion
 
     // region Local Extraction
-    override suspend fun getStreams(videoId: String): Streams = withContext(Dispatchers.IO) {
+    override suspend fun getStreams(videoId: String): Streams = extractStreams(videoId, withDislikes = true)
+
+    /**
+     * Without the dislike count: a download has no use for it, and Return YouTube Dislike would
+     * be told the video id for nothing while the download sheet waits on its answer.
+     */
+    override suspend fun getStreamsForDownload(videoId: String): Streams =
+        extractStreams(videoId, withDislikes = false)
+
+    private suspend fun extractStreams(videoId: String, withDislikes: Boolean): Streams = withContext(Dispatchers.IO) {
         val respAsync = async {
             StreamInfo.getInfo("$YOUTUBE_FRONTEND_URL/watch?v=$videoId")
         }
         val dislikesAsync = async {
-            if (PlayerHelper.localRYD) runCatching {
+            if (withDislikes && PlayerHelper.localRYD) runCatching {
                 RetrofitInstance.externalApi.getVotes(videoId).dislikes
             }.getOrElse { -1 } else -1
         }

@@ -27,6 +27,20 @@
     <string name="server_error">Il semble y avoir un problème avec le serveur sélectionné. Essayez une autre instance.</string>
     <string name="unknown_error">Erreur réseau.</string>
     <string name="error">Quelque chose s’est mal passé.</string>
+    <string name="error_age_restricted">Cette vidéo est soumise à une limite d’âge.</string>
+    <string name="error_not_in_country">Cette vidéo n’est pas disponible dans votre pays.</string>
+    <string name="error_private">Cette vidéo est privée.</string>
+    <string name="error_paid">Cette vidéo est réservée aux membres payants.</string>
+    <string name="error_account_terminated">Le compte de cette chaîne a été fermé.</string>
+    <string name="error_unavailable">Cette vidéo n’est pas disponible.</string>
+    <string name="error_not_started">Cette vidéo n’a pas encore commencé : elle pourra être vue dès sa diffusion.</string>
+    <string name="error_youtube_limited">YouTube limite l’accès anonyme. Réessayez dans quelques minutes.</string>
+    <string name="error_youtube_unreadable">La réponse de YouTube n’a pas pu être lue. Réessayez plus tard.</string>
+    <string name="error_server_answer">Le serveur n’a pas pu répondre. Réessayez plus tard.</string>
+    <string name="error_playback_stream">Le flux vidéo n’a pas pu être lu.</string>
+    <string name="error_playback_decoder">Cet appareil ne peut pas décoder cette vidéo.</string>
+    <string name="error_playback_audio">Le son n’a pas pu être joué sur cet appareil.</string>
+    <string name="error_language_settings">Les réglages de langue du système n’ont pas pu être ouverts.</string>
     <string name="notgmail">Ceci est pour un compte Piped</string>
     <string name="defres">Résolution de la vidéo</string>
     <string name="addToPlaylist">Ajouter à la playlist</string>
@@ -629,13 +643,8 @@
         <item quantity="one">local · %1$d vidéo</item>
         <item quantity="other">local · %1$d vidéos</item>
     </plurals>
-    <plurals name="watube_shortcut_playlists">
-        <item quantity="one">%1$d playlist</item>
-        <item quantity="other">%1$d playlists</item>
-    </plurals>
     <string name="watube_shortcut_downloads">hors-ligne</string>
-    <string name="watube_shortcut_privacy_title">Données privées</string>
-    <string name="watube_shortcut_privacy">jamais envoyées</string>
+    <string name="watube_shortcut_folder">Destination</string>
 
     <!-- Panneau de recherche Solar (libellés .slab, état vide .noresult) -->
     <string name="watube_search_recent">Récents</string>
@@ -871,5 +880,31 @@
         <item quantity="one">%1$d pisteur retiré : %2$s</item>
         <item quantity="many">%1$d pisteurs retirés : %2$s</item>
         <item quantity="other">%1$d pisteurs retirés : %2$s</item>
+    </plurals>
+    <!-- Feuille de téléchargement (DownloadDialog, DownloadPlaylistDialog) -->
+    <string name="download_audio_only">Audio seul</string>
+    <string name="download_more_options">Plus d\'options</string>
+    <string name="download_video_codec">Codec vidéo</string>
+    <string name="download_codec_auto">Auto</string>
+    <string name="download_with_size">Télécharger · %1$s</string>
+    <string name="download_qualities_failed">Les qualités de cette vidéo n\'ont pas pu être chargées.</string>
+    <string name="download_fps">%1$d i/s</string>
+    <string name="download_kbps">%1$s kbit/s</string>
+    <string name="download_choose_videos">Choisis les vidéos à télécharger</string>
+    <string name="download_select_all">Tout cocher</string>
+    <string name="download_select_none">Tout décocher</string>
+    <string name="download_next">Suivant</string>
+    <string name="download_back_to_videos">Retour aux vidéos</string>
+    <string name="download_playlist_quality_note">Chaque vidéo arrive dans cette qualité, ou la plus proche en dessous.</string>
+    <string name="download_playlist_empty">Cette playlist n\'a aucune vidéo à télécharger.</string>
+    <plurals name="download_selected_count">
+        <item quantity="one">%1$d sur %2$d cochée</item>
+        <item quantity="many">%1$d sur %2$d cochées</item>
+        <item quantity="other">%1$d sur %2$d cochées</item>
+    </plurals>
+    <plurals name="download_videos">
+        <item quantity="one">Télécharger %1$d vidéo</item>
+        <item quantity="many">Télécharger %1$d vidéos</item>
+        <item quantity="other">Télécharger %1$d vidéos</item>
     </plurals>
 </resources>

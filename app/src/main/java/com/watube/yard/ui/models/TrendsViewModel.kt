@@ -11,6 +11,7 @@ import com.watube.yard.api.TrendingCategory
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.PreferenceHelper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,7 @@ class TrendsViewModel : ViewModel() {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.stackTraceToString())
-                context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
+                context.toastFromMainDispatcher(ErrorMessages.of(e))
             }
         }
     }

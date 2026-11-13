@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Solar bottom navigation (night): the day glass pill in dark glass, the mockup dark nav
-  tone at 84 % (watube_nav_scrim_night), with the same narrow sheen,
+  tone at 92 % (watube_nav_plain_night, Efecto off; the glass uses watube_nav_scrim_night
+  at 84 %), with the same narrow sheen,
   kept faint so the pill stays dark (values-night is outside the editable resource set,
   so the night pill is picked at runtime from MainActivity).
 -->
@@ -9,7 +10,7 @@
     <!-- the plain fill, swapped for the smart tint while the glass is on (GlassBackground) -->
     <item android:id="@+id/watube_glass_fill">
         <shape android:shape="rectangle">
-            <solid android:color="@color/watube_nav_scrim_night" />
+            <solid android:color="@color/watube_nav_plain_night" />
             <corners android:radius="25dp" />
         </shape>
     </item>

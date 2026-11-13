@@ -104,7 +104,7 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
         // the tab pill wears the bottom bar's glass pill, its night one in the dark
         val night = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
             Configuration.UI_MODE_NIGHT_YES
-        if (night) binding.tabLayout.setBackgroundResource(R.drawable.watube_bottom_nav_background_night)
+        if (night) binding.tabPill.setBackgroundResource(R.drawable.watube_bottom_nav_background_night)
 
         TabLayoutMediator(binding.tabLayout, binding.downloadsPager) { tab, position ->
             tab.text = when (position) {

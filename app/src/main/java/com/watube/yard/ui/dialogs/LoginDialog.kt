@@ -19,6 +19,7 @@ import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogLoginBinding
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.preferences.InstanceSettings.Companion.INSTANCE_DIALOG_REQUEST_KEY
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
@@ -84,7 +85,7 @@ class LoginDialog : DialogFragment() {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG(), e.toString())
-                context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
+                context?.toastFromMainDispatcher(ErrorMessages.of(e))
                 return@launch
             }
 

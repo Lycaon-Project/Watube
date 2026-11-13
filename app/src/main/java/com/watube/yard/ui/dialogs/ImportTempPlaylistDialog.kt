@@ -9,6 +9,7 @@ import com.watube.yard.api.PlaylistsHelper
 import com.watube.yard.constants.IntentData
 import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.obj.PipedImportPlaylist
 import com.watube.yard.util.TextUtils
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
@@ -48,9 +49,7 @@ class ImportTempPlaylistDialog : DialogFragment() {
                         throw e
                     } catch (e: Exception) {
                         Log.e(TAG(), e.toString())
-                        e.localizedMessage?.let {
-                            context.toastFromMainDispatcher(it)
-                        }
+                        context.toastFromMainDispatcher(ErrorMessages.of(e))
                     }
                 }
             }

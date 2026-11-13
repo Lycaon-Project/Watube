@@ -3,12 +3,13 @@ package com.watube.yard.ui.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import com.watube.yard.R
 import com.watube.yard.constants.IntentData
-import com.watube.yard.databinding.PlaylistsRowBinding
+import com.watube.yard.databinding.PlaylistCoverBinding
 import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.db.obj.PlaylistBookmark
 import com.watube.yard.enums.PlaylistType
@@ -31,7 +32,7 @@ class PlaylistBookmarkAdapter: ListAdapter<PlaylistBookmark, PlaylistBookmarkVie
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistBookmarkViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return PlaylistBookmarkViewHolder(
-            PlaylistsRowBinding.inflate(layoutInflater, parent, false)
+            PlaylistCoverBinding.inflate(layoutInflater, parent, false)
         )
     }
 
@@ -47,6 +48,16 @@ class PlaylistBookmarkAdapter: ListAdapter<PlaylistBookmark, PlaylistBookmarkVie
         )
     }
 
+    /** The toggle's icon, and what it does next for a screen reader. */
+    private fun showBookmarkState(toggle: ImageView, isBookmarked: Boolean) {
+        toggle.setImageResource(
+            if (isBookmarked) R.drawable.ic_bookmark else R.drawable.ic_bookmark_outlined
+        )
+        toggle.contentDescription = toggle.context.getString(
+            if (isBookmarked) R.string.remove_bookmark else R.string.add_to_bookmarks
+        )
+    }
+
     override fun onBindViewHolder(holder: PlaylistBookmarkViewHolder, position: Int) {
         val bookmark = getItem(holder.bindingAdapterPosition)
 
@@ -56,13 +67,14 @@ class PlaylistBookmarkAdapter: ListAdapter<PlaylistBookmark, PlaylistBookmarkVie
             ImageHelper.loadImage(bookmark.thumbnailUrl, playlistThumbnail)
             playlistTitle.text = bookmark.playlistName
             playlistDescription.text = bookmark.uploader
+            playlistDescription.isVisible = !bookmark.uploader.isNullOrBlank()
             videoCount.text = bookmark.videos.toString()
 
+            // a recycled tile may still show the state another bookmark was left in
+            showBookmarkState(bookmarkPlaylist, isBookmarked)
             bookmarkPlaylist.setOnClickListener {
                 isBookmarked = !isBookmarked
-                bookmarkPlaylist.setImageResource(
-                    if (isBookmarked) R.drawable.ic_bookmark else R.drawable.ic_bookmark_outlined
-                )
+                showBookmarkState(bookmarkPlaylist, isBookmarked)
                 CoroutineScope(Dispatchers.IO).launch {
                     if (!isBookmarked) {
                         DatabaseHolder.Database.playlistBookmarkDao()

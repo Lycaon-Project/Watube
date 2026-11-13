@@ -7,6 +7,7 @@ import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -22,11 +23,15 @@ import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.formatShort
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.ClipboardHelper
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavigationHelper
+import com.watube.yard.ui.base.RunsUnderTopBar
+import com.watube.yard.ui.base.UnderTopBar
 import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.models.ChannelViewModel
 import com.watube.yard.ui.sheets.ChannelOptionsBottomSheet
+import com.watube.yard.ui.views.Efecto
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +39,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 // region Channels
-class ChannelFragment : Fragment(R.layout.fragment_channel) {
+class ChannelFragment : Fragment(R.layout.fragment_channel), RunsUnderTopBar {
     private var _binding: FragmentChannelBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<ChannelFragmentArgs>()
@@ -48,6 +53,22 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
 
     private var isAppBarFullyExpanded: Boolean = true
     private var pageCallbackRegistered = false
+
+    /** Height of the pinned tab chips, which each tab's list keeps free at its top. */
+    private var headerRoom = 0
+
+    /** Height of the app's top bar, which the channel header runs on under. */
+    private var topBar = 0
+
+    /** Gives each tab's list, as its view is created, the room under the tab chips. */
+    private val pageFitter = object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentViewCreated(
+            fm: FragmentManager,
+            f: Fragment,
+            v: View,
+            savedInstanceState: Bundle?
+        ) = fitPage(v)
+    }
     private val tabList = mutableListOf<ChannelTab>()
 
     private val tabNamesMap = mapOf(
@@ -66,6 +87,7 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
             ?.replace("/c/", "")
             ?.replace("/user/", "")
         channelId = args.channelId
+        childFragmentManager.registerFragmentLifecycleCallbacks(pageFitter, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,9 +96,23 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
         // Check if the AppBarLayout is fully expanded
         binding.channelAppBar.addOnOffsetChangedListener { _, verticalOffset ->
             isAppBarFullyExpanded = verticalOffset == 0
+            // the bar's buttons sit on the glass alone, never over the banner or the name
+            UnderTopBar.clip(binding.channelHeaderContent, verticalOffset)
         }
 
         binding.pager.reduceDragSensitivity()
+
+        // the tab's list runs on under the pinned tab chips, which show it through Efecto's
+        // glass: only the chips stay on screen, the rest of the header scrolls away
+        val appBar = binding.channelAppBar
+        Efecto.runFrameUnder(
+            appBar,
+            binding.channelBackdrop,
+            overlap = { appBar.height - appBar.totalScrollRange }
+        ) { room ->
+            headerRoom = room
+            childFragmentManager.fragments.forEach { page -> page.view?.let(::fitPage) }
+        }
 
         // Determine if the child can scroll up
         binding.channelRefresh.setOnChildScrollUpCallback { _, _ ->
@@ -87,7 +123,24 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
             fetchChannel()
         }
 
+        fitUnderTopBar()
         fetchChannel()
+    }
+
+    /**
+     * The channel runs on under the top bar (brand, theme, bell, menu) as the home does: the
+     * header's glass, or its plain fill with Efecto off, covers the bar and runs on down to the
+     * tab chips. The collapsing part keeps the bar's height as its own once collapsed and
+     * clips the banner below the bar: the bar's buttons only ever sit on the glass.
+     */
+    override fun fitTopBar(height: Int) {
+        topBar = height
+        if (_binding != null) fitUnderTopBar()
+    }
+
+    private fun fitUnderTopBar() {
+        UnderTopBar.fitCollapsing(binding.channelCollapsingTb, topBar)
+        UnderTopBar.fitRefresh(binding.channelRefresh, topBar)
     }
 
     // adjust sensitivity due to the issue of viewpager2 with SwipeToRefresh https://issuetracker.google.com/issues/138314213
@@ -100,6 +153,17 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
         touchSlopField.isAccessible = true
         val touchSlop = touchSlopField.get(recyclerView) as Int
         touchSlopField.set(recyclerView, touchSlop * 3)
+    }
+
+    private fun fitPage(page: View) {
+        page.findViewById<RecyclerView>(R.id.channel_recView)
+            ?.let { list -> Efecto.padUnder(list, headerRoom) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Efecto may have been switched in the settings meanwhile
+        _binding?.let { Efecto.applyToHeader(it.channelAppBar, it.channelBackdrop) }
     }
 
     override fun onDestroyView() {
@@ -123,7 +187,7 @@ class ChannelFragment : Fragment(R.layout.fragment_channel) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
-            context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            context?.toastFromMainDispatcher(ErrorMessages.of(e))
             return@launch
         } finally {
             _binding?.channelRefresh?.isRefreshing = false

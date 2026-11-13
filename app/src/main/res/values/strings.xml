@@ -34,6 +34,20 @@
     <string name="server_error">There seem to be a problem with the selected server. Try another instance.</string>
     <string name="unknown_error">Network error.</string>
     <string name="error">Something went wrong.</string>
+    <string name="error_age_restricted">This video is age-restricted.</string>
+    <string name="error_not_in_country">This video is not available in your country.</string>
+    <string name="error_private">This video is private.</string>
+    <string name="error_paid">This video is for paying members only.</string>
+    <string name="error_account_terminated">The account of this channel has been closed.</string>
+    <string name="error_unavailable">This video is not available.</string>
+    <string name="error_not_started">This video has not started yet: it can be watched once it airs.</string>
+    <string name="error_youtube_limited">YouTube is limiting anonymous access. Try again in a few minutes.</string>
+    <string name="error_youtube_unreadable">The answer of YouTube could not be read. Try again later.</string>
+    <string name="error_server_answer">The server could not answer. Try again later.</string>
+    <string name="error_playback_stream">The video stream could not be played.</string>
+    <string name="error_playback_decoder">This device cannot decode this video.</string>
+    <string name="error_playback_audio">The sound could not be played on this device.</string>
+    <string name="error_language_settings">The language settings of the system could not be opened.</string>
     <string name="empty">You have to enter a username and password.</string>
     <string name="notgmail">This is for a Piped account</string>
     <string name="defres">Video resolution</string>
@@ -687,13 +701,8 @@
         <item quantity="one">local · %1$d video</item>
         <item quantity="other">local · %1$d videos</item>
     </plurals>
-    <plurals name="watube_shortcut_playlists">
-        <item quantity="one">%1$d playlist</item>
-        <item quantity="other">%1$d playlists</item>
-    </plurals>
     <string name="watube_shortcut_downloads">offline</string>
-    <string name="watube_shortcut_privacy_title">Private data</string>
-    <string name="watube_shortcut_privacy">never sent</string>
+    <string name="watube_shortcut_folder">Destination</string>
 
     <!-- Solar search pane (.slab labels, .noresult empty state) -->
     <string name="watube_search_recent">Recents</string>
@@ -924,5 +933,29 @@
     <plurals name="external_link_trackers">
         <item quantity="one">%1$d tracker removed: %2$s</item>
         <item quantity="other">%1$d trackers removed: %2$s</item>
+    </plurals>
+    <!-- Download sheet (DownloadDialog, DownloadPlaylistDialog) -->
+    <string name="download_audio_only">Audio only</string>
+    <string name="download_more_options">More options</string>
+    <string name="download_video_codec">Video codec</string>
+    <string name="download_codec_auto">Auto</string>
+    <string name="download_with_size">Download · %1$s</string>
+    <string name="download_qualities_failed">The qualities of this video could not be loaded.</string>
+    <string name="download_fps">%1$d fps</string>
+    <string name="download_kbps">%1$s kbit/s</string>
+    <string name="download_choose_videos">Choose the videos to download</string>
+    <string name="download_select_all">Select all</string>
+    <string name="download_select_none">Select none</string>
+    <string name="download_next">Next</string>
+    <string name="download_back_to_videos">Back to the videos</string>
+    <string name="download_playlist_quality_note">Each video comes in this quality, or the closest one below it.</string>
+    <string name="download_playlist_empty">This playlist has no video to download.</string>
+    <plurals name="download_selected_count">
+        <item quantity="one">%1$d of %2$d selected</item>
+        <item quantity="other">%1$d of %2$d selected</item>
+    </plurals>
+    <plurals name="download_videos">
+        <item quantity="one">Download %1$d video</item>
+        <item quantity="other">Download %1$d videos</item>
     </plurals>
 </resources>

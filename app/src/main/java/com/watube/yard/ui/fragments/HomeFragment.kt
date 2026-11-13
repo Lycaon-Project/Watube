@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -45,7 +46,9 @@ import com.watube.yard.util.TextUtils
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.UncontainedCarouselStrategy
+import com.watube.yard.ui.base.RunsUnderTopBar
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import com.watube.yard.ui.views.Efecto
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.Hold
 
@@ -53,7 +56,10 @@ import com.google.android.material.transition.Hold
 /** Left inset of a feed row (trending_row / ItemRow), so card edges land on the gutter */
 private const val CARD_INSET_DP = 8f
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+/** Where the pull-to-refresh circle comes to rest, below the top of the feed (its default). */
+private const val REFRESH_TARGET_DP = 64f
+
+class HomeFragment : Fragment(R.layout.fragment_home), RunsUnderTopBar {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -70,10 +76,53 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     /** Fits the header, the hero and the feed to the window, see [HomeWindowLayout]. */
     private var windowLayout: HomeWindowLayout? = null
 
+    /** Lets the feed run on under the header again, after the header moved (see [placeHeader]). */
+    private var refitHeader: (() -> Unit)? = null
+
+    /** Height of the app's top bar, status bar included (see [fitTopBar]). */
+    private var topBar = 0
+
+    /**
+     * The pinned header runs on under the top bar: its glass reaches the top of the window
+     * and the bar's brand and buttons sit on it, one surface with the search pill and the
+     * chips. Scrolling away with the feed, the header leaves the screen below the bar, as the
+     * other screens are. The loading circle and the messages stay below the bar either way.
+     */
+    override fun fitTopBar(height: Int) {
+        topBar = height
+        if (_binding != null) fitUnderTopBar()
+    }
+
+    private fun fitUnderTopBar() {
+        // glass or plain fill (Efecto off), the bar takes the header's own background: one
+        // surface from the top of the window down to the chips
+        val under = binding.homeHeader.parent === binding.homeLayout
+        binding.root.updatePadding(top = topBar)
+        (binding.root as ViewGroup).clipToPadding = !under
+        binding.homeLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = if (under) -topBar else 0
+        }
+        binding.homeHeader.updatePadding(top = if (under) topBar else 0)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
         windowLayout = HomeWindowLayout(binding)
+
+        // the pinned header floats over the feed, which runs on under it; the pull-to-refresh
+        // circle comes down below the header instead of behind it
+        val header = binding.homeHeader
+        val refreshTarget = REFRESH_TARGET_DP.dpToPx()
+        refitHeader = Efecto.runFrameUnder(
+            header,
+            binding.homeBackdrop,
+            overlap = { if (header.parent === binding.homeLayout) header.height else 0 }
+        ) { room ->
+            Efecto.padUnder(binding.scroll, room)
+            val circle = binding.refresh.progressCircleDiameter
+            binding.refresh.setProgressViewOffset(false, room - circle, room + refreshTarget)
+        }
 
         binding.bookmarksRV.layoutManager = CarouselLayoutManager(UncontainedCarouselStrategy())
         binding.playlistsRV.layoutManager = CarouselLayoutManager(UncontainedCarouselStrategy())
@@ -344,13 +393,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     /**
      * The search pill and the filter chips stay pinned above the feed, unless the persistent
      * search bar is turned off: they then scroll away with the feed, as they used to.
+     * Pinned, the feed runs on under them and they show it through Efecto's glass (or the page
+     * tone, a little see-through, with Efecto off).
      */
     private fun placeHeader() {
         val header = binding.homeHeader
-        val parent = if (PlayerHelper.persistentSearchBar) binding.homeLayout else binding.homeContent
-        if (header.parent === parent) return
-        (header.parent as ViewGroup).removeView(header)
-        parent.addView(header, 0)
+        val pinned = PlayerHelper.persistentSearchBar
+        val parent = if (pinned) binding.homeLayout else binding.homeContent
+        if (header.parent !== parent) {
+            (header.parent as ViewGroup).removeView(header)
+            parent.addView(header, 0)
+        }
+        // the header's place under the top bar follows the pin
+        fitUnderTopBar()
+        refitHeader?.invoke()
+        if (pinned) {
+            Efecto.applyToHeader(header, binding.homeBackdrop)
+        } else {
+            Efecto.clearHeader(header, binding.homeBackdrop)
+        }
     }
 
     override fun onResume() {
@@ -375,6 +436,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onDestroyView() {
         super.onDestroyView()
         windowLayout = null
+        refitHeader = null
         _binding = null
     }
 

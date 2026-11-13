@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.watube.yard.WatubeApp.Companion.DOWNLOAD_CHANNEL_NAME
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
+import com.watube.yard.api.StreamsCache
 import com.watube.yard.api.obj.PipedStream
 import com.watube.yard.api.obj.Streams
 import com.watube.yard.constants.IntentData
@@ -47,6 +48,7 @@ import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.helpers.DownloadEncryption
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.DownloadHelper.getNotificationId
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.helpers.NetworkHelper
@@ -185,13 +187,14 @@ class DownloadService : LifecycleService() {
 
         val streams = try {
             withContext(Dispatchers.IO) {
-                MediaServiceRepository.instance.getStreams(videoId)
+                // the sheet (or the player) usually extracted them a moment ago
+                StreamsCache.forDownload(videoId)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
-            toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            toastFromMainDispatcher(ErrorMessages.of(e))
             return null
         }
 

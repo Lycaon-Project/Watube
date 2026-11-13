@@ -4,8 +4,11 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,15 +24,18 @@ import com.watube.yard.extensions.ceilHalf
 import com.watube.yard.ui.activities.MainActivity
 import com.watube.yard.ui.adapters.SearchResultsAdapter
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
+import com.watube.yard.ui.base.RunsUnderTopBar
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.models.SearchResultViewModel
+import com.watube.yard.ui.views.Efecto
 import com.watube.yard.util.TextUtils.toTimeInSeconds
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 // region Search
-class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_search_result) {
+class SearchResultFragment :
+    DynamicLayoutManagerFragment(R.layout.fragment_search_result), RunsUnderTopBar {
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<SearchResultFragmentArgs>()
@@ -37,6 +43,9 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
 
     private val mainActivity get() = activity as MainActivity
     private var recyclerViewState: Parcelable? = null
+
+    /** Height of the app's top bar, which the header (and the results) run on under. */
+    private var topBar = 0
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.searchRecycler?.layoutManager = GridLayoutManager(context, gridItems.ceilHalf())
@@ -64,6 +73,12 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
                 animate().alpha(1f).translationY(0f).setDuration(220L).start()
             }
         }
+
+        // the results run on under the header, which shows them through Efecto's glass
+        binding.searchHeader.addOnLayoutChangeListener { header, _, top, _, bottom, _, oldTop, _, oldBottom ->
+            if (bottom - top != oldBottom - oldTop) header.post { fitUnderHeader() }
+        }
+        fitUnderTopBar()
 
         // filter options
         binding.filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
@@ -163,6 +178,35 @@ class SearchResultFragment : DynamicLayoutManagerFragment(R.layout.fragment_sear
             findNavController().popBackStack(R.id.searchFragment, true) ||
                     findNavController().popBackStack()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Efecto may have been switched in the settings meanwhile
+        Efecto.applyToHeader(binding.searchHeader, binding.searchBackdrop)
+    }
+
+    /**
+     * The page runs on under the top bar (brand, theme, bell, menu) as the home does: the
+     * header's glass, or its plain fill with Efecto off, covers the bar and runs on down to the
+     * filter chips. The loading circle stays centred on the part of the screen left visible.
+     */
+    override fun fitTopBar(height: Int) {
+        topBar = height
+        if (_binding != null) fitUnderTopBar()
+    }
+
+    private fun fitUnderTopBar() {
+        if (binding.searchHeader.paddingTop != topBar) binding.searchHeader.updatePadding(top = topBar)
+        binding.progress.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = topBar }
+    }
+
+    /** Gives the results, and the empty state, the room the header takes over them. */
+    private fun fitUnderHeader() {
+        val binding = _binding ?: return
+        val room = binding.searchHeader.height
+        Efecto.padUnder(binding.searchRecycler, room)
+        binding.noSearchResult.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = room }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

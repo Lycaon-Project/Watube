@@ -73,28 +73,38 @@
 
         <!-- Video / Audio / Playlists as a floating pill, the bottom bar's sibling: its glass
              pill (the night one picked by DownloadsFragment), the selected tab lit by the
-             bar's pill, which slides from one tab to the next -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
+             bar's pill, which slides from one tab to the next. The glass pill and its inner
+             gap are on this frame, not on the TabLayout: a fixed TabLayout lays its tabs out
+             without its end padding, so the last tab ran under it and its pill was cut square. -->
+        <FrameLayout
+            android:id="@+id/tab_pill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/watube_nav_inset"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="6dp"
             android:background="@drawable/watube_bottom_nav_background"
-            android:padding="5dp"
-            app:tabGravity="fill"
-            app:tabIndicator="@drawable/watube_tab_pill"
-            app:tabIndicatorAnimationMode="elastic"
-            app:tabIndicatorColor="@color/watube_nav_pill"
-            app:tabIndicatorFullWidth="true"
-            app:tabIndicatorGravity="stretch"
-            app:tabMinWidth="0dp"
-            app:tabMode="fixed"
-            app:tabRippleColor="@android:color/transparent"
-            app:tabSelectedTextColor="@color/watube_nav_active"
-            app:tabTextAppearance="@style/WatubePillTabLabel"
-            app:tabTextColor="?attr/colorOutline" />
+            android:padding="5dp">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:tabGravity="fill"
+                app:tabIndicator="@drawable/watube_tab_pill"
+                app:tabIndicatorAnimationMode="elastic"
+                app:tabIndicatorColor="@color/watube_nav_pill"
+                app:tabIndicatorFullWidth="true"
+                app:tabIndicatorGravity="stretch"
+                app:tabMinWidth="0dp"
+                app:tabMode="fixed"
+                app:tabRippleColor="@android:color/transparent"
+                app:tabSelectedTextColor="@color/watube_nav_active"
+                app:tabTextAppearance="@style/WatubePillTabLabel"
+                app:tabTextColor="?attr/colorOutline" />
+
+        </FrameLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/downloads_pager"

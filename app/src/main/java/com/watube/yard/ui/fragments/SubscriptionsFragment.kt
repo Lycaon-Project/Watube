@@ -37,6 +37,8 @@ import com.watube.yard.ui.adapters.RailChannel
 import com.watube.yard.ui.adapters.SubscriptionRailAdapter
 import com.watube.yard.ui.adapters.VideoCardsAdapter
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
+import com.watube.yard.ui.base.RunsUnderTopBar
+import com.watube.yard.ui.base.UnderTopBar
 import com.watube.yard.ui.models.SubscriptionsViewModel
 import com.watube.yard.ui.sheets.ChannelGroupsSheet
 import com.watube.yard.ui.sheets.FilterSortBottomSheet
@@ -49,8 +51,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // region Feed
-class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_subscriptions) {
+class SubscriptionsFragment :
+    DynamicLayoutManagerFragment(R.layout.fragment_subscriptions), RunsUnderTopBar {
     private var _binding: FragmentSubscriptionsBinding? = null
+
+    /** Height of the app's top bar, which the header (and the feed) run on under. */
+    private var topBar = 0
+
+    /** Refits the feed's frame under the header, for a new top bar height. */
+    private var refitFeed: (() -> Unit)? = null
     private val binding get() = _binding!!
 
     private val viewModel: SubscriptionsViewModel by activityViewModels()
@@ -109,15 +118,20 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
 
         binding.subFeed.adapter = feedAdapter
 
-        // the feed runs on under the compact bar, which shows it through Efecto's glass
-        val compactBar = resources.getDimensionPixelSize(R.dimen.watube_subs_compact_bar_height)
-        Efecto.runUnder(binding.subscriptionsAppBar, binding.subBackdrop, binding.subFeed) {
-            compactBar
-        }
+        // the feed runs on under the compact bar and the top bar, which show it through
+        // Efecto's glass
+        refitFeed = Efecto.runFrameUnder(
+            binding.subscriptionsAppBar,
+            binding.subBackdrop,
+            overlap = { topBar + foldedRoom() }
+        ) { room -> _binding?.let { Efecto.padUnder(it.subFeed, room) } }
+        fitUnderTopBar()
 
         // Check if the AppBarLayout is fully expanded, and fold the header with the scroll
         binding.subscriptionsAppBar.addOnOffsetChangedListener { appBar, verticalOffset ->
             isAppBarFullyExpanded = verticalOffset == 0
+            // the top bar's buttons sit on the glass alone, never over the header
+            UnderTopBar.clip(binding.subsExpanded, verticalOffset)
             val range = appBar.totalScrollRange
             applyHeaderFold(if (range > 0) -verticalOffset / range.toFloat() else 0f)
         }
@@ -294,7 +308,36 @@ class SubscriptionsFragment : DynamicLayoutManagerFragment(R.layout.fragment_sub
         _binding?.let { Efecto.applyToHeader(it.subscriptionsAppBar, it.subBackdrop) }
     }
 
+    /**
+     * The feed runs on under the top bar (brand, theme, bell, menu) as the home does: the
+     * header's glass, or its plain fill with Efecto off, covers the bar and runs on down to the
+     * compact selection once the header is folded. The loading circle and the empty state stay
+     * centred below the bar.
+     */
+    override fun fitTopBar(height: Int) {
+        topBar = height
+        if (_binding == null) return
+        fitUnderTopBar()
+        refitFeed?.invoke()
+    }
+
+    /**
+     * Room the folded header keeps under the top bar: the compact selection, and under it the
+     * glass's fading edge, so the selection stays in the middle of the band that reads as solid.
+     */
+    private fun foldedRoom() =
+        resources.getDimensionPixelSize(R.dimen.watube_subs_compact_bar_height) +
+            resources.getDimensionPixelSize(R.dimen.watube_glass_header_fade)
+
+    private fun fitUnderTopBar() {
+        UnderTopBar.fitCollapsing(binding.subscriptionsCollapsingTb, topBar, foldedRoom())
+        UnderTopBar.fitRefresh(binding.subRefresh, topBar)
+        binding.subProgress.translationY = topBar / 2f
+        binding.emptyFeed.translationY = topBar / 2f
+    }
+
     override fun onDestroyView() {
+        refitFeed = null
         // the adapters outlive the view: detach them so they do not keep the old view tree
         _binding?.subsRail?.adapter = null
         _binding?.subsRailCompact?.adapter = null

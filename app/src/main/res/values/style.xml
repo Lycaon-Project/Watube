@@ -68,6 +68,22 @@
 
     </style>
 
+    <!-- Thumbnails of the download sheets (DownloadDialog, DownloadPlaylistDialog) -->
+    <style name="WatubeDownloadThumbnail">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">9dp</item>
+    </style>
+
+    <!-- Video / Audio only switch of the download sheets: the chips' colours, the chosen side
+         filled with the accent like a chosen quality card -->
+    <style name="WatubeDownloadToggle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="backgroundTint">@color/watube_chip_bg</item>
+        <item name="android:textColor">@color/watube_chip_text</item>
+        <item name="iconTint">@color/watube_chip_text</item>
+        <item name="strokeColor">@color/watube_chip_stroke</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
     <!-- Solar sheet heading: compact bold title over a divider -->
     <style name="WatubeSheetTitle">
 

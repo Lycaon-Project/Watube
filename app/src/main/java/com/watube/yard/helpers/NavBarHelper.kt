@@ -45,14 +45,25 @@ object NavBarHelper {
      */
     const val MAX_VISIBLE_USER_TABS = 4
 
+    /**
+     * Screens that are no longer offered as tabs: trends opens from the home page, downloads
+     * from the library. They stay in bottom_menu.xml, whose positions are what the preferences
+     * store (removing them would shift every saved order and start tab), but they are always
+     * hidden, left out of the navigation bar dialog and never where the app opens.
+     */
+    private val RETIRED_TABS = listOf(R.id.trendsFragment, R.id.downloadsFragment)
+
     fun isPinned(itemId: Int) = itemId in PINNED_TABS
+
+    /** Whether the navigation bar dialog lists [itemId] (see [RETIRED_TABS]). */
+    fun isOffered(itemId: Int) = itemId !in RETIRED_TABS
 
     fun getNavBarItemPreference(context: Context): List<Pair<Int, Boolean>> {
         val (pinned, items) = readNavBarItemPreference(context).partition { (itemId, _) -> isPinned(itemId) }
         // more visible tabs than the bar holds (older preference): the last ones are hidden
         var visibleLeft = MAX_VISIBLE_USER_TABS
         val userTabs = items.map { (itemId, isVisible) ->
-            itemId to (isVisible && visibleLeft-- > 0)
+            itemId to (isVisible && isOffered(itemId) && visibleLeft-- > 0)
         }
         return userTabs + pinned
             .sortedBy { (itemId, _) -> PINNED_TABS.indexOf(itemId) }
@@ -114,6 +125,11 @@ object NavBarHelper {
             // an unknown item would be stored as "-1" and silently re-read as "item #1 hidden"
             if (index < 0) return@forEach
             prefString.add(if (newItem.isVisible) index.toString() else "-$index")
+        }
+        // the dialog does not list the retired tabs: they are stored hidden, so the preference
+        // still names every item of the menu and is not read back as corrupted
+        defaultNavBarItems.forEachIndexed { index, menuItem ->
+            if (items.none { it.itemId == menuItem.itemId }) prefString.add("-$index")
         }
         PreferenceHelper.putString(
             PreferenceKeys.NAVBAR_ITEMS,
@@ -189,9 +205,10 @@ object NavBarHelper {
                 .firstOrNull { (itemId, isVisible) -> isVisible && !isPinned(itemId) }?.first
                 ?: R.id.homeFragment
         } else {
-            // -1 (unknown item) or a stale index must not throw IndexOutOfBounds; settings can no
-            // longer be the start tab, an older choice of it falls back to home
-            defaultNavItems.getOrNull(pref)?.itemId?.takeUnless(::isPinned) ?: R.id.homeFragment
+            // -1 (unknown item) or a stale index must not throw IndexOutOfBounds; settings and the
+            // retired tabs can no longer be the start tab, an older choice of them falls back to home
+            defaultNavItems.getOrNull(pref)?.itemId
+                ?.takeUnless { isPinned(it) || !isOffered(it) } ?: R.id.homeFragment
         }
     }
 

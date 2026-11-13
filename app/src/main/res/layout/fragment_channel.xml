@@ -14,19 +14,30 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
+        <!-- Over the tab's list, which runs on under the pinned tab chips: Efecto's glass (or
+             the page tone, a little see-through) is given by ChannelFragment. The page runs on
+             under the app's top bar too: the collapsing part gets the bar's height as its top
+             padding and as its collapsed height, and its content is clipped below the bar as it
+             scrolls (ChannelFragment), so the
+             same surface goes from the top of the window down to the chips -->
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/channel_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:outlineProvider="none"
+            android:translationZ="1dp"
+            app:liftOnScroll="false">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/channel_collapsing_tb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:titleCollapseMode="scale">
 
                 <LinearLayout
+                    android:id="@+id/channel_header_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -134,11 +145,16 @@
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+            <!-- the header's last watube_glass_header_fade pixels fade out over the list
+                 (Efecto): that much room under the chips keeps them in the middle of the
+                 band that reads as solid, instead of sitting on its lower edge -->
             <HorizontalScrollView
                 android:id="@+id/tab_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:paddingBottom="@dimen/watube_glass_header_fade"
+                android:clipToPadding="false"
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
@@ -156,11 +172,18 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pager"
+        <com.watube.yard.ui.views.BackdropFrameLayout
+            android:id="@+id/channel_backdrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.watube.yard.ui.views.BackdropFrameLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </com.watube.yard.ui.views.CustomSwipeToRefresh>

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SeekBarPreference
@@ -11,6 +12,7 @@ import androidx.preference.SwitchPreferenceCompat
 import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
+import com.watube.yard.extensions.TAG
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.adapters.IconsSheetAdapter
@@ -123,7 +125,9 @@ class AppearanceSettings : BasePreferenceFragment() {
                         .setData(Uri.fromParts("package", BuildConfig.APPLICATION_ID, null))
                 )
             } catch (e: Exception) {
-                context?.toastFromMainThread("Failed to open per-app language settings: ${e.message}")
+                // some systems have no per-app language screen
+                Log.e(TAG(), e.toString())
+                context?.toastFromMainThread(R.string.error_language_settings)
             }
             true
         }
