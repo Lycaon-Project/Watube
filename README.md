@@ -21,7 +21,7 @@
 
   <!-- ░░░ TECH / STATUS BADGES ░░░ -->
   <p>
-    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-1FD47E?style=for-the-badge&labelColor=15181C&logo=android&logoColor=white" alt="Android 13 to 17">
+    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-1FD47E?style=for-the-badge&labelColor=15181C&logo=android&logoColor=white" alt="Android 12 to 17">
     <img src="https://img.shields.io/badge/Kotlin-100%25-1FD47E?style=for-the-badge&labelColor=15181C&logo=kotlin&logoColor=white" alt="100% Kotlin">
     <img src="https://img.shields.io/badge/Material_3-Expressive-1FD47E?style=for-the-badge&labelColor=15181C&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
   </p>
@@ -122,7 +122,7 @@ The freshest work landing in Watube — focused on **playback correctness**, **s
 | 🚫 **No proprietary Google code** | Google Play Services and its Cast SDK are **removed**: nothing in Watube talks to Play Services any more, and the build **refuses** them, even as an indirect dependency. Casting uses **Stolm**, Watube's own client written from the open Cast protocol: it only talks to devices that prove they are genuine, and the video reaches the TV through your phone, never from YouTube directly. |
 | 🔒 **Privacy by default** | Search suggestions come from your own history, on the device; online suggestions are an opt-in and never sent for a link, an e-mail address or a number. Nothing goes to a cloud backup. Connections use TLS 1.2/1.3 only. An option hides the app from screenshots and recordings. |
 | 🎬 **Player polish** | In fullscreen landscape the seek bar sits back at the bottom edge, and the top buttons show their press ripple above the video instead of behind it. |
-| 📱 **Android 13 or newer** | Watube now requires **Android 13** (API 33); older versions are no longer supported. |
+| 📱 **Android 12 or newer** | Watube now requires **Android 12** (API 31); older versions are no longer supported. |
 | 🛡️ **Telemetry deleted, not disabled** | The platform playback metrics of Media3 are **cut out of the release build**, and the build **fails** if they come back. |
 | ▶️ **Steadier playback** | A video no longer stops with a *source error* about a minute in: the streaming session is renewed with a single player request — no integrity token, no Google code running on the device. |
 | 🌍 **Neutral region** | With the Trends region on *Automatic*, trending is requested for the **United Kingdom** — the same country for every user — instead of your device's country. Another country can be picked by hand. |
@@ -211,7 +211,7 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 | **UI** | Material 3 Expressive, View system |
 | **Playback** | AndroidX Media3 / ExoPlayer |
 | **Build** | Gradle 9.8.2 · AGP 9.5.0 · JDK 21 |
-| **SDK** | minSdk 33 (Android 13) · compile/target SDK 37 (Android 17) |
+| **SDK** | minSdk 31 (Android 12) · compile/target SDK 37 (Android 17) |
 
 </details>
 
