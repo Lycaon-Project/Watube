@@ -34,6 +34,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBack"
+                    android:contentDescription="@string/search_back"
                     style="@style/Widget.Material3Expressive.Button.IconButton.Tonal"
                     android:backgroundTint="?colorSurfaceContainerLow"
                     android:layout_width="wrap_content"
@@ -44,6 +45,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/commentsTitle"
+                    android:accessibilityHeading="true"
                     style="@style/TextAppearance.Material3.ActionBar.Title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -57,6 +59,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnScrollToTop"
+                    android:contentDescription="@string/tooltip_scroll_to_top"
                     style="@style/Widget.Material3Expressive.Button.IconButton.Tonal"
                     android:backgroundTint="?colorSurfaceContainerLow"
                     android:layout_width="wrap_content"
@@ -69,6 +72,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnClose"
+                    android:contentDescription="@string/tooltip_close"
                     style="@style/Widget.Material3Expressive.Button.IconButton.Tonal"
                     android:backgroundTint="?colorSurfaceContainerLow"
                     android:layout_width="wrap_content"

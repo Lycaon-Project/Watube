@@ -13,6 +13,7 @@ import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import com.watube.yard.ui.extensions.nameLongPress
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,6 +60,7 @@ class DownloadPlaylistAdapter(
             root.setOnClickListener {
                 navigateToPlaylist(item)
             }
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 showOptions(item, holder.bindingAdapterPosition)
                 true

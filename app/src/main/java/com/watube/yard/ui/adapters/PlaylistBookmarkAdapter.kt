@@ -17,6 +17,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
 import com.watube.yard.ui.viewholders.PlaylistBookmarkViewHolder
 import kotlinx.coroutines.CoroutineScope
@@ -94,6 +95,7 @@ class PlaylistBookmarkAdapter: ListAdapter<PlaylistBookmark, PlaylistBookmarkVie
                 )
             }
 
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 showPlaylistOptions(root.context, bookmark)
                 true

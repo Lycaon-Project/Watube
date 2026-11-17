@@ -45,6 +45,7 @@
 
                     <ImageView
                         android:id="@+id/channel_banner"
+                        android:contentDescription="@string/a11y_channel_banner"
                         android:layout_width="match_parent"
                         android:layout_height="80dp" />
 
@@ -60,6 +61,7 @@
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/channel_image"
+                            android:contentDescription="@string/a11y_channel_picture"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="center"
@@ -113,6 +115,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/notification_bell"
+                                android:contentDescription="@string/notifications"
                                 style="?materialIconButtonFilledStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -121,6 +124,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/show_more"
+                                android:contentDescription="@string/tooltip_more"
                                 style="?attr/materialIconButtonFilledStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

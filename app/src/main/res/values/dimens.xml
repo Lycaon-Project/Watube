@@ -20,6 +20,14 @@
     <!-- Soft lower edge of the headers floating over a list (Efecto): the glass, or the plain
          fill with Efecto off, fades out over this height instead of stopping on a hard line -->
     <dimen name="watube_glass_header_fade">9dp</dimen>
+    <!-- Light reflection at the top of a glass sheet (SheetGloss): the mini-player's gloss,
+         fading out over this height, below the sheet's title -->
+    <dimen name="watube_sheet_gloss_height">120dp</dimen>
+    <!-- Frosted glass of a sheet over the app (Efecto): a wider blur than the bar's glass,
+         so the sheet reads as a thicker pane -->
+    <dimen name="watube_sheet_blur_radius">32dp</dimen>
+    <!-- Drop shadow of a sheet over the app, which stays sharp behind it -->
+    <dimen name="watube_sheet_elevation">8dp</dimen>
     <!-- The same edge on the plain fill, Efecto off: shorter, the solid tone reads as a shadow
          over the rows when it fades over the glass's height -->
     <dimen name="watube_plain_header_fade">6dp</dimen>

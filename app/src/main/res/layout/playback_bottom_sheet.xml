@@ -137,6 +137,7 @@
                             <com.google.android.material.button.MaterialButton
                                 style="@style/Widget.Material3.Button.IconButton"
                                 android:id="@+id/pitch_reset_button"
+                                android:contentDescription="@string/dialog_reset"
                                 android:layout_marginStart="10dp"
                                 android:layout_width="60dp"
                                 android:layout_height="45dp"

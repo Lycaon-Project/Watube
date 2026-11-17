@@ -22,15 +22,26 @@ open class ExpandedBottomSheet(@LayoutRes layoutResId: Int) :
     private val bottomSheet: FrameLayout? get() = dialog?.findViewById(R.id.design_bottom_sheet)
     private val playerViewModel: CommonPlayerViewModel by activityViewModels()
 
+    /**
+     * Whether the sheet always opens expanded, without a collapsed step. A sheet whose content
+     * grows while open (the download sheets: Audio only to Video) needs it: collapsed, it
+     * stays at its peek height when its content outgrows it, and its bottom (the download
+     * button) ends up off screen, under the navigation bar. Expanded, it follows its content
+     * up to the full screen and scrolls the rest.
+     */
+    protected open val opensExpanded = false
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
 
         // Landscape opens fully expanded. The state is set before the dialog is shown so the
         // sheet slides straight to it: expanding from a show listener started a second
         // animation right after the collapsed one, which read as the sheet shaking.
-        if (resources.configuration.orientation != Configuration.ORIENTATION_PORTRAIT) {
+        if (opensExpanded || resources.configuration.orientation != Configuration.ORIENTATION_PORTRAIT) {
             dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+        // swiped down, such a sheet closes instead of stopping half way
+        if (opensExpanded) dialog.behavior.skipCollapsed = true
 
         return dialog
     }

@@ -27,6 +27,7 @@
 
                 <ImageView
                     android:id="@+id/close_imageButton"
+                    android:contentDescription="@string/tooltip_minimize"
                     style="@style/PlayerControlTop"
                     android:layout_marginEnd="-10dp"
                     android:src="@drawable/ic_close"
@@ -81,6 +82,7 @@
                 <!-- region DeArrow -->
                 <ImageButton
                     android:id="@+id/dearrow_submit"
+                    android:contentDescription="@string/contribute_to_dearrow"
                     style="@style/PlayerControlTop"
                     android:layout_marginEnd="2dp"
                     android:src="@drawable/ic_dearrow"
@@ -92,6 +94,7 @@
                 <!-- region SponsorBlock -->
                 <ImageButton
                     android:id="@+id/sb_submit"
+                    android:contentDescription="@string/sb_create_segment"
                     style="@style/PlayerControlTop"
                     android:layout_marginEnd="2dp"
                     android:src="@drawable/ic_upload_segment"
@@ -103,6 +106,7 @@
                 <!-- region SponsorBlock -->
                 <ImageButton
                     android:id="@+id/sb_toggle"
+                    android:contentDescription="@string/tooltip_sponsorblock"
                     style="@style/PlayerControlTop"
                     android:layout_marginEnd="2dp"
                     android:src="@drawable/ic_sb_enabled"
@@ -114,6 +118,7 @@
                 <!-- region Playing Queue -->
                 <ImageButton
                     android:id="@+id/queue_toggle"
+                    android:contentDescription="@string/queue"
                     style="@style/PlayerControlTop"
                     android:layout_marginEnd="2dp"
                     android:src="@drawable/ic_queue"
@@ -124,6 +129,7 @@
                 <!-- region Playback Options -->
                 <ImageButton
                     android:id="@+id/toggle_options"
+                    android:contentDescription="@string/tooltip_options"
                     style="@style/PlayerControlTop"
                     android:src="@drawable/ic_player_settings"
                     android:tooltipText="@string/tooltip_options"
@@ -222,6 +228,7 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/seekbar_preview_image"
+                android:importantForAccessibility="no"
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"

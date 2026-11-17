@@ -36,6 +36,7 @@ import com.watube.yard.ui.adapters.QualityOption
 import com.watube.yard.ui.sheets.ExpandedBottomSheet
 import com.watube.yard.ui.views.DownloadMotion
 import com.watube.yard.ui.views.Efecto
+import com.watube.yard.ui.views.SlidingToggle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,6 +52,9 @@ import java.util.Locale
  * and the captions wait under More options, already set to the last choices.
  */
 class DownloadDialog : ExpandedBottomSheet(R.layout.dialog_download) {
+    // its content grows from Audio only to Video: collapsed, its button would sink under the bar
+    override val opensExpanded = true
+
     private lateinit var videoId: String
     private var binding: DialogDownloadBinding? = null
     private var glassApplied = false
@@ -91,6 +95,7 @@ class DownloadDialog : ExpandedBottomSheet(R.layout.dialog_download) {
 
         audioOnly = PreferenceHelper.getBoolean(DOWNLOAD_AUDIO_ONLY, false)
         binding.downloadMode.check(if (audioOnly) R.id.mode_audio else R.id.mode_video)
+        SlidingToggle(binding.downloadMode, binding.downloadModePill)
         binding.downloadMode.addOnButtonCheckedListener { _, id, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             audioOnly = id == R.id.mode_audio
@@ -323,6 +328,7 @@ class DownloadDialog : ExpandedBottomSheet(R.layout.dialog_download) {
             audioLanguage = audioStream?.audioTrackLocale,
             subtitleCode = subtitle?.code
         )
+        activity?.let(DownloadHelper::requestNotificationPermission)
         DownloadHelper.startDownloadService(requireContext(), downloadData)
         dismiss()
     }

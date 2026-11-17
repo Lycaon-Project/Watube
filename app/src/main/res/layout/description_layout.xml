@@ -58,6 +58,7 @@
 
             <ImageView
                 android:id="@+id/player_description_arrow"
+                android:importantForAccessibility="no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

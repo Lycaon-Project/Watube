@@ -25,6 +25,7 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/chapter_image"
+                android:importantForAccessibility="no"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:shapeAppearanceOverlay="@style/RoundedImageView"

@@ -302,6 +302,7 @@
                         <!-- Section Reprendre la lecture -->
                         <LinearLayout
                             android:id="@+id/watchingTV"
+                            android:accessibilityHeading="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/watube_cgap"
@@ -331,6 +332,7 @@
                         <!-- Section Pour vous (flux en une seule colonne) -->
                         <LinearLayout
                             android:id="@+id/trendingTV"
+                            android:accessibilityHeading="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/watube_cgap"
@@ -354,6 +356,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/trending_category"
+                                android:contentDescription="@string/category"
                                 style="?materialIconButtonOutlinedStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -363,6 +366,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/trending_region"
+                                android:contentDescription="@string/region"
                                 style="?materialIconButtonFilledTonalStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -393,6 +397,7 @@
                         <!-- Section Abonnements (featured feed) -->
                         <LinearLayout
                             android:id="@+id/featuredTV"
+                            android:accessibilityHeading="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/watube_cgap"
@@ -423,6 +428,7 @@
                         <!-- Section Bibliothèque (bookmarks + playlists) -->
                         <LinearLayout
                             android:id="@+id/bookmarksTV"
+                            android:accessibilityHeading="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/watube_cgap"
@@ -451,6 +457,7 @@
 
                         <LinearLayout
                             android:id="@+id/playlistsTV"
+                            android:accessibilityHeading="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/watube_cgap"
@@ -510,20 +517,24 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <!-- a minimum, not a fixed height: same size at normal text, grows with very large system fonts -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/refresh_button"
             style="@style/Widget.Material3Expressive.Button"
             android:layout_width="150dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:text="@string/retry" />
 
+        <!-- a minimum, not a fixed height: same size at normal text, grows with very large system fonts -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/change_instance"
             style="@style/Widget.Material3Expressive.Button"
             android:layout_width="150dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:text="@string/change_instance" />

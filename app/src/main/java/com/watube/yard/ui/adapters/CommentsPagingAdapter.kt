@@ -17,6 +17,7 @@ import com.watube.yard.extensions.formatShort
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.viewholders.CommentViewHolder
 import com.watube.yard.util.HtmlParser
 import com.watube.yard.util.LinkHandler
@@ -81,6 +82,8 @@ class CommentsPagingAdapter(
             repliesCount.isVisible = !isReplies && comment.repliesPage != null
             repliesCount.text = if (comment.replyCount > 0) comment.replyCount.formatShort() else null
 
+            commentorImage.contentDescription =
+                root.context.getString(R.string.a11y_open_channel, comment.author)
             commentorImage.setOnClickListener {
                 navigateToChannel(comment)
             }
@@ -113,6 +116,7 @@ class CommentsPagingAdapter(
                 commentText.setOnClickListener(onClickListener)
             }
 
+            root.nameLongPress(R.string.copy_tooltip)
             root.setOnLongClickListener {
                 saveToClipboard(comment)
                 true

@@ -1,9 +1,14 @@
 package com.watube.yard.helpers
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.storage.StorageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -59,6 +64,7 @@ object DownloadHelper {
     const val DEFAULT_TIMEOUT = 15 * 1000
     const val MAX_CONCURRENT_DOWNLOADS = 6
     private const val VIDEO_MIMETYPE = "video/*"
+    private const val NOTIFICATION_PERMISSION_REQUEST = 0x57A7
 
     /** The apps' own part of the shared storage (Android/data, Android/media...). */
     internal const val APP_STORAGE_DIR = "Android"
@@ -308,6 +314,18 @@ object DownloadHelper {
             .putExtra(IntentData.downloadData, downloadData)
 
         ContextCompat.startForegroundService(context, intent)
+    }
+
+    /**
+     * Asks for the right to post notifications (Android 13 and later), so the progress and the
+     * end of a download show in the status bar. The download starts either way: refused, it runs
+     * without a visible notification, and Android stops asking after the second refusal.
+     */
+    fun requestNotificationPermission(activity: Activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+        if (ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED) return
+        ActivityCompat.requestPermissions(activity, arrayOf(permission), NOTIFICATION_PERMISSION_REQUEST)
     }
 
     fun DownloadItem.getNotificationId(): Int {

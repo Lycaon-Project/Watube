@@ -53,7 +53,9 @@ import com.watube.yard.receivers.DownloadReceiver
 import com.watube.yard.services.DownloadService
 import com.watube.yard.ui.adapters.DownloadPlaylistAdapter
 import com.watube.yard.ui.adapters.DownloadsAdapter
+import com.watube.yard.ui.adapters.showDownloadAction
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
+import com.watube.yard.ui.extensions.dragPillWith
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.DownloadsViewModel
@@ -114,6 +116,8 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
                 else -> throw IllegalArgumentException()
             }
         }.attach()
+        // the tabs' pill can also be dragged from tab to tab, the pages following
+        binding.tabLayout.dragPillWith(binding.downloadsPager)
 
         setupSearchInput()
     }
@@ -362,6 +366,7 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
             .map { item -> item.id }
 
         if (!serviceConnection.isBound) {
+            activity?.let(DownloadHelper::requestNotificationPermission)
             DownloadHelper.startDownloadService(requireContext())
             bindDownloadService(ids.toIntArray())
             return true
@@ -484,7 +489,7 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
         view?.binding?.apply {
             when (status) {
                 DownloadStatus.Paused -> {
-                    resumePauseBtn.setImageResource(R.drawable.ic_download)
+                    showDownloadAction(R.drawable.ic_download)
                 }
 
                 DownloadStatus.Completed -> {
@@ -495,16 +500,16 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
 
                 is DownloadStatus.Progress -> {
                     downloadOverlay.isVisible = true
-                    resumePauseBtn.setImageResource(R.drawable.ic_pause)
+                    showDownloadAction(R.drawable.ic_pause)
                     if (progressBar.isIndeterminate) return
                     progressBar.incrementProgressBy(status.progress.toInt())
-                    val progressInfo = progressBar.progress.formatAsFileSize() +
-                            " /\n" + progressBar.max.formatAsFileSize()
+                    val progressInfo = progressBar.progress.formatAsFileSize(fileSize.context) +
+                            " /\n" + progressBar.max.formatAsFileSize(fileSize.context)
                     fileSize.text = progressInfo
                 }
 
                 is DownloadStatus.Error -> {
-                    resumePauseBtn.setImageResource(R.drawable.ic_restart)
+                    showDownloadAction(R.drawable.ic_restart)
                 }
             }
         }

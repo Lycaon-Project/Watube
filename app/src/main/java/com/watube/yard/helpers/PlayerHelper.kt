@@ -415,6 +415,14 @@ object PlayerHelper {
         player.playbackState == Player.STATE_ENDED -> R.drawable.ic_restart
         else -> R.drawable.ic_play
     }
+
+    /** What the play/pause control does now, for screen readers: its icon alone says nothing. */
+    @StringRes
+    fun getPlayPauseActionLabel(player: Player) = when {
+        player.isPlaying -> R.string.pause
+        player.playbackState == Player.STATE_ENDED -> R.string.a11y_replay
+        else -> R.string.tooltip_play
+    }
     // endregion
 
     // region Watch Positions

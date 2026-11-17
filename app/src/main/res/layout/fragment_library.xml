@@ -26,6 +26,7 @@
 
                 <TextView
                     android:id="@+id/library_title"
+                    android:accessibilityHeading="true"
                     style="@style/WatubeScreenTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -159,6 +160,7 @@
                         android:visibility="gone">
 
                         <ImageView
+                            android:importantForAccessibility="no"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
@@ -216,6 +218,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_playlist"
+        android:contentDescription="@string/tooltip_create_playlist"
         android:tooltipText="@string/tooltip_create_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

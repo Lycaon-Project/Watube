@@ -1,22 +1,14 @@
 package com.watube.yard.extensions
 
-import kotlin.math.log2
-import kotlin.math.pow
+import android.content.Context
+import android.text.format.Formatter
 
 // region Common Utilities
-fun Int.formatAsFileSize(): String {
-    return toLong().formatAsFileSize()
-}
+fun Int.formatAsFileSize(context: Context): String = toLong().formatAsFileSize(context)
 
-fun Long.formatAsFileSize(): String {
-    return log2(if (this != 0L) toDouble() else 1.0).toInt().div(10).let {
-        val precision = when (it) {
-            0 -> 0
-            1 -> 1
-            else -> 2
-        }
-        val prefix = arrayOf("", "K", "M", "G", "T", "P", "E", "Z", "Y")
-        String.format("%.${precision}f ${prefix[it]}B", toDouble() / 2.0.pow(it * 10.0))
-    }
-}
+/**
+ * The size in the user's language and units ("16,29 Mo" in French), as the system writes it:
+ * the same units as the download dialog, so one file never shows two different sizes.
+ */
+fun Long.formatAsFileSize(context: Context): String = Formatter.formatFileSize(context, this)
 // endregion

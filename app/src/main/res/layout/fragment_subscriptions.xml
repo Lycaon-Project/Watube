@@ -25,6 +25,7 @@
         tools:visibility="visible">
 
         <ImageView
+            android:importantForAccessibility="no"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -97,6 +98,7 @@
 
                             <TextView
                                 android:id="@+id/subs_title"
+                                android:accessibilityHeading="true"
                                 style="@style/WatubeSubsTitle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -298,6 +300,7 @@
 
                                 <TextView
                                     android:id="@+id/feed_progress_text"
+                                    android:accessibilityLiveRegion="polite"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     tools:text="5/20" />

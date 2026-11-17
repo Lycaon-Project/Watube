@@ -126,11 +126,13 @@
 
         </FrameLayout>
 
+        <!-- a minimum, not a fixed height: same size at normal text, grows with very large system fonts -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/next_button"
             style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
             android:layout_marginTop="12dp"
             android:enabled="false"
             android:text="@string/download_next" />
@@ -182,36 +184,48 @@
 
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/format_mode"
+            <!-- Video / Audio: the accent pill slides under the chosen button (SlidingToggle) -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:checkedButton="@+id/format_video"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+                android:background="@drawable/watube_segment_track">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/format_video"
-                    style="@style/WatubeDownloadToggle"
+                <View
+                    android:id="@+id/format_mode_pill"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:minHeight="48dp"
-                    android:text="@string/video"
-                    app:icon="@drawable/ic_video" />
+                    android:layout_height="0dp"
+                    android:background="@drawable/watube_segment_pill"
+                    android:importantForAccessibility="no" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/format_audio"
-                    style="@style/WatubeDownloadToggle"
-                    android:layout_width="0dp"
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/format_mode"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:minHeight="48dp"
-                    android:text="@string/download_audio_only"
-                    app:icon="@drawable/ic_audio" />
+                    app:checkedButton="@+id/format_video"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
 
-            </com.google.android.material.button.MaterialButtonToggleGroup>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/format_video"
+                        style="@style/WatubeDownloadSegment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/video"
+                        app:icon="@drawable/ic_video" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/format_audio"
+                        style="@style/WatubeDownloadSegment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/download_audio_only"
+                        app:icon="@drawable/ic_audio" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </FrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/playlist_quality_grid"
@@ -263,11 +277,13 @@
 
             </LinearLayout>
 
+            <!-- a minimum, not a fixed height: same size at normal text, grows with very large system fonts -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/playlist_download_button"
                 style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
                 android:layout_marginTop="12dp"
                 android:fontFeatureSettings="tnum"
                 android:text="@string/download"

@@ -1010,6 +1010,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 .apply {
                     arguments = Bundle().apply {
                         putString(IntentData.channelAvatar, streams.uploaderAvatar)
+                        putBoolean(IntentData.isLive, streams.isLive)
                     }
                 }
                 .show(childFragmentManager)
@@ -2114,6 +2115,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         if (!::playerController.isInitialized) return
         val playPauseAction = PlayerHelper.getPlayPauseActionIcon(playerController)
         binding.playImageView.setImageResource(playPauseAction)
+        binding.playImageView.contentDescription =
+            getString(PlayerHelper.getPlayPauseActionLabel(playerController))
     }
 
     /**

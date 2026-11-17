@@ -2,6 +2,7 @@ package com.watube.yard.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.watube.yard.R
 import com.watube.yard.extensions.bundleOf
 import androidx.recyclerview.widget.ListAdapter
 import com.watube.yard.api.PlaylistsHelper
@@ -11,6 +12,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
 import com.watube.yard.ui.viewholders.CarouselPlaylistViewHolder
 
@@ -47,6 +49,7 @@ class CarouselPlaylistAdapter : ListAdapter<CarouselPlaylist, CarouselPlaylistVi
                 NavigationHelper.navigatePlaylist(root.context, item.id, type)
             }
 
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 val playlistOptionsDialog = PlaylistOptionsBottomSheet()
                 playlistOptionsDialog.arguments = bundleOf(

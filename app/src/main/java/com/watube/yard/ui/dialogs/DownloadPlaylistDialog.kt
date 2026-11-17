@@ -28,6 +28,7 @@ import com.watube.yard.extensions.dpToPx
 import com.watube.yard.extensions.getWhileDigit
 import com.watube.yard.extensions.serializable
 import com.watube.yard.extensions.toID
+import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.LocaleHelper
 import com.watube.yard.helpers.PreferenceHelper
@@ -39,6 +40,7 @@ import com.watube.yard.ui.adapters.QualityOption
 import com.watube.yard.ui.sheets.ExpandedBottomSheet
 import com.watube.yard.ui.views.DownloadMotion
 import com.watube.yard.ui.views.Efecto
+import com.watube.yard.ui.views.SlidingToggle
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.util.TextUtils
 import kotlinx.coroutines.CancellationException
@@ -54,6 +56,9 @@ import kotlinx.coroutines.withContext
  * the audio language and the captions under More options. Only the ticked videos are queued.
  */
 class DownloadPlaylistDialog : ExpandedBottomSheet(R.layout.dialog_download_playlist) {
+    // its content grows from Audio only to Video: collapsed, its button would sink under the bar
+    override val opensExpanded = true
+
     private lateinit var playlistId: String
     private lateinit var playlistName: String
     private lateinit var playlistType: PlaylistType
@@ -132,6 +137,7 @@ class DownloadPlaylistDialog : ExpandedBottomSheet(R.layout.dialog_download_play
 
         audioOnly = PreferenceHelper.getBoolean(PLAYLIST_DOWNLOAD_AUDIO_ONLY, false)
         binding.formatMode.check(if (audioOnly) R.id.format_audio else R.id.format_video)
+        SlidingToggle(binding.formatMode, binding.formatModePill)
         binding.formatMode.addOnButtonCheckedListener { _, id, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             audioOnly = id == R.id.format_audio
@@ -368,6 +374,7 @@ class DownloadPlaylistDialog : ExpandedBottomSheet(R.layout.dialog_download_play
             .putExtra(IntentData.maxAudioQuality, maxAudioQuality ?: 0)
             .putExtra(IntentData.captionLanguage, captionLanguage)
             .putStringArrayListExtra(IntentData.videoIds, ArrayList(ids))
+        activity?.let(DownloadHelper::requestNotificationPermission)
         ContextCompat.startForegroundService(requireContext(), intent)
         dismiss()
     }

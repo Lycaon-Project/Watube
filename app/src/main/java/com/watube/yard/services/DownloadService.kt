@@ -322,7 +322,7 @@ class DownloadService : LifecycleService() {
         downloadProvider: DownloadProvider,
     ) {
         downloadQueue[item.id] = true
-        val notificationBuilder = getNotificationBuilder(item)
+        val notificationBuilder = getNotificationBuilder(item, titleOf(item))
         setResumeNotification(notificationBuilder, item)
 
         if (!prepareFile(item, notificationBuilder)) {
@@ -426,8 +426,8 @@ class DownloadService : LifecycleService() {
 
         notificationBuilder
             .setContentText(
-                totalRead.formatAsFileSize() + " / " +
-                        item.downloadSize.formatAsFileSize()
+                totalRead.formatAsFileSize(this) + " / " +
+                        item.downloadSize.formatAsFileSize(this)
             )
 
         val downloadSize = item.downloadSize
@@ -612,14 +612,29 @@ class DownloadService : LifecycleService() {
         )
     }
 
-    private fun getNotificationBuilder(item: DownloadItem): Builder {
+    /** The video's title, stored before its files are downloaded; the file name without it. */
+    private suspend fun titleOf(item: DownloadItem): String =
+        Database.downloadDao().findById(item.videoId)?.download?.title
+            ?.takeIf { it.isNotBlank() } ?: item.fileName
+
+    /** What the file holds, in words: shown beside the app's name, above the title. */
+    private fun typeLabel(type: FileType): String = getString(
+        when (type) {
+            FileType.AUDIO -> R.string.download_audio_only
+            FileType.VIDEO -> R.string.video
+            FileType.SUBTITLE -> R.string.captions
+        }
+    )
+
+    private fun getNotificationBuilder(item: DownloadItem, title: String): Builder {
         val intent = Intent(this@DownloadService, MainActivity::class.java)
             .putExtra(IntentData.OPEN_DOWNLOADS, true)
         val activityIntent = PendingIntentCompat
             .getActivity(this@DownloadService, 0, intent, FLAG_CANCEL_CURRENT, false)
 
         return Builder(this, DOWNLOAD_CHANNEL_NAME)
-            .setContentTitle("[${item.type}] ${item.fileName}")
+            .setContentTitle(title)
+            .setSubText(typeLabel(item.type))
             .setProgress(0, 0, true)
             .setOngoing(true)
             .setContentIntent(activityIntent)

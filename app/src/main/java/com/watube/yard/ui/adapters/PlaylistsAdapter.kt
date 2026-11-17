@@ -18,6 +18,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet
 import com.watube.yard.ui.sheets.PlaylistOptionsBottomSheet.Companion.PLAYLIST_OPTIONS_REQUEST_KEY
 import com.watube.yard.ui.viewholders.PlaylistsViewHolder
@@ -56,12 +57,19 @@ class PlaylistsAdapter(
             playlistDescription.isVisible = !playlist.shortDescription.isNullOrBlank()
 
             videoCount.text = playlist.videos.toString()
+            // read as one: the name first, then the description and the count (which sits first on screen)
+            root.contentDescription = listOfNotNull(
+                playlist.name,
+                playlist.shortDescription?.takeIf { it.isNotBlank() },
+                root.resources.getQuantityString(R.plurals.a11y_video_count, playlist.videos.toInt(), playlist.videos)
+            ).joinToString(", ")
 
             root.setOnClickListener {
                 NavigationHelper.navigatePlaylist(root.context, playlist.id, playlistType)
             }
 
             val fragmentManager = (root.context as BaseActivity).supportFragmentManager
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 fragmentManager.setFragmentResultListener(
                     PLAYLIST_OPTIONS_REQUEST_KEY,

@@ -16,6 +16,7 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.Window
 import android.view.WindowInsets
+import android.view.accessibility.AccessibilityManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -1098,6 +1099,9 @@ class CustomExoPlayerView(
             binding.sbToggle.setImageResource(
                 if (sponsorBlockAutoSkip) R.drawable.ic_sb_enabled else R.drawable.ic_sb_disabled
             )
+            // the icon alone tells on from off: screen readers say it
+            binding.sbToggle.stateDescription =
+                context.getString(if (sponsorBlockAutoSkip) R.string.enabled else R.string.disabled)
         }
         updateSbImageResource()
         binding.sbToggle.setOnClickListener {
@@ -1164,6 +1168,8 @@ class CustomExoPlayerView(
         binding.playPauseBTN.setImageResource(
             PlayerHelper.getPlayPauseActionIcon(player)
         )
+        binding.playPauseBTN.contentDescription =
+            context.getString(PlayerHelper.getPlayPauseActionLabel(player))
 
         binding.exoProgress.setPlayer(player)
 
@@ -1181,6 +1187,7 @@ class CustomExoPlayerView(
 
             binding.lockPlayer.setImageResource(icon)
             TooltipCompat.setTooltipText(binding.lockPlayer, context.getString(tooltip))
+            binding.lockPlayer.contentDescription = context.getString(tooltip)
 
             // show/hide all the controls
             lockPlayer(isPlayerLocked)
@@ -1248,7 +1255,15 @@ class CustomExoPlayerView(
     }
 
     private fun enqueueHideControllerTask() {
-        runnableHandler.postDelayed(AUTO_HIDE_CONTROLLER_DELAY, HIDE_CONTROLLER_TOKEN) {
+        val accessibility = context.getSystemService(AccessibilityManager::class.java)
+        // a screen reader goes through the controls one by one: they stay until hidden by hand
+        if (accessibility?.isTouchExplorationEnabled == true) return
+        // the time the user asked for to act on controls (Accessibility settings), when longer
+        val delay = accessibility?.getRecommendedTimeoutMillis(
+            AUTO_HIDE_CONTROLLER_DELAY.toInt(),
+            AccessibilityManager.FLAG_CONTENT_CONTROLS or AccessibilityManager.FLAG_CONTENT_ICONS
+        )?.toLong() ?: AUTO_HIDE_CONTROLLER_DELAY
+        runnableHandler.postDelayed(delay, HIDE_CONTROLLER_TOKEN) {
             hideController()
         }
     }
@@ -1423,6 +1438,8 @@ class CustomExoPlayerView(
             binding.playPauseBTN.setImageResource(
                 PlayerHelper.getPlayPauseActionIcon(player)
             )
+            binding.playPauseBTN.contentDescription =
+                context.getString(PlayerHelper.getPlayPauseActionLabel(player))
 
             // keep screen on if the video is playing
             keepScreenOn = keepsScreenOn(player)

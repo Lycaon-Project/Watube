@@ -17,4 +17,10 @@
     <item name="watube_top_bar_clip" type="id" />
     <!-- running pulse of a download sheet placeholder (DownloadMotion) -->
     <item name="watube_download_pulse" type="id" />
+    <!-- RecyclerView tag holding the listener that offers a list's swipe and drag as actions,
+         and row tag holding the ids of the actions it offers (RecyclerViewAdapter.kt). -->
+    <item name="gesture_actions_listener" type="id" />
+    <item name="gesture_action_ids" type="id" />
+    <!-- Accessibility action of a bottom bar option: open the app on this tab. -->
+    <item name="a11y_set_start_tab" type="id" />
 </resources>

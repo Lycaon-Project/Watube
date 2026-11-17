@@ -83,6 +83,7 @@
                     <com.google.android.material.button.MaterialButton
                         style="?materialIconButtonFilledTonalStyle"
                         android:id="@+id/group_edit_btn"
+                        android:contentDescription="@string/tooltip_edit_groups"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"

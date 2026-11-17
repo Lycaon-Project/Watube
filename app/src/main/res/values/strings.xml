@@ -82,6 +82,10 @@
     <string name="retry">Retry</string>
     <string name="comments">Comments</string>
     <string name="comments_count">Comments (%1$s)</string>
+    <string name="live_chat">Live chat</string>
+    <string name="live_chat_ended">The live chat has ended.</string>
+    <string name="live_chat_empty">No messages yet.</string>
+    <string name="live_chat_owner">Channel owner</string>
     <string name="replies">Replies</string>
     <string name="channels">Channels</string>
     <string name="albums">Albums</string>
@@ -957,5 +961,29 @@
     <plurals name="download_videos">
         <item quantity="one">Download %1$d video</item>
         <item quantity="other">Download %1$d videos</item>
+    </plurals>
+    <!-- Screen reader labels of controls shown as icons only -->
+    <string name="a11y_delete_instance">Delete instance</string>
+    <string name="a11y_decrease">Decrease</string>
+    <string name="a11y_increase">Increase</string>
+    <string name="a11y_swap_times">Swap start and end times</string>
+    <string name="a11y_remove_history">Remove from history</string>
+    <string name="a11y_fill_search">Copy to search field</string>
+    <string name="a11y_hearted">Liked by the creator</string>
+    <string name="a11y_creator_reply">Creator replied</string>
+    <string name="a11y_channel_picture">Channel picture</string>
+    <string name="a11y_channel_banner">Channel banner</string>
+    <string name="a11y_replay">Replay</string>
+    <string name="a11y_open_channel">Open channel %1$s</string>
+    <string name="a11y_expanded">Expanded</string>
+    <string name="a11y_collapsed">Collapsed</string>
+    <string name="a11y_remove">Remove</string>
+    <string name="a11y_move_up">Move up</string>
+    <string name="a11y_move_down">Move down</string>
+    <string name="a11y_start_tab">Start tab</string>
+    <string name="a11y_set_start_tab">Open the app on this tab</string>
+    <plurals name="a11y_video_count">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videos</item>
     </plurals>
 </resources>

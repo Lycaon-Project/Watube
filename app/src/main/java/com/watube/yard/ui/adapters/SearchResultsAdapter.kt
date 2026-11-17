@@ -24,6 +24,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.extensions.setFormattedDuration
 import com.watube.yard.ui.extensions.setWatchProgressLength
 import com.watube.yard.ui.extensions.setupSubscriptionButton
@@ -123,6 +124,7 @@ class SearchResultsAdapter(
             val videoId = item.url.toID()
             val activity = (root.context as BaseActivity)
             val fragmentManager = activity.supportFragmentManager
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 fragmentManager.setFragmentResultListener(
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,
@@ -207,6 +209,7 @@ class SearchResultsAdapter(
                 subscribed = it
             }
 
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 val channelOptionsSheet = ChannelOptionsBottomSheet()
                 channelOptionsSheet.arguments = bundleOf(
@@ -236,6 +239,7 @@ class SearchResultsAdapter(
                 NavigationHelper.navigatePlaylist(root.context, item.url, PlaylistType.PUBLIC)
             }
 
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 val sheet = PlaylistOptionsBottomSheet()
                 sheet.arguments = bundleOf(

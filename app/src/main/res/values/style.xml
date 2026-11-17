@@ -74,13 +74,14 @@
         <item name="cornerSize">9dp</item>
     </style>
 
-    <!-- Video / Audio only switch of the download sheets: the chips' colours, the chosen side
-         filled with the accent like a chosen quality card -->
-    <style name="WatubeDownloadToggle" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="backgroundTint">@color/watube_chip_bg</item>
-        <item name="android:textColor">@color/watube_chip_text</item>
-        <item name="iconTint">@color/watube_chip_text</item>
-        <item name="strokeColor">@color/watube_chip_stroke</item>
+    <!-- A button of the Video / Audio switch (SlidingToggle): no fill of its own, the accent
+         pill slides under the chosen one; the chips' text colours, full 48dp touch height -->
+    <style name="WatubeDownloadSegment" parent="Widget.Material3.Button.TextButton.Icon">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:textColor">@color/watube_segment_text</item>
+        <item name="iconTint">@color/watube_segment_text</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
         <item name="android:minHeight">48dp</item>
     </style>
 
@@ -376,6 +377,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:drawableStart">@drawable/watube_section_tick</item>
+        <!-- a section title: screen readers can jump from one to the next -->
+        <item name="android:accessibilityHeading">true</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:padding">8dp</item>
         <item name="android:paddingStart">@dimen/watube_gutter</item>

@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/app_icon"
+        android:contentDescription="@string/share"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_gravity="center"

@@ -29,10 +29,12 @@
             app:strokeColor="?attr/colorOutlineVariant"
             app:strokeWidth="2dp" />
 
+        <!-- a minimum, not a fixed height: same size at normal text, grows with very large system fonts -->
         <TextView
             android:id="@+id/rail_badge"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
+            android:minHeight="20dp"
             android:layout_gravity="bottom|end"
             android:background="@drawable/watube_rail_badge"
             android:gravity="center"

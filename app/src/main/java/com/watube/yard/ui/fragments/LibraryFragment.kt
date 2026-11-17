@@ -209,7 +209,7 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
             // walking the cache directory is I/O: keep it off the main thread
             val size = withContext(Dispatchers.IO) { ImageHelper.getCacheSize(appContext) }
             val binding = _binding ?: return@launch
-            binding.shortcutCache.shortcutSummary.text = size.formatAsFileSize()
+            binding.shortcutCache.shortcutSummary.text = size.formatAsFileSize(binding.root.context)
         }
     }
 

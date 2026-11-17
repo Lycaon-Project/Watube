@@ -5,14 +5,20 @@ import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentDialog
 import androidx.activity.addCallback
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnAttach
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.setFragmentResult
 import com.watube.yard.R
 import com.watube.yard.databinding.CommentsSheetBinding
+import com.watube.yard.constants.IntentData
 import com.watube.yard.ui.fragments.CommentsMainFragment
+import com.watube.yard.ui.fragments.LiveChatFragment
 import com.watube.yard.ui.models.CommonPlayerViewModel
 
 // region Comments
@@ -51,8 +57,13 @@ class CommentsSheet : ExpandablePlayerSheet(R.layout.comments_sheet) {
 
         binding.btnClose.setOnClickListener { dismiss() }
 
+        // a live stream shows its live chat, which falls back to the comments when it has none
         childFragmentManager.commit {
-            replace<CommentsMainFragment>(R.id.commentFragContainer, args = arguments)
+            if (arguments?.getBoolean(IntentData.isLive) == true) {
+                replace<LiveChatFragment>(R.id.commentFragContainer, args = arguments)
+            } else {
+                replace<CommentsMainFragment>(R.id.commentFragContainer, args = arguments)
+            }
         }
     }
 
@@ -87,6 +98,18 @@ class CommentsSheet : ExpandablePlayerSheet(R.layout.comments_sheet) {
     }
 
     companion object {
+        /**
+         * Keeps the end of [list] above the navigation bar: the sheet is laid out under it
+         * (FLAG_LAYOUT_NO_LIMITS), so the last row would sit behind the bar, out of reach.
+         */
+        fun padAboveNavigationBar(list: View) {
+            list.doOnAttach { attached ->
+                val bar = ViewCompat.getRootWindowInsets(attached)
+                    ?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+                attached.updatePadding(bottom = bar)
+            }
+        }
+
         const val HANDLE_LINK_REQUEST_KEY = "handle_link_request_key"
         const val DISMISS_SHEET_REQUEST_KEY = "dismiss_sheet_request_key"
     }

@@ -626,7 +626,8 @@ class NewPipeMediaServiceRepository : MediaServiceRepository {
             nextpage = commentsInfo.nextPage?.toNextPageString(),
             disabled = commentsInfo.isCommentsDisabled,
             commentCount = commentsInfo.commentsCount.toLong(),
-            comments = commentsInfo.relatedItems.map { it.toComment() }
+            comments = commentsInfo.relatedItems.map { it.toComment() },
+            liveChat = commentsInfo.isLiveChat
         )
     }
 

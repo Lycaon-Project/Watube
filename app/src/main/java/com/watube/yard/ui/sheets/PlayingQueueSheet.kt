@@ -107,6 +107,14 @@ class PlayingQueueSheet : ExpandedBottomSheet(R.layout.queue_bottom_sheet) {
         binding.repeat.alpha = if (PlayingQueue.repeatMode == Player.REPEAT_MODE_OFF) 0.5f else 1f
         val drawableResource = if (PlayingQueue.repeatMode == Player.REPEAT_MODE_ONE) R.drawable.ic_repeat_one else R.drawable.ic_repeat
         binding.repeat.setIconResource(drawableResource)
+        // the modes differ only by shade and a small "1": screen readers say which one is on
+        binding.repeat.stateDescription = getString(
+            when (PlayingQueue.repeatMode) {
+                Player.REPEAT_MODE_ONE -> R.string.repeat_mode_current
+                Player.REPEAT_MODE_ALL -> R.string.repeat_mode_all
+                else -> R.string.repeat_mode_none
+            }
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")

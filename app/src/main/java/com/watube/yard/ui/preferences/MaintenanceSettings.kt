@@ -87,7 +87,7 @@ class MaintenanceSettings : BasePreferenceFragment() {
             val size = withContext(Dispatchers.IO) {
                 ImageHelper.getCacheSize(appContext)
             }
-            preference.summary = getString(R.string.clear_cache_summary, size.formatAsFileSize())
+            preference.summary = getString(R.string.clear_cache_summary, size.formatAsFileSize(preference.context))
         }
     }
     // endregion

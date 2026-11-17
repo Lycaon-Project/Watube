@@ -34,6 +34,7 @@
 
             <ImageView
                 android:id="@+id/minimize_player"
+                android:contentDescription="@string/tooltip_minimize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -208,6 +209,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/rewindBTN"
+                android:contentDescription="@string/rewind"
                 style="?materialIconButtonFilledStyle"
                 android:layout_width="0dp"
                 android:layout_weight="2"
@@ -233,6 +235,7 @@
             <com.google.android.material.button.MaterialButton
                 style="?materialIconButtonFilledStyle"
                 android:id="@+id/forwardBTN"
+                android:contentDescription="@string/forward"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
@@ -261,6 +264,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="?materialIconButtonOutlinedStyle"
                     android:id="@+id/open_queue"
+                    android:contentDescription="@string/queue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_queue" />
@@ -268,6 +272,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="?materialIconButtonOutlinedStyle"
                     android:id="@+id/open_chapters"
+                    android:contentDescription="@string/chapters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_frame" />
@@ -275,6 +280,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="?materialIconButtonOutlinedStyle"
                     android:id="@+id/playback_options"
+                    android:contentDescription="@string/playback_speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_speed" />
@@ -282,6 +288,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="?materialIconButtonOutlinedStyle"
                     android:id="@+id/sleep_timer"
+                    android:contentDescription="@string/sleep_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_sleep" />
@@ -289,6 +296,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="?materialIconButtonOutlinedStyle"
                     android:id="@+id/open_video"
+                    android:contentDescription="@string/go_to_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_video" />
@@ -297,6 +305,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/show_more"
+                android:contentDescription="@string/tooltip_more"
                 style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -355,6 +364,7 @@
 
         <ImageView
             android:id="@+id/miniPlayerClose"
+            android:contentDescription="@string/tooltip_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
