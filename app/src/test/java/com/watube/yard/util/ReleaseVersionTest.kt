@@ -26,6 +26,18 @@ class ReleaseVersionTest {
     }
 
     @Test
+    fun `the version code in brackets is not a version`() {
+        // the 26.12 release: "6212" would read as year 62, month 12, newer than every real
+        // version, so the installed 26.12 kept being offered itself as an update
+        assertEquals(
+            261200,
+            ReleaseVersion.code("Watube_Android", "Your update is ready Watube 26.12 · Vireo (6212)")
+        )
+        assertNull(ReleaseVersion.code("Watube_Android", "Your update is ready (6212)"))
+        assertNull(ReleaseVersion.code("6212"))
+    }
+
+    @Test
     fun `the app's own version name`() {
         assertEquals(261200, ReleaseVersion.code("26.12"))
         assertEquals(261101, ReleaseVersion.code("26.11.1"))
