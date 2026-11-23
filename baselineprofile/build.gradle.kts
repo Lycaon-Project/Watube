@@ -1,53 +1,41 @@
-
 plugins {
-    // Identique au dépôt amont (Lycaon-Project/Watube @ main) : le plugin
-    // com.android.test partage la classe d'agents commune chargée à la racine
-    // (alias androidTest > même version que AGP, embarquée dans AGP).
+    // com.android.test shares the AGP classes loaded at the root (same version as AGP)
     alias(libs.plugins.androidTest)
     alias(libs.plugins.baselineprofile)
-    // WATUBE FIX : le module contient des sources Kotlin (BaselineProfileGenerator).
-    // AGP 9 embarque le support Kotlin : declarer org.jetbrains.kotlin.android echoue
-    // ("no longer required for Kotlin support since AGP 9.0") -> rien a declarer ici.
+    // The module has Kotlin sources (BaselineProfileGenerator): AGP 9 compiles them itself,
+    // declaring org.jetbrains.kotlin.android fails ("no longer required for Kotlin support").
 }
 
-// ✅ CORRECTION 1 : Suppression du warning de dépréciation pour android {}
 @Suppress("Deprecation")
 android {
-    // CORRECTION CRITIQUE DE LA SYNC ANDROID STUDIO :
-    // "targetProjectPath cannot be null in test project baselineprofile"
-    // AGP lit cette propriété dès la phase afterEvaluate ; elle doit donc être
-    // déclarée EN TÊTE du bloc android{}, avant toute autre configuration.
+    // read by AGP as early as afterEvaluate: declared first, before any other setting
+    // ("targetProjectPath cannot be null in test project baselineprofile" otherwise)
     targetProjectPath = ":app"
 
     namespace = "com.watube.yard.baselineprofile"
     compileSdk = 37
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 
     defaultConfig {
         minSdk = 28
-        // ✅ CORRECTION 3 : Mise à jour vers targetSdk 37 pour éliminer le warning
         targetSdk = 37
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
 }
 
-// WATUBE FIX : jvmTarget Kotlin aligne sur compileOptions (AGP 9 embarque Kotlin :
-// l'extension DSL kotlin{} du plugin org.jetbrains.kotlin.android n'existe plus).
+// Kotlin jvmTarget aligned with compileOptions (AGP 9 built-in Kotlin has no kotlin {} block here)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25)
     }
 }
 
-
-// This is the configuration block for the Baseline Profile plugin.
-// You can specify to run the generators on a managed devices or connected devices.
+// Runs the generators on the connected devices (no Gradle managed device).
 baselineProfile {
     useConnectedDevices = true
 }
@@ -59,7 +47,7 @@ dependencies {
     implementation(libs.androidx.benchmark.macro.junit4)
 }
 
-// ✅ CORRECTION 4 : Suppression du warning @Incubating pour getTestedApks()
+// getTestedApks() is @Incubating
 @Suppress("UnstableApiUsage")
 androidComponents {
     onVariants { v ->

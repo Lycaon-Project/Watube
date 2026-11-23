@@ -43,7 +43,8 @@
 
         <!-- region Updates -->
         <!-- every launch by default (a cold start, not a rotation or a return from the
-             background): one request without identifier, cookie or token, sent in TLS 1.3 -->
+             background), else weekly, monthly, every 3 or 6 months: one request without
+             identifier, cookie or token, sent in TLS 1.3 -->
         <ListPreference
             android:defaultValue="0"
             android:dependency="automatic_update_checks"

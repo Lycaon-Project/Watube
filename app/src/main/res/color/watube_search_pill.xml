@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Inside of the search pill (home, search results): the raised surface by day. At night
+  (color-night) the same surface a touch darker.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/colorSurfaceContainerHighest" />
+</selector>

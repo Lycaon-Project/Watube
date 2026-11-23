@@ -23,6 +23,7 @@ import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.imageLoader
 import coil3.load
+import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
@@ -52,6 +53,9 @@ object ImageHelper {
     /** Images may only take half of the app cache quota, the rest is for http and temp files. */
     private const val DISK_CACHE_FRACTION = 0.5
     private const val MIN_DISK_CACHE_BYTES = 32L * 1024 * 1024
+
+    /** Share of the heap given to decoded images kept in memory, half of Coil's default. */
+    private const val MEMORY_CACHE_FRACTION = 0.1
 
     private const val ARTWORK_MAX_SIDE = 512
     private const val ARTWORK_QUALITY = 85
@@ -93,6 +97,14 @@ object ImageHelper {
             .apply {
                 diskCachePolicy(CachePolicy.ENABLED)
                 memoryCachePolicy(CachePolicy.ENABLED)
+                // Coil's default is a fifth of the large heap (about 100 MB of decoded
+                // thumbnails here, because of android:largeHeap); thumbnails scrolled away
+                // come back from the disk cache, decoded again at a small cost
+                memoryCache {
+                    MemoryCache.Builder()
+                        .maxSizePercent(context.applicationContext, MEMORY_CACHE_FRACTION)
+                        .build()
+                }
 
                 val storageManager = context.getSystemService<StorageManager>()!!
                 val availableCache = storageManager.getCacheQuotaBytes(

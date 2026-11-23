@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Top bar, theme switch shown at night (back to the light theme): a filled sun with rounded
+  rays, in the filled, rounded family of the bottom bar's icons (the former watube_sun was a
+  thin 2px outline, out of step with them).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,7.6a4.4,4.4 0 1,1 0,8.8a4.4,4.4 0 1,1 0,-8.8z" />
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,2.4V4.4M12,19.6V21.6M2.4,12H4.4M19.6,12H21.6M5.21,5.21L6.63,6.63M17.37,17.37L18.79,18.79M5.21,18.79L6.63,17.37M17.37,6.63L18.79,5.21"
+        android:strokeColor="@android:color/white"
+        android:strokeLineCap="round"
+        android:strokeWidth="2.2" />
+
+</vector>

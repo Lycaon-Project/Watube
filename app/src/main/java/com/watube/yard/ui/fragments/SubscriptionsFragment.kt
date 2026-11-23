@@ -144,7 +144,8 @@ class SubscriptionsFragment :
         binding.subRefresh.isEnabled = true
         binding.subProgress.isVisible = true
 
-        if (viewModel.videoFeed.value == null) {
+        // none loaded yet, or loaded before a subscription change (empty before the first one)
+        if (viewModel.currentFeed == null) {
             viewModel.fetchFeed(requireContext(), forceRefresh = false)
         }
 

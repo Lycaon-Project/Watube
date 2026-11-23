@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Downloads -->
+<!-- Destination folder of the downloads: what it is for, where they go now, and the folders
+     to choose from, as buttons drawn like the dialog's own Cancel (MaintenanceSettings). -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="4dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/download_folder_message"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+        <TextView
+            android:id="@+id/download_folder_current"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            android:textColor="?attr/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/download_folder_default"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="start|center_vertical"
+            android:minHeight="64dp"
+            android:paddingVertical="12dp"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_download_folder" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/download_folder_pick"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="start|center_vertical"
+            android:minHeight="64dp"
+            android:paddingVertical="12dp"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_add" />
+
+    </LinearLayout>
+</ScrollView>
+<!-- endregion -->

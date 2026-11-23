@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Top bar, Data & maintenance: a filled database cylinder (a cap and two tiers split by thin
+  gaps), in the filled, rounded family of the bottom bar's icons. It replaces the bell, which
+  suggested notifications, and then a wrench, which read as a tool rather than as app data.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4.4,5.8a7.6,3 0 1,1 15.2,0a7.6,3 0 1,1 -15.2,0z" />
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4.4,7.2v4.8a7.6,3 0 0,0 15.2,0V7.2a7.6,3 0 0,1 -15.2,0z" />
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4.4,13.4v4.8a7.6,3 0 0,0 15.2,0v-4.8a7.6,3 0 0,1 -15.2,0z" />
+
+</vector>

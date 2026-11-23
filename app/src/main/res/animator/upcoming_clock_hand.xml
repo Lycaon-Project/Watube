@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Minute hand of the upcoming pill's clock (avd_upcoming_clock): one round, in the same time
+  as the glint that crosses the pill (UpcomingBadgeMotion, GLINT_DURATION_MS).
+  Recovered from the 26.11 release build after the emergency restore.
+-->
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="1100"
+    android:interpolator="@interpolator/watube_standard"
+    android:propertyName="rotation"
+    android:valueFrom="0"
+    android:valueTo="360"
+    android:valueType="floatType" />

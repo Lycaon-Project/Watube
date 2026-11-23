@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Downloads -->
+<!-- One quality in the download sheet (DownloadQualityAdapter): the quality large, its pill
+     (HD, FHD, 2K, 4K), then what else to know (frame rate, codec, size). Chosen, the card takes
+     the accent fill of the Solar chips; the screen reader hears it as checked. -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quality_card"
+    style="@style/Widget.Material3.CardView.Outlined"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/watube_chip_bg"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:checkedIcon="@null"
+    app:strokeColor="@color/watube_chip_stroke"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="true"
+        android:gravity="center_vertical"
+        android:minHeight="72dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="11dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/quality_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:duplicateParentState="true"
+                android:fontFeatureSettings="tnum"
+                android:maxLines="1"
+                android:textColor="@color/watube_chip_text"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                tools:text="1080p" />
+
+            <TextView
+                android:id="@+id/quality_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:background="@drawable/watube_download_badge"
+                android:backgroundTint="@color/watube_download_badge_fill"
+                android:duplicateParentState="true"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="1dp"
+                android:textColor="@color/watube_chip_text"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="FHD"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/quality_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:duplicateParentState="true"
+            android:ellipsize="end"
+            android:fontFeatureSettings="tnum"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="@color/watube_download_card_detail"
+            android:visibility="gone"
+            tools:text="60 i/s · H.264 · 245 Mo"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+<!-- endregion -->

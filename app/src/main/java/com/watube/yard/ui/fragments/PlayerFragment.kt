@@ -486,8 +486,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
             openOrCloseFullscreenDialog(true)
             pipActivity = activity
+            // a TV playing the video keeps its quality
+            if (::playerController.isInitialized && !playerController.isRemote) {
+                binding.player.setPipResolutionCap(true)
+            }
         } else {
             binding.player.useController = true
+            binding.player.setPipResolutionCap(false)
 
             if (lifecycle.currentState == Lifecycle.State.CREATED) {
                 if (::playerController.isInitialized) {

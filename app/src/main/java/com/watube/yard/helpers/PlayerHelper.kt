@@ -285,6 +285,17 @@ object PlayerHelper {
     // region Video Player
     private const val MINIMUM_BUFFER_DURATION = 1000 * 10 // exo default is 50s
 
+    /** Bounds of the back buffer, see [backBufferMs]. */
+    private const val MIN_BACK_BUFFER_MS = 15_000L
+    private const val MAX_BACK_BUFFER_MS = 60_000L
+
+    /**
+     * How much of what was played is kept for backward seeks: two seek steps (20 s at the
+     * default step of 10 s), so going back once or twice never downloads again.
+     */
+    private val backBufferMs: Int
+        get() = (2 * seekIncrement).coerceIn(MIN_BACK_BUFFER_MS, MAX_BACK_BUFFER_MS).toInt()
+
     /**
      * The maximum amount of time to wait until the video starts playing: 10 minutes
      */
@@ -399,8 +410,9 @@ object PlayerHelper {
     @OptIn(UnstableApi::class)
     fun getLoadControl(): LoadControl {
         return DefaultLoadControl.Builder()
-            // cache the last minute of the video for backward seeks
-            .setBackBuffer(1000 * 60, true)
+            // memory: what was played stays in memory for backward seeks, two seek steps of it;
+            // a full minute of 1080p video stayed in the Java heap for seeks rarely made
+            .setBackBuffer(backBufferMs, true)
             .setBufferDurationsMs(
                 MINIMUM_BUFFER_DURATION,
                 max(bufferingGoal, MINIMUM_BUFFER_DURATION),

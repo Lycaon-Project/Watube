@@ -32,13 +32,6 @@ class UpdateChecker(
 
     companion object {
         /**
-         * Default delay (hours) between two automatic update checks, used when the user hasn't picked one.
-         * "0" = check on every launch (no throttling). Must stay in sync with the `update_check_interval`
-         * ListPreference default in res/xml/general_settings.xml.
-         */
-        private const val DEFAULT_CHECK_INTERVAL_HOURS = "0"
-
-        /**
          * "Every launch" means once per start of the app: MainActivity is also created again by a
          * shared link or after being destroyed in the background, which re-queried GitHub.
          */
@@ -47,15 +40,15 @@ class UpdateChecker(
     }
 
     /**
-     * User-configurable minimum delay between two automatic checks, in milliseconds.
-     * A value of "0" means "check on every launch" (no throttling).
+     * User-configurable minimum delay between two automatic checks, in milliseconds; 0 means
+     * every launch. The default must match the ListPreference in res/xml/general_settings.xml.
      */
-    private fun autoCheckIntervalMs(): Long {
-        val hours = PreferenceHelper
-            .getString(PreferenceKeys.UPDATE_CHECK_INTERVAL, DEFAULT_CHECK_INTERVAL_HOURS)
-            .toLongOrNull() ?: DEFAULT_CHECK_INTERVAL_HOURS.toLong()
-        return hours * 60 * 60 * 1000L
-    }
+    private fun autoCheckIntervalMs(): Long = UpdateCheckInterval.millis(
+        PreferenceHelper.getString(
+            PreferenceKeys.UPDATE_CHECK_INTERVAL,
+            UpdateCheckInterval.EVERY_LAUNCH
+        )
+    )
 
     private fun isCheckThrottled(): Boolean {
         val interval = autoCheckIntervalMs()

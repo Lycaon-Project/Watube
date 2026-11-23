@@ -41,6 +41,22 @@ class SubscriptionsViewModel : ViewModel() {
 
     private var feedLoad: Deferred<List<StreamItem>>? = null
 
+    /** The last loaded feed and the [SubscriptionHelper.subscriptionsVersion] it was fetched for. */
+    private class LoadedFeed(val subscriptionsVersion: Int, val items: List<StreamItem>)
+
+    @Volatile
+    private var loadedFeed: LoadedFeed? = null
+
+    /**
+     * The feed already loaded, or null when there is none yet or the subscriptions changed since
+     * it was fetched: home loads it at startup, so before the first subscription it was empty
+     * and the subscriptions tab kept showing that empty feed.
+     */
+    val currentFeed: List<StreamItem>?
+        get() = loadedFeed
+            ?.takeIf { it.subscriptionsVersion == SubscriptionHelper.subscriptionsVersion }
+            ?.items
+
     /**
      * Loads the feed, one load at a time: a caller arriving while it runs (new videos badge at
      * startup, home, subscriptions tab, refresh) shares it. Side by side loads each requested
@@ -50,6 +66,8 @@ class SubscriptionsViewModel : ViewModel() {
     @Synchronized
     fun fetchFeed(context: Context, forceRefresh: Boolean): Deferred<List<StreamItem>> =
         feedLoad?.takeIf { it.isActive } ?: viewModelScope.async(Dispatchers.IO) {
+            // read before the load: a change made while it runs leaves the feed stale
+            val subscriptionsVersion = SubscriptionHelper.subscriptionsVersion
             val videoFeed = try {
                 SubscriptionHelper.getFeed(forceRefresh = forceRefresh) { feedProgress ->
                     this@SubscriptionsViewModel.feedProgress.postValue(feedProgress)
@@ -66,6 +84,7 @@ class SubscriptionsViewModel : ViewModel() {
             // close the progress bar even when the repository short-circuited (cached feed,
             // no subscriptions) and never reported a final "n/n" update
             this@SubscriptionsViewModel.feedProgress.postValue(null)
+            loadedFeed = LoadedFeed(subscriptionsVersion, videoFeed)
             this@SubscriptionsViewModel.videoFeed.postValue(videoFeed)
             videoFeed.firstOrNull { !it.isUpcoming }?.uploaded?.let {
                 PreferenceHelper.updateLastFeedWatchedTime(it, false)

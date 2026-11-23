@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Mini-player fill: the card surface, slightly see-through so the list scrolling under the
+  floating mini-player stays faintly visible. This is the plain card, Efecto off: at 92 %,
+  like the bottom bar's plain fill (watube_nav_plain); the glass uses
+  watube_miniplayer_glass_fill instead. Opaque enough for the title and the controls.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="0.92" android:color="?attr/colorSurfaceContainer" />
+</selector>

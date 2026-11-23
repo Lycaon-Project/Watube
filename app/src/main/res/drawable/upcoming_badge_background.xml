@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region UI Components -->
+<!-- "In 3 days" pill of a feed row whose video is not out yet: the tertiary tone of the
+     theme, so it stands apart from the neutral meta line without reading as an error. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="999dp" />
+    <solid android:color="?attr/colorTertiaryContainer" />
+</shape>
+<!-- endregion -->

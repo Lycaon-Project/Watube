@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Count chip in the corner of a playlist cover: the .plside band of the list row, made
+     small enough for a grid tile. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#D10A0C0E" />
+    <corners android:radius="6dp" />
+</shape>

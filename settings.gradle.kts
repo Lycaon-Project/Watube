@@ -52,7 +52,7 @@ dependencyResolutionManagement {
         exclusiveContent {
             forRepository { maven("https://jitpack.io") }
             filter {
-                includeGroup("com.github.TeamNewPipe")
+                // Watube Extrato only: it carries its own JSON code, so nothing else comes from here
                 includeGroup("com.github.Lycaon-Project")
             }
         }

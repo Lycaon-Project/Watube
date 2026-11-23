@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Top bar, more options: three round dots, a little fuller than ic_three_dots, in the filled,
+  rounded family of the bottom bar's icons.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,2.9a2.1,2.1 0 1,1 0,4.2a2.1,2.1 0 1,1 0,-4.2zM12,9.9a2.1,2.1 0 1,1 0,4.2a2.1,2.1 0 1,1 0,-4.2zM12,16.9a2.1,2.1 0 1,1 0,4.2a2.1,2.1 0 1,1 0,-4.2z" />
+
+</vector>

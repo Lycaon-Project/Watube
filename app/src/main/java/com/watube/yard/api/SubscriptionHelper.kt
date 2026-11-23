@@ -16,6 +16,7 @@ import com.watube.yard.repo.PipedAccountFeedRepository
 import com.watube.yard.repo.PipedLocalSubscriptionsRepository
 import com.watube.yard.repo.PipedNoAccountFeedRepository
 import com.watube.yard.repo.SubscriptionsRepository
+import java.util.concurrent.atomic.AtomicInteger
 
 // region Subscriptions
 object SubscriptionHelper {
@@ -58,14 +59,27 @@ object SubscriptionHelper {
             else -> PipedNoAccountFeedRepository()
         }
 
+    private val subscriptionsChanges = AtomicInteger()
+
+    /**
+     * Bumped on every subscribe, unsubscribe and import: a feed loaded for another value was
+     * loaded for other channels (see SubscriptionsViewModel.currentFeed). Without it, a feed
+     * loaded empty before the first subscription was shown again as "nothing here".
+     */
+    val subscriptionsVersion: Int get() = subscriptionsChanges.get()
+
     suspend fun subscribe(
         channelId: String, name: String, uploaderAvatar: String?, verified: Boolean
     ) = subscriptionsRepository.subscribe(channelId, name, uploaderAvatar, verified)
-        .also { invalidateSubscribedState(channelId) }
+        .also {
+            invalidateSubscribedState(channelId)
+            subscriptionsChanges.incrementAndGet()
+        }
 
     suspend fun unsubscribe(channelId: String) {
         subscriptionsRepository.unsubscribe(channelId)
         invalidateSubscribedState(channelId)
+        subscriptionsChanges.incrementAndGet()
         // remove videos from (local) feed
         feedRepository.removeChannel(channelId)
     }
@@ -101,6 +115,7 @@ object SubscriptionHelper {
     suspend fun importSubscriptions(newChannels: List<String>) =
         subscriptionsRepository.importSubscriptions(newChannels).also {
             subscribedState.evictAll()
+            subscriptionsChanges.incrementAndGet()
         }
 
     suspend fun getSubscriptions() =

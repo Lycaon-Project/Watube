@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Video / Audio switch of the download sheets: the Downloads page tabs' colours, green ink on
+     the chosen side, the outline grey on the other -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:alpha="0.38"
+        android:color="?attr/colorOnSurface"
+        android:state_enabled="false" />
+    <item
+        android:color="@color/watube_nav_active"
+        android:state_checked="true" />
+    <item android:color="?attr/colorOutline" />
+</selector>

@@ -559,6 +559,12 @@ class CustomExoPlayerView(
 
     // region Playback Options
     private var selectedResolution: Int? = null
+
+    /** The resolution last asked for, after the shorts adjustment of [setPlayerResolution]. */
+    private var requestedResolution = Int.MAX_VALUE
+
+    /** Whether the video shows in a picture-in-picture window, see [setPipResolutionCap]. */
+    private var pipResolutionCapped = false
     // endregion
 
     // region SponsorBlock
@@ -855,13 +861,37 @@ class CustomExoPlayerView(
                 resolution
             }
 
-        player.sendCustomCommand(
-            AbstractPlayerService.runPlayerActionCommand, bundleOf(
-                PlayerCommand.SET_RESOLUTION.name to transformedResolution
-            )
-        )
+        requestedResolution = transformedResolution
+        sendResolution(player)
 
         selectedResolution = resolution
+    }
+
+    /**
+     * Battery: a picture-in-picture window is a few hundred pixels high, so the video it shows is
+     * played at [PIP_MAX_RESOLUTION] at most (a fifth of the pixels of 1080p to download and
+     * decode). Leaving the window brings the resolution asked for before back.
+     */
+    fun setPipResolutionCap(inPip: Boolean) {
+        if (pipResolutionCapped == inPip) return
+        pipResolutionCapped = inPip
+        sendResolution(player as? MediaController ?: return)
+    }
+
+    private fun sendResolution(player: MediaController) {
+        val pipCap = if (playerCallback.isVideoShort()) {
+            ceil(PIP_MAX_RESOLUTION * 16.0 / 9.0).toInt()
+        } else {
+            PIP_MAX_RESOLUTION
+        }
+        val resolution =
+            if (pipResolutionCapped) minOf(requestedResolution, pipCap) else requestedResolution
+
+        player.sendCustomCommand(
+            AbstractPlayerService.runPlayerActionCommand, bundleOf(
+                PlayerCommand.SET_RESOLUTION.name to resolution
+            )
+        )
     }
 
     private fun audioChoices(player: MediaController): List<TranslationSheet.Choice> {
@@ -1686,6 +1716,9 @@ class CustomExoPlayerView(
 
         // region Video Player
         private const val HIDE_CONTROLLER_TOKEN = "hideController"
+
+        /** Highest video height played in a picture-in-picture window. */
+        private const val PIP_MAX_RESOLUTION = 480
 
         private const val UPDATE_POSITION_TOKEN = "updatePosition"
         private const val MIN_POSITION_TICK_MS = 50L

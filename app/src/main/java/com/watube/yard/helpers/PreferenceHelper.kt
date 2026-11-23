@@ -12,6 +12,7 @@ import com.watube.yard.api.TrendingCategory
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.helpers.LocaleHelper.getDetectedCountry
+import com.watube.yard.util.UpdateCheckInterval
 import kotlin.math.roundToInt
 
 // region Crash Reports
@@ -288,6 +289,15 @@ object PreferenceHelper {
                 .getStringArray(R.array.homeTabItemsValues).toSet()
             if (getStringSet(PreferenceKeys.HOME_TAB_CONTENT, emptySet()) == allSections) {
                 remove(PreferenceKeys.HOME_TAB_CONTENT)
+            }
+        },
+        PreferenceMigration(16, 17) {
+            // Watube: the update checks are offered every launch, weekly, monthly, every 3 or
+            // 6 months. The every 6 hours, 12 hours and daily choices are gone: they go back to
+            // the default, every launch, the closest to such frequent checks
+            val interval = getString(PreferenceKeys.UPDATE_CHECK_INTERVAL, "")
+            if (UpdateCheckInterval.isRetired(interval)) {
+                remove(PreferenceKeys.UPDATE_CHECK_INTERVAL)
             }
         }
     )

@@ -1,7 +1,3 @@
-// Fichier : /app/build.gradle.kts
-// ⚠️ IMPORTANT : Le bloc plugins {} DOIT être la TOUTE PREMIÈRE instruction du fichier
-// Il ne doit PAS être à l'intérieur d'un bloc android {}, dependencies {}, ou autre
-
 // region Build
 plugins {
     alias(libs.plugins.androidApplication)
@@ -9,14 +5,10 @@ plugins {
     alias(libs.plugins.baselineprofile)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.protobuf)
+    alias(libs.plugins.kotlin.serialization)
+    // shipped by AGP, already on the classpath "with an unknown version": requested bare
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
-
-// WATUBE: parcelize is already on the build classpath (shipped by AGP) -> it can only be
-// applied WITHOUT a version (a versioned request fails with "already on the classpath with
-// an unknown version"). Serialization is not, hence its `apply false` declaration at the
-// root project, so this bare apply can find it.
-apply(plugin = "org.jetbrains.kotlin.plugin.parcelize")
-apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
 android {
     namespace = "com.watube.yard"
@@ -46,6 +38,7 @@ android {
             // Hardening: never ship a debuggable release, and keep the source control
             // revision (commit hash / branch) out of the packaged APK.
             isDebuggable = false
+            @Suppress("UnstableApiUsage")
             vcsInfo { include = false }
             // 64-bit ARM only, the processor of every phone Watube targets: the other ABIs only
             // shipped more copies of the SQLCipher library (x86 / x86_64 for emulators, 32-bit
@@ -75,20 +68,8 @@ android {
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    // Configuration du jvmTarget pour Kotlin
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        }
-    }
-
-    // javaParameters via les tâches Java
-    tasks.withType<JavaCompile>().configureEach {
-        options.compilerArgs.add("-parameters")
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 
     buildFeatures {
@@ -124,6 +105,9 @@ android {
     lint {
         abortOnError = false
         checkReleaseBuilds = false
+        // arm64-v8a only on purpose (see the release ndk filter above): x86_64 Chromebooks are
+        // not a target, and their ABI would add another copy of the SQLCipher library
+        disable += "ChromeOsAbiSupport"
     }
 
     dependenciesInfo {
@@ -148,8 +132,19 @@ android {
     }
 }
 
-// WATUBE: Room schema export. AppDatabase has exportSchema = true, without this KSP
-// fails the build ("Schema import directory was not provided").
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25)
+    }
+}
+
+// method parameter names kept in the Java bytecode (reflection on parameter names)
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("-parameters")
+}
+
+// Room schema export: AppDatabase has exportSchema = true, without this KSP fails the build
+// ("Schema import directory was not provided").
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
     arg("exportSchema", "true")
@@ -208,9 +203,8 @@ dependencies {
     implementation(libs.google.protobuf.kotlin.lite)
 
     /* NewPipe Extractor */
+    // also the JSON code the app reads the player response with (org.schabi.newpipe.extractor.json)
     implementation(libs.newpipeextractor)
-    // already packaged by the extractor; declared to read its player response (session renewal)
-    implementation(libs.nanojson)
 
     /* Coil */
     coreLibraryDesugaring(libs.desugaring)
@@ -239,17 +233,17 @@ dependencies {
     }
 }
 
-// Protobuf configuration
+// Protobuf: protoc is a build tool, not a dependency of the app, hence a plain coordinate built
+// from the catalog version (shared with the protobuf runtime) rather than a library alias.
 protobuf {
     protoc {
-        artifact = libs.protobuf.protoc.get().toString()
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
     generateProtoTasks {
         all().forEach { task ->
-            task.plugins {
-                create("java") {
-                    option("lite")
-                }
+            // java is a generator built into protoc, not an external protoc-gen-* plugin
+            task.builtins {
+                maybeCreate("java").option("lite")
             }
         }
     }

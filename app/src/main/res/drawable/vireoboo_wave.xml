@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VireoBoo waving hello: the "arm" group of vireoboo.xml, animated by vireoboo_arm_wave. -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/vireoboo">
+    <target
+        android:name="arm"
+        android:animation="@animator/vireoboo_arm_wave" />
+</animated-vector>

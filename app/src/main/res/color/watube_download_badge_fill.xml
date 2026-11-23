@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Downloads -->
+<!-- Pill of a download quality card (HD, FHD, 2K, 4K): a faint tint of the text it carries -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:alpha="0.18"
+        android:color="?attr/colorOnPrimary"
+        android:state_checked="true" />
+    <item
+        android:alpha="0.09"
+        android:color="?attr/colorOnSurface" />
+</selector>
+<!-- endregion -->
