@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: "zulu"
-          java-version: "17"
+          java-version: "25"
           # no shared Gradle cache for the signed build: a cache written by another workflow
           # run could inject build logic next to the signing key
 
