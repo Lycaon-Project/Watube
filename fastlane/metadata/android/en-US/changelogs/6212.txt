@@ -1,0 +1,3 @@
+Watube 26.12 is lighter on battery and memory: picture-in-picture plays at 480p, the player keeps less of what you already watched, and fewer thumbnails stay in memory. With picture-in-picture off, the background plays audio only.
+
+Also new: full TalkBack support, live chat on live streams, a new download sheet with a Watube folder in Download, clear error messages in your language, HTTPS only by default, and Watube's own extractor written in Kotlin.
