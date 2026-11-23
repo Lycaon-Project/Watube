@@ -236,6 +236,10 @@ object BackupHelper {
         PreferenceKeys.AUTH_INSTANCE_TOGGLE,       // enables the auth instance override
         PreferenceKeys.IMAGE_PROXY_URL,            // host used to proxy thumbnails
         PreferenceKeys.EXTERNAL_DOWNLOAD_PROVIDER, // app the video is handed over to
+        // where downloads land in the clear: a folder access granted on this phone only, and
+        // the switch that drops their encryption (off, the privacy preserving side)
+        PreferenceKeys.DOWNLOAD_FOLDER,
+        PreferenceKeys.DOWNLOAD_READABLE,
         // stamp of the proxy refresh above: keeping it would suppress the re-fetch of the
         // (blocked) image_proxy_url from the instance actually selected after the restore
         PreferenceKeys.LAST_PROXY_FETCH_INSTANCE,

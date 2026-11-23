@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  VireoBoo, the mascot of Watube 26.12 "Vireo": a Bangboo of our own, drawn the way that
+  world draws them (thick ink outline, flat cel-shaded shadows, a big shell of a head with a
+  screen for a face, stubby limbs) but its own character. A vireo is a small songbird, so it
+  has a tuft of feathers on its head and a little amber beak under its screen; its happy
+  eyes are the Watube green. One mechanical ear is bent at the tip, headphones rest round
+  its neck, and the play mark is sewn on its belly. Its right arm is the group "arm" (pivot
+  at the shoulder), raised and waved by vireoboo_wave.xml.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="84dp"
+    android:viewportWidth="96"
+    android:viewportHeight="112">
+
+    <!-- ground shadow -->
+    <path
+        android:fillAlpha="0.18"
+        android:fillColor="#000000"
+        android:pathData="M24,105a24,4 0,1 0,48 0a24,4 0,1 0,-48 0z" />
+
+    <!-- ears: ink outline, shell, green inner panel, dark hinge at the base -->
+    <path
+        android:pathData="M32,31L23,9 M64,31L71,15L80,11"
+        android:strokeColor="#17201C"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="14" />
+    <path
+        android:pathData="M32,31L23,9 M64,31L71,15L80,11"
+        android:strokeColor="#F1F3EC"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="9" />
+    <path
+        android:pathData="M28.6,22.5L24.2,11.8 M66.4,24.5L71,15L77.6,12.2"
+        android:strokeColor="#2FD47E"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="3.6" />
+    <path
+        android:pathData="M31.4,29.4L30.6,27.6 M64.7,29.4L65.5,27.6"
+        android:strokeColor="#17201C"
+        android:strokeLineCap="butt"
+        android:strokeWidth="13" />
+    <path
+        android:fillColor="#8E9A94"
+        android:pathData="M29.5,28.5a1.6,1.6 0,1 0,3.2 0a1.6,1.6 0,1 0,-3.2 0z M63.5,28.5a1.6,1.6 0,1 0,3.2 0a1.6,1.6 0,1 0,-3.2 0z" />
+
+    <!-- the vireo's tuft -->
+    <path
+        android:fillColor="#2FD47E"
+        android:pathData="M46,27C41.5,21 41.5,14.5 45.5,10C49,15 49.5,21.5 46,27Z M50,27C51,20 55,15.5 61,14.5C60,21 55.5,25 50,27Z"
+        android:strokeColor="#17201C"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+
+    <!-- boots -->
+    <path
+        android:fillColor="#129A5C"
+        android:pathData="M31,100a7,5 0,1 0,14 0a7,5 0,1 0,-14 0z M51,100a7,5 0,1 0,14 0a7,5 0,1 0,-14 0z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="2.2" />
+
+    <!-- left arm, resting (its shoulder hides behind the body) -->
+    <path
+        android:pathData="M30,79L22,89"
+        android:strokeColor="#17201C"
+        android:strokeLineCap="round"
+        android:strokeWidth="9.5" />
+    <path
+        android:pathData="M30,79L22,89"
+        android:strokeColor="#F1F3EC"
+        android:strokeLineCap="round"
+        android:strokeWidth="5.3" />
+    <path
+        android:fillColor="#2FD47E"
+        android:pathData="M17.5,90a4,4 0,1 0,8 0a4,4 0,1 0,-8 0z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="2" />
+
+    <!-- body: shell, cel shadow on the right, outline -->
+    <path
+        android:fillColor="#F1F3EC"
+        android:pathData="M35,68H61C66,68 69,72 69,79V86C69,94 63,98 48,98C33,98 27,94 27,86V79C27,72 30,68 35,68Z" />
+    <path
+        android:fillColor="#C9D3C8"
+        android:pathData="M62.5,69C66.5,70.5 69,74 69,79V86C69,93 64,97 54,97.8C60.5,94 63.5,89.5 63.5,84V75C63.5,72.5 63.2,70.5 62.5,69Z" />
+    <path
+        android:pathData="M35,68H61C66,68 69,72 69,79V86C69,94 63,98 48,98C33,98 27,94 27,86V79C27,72 30,68 35,68Z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="2.6" />
+
+    <!-- play patch sewn on the belly -->
+    <path
+        android:fillColor="#2FD47E"
+        android:pathData="M44,79H52C54.2,79 56,80.8 56,83V87C56,89.2 54.2,91 52,91H44C41.8,91 40,89.2 40,87V83C40,80.8 41.8,79 44,79Z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="1.8" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M45.6,82.2L51.6,85L45.6,87.8Z" />
+
+    <!-- headphones resting round the neck -->
+    <path
+        android:pathData="M25,72C30,81 66,81 71,72"
+        android:strokeColor="#3A4641"
+        android:strokeLineCap="round"
+        android:strokeWidth="3.4" />
+    <path
+        android:fillColor="#5E6B65"
+        android:pathData="M18.5,72.5a6,6 0,1 0,12 0a6,6 0,1 0,-12 0z M65.5,72.5a6,6 0,1 0,12 0a6,6 0,1 0,-12 0z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="2" />
+    <path
+        android:fillColor="#2FD47E"
+        android:pathData="M22.3,74a2.2,2.2 0,1 0,4.4 0a2.2,2.2 0,1 0,-4.4 0z M69.3,74a2.2,2.2 0,1 0,4.4 0a2.2,2.2 0,1 0,-4.4 0z" />
+
+    <!-- head: shell, cel shadows, highlight, outline -->
+    <path
+        android:fillColor="#F1F3EC"
+        android:pathData="M48,24C71,24 83,33 83,48C83,64 72,72 48,72C24,72 13,64 13,48C13,33 25,24 48,24Z" />
+    <path
+        android:fillColor="#C9D3C8"
+        android:pathData="M73,29C79.5,33.5 82.5,40 82.5,48C82.5,62.5 72,70.5 50,71.6C65,67 74,59.5 75.2,47C75.8,40 75,34 73,29Z M17,58.5C22,66.5 33,70.6 48,71C35,68.5 24.5,64.5 17,58.5Z" />
+    <path
+        android:pathData="M20.5,40C22.5,33.5 27.5,29.5 34,28.3"
+        android:strokeAlpha="0.95"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="2.4" />
+    <path
+        android:pathData="M48,24C71,24 83,33 83,48C83,64 72,72 48,72C24,72 13,64 13,48C13,33 25,24 48,24Z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="2.8" />
+
+    <!-- screen face -->
+    <path
+        android:fillColor="#101614"
+        android:pathData="M31,34H65C70,34 74,38 74,43V53C74,58 70,62 65,62H31C26,62 22,58 22,53V43C22,38 26,34 31,34Z"
+        android:strokeColor="#17201C"
+        android:strokeWidth="2.2" />
+    <path
+        android:pathData="M26.5,41.5C27.2,38.6 29.4,37 32.5,37"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.6" />
+
+    <!-- happy eyes: glow, then the neon arcs; little cheek marks -->
+    <path
+        android:pathData="M32,52C33,45.5 41,45.5 42,52 M54,52C55,45.5 63,45.5 64,52"
+        android:strokeAlpha="0.25"
+        android:strokeColor="#2FD47E"
+        android:strokeLineCap="round"
+        android:strokeWidth="6.5" />
+    <path
+        android:pathData="M32,52C33,45.5 41,45.5 42,52 M54,52C55,45.5 63,45.5 64,52"
+        android:strokeColor="#7DFFB8"
+        android:strokeLineCap="round"
+        android:strokeWidth="3" />
+    <path
+        android:pathData="M27.5,56.5h4 M64.5,56.5h4"
+        android:strokeAlpha="0.6"
+        android:strokeColor="#2FD47E"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.6" />
+
+    <!-- the vireo's beak, under the screen -->
+    <path
+        android:fillColor="#FFB648"
+        android:pathData="M42.5,60.6H53.5L48,69Z"
+        android:strokeColor="#17201C"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.8" />
+    <path
+        android:fillColor="#E08A1E"
+        android:pathData="M48,61.6H52L48,67.6Z" />
+
+    <!-- right arm, the one that waves -->
+    <group
+        android:name="arm"
+        android:pivotX="66"
+        android:pivotY="79">
+        <path
+            android:pathData="M66,79L74,89"
+            android:strokeColor="#17201C"
+            android:strokeLineCap="round"
+            android:strokeWidth="9.5" />
+        <path
+            android:pathData="M66,79L74,89"
+            android:strokeColor="#F1F3EC"
+            android:strokeLineCap="round"
+            android:strokeWidth="5.3" />
+        <path
+            android:fillColor="#2FD47E"
+            android:pathData="M70.5,90a4,4 0,1 0,8 0a4,4 0,1 0,-8 0z"
+            android:strokeColor="#17201C"
+            android:strokeWidth="2" />
+    </group>
+</vector>

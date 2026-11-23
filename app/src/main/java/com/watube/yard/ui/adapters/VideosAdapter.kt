@@ -8,6 +8,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.watube.yard.R
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.VideoRowBinding
@@ -18,6 +19,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.extensions.setFormattedDuration
 import com.watube.yard.ui.extensions.setWatchProgressLength
 import com.watube.yard.ui.sheets.VideoOptionsBottomSheet
@@ -85,6 +87,7 @@ class VideosAdapter(
                 NavigationHelper.navigateVideo(root.context, PlayerData(videoId))
             }
 
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 fragmentManager.setFragmentResultListener(
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,

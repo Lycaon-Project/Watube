@@ -83,6 +83,7 @@
                     <com.google.android.material.button.MaterialButton
                         style="?materialIconButtonFilledTonalStyle"
                         android:id="@+id/group_edit_btn"
+                        android:contentDescription="@string/tooltip_edit_groups"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
@@ -96,7 +97,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:layout_marginHorizontal="@dimen/watube_gutter">
+                    android:layout_marginHorizontal="@dimen/watube_gutter"
+                    app:boxBackgroundColor="@color/watube_search_pill">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/subscriptions_search_input"

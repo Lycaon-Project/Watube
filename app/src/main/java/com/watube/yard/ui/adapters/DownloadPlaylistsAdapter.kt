@@ -13,6 +13,7 @@ import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
+import com.watube.yard.ui.extensions.nameLongPress
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +24,9 @@ class DownloadPlaylistViewHolder(val binding: PlaylistsRowBinding) :
     RecyclerView.ViewHolder(binding.root)
 
 class DownloadPlaylistAdapter(
-    val navigateToPlaylist: (playlist: DownloadPlaylistWithDownload) -> Unit
+    val navigateToPlaylist: (playlist: DownloadPlaylistWithDownload) -> Unit,
+    /** Long press on a playlist: its options, [position] for [showDeleteDialog]. */
+    val showOptions: (playlist: DownloadPlaylistWithDownload, position: Int) -> Unit
 ) :
     ListAdapter<DownloadPlaylistWithDownload, DownloadPlaylistViewHolder>(
         DiffUtilItemCallback<DownloadPlaylistWithDownload>(
@@ -56,6 +59,11 @@ class DownloadPlaylistAdapter(
 
             root.setOnClickListener {
                 navigateToPlaylist(item)
+            }
+            root.nameLongPress(R.string.tooltip_more)
+            root.setOnLongClickListener {
+                showOptions(item, holder.bindingAdapterPosition)
+                true
             }
         }
     }

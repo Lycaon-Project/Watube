@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The upcoming clock with its long hand turning once per beat. Runs on the render thread. -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_upcoming_clock">
+    <target
+        android:name="hand"
+        android:animation="@animator/upcoming_clock_hand" />
+</animated-vector>

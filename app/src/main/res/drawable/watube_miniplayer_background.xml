@@ -4,12 +4,38 @@
   In the expanded player state the full-bleed video covers this background entirely, so
   the rounding and stroke only appear once the player is collapsed into the floating
   mini-player bar, matching the floating rounded bottom navigation.
+
+  The lists scroll on under the floating mini-player: the card is slightly see-through
+  (watube_miniplayer_fill) with a soft gloss on its upper half, a light reflection that
+  fades out before the title, so it reads as a glass bubble over the content.
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="?attr/colorSurfaceContainer" />
-    <stroke
-        android:width="1dp"
-        android:color="?attr/colorOutlineVariant" />
-    <corners android:radius="@dimen/watube_card_radius" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- fill and gloss give way to the glass while it is on (GlassBackground) -->
+    <item android:id="@+id/watube_glass_fill">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/watube_miniplayer_fill" />
+            <corners android:radius="@dimen/watube_card_radius" />
+        </shape>
+    </item>
+    <item android:id="@+id/watube_glass_gloss">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:centerY="0.45"
+                android:startColor="#29FFFFFF"
+                android:centerColor="#0AFFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners android:radius="@dimen/watube_card_radius" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="1dp"
+                android:color="?attr/colorOutlineVariant" />
+            <corners android:radius="@dimen/watube_card_radius" />
+        </shape>
+    </item>
+</layer-list>

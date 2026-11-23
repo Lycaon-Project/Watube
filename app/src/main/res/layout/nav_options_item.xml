@@ -38,10 +38,11 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:singleLine="true"
+        android:maxLines="2"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="18sp"
+        android:textSize="16sp"
         tools:text="Item" />
 
     <androidx.appcompat.widget.AppCompatImageView

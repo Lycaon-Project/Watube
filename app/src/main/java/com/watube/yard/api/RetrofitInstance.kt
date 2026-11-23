@@ -5,6 +5,7 @@ import com.watube.yard.WatubeApp
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.helpers.PrivacyHelper
+import com.watube.yard.util.LocalInstanceRouter
 import com.watube.yard.util.SharedHttpClient
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -136,7 +137,8 @@ object RetrofitInstance {
         client: OkHttpClient = httpClient,
     ): T = Retrofit.Builder()
         .baseUrl(apiUrl)
-        .client(client)
+        // a self-hosted instance running on the phone itself is reached in plain http
+        .callFactory(LocalInstanceRouter(client))
         .addConverterFactory(kotlinxConverterFactory)
         .build()
         .create<T>()

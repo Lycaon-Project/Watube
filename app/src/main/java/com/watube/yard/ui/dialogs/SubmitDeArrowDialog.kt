@@ -14,6 +14,7 @@ import com.watube.yard.api.obj.DeArrowSubmitTitle
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.DialogSubmitDearrowBinding
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.util.TextUtils
 import com.watube.yard.util.TextUtils.parseDurationString
@@ -108,7 +109,7 @@ class SubmitDeArrowDialog: DialogFragment() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            context.toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            context.toastFromMainDispatcher(ErrorMessages.of(e))
         }
 
         dialog?.dismiss()

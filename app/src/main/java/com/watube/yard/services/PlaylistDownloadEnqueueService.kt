@@ -14,6 +14,8 @@ import com.watube.yard.WatubeApp.Companion.PLAYLIST_DOWNLOAD_ENQUEUE_CHANNEL_NAM
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
 import com.watube.yard.api.PlaylistsHelper
+import com.watube.yard.api.StreamsCache
+import com.watube.yard.api.obj.Playlist
 import com.watube.yard.api.obj.PipedStream
 import com.watube.yard.api.obj.StreamItem
 import com.watube.yard.constants.IntentData
@@ -29,6 +31,7 @@ import com.watube.yard.extensions.toID
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.helpers.DownloadEncryption
 import com.watube.yard.helpers.DownloadHelper
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.parcelable.DownloadData
@@ -76,8 +79,13 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
 
         nManager.notify(NotificationId.ENQUEUE_PLAYLIST_DOWNLOAD.id, buildNotification())
 
+        // the videos ticked in the download sheet, in playlist order; absent means all of them
+        val chosenIds = intent.getStringArrayListExtra(IntentData.videoIds)
+
         lifecycleScope.launch(Dispatchers.IO) {
-            if (playlistType != PlaylistType.PUBLIC) {
+            if (chosenIds != null) {
+                enqueueChosenVideos(chosenIds)
+            } else if (playlistType != PlaylistType.PUBLIC) {
                 enqueuePrivatePlaylist()
             } else {
                 enqueuePublicPlaylist()
@@ -106,12 +114,33 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            toastFromMainDispatcher(ErrorMessages.of(e))
             stopSelf()
             return
         }
         amountOfVideos = playlist.videos
         enqueueStreams(playlistId, playlist.relatedStreams)
+    }
+
+    /**
+     * Only the videos ticked in the sheet: no paging through the playlist again, the sheet
+     * already did it. A public playlist still gets its name, description and cover saved.
+     */
+    private suspend fun enqueueChosenVideos(videoIds: List<String>) {
+        if (playlistType == PlaylistType.PUBLIC) {
+            val playlist = try {
+                MediaServiceRepository.instance.getPlaylist(playlistId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                toastFromMainDispatcher(ErrorMessages.of(e))
+                stopSelf()
+                return
+            }
+            savePlaylistInfo(playlist)
+        }
+        amountOfVideos = videoIds.size
+        enqueueVideoIds(playlistId, videoIds)
     }
 
     private suspend fun enqueuePublicPlaylist() {
@@ -120,35 +149,11 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            toastFromMainDispatcher(ErrorMessages.of(e))
             stopSelf()
             return
         }
-
-        // stored encrypted, like every download (see DownloadEncryption)
-        val thumbnailPath = DownloadEncryption.encryptedPathOf(
-            getDownloadPath(DownloadHelper.PLAYLIST_THUMBNAIL_DIR, playlistId)
-        )
-        CoroutineScope(Dispatchers.IO).launch {
-            val url = playlist.thumbnailUrl ?: return@launch
-            // a missing cover must not bring the app down: the playlist is saved without one
-            try {
-                ImageHelper.downloadImage(this@PlaylistDownloadEnqueueService, url, thumbnailPath)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Log.e(TAG(), "Failed to save the playlist thumbnail", e)
-            }
-        }
-
-        DatabaseHolder.Database.downloadDao().insertPlaylist(
-            DownloadPlaylist(
-                playlistId = playlistId,
-                title = playlist.name.orEmpty(),
-                description = playlist.description,
-                thumbnailPath = thumbnailPath,
-            )
-        )
+        savePlaylistInfo(playlist)
 
         amountOfVideos = playlist.videos
         enqueueStreams(playlistId, playlist.relatedStreams)
@@ -180,12 +185,41 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
         }
     }
 
-    private suspend fun enqueueStreams(playlistId: String, streams: List<StreamItem>) {
+    /** The playlist itself (name, description, cover) for the Downloads screen. */
+    private suspend fun savePlaylistInfo(playlist: Playlist) {
+        // stored encrypted, like every download (see DownloadEncryption)
+        val thumbnailPath = DownloadEncryption.encryptedPathOf(
+            getDownloadPath(DownloadHelper.PLAYLIST_THUMBNAIL_DIR, playlistId)
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            val url = playlist.thumbnailUrl ?: return@launch
+            // a missing cover must not bring the app down: the playlist is saved without one
+            try {
+                ImageHelper.downloadImage(this@PlaylistDownloadEnqueueService, url, thumbnailPath)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(TAG(), "Failed to save the playlist thumbnail", e)
+            }
+        }
+
+        DatabaseHolder.Database.downloadDao().insertPlaylist(
+            DownloadPlaylist(
+                playlistId = playlistId,
+                title = playlist.name.orEmpty(),
+                description = playlist.description,
+                thumbnailPath = thumbnailPath,
+            )
+        )
+    }
+
+    private suspend fun enqueueStreams(playlistId: String, streams: List<StreamItem>) =
+        enqueueVideoIds(playlistId, streams.mapNotNull { it.url?.toID() })
+
+    private suspend fun enqueueVideoIds(playlistId: String, videoIds: List<String>) {
         nManager.notify(NotificationId.ENQUEUE_PLAYLIST_DOWNLOAD.id, buildNotification())
 
-        for (stream in streams) {
-            val videoId = stream.url!!.toID()
-
+        for (videoId in videoIds) {
             // link the playlist to the video, so that we can later query all videos contained in the playlist
             DatabaseHolder.Database.downloadDao().insertPlaylistVideoConnection(
                 DownloadPlaylistVideosCrossRef(
@@ -196,8 +230,9 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
 
             // only download videos that have not been downloaded before
             if (!DatabaseHolder.Database.downloadDao().exists(videoId)) {
+                // the download service then finds these streams in the cache: one extraction
                 val videoInfo = runCatching {
-                    MediaServiceRepository.instance.getStreams(videoId)
+                    StreamsCache.forDownload(videoId)
                 }.getOrNull()
 
                 if (videoInfo != null) {
@@ -239,7 +274,7 @@ class PlaylistDownloadEnqueueService : LifecycleService() {
         // return the last item below the maximum quality - or if there's none - the stream with
         // the lowest quality available
         return sortedStreams
-            .lastOrNull { it.quality.getWhileDigit()!! <= maxStreamQuality }
+            .lastOrNull { (it.quality.getWhileDigit() ?: Int.MAX_VALUE) <= maxStreamQuality }
             ?: sortedStreams.firstOrNull()
     }
 

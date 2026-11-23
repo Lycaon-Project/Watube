@@ -5,6 +5,7 @@ import android.content.Context
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import com.watube.yard.extensions.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -21,6 +22,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.extensions.setWatchProgressLength
 import com.watube.yard.ui.fragments.DownloadSortingOrder
 import com.watube.yard.ui.fragments.DownloadTab
@@ -83,14 +85,14 @@ class DownloadsAdapter(
             }
 
             val totalSizeInfo = if (downloadSize > 0) {
-                downloadSize.formatAsFileSize()
+                downloadSize.formatAsFileSize(context)
             } else {
                 context.getString(R.string.unknown)
             }
             if (downloadSize > currentSize) {
                 downloadOverlay.isVisible = true
-                resumePauseBtn.setImageResource(R.drawable.ic_download)
-                fileSize.text = "${currentSize.formatAsFileSize()} / $totalSizeInfo"
+                showDownloadAction(R.drawable.ic_download)
+                fileSize.text = "${currentSize.formatAsFileSize(context)} / $totalSizeInfo"
             } else {
                 downloadOverlay.isGone = true
                 fileSize.text = totalSizeInfo
@@ -110,7 +112,7 @@ class DownloadsAdapter(
                     ?: return@setOnClickListener
                 val isDownloading = toggleDownload(item)
 
-                resumePauseBtn.setImageResource(
+                showDownloadAction(
                     if (isDownloading) {
                         R.drawable.ic_pause
                     } else {
@@ -142,6 +144,7 @@ class DownloadsAdapter(
                 }
             }
 
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 val activity = root.context as BaseActivity
                 val fragmentManager = activity.supportFragmentManager
@@ -225,5 +228,19 @@ class DownloadsAdapter(
         notifyItemRemoved(position)
         notifyItemInserted(position)
     }
+}
+/**
+ * Shows what tapping a download's progress does now (go on, pause or retry): by the icon, and in
+ * words for screen readers, which read the progress ring that takes the tap.
+ */
+fun VideoRowBinding.showDownloadAction(@DrawableRes icon: Int) {
+    resumePauseBtn.setImageResource(icon)
+    progressBar.contentDescription = root.context.getString(
+        when (icon) {
+            R.drawable.ic_pause -> R.string.pause
+            R.drawable.ic_restart -> R.string.retry
+            else -> R.string.resume
+        }
+    )
 }
 // endregion

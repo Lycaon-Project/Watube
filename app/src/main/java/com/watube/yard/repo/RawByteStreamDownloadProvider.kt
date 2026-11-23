@@ -5,11 +5,12 @@ import com.watube.yard.api.GenericUserAgentInterceptor
 import com.watube.yard.db.obj.DownloadItem
 import com.watube.yard.extensions.TAG
 import com.watube.yard.helpers.DownloadHelper
+import com.watube.yard.util.LocalInstanceRouter
 import com.watube.yard.util.SharedHttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
+import okhttp3.Call
 import okhttp3.Request
 import okhttp3.ResponseBody
 import okio.BufferedSink
@@ -24,14 +25,15 @@ import kotlin.math.min
  * Download from RAW HTTP stream.
  */
 class RawByteStreamDownloadProvider(private val url: HttpUrl) : DownloadProvider {
-    private val httpClient: OkHttpClient by lazy {
-        SharedHttpClient.base.newBuilder()
+    // a proxy running on the phone itself is reached in plain http
+    private val httpClient: Call.Factory by lazy {
+        LocalInstanceRouter(SharedHttpClient.base.newBuilder()
             .connectTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
             .readTimeout(Duration.ofMillis(DownloadHelper.DEFAULT_TIMEOUT.toLong()))
             .retryOnConnectionFailure(true)
             // downloads must not leak `okhttp/x.y.z` either: same UA as the API calls
             .addInterceptor(GenericUserAgentInterceptor())
-            .build()
+            .build())
     }
 
     override suspend fun downloadNextChunk(

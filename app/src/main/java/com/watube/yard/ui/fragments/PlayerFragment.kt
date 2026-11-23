@@ -135,6 +135,7 @@ import com.watube.yard.ui.sheets.CommentsSheet
 import com.watube.yard.ui.sheets.ExternalLinkSheet
 import com.watube.yard.ui.sheets.PlayingQueueSheet
 import com.watube.yard.ui.tools.SleepTimer
+import com.watube.yard.ui.views.VideoReturnFrame
 import com.watube.yard.util.ExternalLink
 import com.watube.yard.util.OfflineTimeFrameReceiver
 import com.watube.yard.util.OnlineTimeFrameReceiver
@@ -156,6 +157,9 @@ private const val ORIENTATION_SETTLE_DELAY_MS = 1000L
 
 /** Continuity animation between the page and fullscreen (Material 3 medium duration) */
 private const val FULLSCREEN_TRANSITION_MS = 300L
+
+/** Refresh of the mini player's progress bar while it plays */
+private const val MINI_PROGRESS_TICK_MS = 500L
 // endregion
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
@@ -384,6 +388,14 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     private var lastPipVideoSize: VideoSize? = null
     // endregion
 
+    // region Background Playback
+    /** Whether the video track is turned off, the screen being unseen (see [onStop]). */
+    private var videoTurnedOff = false
+
+    /** The last frame seen, laid over the video while it comes back (see [bringVideoBack]). */
+    private var returnFrame: VideoReturnFrame? = null
+    // endregion
+
     // region Video Player
     /** limite les tentatives de reprise après une erreur source (évite la boucle infinie) */
     private var playbackErrorRetries = 0
@@ -474,8 +486,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
             openOrCloseFullscreenDialog(true)
             pipActivity = activity
+            // a TV playing the video keeps its quality
+            if (::playerController.isInitialized && !playerController.isRemote) {
+                binding.player.setPipResolutionCap(true)
+            }
         } else {
             binding.player.useController = true
+            binding.player.setPipResolutionCap(false)
 
             if (lifecycle.currentState == Lifecycle.State.CREATED) {
                 if (::playerController.isInitialized) {
@@ -545,6 +562,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             PictureInPictureCompat.setPictureInPictureParams(requireActivity(), pipParams)
             if (isPlaying && ::videoId.isInitialized) SleepTimer.startForVideo(requireActivity(), videoId)
+            // the mini player's bar only ticks while the video plays
+            restartMiniProgress()
 
             if (isPlaying && PlayerHelper.sponsorBlockEnabled) {
                 handler.removeCallbacks(segmentsChecker)
@@ -707,8 +726,15 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
             }
         }
 
+        override fun onRenderedFirstFrame() {
+            // the video moves again after its return: the frame laid over it gives way
+            returnFrame?.reveal()
+        }
+
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
+            // the frame kept belongs to the video before
+            returnFrame?.clear()
             if (mediaItem == null) {
                 toggleVideoInfoVisibility(false)
                 disableController()
@@ -744,6 +770,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentPlayerBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        returnFrame = VideoReturnFrame(playerBackgroundBinding.returnFrame) {
+            _binding?.player?.videoSurfaceView as? SurfaceView
+        }
+        // the docked card in glass while the glass effect is on, else its glossy XML card
+        (activity as? AbstractPlayerHostActivity)?.miniPlayerBackground(binding.mainContainer)
+            ?.let { binding.mainContainer.background = it }
         // ticks twice a second in the mini player
         binding.miniplayerProgress.preferLowFrameRate()
 
@@ -942,6 +974,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
             playerController = it
             playerController.addListener(playerListener)
+            // a screen reopened from the notification finds the video turned off by the last one
+            setVideoTrackTypeDisabled(!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
             connectToPlayerView(playerController)
             updatePlayPauseButton()
         }
@@ -981,6 +1015,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 .apply {
                     arguments = Bundle().apply {
                         putString(IntentData.channelAvatar, streams.uploaderAvatar)
+                        putBoolean(IntentData.isLive, streams.isLive)
                     }
                 }
                 .show(childFragmentManager)
@@ -1087,6 +1122,41 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         chaptersViewModel.maxSheetHeightPx = maxHeight
     }
 
+    override fun onStart() {
+        super.onStart()
+        bringVideoBack()
+    }
+
+    /**
+     * The video turned off while unseen comes back as the screen starts, before its first frame
+     * is drawn: the last frame seen shows at once over the video, which the renderer brings back
+     * joining the playing sound (no pause, no rebuffer of the sound), and gives way to it as soon
+     * as it moves again.
+     */
+    private fun bringVideoBack() {
+        if (!videoTurnedOff) return
+        returnFrame?.show()
+        setVideoTrackTypeDisabled(false)
+    }
+
+    /**
+     * Battery: nobody sees the video once the screen is stopped (another app, home screen, screen
+     * off), so it is no longer decoded; the sound goes on. Decoding an unseen video kept a CPU core
+     * two-thirds busy on the reference phone. PiP stays visible, a rotation comes right back.
+     */
+    override fun onStop() {
+        super.onStop()
+        val activity = requireActivity()
+        if (!activity.isChangingConfigurations &&
+            !PictureInPictureCompat.isInPictureInPictureMode(activity)
+        ) {
+            setVideoTrackTypeDisabled(true)
+        } else if (!videoTurnedOff) {
+            // the video stays on: no frame to bring back
+            returnFrame?.clear()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
 
@@ -1097,6 +1167,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         orientationHold?.disable()
 
         if (!::playerController.isInitialized) return
+
+        // the surface still shows the video here, not once stopped: its frame is kept in case
+        // the video is turned off (screen off below, or onStop)
+        if (!videoTurnedOff && !isEnteringPiPMode) returnFrame?.capture()
 
         val isInteractive = requireContext().getSystemService<PowerManager>()?.isInteractive ?: true
 
@@ -1125,8 +1199,12 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
 
         if (!::playerController.isInitialized) return
 
+        // the screen turned off and on again without stopping the fragment
+        bringVideoBack()
+        // a pause that kept the video on (a dialog, PiP) leaves a frame nobody needs
+        if (returnFrame?.isShowing == false) returnFrame?.clear()
+
         setAutoPlayCountdownEnabled(PlayerHelper.autoPlayCountdown)
-        setVideoTrackTypeDisabled(false)
 
         // the skip button loop stopped while unseen
         checkForSegments()
@@ -1147,6 +1225,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                 putBoolean(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name, disabled)
             }
         )
+        videoTurnedOff = disabled
     }
 
     override fun onDestroy() {
@@ -1350,6 +1429,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         handler.removeCallbacks(miniProgressUpdater)
         releaseOrientationHold()
         releasePreviewFrames()
+        returnFrame?.clear()
+        returnFrame = null
         _binding = null
     }
 
@@ -1916,7 +1997,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
     // endregion
 
     // region Mini Player
-    /** Ticks the mini-player progress bar while the player is collapsed. */
+    /**
+     * Ticks the mini-player progress bar while the player is collapsed and playing. Paused, the
+     * bar cannot move: it is drawn once at the exact position and the tick stops until the
+     * playback goes on (see [restartMiniProgress]).
+     */
     private val miniProgressUpdater = object : Runnable {
         override fun run() {
             val binding = _binding ?: return
@@ -1926,8 +2011,19 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
                     binding.miniplayerProgress.progress =
                         (playerController.currentPosition * 1000 / duration).toInt()
                 }
+                if (!playerController.isPlaying) return
             }
-            handler.postDelayed(this, 500L)
+            handler.postDelayed(this, MINI_PROGRESS_TICK_MS)
+        }
+    }
+
+    /** Redraws the mini player's bar now and ticks it again if it is on show and playing. */
+    private fun restartMiniProgress() {
+        handler.removeCallbacks(miniProgressUpdater)
+        if (commonPlayerViewModel.isMiniPlayerVisible.value == true &&
+            lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+        ) {
+            handler.post(miniProgressUpdater)
         }
     }
 
@@ -2024,6 +2120,8 @@ class PlayerFragment : Fragment(R.layout.fragment_player), CustomPlayerCallback 
         if (!::playerController.isInitialized) return
         val playPauseAction = PlayerHelper.getPlayPauseActionIcon(playerController)
         binding.playImageView.setImageResource(playPauseAction)
+        binding.playImageView.contentDescription =
+            getString(PlayerHelper.getPlayPauseActionLabel(playerController))
     }
 
     /**

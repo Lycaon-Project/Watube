@@ -12,13 +12,14 @@ import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.extensions.formatAsFileSize
-import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.DownloadDestination
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NotificationHelper
 import com.watube.yard.helpers.PreferenceHelper
-import com.watube.yard.helpers.PrivacyHelper
 import com.watube.yard.ui.base.BasePreferenceFragment
+import com.watube.yard.ui.dialogs.DownloadFolderChooser
 import com.watube.yard.ui.dialogs.ErrorDialog
+import com.watube.yard.ui.dialogs.showClearCacheDialog
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +31,12 @@ import kotlinx.coroutines.withContext
  * crash log) and the settings reset.
  */
 class MaintenanceSettings : BasePreferenceFragment() {
+    // region Downloads
+    private val folderChooser = DownloadFolderChooser(this) {
+        findPreference<Preference>(PreferenceKeys.DOWNLOAD_FOLDER)?.let(::refreshFolderSummary)
+    }
+    // endregion
+
     // region Settings
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.general_settings, rootKey)
@@ -37,6 +44,7 @@ class MaintenanceSettings : BasePreferenceFragment() {
         addPreferencesFromResource(R.xml.maintenance_settings)
 
         setupReset()
+        setupDownloadFolder()
         setupNotifications()
         setupBackup()
         setupClearCache()
@@ -67,22 +75,7 @@ class MaintenanceSettings : BasePreferenceFragment() {
         refreshCacheSummary(clearCache)
 
         clearCache.setOnPreferenceClickListener {
-            SecureAlertDialogBuilder(requireContext())
-                .setTitle(R.string.clear_cache_dialog_title)
-                .setMessage(R.string.clear_cache_dialog_message)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.clear_cache) { _, _ ->
-                    val appContext = requireContext().applicationContext
-                    lifecycleScope.launch {
-                        ImageHelper.clearCache(appContext)
-                        // Watube: also drop cookies / web storage a WebView may have persisted
-                        PrivacyHelper.clearWebViewData()
-                        refreshCacheSummary(clearCache)
-                        appContext.toastFromMainDispatcher(R.string.cache_cleared)
-                    }
-                }
-                .show()
-
+            showClearCacheDialog { refreshCacheSummary(clearCache) }
             true
         }
     }
@@ -94,7 +87,44 @@ class MaintenanceSettings : BasePreferenceFragment() {
             val size = withContext(Dispatchers.IO) {
                 ImageHelper.getCacheSize(appContext)
             }
-            preference.summary = getString(R.string.clear_cache_summary, size.formatAsFileSize())
+            preference.summary = getString(R.string.clear_cache_summary, size.formatAsFileSize(preference.context))
+        }
+    }
+    // endregion
+
+    // region Downloads
+    /**
+     * Destination folder: Watube's own (Download/Watube) or one the user picks, kept through
+     * a lasting access; and Save readable, which drops the encryption of new downloads, so
+     * it is only switched on once its consequence was read.
+     */
+    private fun setupDownloadFolder() {
+        val folder = findPreference<Preference>(PreferenceKeys.DOWNLOAD_FOLDER) ?: return
+        refreshFolderSummary(folder)
+        folder.setOnPreferenceClickListener {
+            folderChooser.show()
+            true
+        }
+
+        val readable = findPreference<SwitchPreferenceCompat>(PreferenceKeys.DOWNLOAD_READABLE)
+        readable?.setOnPreferenceChangeListener { _, enabled ->
+            if (enabled != true) return@setOnPreferenceChangeListener true
+            SecureAlertDialogBuilder(requireContext())
+                .setTitle(R.string.download_readable)
+                .setMessage(R.string.download_readable_warning)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.okay) { _, _ -> readable.isChecked = true }
+                .show()
+            false
+        }
+    }
+
+    private fun refreshFolderSummary(folder: Preference) {
+        val context = requireContext()
+        folder.summary = if (DownloadDestination.isPickedFolderReachable(context)) {
+            getString(R.string.download_folder_summary, DownloadDestination.describe(context))
+        } else {
+            getString(R.string.download_folder_unavailable)
         }
     }
     // endregion

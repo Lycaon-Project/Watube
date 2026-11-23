@@ -2,6 +2,7 @@ package com.watube.yard.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
@@ -9,6 +10,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.view.inputmethod.InputMethodManager
 import com.watube.yard.extensions.bundleOf
 import androidx.core.text.parseAsHtml
@@ -39,13 +41,16 @@ import com.watube.yard.extensions.dpToPx
 import com.watube.yard.extensions.setOnDismissListener
 import com.watube.yard.extensions.toID
 import com.watube.yard.extensions.toastFromMainDispatcher
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.PlaylistAdapter
 import com.watube.yard.ui.adapters.PlaylistItem
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.base.BottomBarOverlay
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.extensions.addOnBottomReachedListener
 import com.watube.yard.ui.models.CommonPlayerViewModel
@@ -59,6 +64,9 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+/** Room around the empty playlist mark on the cover, so it stays small and quiet. */
+private const val EMPTY_COVER_INSET_DP = 52f
 
 // region Playlists
 class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist) {
@@ -122,7 +130,7 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
         }
 
         commonPlayerViewModel.isMiniPlayerVisible.observe(viewLifecycleOwner) {
-            binding.playlistRecView.updatePadding(bottom = if (it) 64f.dpToPx() else 0)
+            BottomBarOverlay.setExtraBottom(binding.playlistRecView, if (it) 64f.dpToPx() else 0)
         }
 
         // manually restore the recyclerview state due to https://github.com/material-components/material-components-android/issues/3473
@@ -159,7 +167,7 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
             input.requestFocus()
         }
 
-        binding.searchBack.setOnClickListener {
+        binding.coverBack.setOnClickListener {
             input.hideKeyboard()
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -180,10 +188,17 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
     }
 
     private fun updateEmptyState() {
-        _binding?.nothingHere?.isVisible = playlistAdapter?.itemCount == 0
+        val binding = _binding ?: return
+        binding.nothingHere.isVisible = playlistAdapter?.itemCount == 0
+        // a playlist with no video has nothing to search; a search that matches nothing keeps
+        // its field, so it can be changed or cleared
+        binding.searchHeader.isGone = playlistFeed.isEmpty()
     }
 
     private fun updateBookmarkRes() {
+        // a private playlist's second button is shuffle, never a bookmark: the bookmark state
+        // read at start may land after it was set up
+        if (playlistType != PlaylistType.PUBLIC) return
         binding.bookmark.setIconResource(
             if (isBookmarked) R.drawable.ic_bookmark else R.drawable.ic_bookmark_outlined
         )
@@ -316,6 +331,7 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
 
             if (playlistFeed.isEmpty()) {
                 binding.nothingHere.isVisible = true
+                binding.searchHeader.isGone = true
                 binding.playAll.isGone = true
             } else {
                 binding.playAll.setOnClickListener {
@@ -582,7 +598,7 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                context?.toastFromMainDispatcher(e.localizedMessage.orEmpty())
+                context?.toastFromMainDispatcher(ErrorMessages.of(e))
                 Log.e(TAG(), e.toString())
                 return@launch
             }
@@ -601,18 +617,33 @@ class PlaylistFragment : DynamicLayoutManagerFragment(R.layout.fragment_playlist
     @SuppressLint("SetTextI18n")
     private fun updatePlaylistDuration(updatedList: List<PlaylistItem>) {
         val totalDuration = updatedList.sumOf { it.item.duration ?: 0 }
+        // nothing to sum yet (empty playlist, durations unknown): no "00:00" on the cover
+        binding.playlistDuration.isVisible = totalDuration > 0
         binding.playlistDuration.text = DateUtils.formatElapsedTime(totalDuration) +
                 if (nextPage != null) "+" else ""
     }
 
     // Update the Cover/Thumbnail of the playlist if the first video was removed
     private fun setPlaylistThumbnail(thumbnailUrl: String?) {
+        val cover = binding.thumbnail
         if (!thumbnailUrl.isNullOrEmpty()) {
-            ImageHelper.loadImage(thumbnailUrl, binding.thumbnail)
+            cover.imageTintList = null
+            cover.scaleType = ImageView.ScaleType.CENTER_CROP
+            cover.setPadding(0)
+            ImageHelper.loadImage(thumbnailUrl, cover)
         } else {
-            binding.thumbnail.setImageResource(R.drawable.ic_empty_playlist)
-            binding.thumbnail.setPadding(64f.dpToPx())
-            binding.thumbnail.setBackgroundColor(com.google.android.material.R.attr.colorSurface)
+            // no video to show: the empty playlist mark, small and quiet, on the card's own
+            // surface (the card behind the image carries the theme colour)
+            cover.tag = null
+            cover.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            cover.setPadding(EMPTY_COVER_INSET_DP.dpToPx())
+            cover.imageTintList = ColorStateList.valueOf(
+                ThemeHelper.getThemeColor(
+                    requireContext(),
+                    com.google.android.material.R.attr.colorOnSurfaceVariant
+                )
+            )
+            cover.setImageResource(R.drawable.ic_empty_playlist)
         }
     }
 

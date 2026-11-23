@@ -21,7 +21,8 @@ object SharedHttpClient {
      */
     private val debugRequestLog = Interceptor { chain ->
         val request = chain.request()
-        Log.d("WatubeNet", "${request.method} ${request.url.host}${request.url.encodedPath}")
+        val url = request.url
+        Log.d("WatubeNet", "${request.method} ${url.scheme}://${url.host}${url.encodedPath}")
         chain.proceed(request)
     }
 
@@ -34,9 +35,10 @@ object SharedHttpClient {
         .build()
 
     val base: OkHttpClient = OkHttpClient.Builder()
-        // TLS 1.3 / 1.2 with forward secret AEAD ciphers only, no older fallback. Plain http stays
-        // limited to localhost (self-hosted instances) by network_security_config.xml.
-        .connectionSpecs(listOf(ConnectionSpec.RESTRICTED_TLS, ConnectionSpec.CLEARTEXT))
+        // https only: TLS 1.3 / 1.2 with forward secret AEAD ciphers, no older fallback, no plain
+        // http. An instance running on the phone itself (http://localhost) is reached through
+        // LocalInstanceRouter, whose own small client speaks plain http to it and to nothing else.
+        .connectionSpecs(listOf(ConnectionSpec.RESTRICTED_TLS))
         // first network interceptor: it sees the refusals of the policies added after it
         .addNetworkInterceptor(NetworkLedger.interceptor)
         .apply { if (BuildConfig.DEBUG) addNetworkInterceptor(debugRequestLog) }

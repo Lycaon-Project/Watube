@@ -13,7 +13,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.R
 import com.watube.yard.api.PlaylistsHelper
@@ -23,8 +22,11 @@ import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.databinding.FragmentLibraryBinding
 import com.watube.yard.db.DatabaseHolder
 import com.watube.yard.extensions.TAG
-import com.watube.yard.extensions.ceilHalf
 import com.watube.yard.extensions.dpToPx
+import com.watube.yard.extensions.formatAsFileSize
+import com.watube.yard.helpers.DownloadDestination
+import com.watube.yard.helpers.GridColumns
+import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavBarHelper
 import com.watube.yard.helpers.PreferenceHelper
 import com.watube.yard.ui.adapters.PlaylistBookmarkAdapter
@@ -32,8 +34,11 @@ import com.watube.yard.ui.adapters.PlaylistsAdapter
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
 import com.watube.yard.ui.dialogs.CreatePlaylistDialog
 import com.watube.yard.ui.dialogs.CreatePlaylistDialog.Companion.CREATE_PLAYLIST_DIALOG_REQUEST_KEY
+import com.watube.yard.ui.dialogs.DownloadFolderChooser
+import com.watube.yard.ui.dialogs.showClearCacheDialog
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.sheets.BaseBottomSheet
+import com.watube.yard.ui.views.CoverGridLayoutManager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,10 +53,17 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
 
     private val playlistsAdapter = PlaylistsAdapter(PlaylistsHelper.getPrivatePlaylistType())
     private val playlistBookmarkAdapter = PlaylistBookmarkAdapter()
+    private val folderChooser = DownloadFolderChooser(this, ::refreshFolderSummary)
 
+    /**
+     * Playlists and bookmarks are two rows of covers that scroll sideways, two columns seen at
+     * once on a phone held upright and more on wider windows; [gridItems] (the video grids'
+     * setting) does not apply to them.
+     */
     override fun setLayoutManagers(gridItems: Int) {
-        _binding?.bookmarksRecView?.layoutManager = GridLayoutManager(context, gridItems.ceilHalf())
-        _binding?.playlistRecView?.layoutManager = GridLayoutManager(context, gridItems.ceilHalf())
+        val columns = GridColumns.coversFor(resources.configuration.screenWidthDp)
+        _binding?.bookmarksRecView?.layoutManager = CoverGridLayoutManager(requireContext(), columns)
+        _binding?.playlistRecView?.layoutManager = CoverGridLayoutManager(requireContext(), columns)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -149,8 +161,9 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
 
     /**
      * Fills the four shortcut tiles of the mockup qgrid. History and downloads keep
-     * their existing navigation, playlists scrolls to its own section and private data
-     * only states that nothing ever leaves the device.
+     * their existing navigation; the two others are shortcuts to settings of "Données &
+     * maintenance" used often enough to be one tap away: where the downloads are saved, and
+     * emptying the cache.
      */
     private fun setupShortcuts() {
         binding.watchHistory.let { shortcut ->
@@ -162,27 +175,42 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
             shortcut.shortcutTitle.setText(R.string.downloads)
             shortcut.shortcutSummary.setText(R.string.watube_shortcut_downloads)
         }
-        binding.shortcutPlaylists.let { shortcut ->
-            shortcut.shortcutIcon.setImageResource(R.drawable.watube_list)
-            shortcut.shortcutTitle.setText(R.string.playlists)
+        binding.shortcutFolder.let { shortcut ->
+            shortcut.shortcutIcon.setImageResource(R.drawable.ic_download_folder)
+            shortcut.shortcutTitle.setText(R.string.watube_shortcut_folder)
+            shortcut.root.setOnClickListener { folderChooser.show() }
         }
-        binding.shortcutPrivacy.let { shortcut ->
-            shortcut.shortcutIcon.setImageResource(R.drawable.watube_lock)
-            shortcut.shortcutTitle.setText(R.string.watube_shortcut_privacy_title)
-            shortcut.shortcutSummary.setText(R.string.watube_shortcut_privacy)
-        }
-
-        binding.shortcutPlaylists.root.setOnClickListener {
-            binding.libraryScroll.post {
-                binding.libraryScroll.smoothScrollTo(0, binding.playlistsSection.top)
-            }
-        }
-        // the tile leads to the privacy tab, which shows what the app keeps and sends
-        binding.shortcutPrivacy.root.setOnClickListener {
-            findNavController().navigate(R.id.privacyFragment)
+        binding.shortcutCache.let { shortcut ->
+            shortcut.shortcutIcon.setImageResource(R.drawable.ic_trash)
+            shortcut.shortcutTitle.setText(R.string.clear_cache)
+            shortcut.root.setOnClickListener { showClearCacheDialog(::refreshCacheSize) }
         }
 
         refreshHistoryCount()
+        refreshFolderSummary()
+        refreshCacheSize()
+    }
+
+    /** Where the downloads are saved now, or that the folder picked earlier is out of reach. */
+    private fun refreshFolderSummary() {
+        val binding = _binding ?: return
+        val context = requireContext()
+        binding.shortcutFolder.shortcutSummary.text =
+            if (DownloadDestination.isPickedFolderReachable(context)) {
+                DownloadDestination.describe(context)
+            } else {
+                getString(R.string.download_folder_unavailable)
+            }
+    }
+
+    private fun refreshCacheSize() {
+        val appContext = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            // walking the cache directory is I/O: keep it off the main thread
+            val size = withContext(Dispatchers.IO) { ImageHelper.getCacheSize(appContext) }
+            val binding = _binding ?: return@launch
+            binding.shortcutCache.shortcutSummary.text = size.formatAsFileSize(binding.root.context)
+        }
     }
 
     private fun refreshHistoryCount() {
@@ -253,9 +281,6 @@ class LibraryFragment : DynamicLayoutManagerFragment(R.layout.fragment_library) 
 
         binding.nothingHere.isGone = true
         binding.sortTV.isVisible = true
-        binding.shortcutPlaylists.shortcutSummary.text = resources.getQuantityString(
-            R.plurals.watube_shortcut_playlists, playlists.size, playlists.size
-        )
         playlistsAdapter.submitList(playlists)
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Downloads -->
+<!-- Placeholder of a card or a row while the download sheet loads (pulsed in code) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="14dp" />
+    <solid android:color="@color/watube_chip_fill" />
+</shape>
+<!-- endregion -->

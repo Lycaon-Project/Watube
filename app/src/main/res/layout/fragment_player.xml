@@ -130,6 +130,7 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/player_channelImage"
+                    android:importantForAccessibility="no"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
@@ -222,6 +223,7 @@
             <!-- region Related Videos -->
             <TextView
                 android:id="@+id/watube_next_title"
+                android:accessibilityHeading="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/watube_gutter"
@@ -294,6 +296,7 @@
     <!-- region Mini Player -->
     <ImageView
         android:id="@+id/close_imageView"
+        android:contentDescription="@string/tooltip_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0"

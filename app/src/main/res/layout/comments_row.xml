@@ -119,6 +119,7 @@
 
                 <ImageView
                     android:id="@+id/hearted_imageView"
+                    android:contentDescription="@string/a11y_hearted"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_marginEnd="8dp"
@@ -128,6 +129,7 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/creator_reply_imageView"
+                    android:contentDescription="@string/a11y_creator_reply"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginEnd="8dp"

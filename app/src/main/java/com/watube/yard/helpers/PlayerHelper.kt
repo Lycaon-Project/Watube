@@ -35,6 +35,7 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.LoadControl
 import androidx.media3.exoplayer.Renderer
+import androidx.media3.exoplayer.metadata.MetadataOutput
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.text.TextOutput
 import androidx.media3.exoplayer.text.TextRenderer
@@ -54,6 +55,7 @@ import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.extensions.seekBy
 import com.watube.yard.extensions.togglePlayPauseState
 import com.watube.yard.obj.VideoStats
+import com.watube.yard.util.LocalInstanceRouter
 import com.watube.yard.util.SharedHttpClient
 import com.watube.yard.util.TextUtils
 import kotlinx.coroutines.CoroutineScope
@@ -283,6 +285,17 @@ object PlayerHelper {
     // region Video Player
     private const val MINIMUM_BUFFER_DURATION = 1000 * 10 // exo default is 50s
 
+    /** Bounds of the back buffer, see [backBufferMs]. */
+    private const val MIN_BACK_BUFFER_MS = 15_000L
+    private const val MAX_BACK_BUFFER_MS = 60_000L
+
+    /**
+     * How much of what was played is kept for backward seeks: two seek steps (20 s at the
+     * default step of 10 s), so going back once or twice never downloads again.
+     */
+    private val backBufferMs: Int
+        get() = (2 * seekIncrement).coerceIn(MIN_BACK_BUFFER_MS, MAX_BACK_BUFFER_MS).toInt()
+
     /**
      * The maximum amount of time to wait until the video starts playing: 10 minutes
      */
@@ -328,6 +341,17 @@ object PlayerHelper {
                 @Suppress("DEPRECATION")
                 (out.last() as? TextRenderer)?.experimentalSetLegacyDecodingEnabled(true)
             }
+
+            // No metadata renderer: the app never reads the timed metadata of a stream (the ID3
+            // tags of the HLS live streams). Once enabled, such a renderer would wake the playback
+            // thread every 10 ms for nothing.
+            override fun buildMetadataRenderers(
+                context: Context,
+                output: MetadataOutput,
+                outputLooper: Looper,
+                extensionRendererMode: Int,
+                out: ArrayList<Renderer>
+            ) = Unit
         }
         return renderersFactory
     }
@@ -344,7 +368,8 @@ object PlayerHelper {
     @OptIn(UnstableApi::class)
     fun mediaDataSourceFactory(context: Context): DataSource.Factory = DefaultDataSource.Factory(
         context,
-        OkHttpDataSource.Factory(mediaHttpClient).setUserAgent(PrivacyHelper.userAgent)
+        OkHttpDataSource.Factory(LocalInstanceRouter(mediaHttpClient))
+            .setUserAgent(PrivacyHelper.userAgent)
     )
 
     private val mediaHttpClient by lazy {
@@ -385,8 +410,9 @@ object PlayerHelper {
     @OptIn(UnstableApi::class)
     fun getLoadControl(): LoadControl {
         return DefaultLoadControl.Builder()
-            // cache the last minute of the video for backward seeks
-            .setBackBuffer(1000 * 60, true)
+            // memory: what was played stays in memory for backward seeks, two seek steps of it;
+            // a full minute of 1080p video stayed in the Java heap for seeks rarely made
+            .setBackBuffer(backBufferMs, true)
             .setBufferDurationsMs(
                 MINIMUM_BUFFER_DURATION,
                 max(bufferingGoal, MINIMUM_BUFFER_DURATION),
@@ -400,6 +426,14 @@ object PlayerHelper {
         player.isPlaying -> R.drawable.ic_pause
         player.playbackState == Player.STATE_ENDED -> R.drawable.ic_restart
         else -> R.drawable.ic_play
+    }
+
+    /** What the play/pause control does now, for screen readers: its icon alone says nothing. */
+    @StringRes
+    fun getPlayPauseActionLabel(player: Player) = when {
+        player.isPlaying -> R.string.pause
+        player.playbackState == Player.STATE_ENDED -> R.string.a11y_replay
+        else -> R.string.tooltip_play
     }
     // endregion
 

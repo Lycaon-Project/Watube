@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Selected tab of a pill tab row (Downloads): a full pill, tinted by the TabLayout with the
+  bottom bar's selected tab colour (watube_nav_pill).
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@android:color/white" />
+    <corners android:radius="999dp" />
+</shape>

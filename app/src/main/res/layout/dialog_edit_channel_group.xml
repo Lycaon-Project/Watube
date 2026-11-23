@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:hint="@string/search_hint"
-            app:startIconDrawable="@drawable/ic_search">
+            app:startIconDrawable="@drawable/ic_search"
+            app:boxBackgroundColor="@color/watube_search_pill">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_input"

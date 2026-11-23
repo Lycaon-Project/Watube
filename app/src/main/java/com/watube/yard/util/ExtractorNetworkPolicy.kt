@@ -29,10 +29,18 @@ object ExtractorNetworkPolicy {
     fun isAllowed(url: HttpUrl): Boolean {
         if (!url.isHttps || url.username.isNotEmpty() || url.port != HTTPS_PORT) return false
         val host = url.host
-        return YOUTUBE_DOMAINS.any { host == it || host.endsWith(".$it") } ||
+        return isAllowedHost(host) && (host != GOOGLE_HOST || url.encodedPath.startsWith(RATE_LIMIT_PATH))
+    }
+
+    /**
+     * Whether the extractor may connect to [host] at all. Checked before the name is looked up,
+     * so that a hostile redirect reveals neither a DNS query nor a TLS handshake (with its SNI)
+     * to another host; [isAllowed] then checks the scheme, the port and the path of each hop.
+     */
+    fun isAllowedHost(host: String): Boolean =
+        YOUTUBE_DOMAINS.any { host == it || host.endsWith(".$it") } ||
             host == INNERTUBE_HOST ||
             host.endsWith(".$VIDEO_SERVERS_DOMAIN") ||
-            (host == GOOGLE_HOST && url.encodedPath.startsWith(RATE_LIMIT_PATH))
-    }
+            host == GOOGLE_HOST
 }
 // endregion

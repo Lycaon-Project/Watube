@@ -26,6 +26,7 @@
 
                 <TextView
                     android:id="@+id/library_title"
+                    android:accessibilityHeading="true"
                     style="@style/WatubeScreenTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -93,7 +94,7 @@
                             android:orientation="vertical">
 
                             <include
-                                android:id="@+id/shortcut_playlists"
+                                android:id="@+id/shortcut_folder"
                                 layout="@layout/watube_shortcut_tile" />
 
                         </LinearLayout>
@@ -105,7 +106,7 @@
                             android:orientation="vertical">
 
                             <include
-                                android:id="@+id/shortcut_privacy"
+                                android:id="@+id/shortcut_cache"
                                 layout="@layout/watube_shortcut_tile" />
 
                         </LinearLayout>
@@ -139,7 +140,7 @@
                             style="?materialButtonTonalStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="@dimen/watube_gutter"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:paddingHorizontal="10dp"
@@ -159,6 +160,7 @@
                         android:visibility="gone">
 
                         <ImageView
+                            android:importantForAccessibility="no"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
@@ -180,8 +182,9 @@
                         android:id="@+id/playlist_recView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"
-                        android:paddingHorizontal="@dimen/watube_gutter" />
+                        android:paddingHorizontal="@dimen/watube_cover_grid_padding" />
 
                 </LinearLayout>
 
@@ -202,7 +205,9 @@
                         android:id="@+id/bookmarks_recView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingHorizontal="@dimen/watube_cover_grid_padding" />
 
                 </LinearLayout>
 
@@ -213,6 +218,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_playlist"
+        android:contentDescription="@string/tooltip_create_playlist"
         android:tooltipText="@string/tooltip_create_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

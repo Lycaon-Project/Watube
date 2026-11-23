@@ -38,6 +38,7 @@ import com.watube.yard.extensions.parcelable
 import com.watube.yard.extensions.parcelableExtra
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.extensions.updateParameters
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getCurrentSegment
 import com.watube.yard.helpers.PrivacyStats
@@ -300,7 +301,7 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
             if (activePlayer !== exoPlayer) return
             // show a toast on errors, unless the service recovers on its own
             if (recoverFromPlayerError(error)) return
-            toastFromMainThread(error.localizedMessage.orEmpty())
+            toastFromMainThread(ErrorMessages.of(error))
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -434,9 +435,11 @@ abstract class AbstractPlayerService : MediaLibraryService(), MediaLibrarySessio
                 args.getBoolean(PlayerCommand.SKIP_SILENCE.name)
 
             args.containsKey(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name) -> trackSelector?.updateParameters {
+                // the audio-only player never gets the picture back from a screen showing up
                 setTrackTypeDisabled(
                     C.TRACK_TYPE_VIDEO,
-                    args.getBoolean(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name)
+                    args.getBoolean(PlayerCommand.SET_VIDEO_TRACK_TYPE_DISABLED.name) ||
+                        isAudioOnlyPlayer
                 )
             }
 

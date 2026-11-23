@@ -1,8 +1,9 @@
 package com.watube.yard.ui.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,6 +18,7 @@ import com.watube.yard.extensions.bundleOf
 import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updatePaddingRelative
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -32,6 +34,7 @@ import com.watube.yard.api.obj.ChapterSegment
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.FragmentAudioPlayerBinding
 import com.watube.yard.enums.PlayerCommand
+import com.watube.yard.extensions.dpToPx
 import com.watube.yard.extensions.navigateVideo
 import com.watube.yard.extensions.normalize
 import com.watube.yard.extensions.seekBy
@@ -65,7 +68,9 @@ import com.watube.yard.ui.sheets.VideoOptionsBottomSheet
 import com.watube.yard.ui.tools.SleepTimer
 import com.watube.yard.util.DataSaverMode
 import com.watube.yard.util.PlayingQueue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.absoluteValue
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -322,7 +327,13 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
             // collapsed: the same rounded Solar card as the video mini player; expanded: the
             // plain full screen surface (the card outline must not frame the whole screen)
             if (isMiniPlayerVisible == true) {
-                binding.audioPlayerContainer.setBackgroundResource(R.drawable.watube_miniplayer_background)
+                val glass = (activity as? AbstractPlayerHostActivity)
+                    ?.miniPlayerBackground(binding.audioPlayerContainer)
+                if (glass != null) {
+                    binding.audioPlayerContainer.background = glass
+                } else {
+                    binding.audioPlayerContainer.setBackgroundResource(R.drawable.watube_miniplayer_background)
+                }
             } else {
                 binding.audioPlayerContainer.setBackgroundColor(
                     ThemeHelper.getThemeColor(
@@ -431,12 +442,22 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
             NavigationHelper.navigateChannel(requireContext(), uploaderId)
         }
 
-        metadata.artworkUri?.let { updateThumbnailAsync(it) }
+        val artworkUri = metadata.artworkUri
+        val artworkData = metadata.artworkData
+        when {
+            artworkUri != null -> updateThumbnailAsync { ImageHelper.getImage(requireContext(), artworkUri) }
+            // a download: its cover is decrypted in memory and never gets a file or an URI
+            artworkData != null -> updateThumbnailAsync { decodeArtwork(artworkData) }
+        }
 
         initializeSeekBar()
     }
 
-    private fun updateThumbnailAsync(thumbnailUri: Uri) {
+    private suspend fun decodeArtwork(artwork: ByteArray): Bitmap? = withContext(Dispatchers.Default) {
+        BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+    }
+
+    private fun updateThumbnailAsync(loadThumbnail: suspend () -> Bitmap?) {
         if (DataSaverMode.isEnabled(requireContext()) && !isOffline) {
             binding.progress.isVisible = false
             binding.thumbnail.setImageResource(R.drawable.ic_launcher_monochrome)
@@ -455,10 +476,16 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
 
         // tied to the view: the bitmap must never land in the views of a destroyed fragment
         viewLifecycleOwner.lifecycleScope.launch {
-            val bitmap = ImageHelper.getImage(requireContext(), thumbnailUri)
+            val bitmap = loadThumbnail()
             val binding = _binding ?: return@launch
             binding.thumbnail.setImageBitmap(bitmap)
             binding.miniPlayerThumbnail.setImageBitmap(bitmap)
+            // no picture (data saver, image unavailable): the bubble keeps no empty slot, its
+            // title starts at the same distance from the edge as the buttons end
+            binding.miniPlayerThumbnail.isVisible = bitmap != null
+            binding.miniPlayerTitle.updatePaddingRelative(
+                start = (if (bitmap != null) MINI_TITLE_GAP_DP else MINI_EDGE_DP).dpToPx()
+            )
             binding.thumbnail.isVisible = true
             binding.progress.isGone = true
         }
@@ -551,6 +578,9 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
             val iconRes = PlayerHelper.getPlayPauseActionIcon(it)
             binding.playPause.setIconResource(iconRes)
             binding.miniPlayerPause.setImageResource(iconRes)
+            val label = getString(PlayerHelper.getPlayPauseActionLabel(it))
+            binding.playPause.contentDescription = label
+            binding.miniPlayerPause.contentDescription = label
         }
     }
 
@@ -666,5 +696,9 @@ class AudioPlayerFragment : Fragment(R.layout.fragment_audio_player), AudioPlaye
         private const val CHAPTER_UPDATE_INTERVAL_PLAYING = 200L
         private const val CHAPTER_UPDATE_INTERVAL_PAUSED = 1000L
         // endregion
+
+        /** Mini player: the title's gap after the thumbnail (as in the layout), and from the edge. */
+        private const val MINI_TITLE_GAP_DP = 8f
+        private const val MINI_EDGE_DP = 16f
     }
 }

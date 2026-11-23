@@ -7,6 +7,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.watube.yard.R
 import com.watube.yard.constants.IntentData
 import com.watube.yard.databinding.VideoRowBinding
 import com.watube.yard.db.DatabaseHolder
@@ -16,6 +17,7 @@ import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.extensions.setFormattedDuration
 import com.watube.yard.ui.extensions.setWatchProgressLength
 import com.watube.yard.ui.sheets.VideoOptionsBottomSheet
@@ -63,6 +65,8 @@ class WatchHistoryAdapter :
                 channelImageContainer.isGone = true
             }
 
+            channelImage.contentDescription =
+                root.context.getString(R.string.a11y_open_channel, video.uploader.orEmpty())
             channelImage.setOnClickListener {
                 NavigationHelper.navigateChannel(root.context, video.uploaderUrl)
             }
@@ -73,6 +77,7 @@ class WatchHistoryAdapter :
 
             val activity = (root.context as BaseActivity)
             val fragmentManager = activity.supportFragmentManager
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 fragmentManager.setFragmentResultListener(
                     VideoOptionsBottomSheet.VIDEO_OPTIONS_SHEET_REQUEST_KEY,

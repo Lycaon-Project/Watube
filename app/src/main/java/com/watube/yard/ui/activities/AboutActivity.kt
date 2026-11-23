@@ -5,13 +5,22 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.os.SystemClock
 import android.text.method.LinkMovementMethod
+import android.animation.ValueAnimator
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.LayerDrawable
+import android.view.HapticFeedbackConstants
 import android.view.View
+import android.view.animation.PathInterpolator
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.content.getSystemService
 import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -24,7 +33,9 @@ import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.helpers.IntentHelper
 import com.watube.yard.helpers.LibraryInfo
+import com.watube.yard.helpers.ThemeHelper
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.views.CardGlowTrail
 import com.watube.yard.util.UpdateChecker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +44,13 @@ import kotlinx.coroutines.withContext
 // region About
 class AboutActivity : BaseActivity() {
     private lateinit var binding: ActivityAboutBinding
+
+    /** The accent light running round the version card. */
+    private lateinit var headerGlow: CardGlowTrail
+
+    /** Quick taps on the version card so far, for the easter egg. */
+    private var versionTaps = 0
+    private var lastVersionTap = 0L
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +66,7 @@ class AboutActivity : BaseActivity() {
 
         // Version comes from BuildConfig only: never a literal in the layout.
         val versionText = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-        binding.aboutTitle.text = "Watube ${BuildConfig.VERSION_NAME}"
+        binding.aboutTitle.text = "Watube ${versionLabel()}"
         binding.aboutBuild.text = "Build ${BuildConfig.VERSION_CODE} · GPL-3.0"
         binding.aboutTitle.setOnClickListener {
             ClipboardHelper.save(this, text = versionText)
@@ -57,6 +75,101 @@ class AboutActivity : BaseActivity() {
         binding.checkUpdates.setOnClickListener { checkForUpdates() }
 
         setupRows()
+        setupHeaderMotion(entering = savedInstanceState == null)
+        binding.aboutHeader.setOnClickListener { onVersionCardTapped() }
+    }
+
+    /**
+     * Easter egg: seven quick taps on the version card bring out VireoBoo, the mascot of the
+     * release, who waves hello. Nothing is stored or sent; the next taps make it wave again.
+     */
+    private fun onVersionCardTapped() {
+        val now = SystemClock.uptimeMillis()
+        versionTaps = if (now - lastVersionTap > TAP_GAP_MS) 1 else versionTaps + 1
+        lastVersionTap = now
+        if (versionTaps < TAPS_TO_FIND && !binding.aboutMascotRow.isVisible) return
+        versionTaps = 0
+        showVireoBoo()
+    }
+
+    /**
+     * VireoBoo pops up on the card, raises its arm and waves, then its bubble speaks. With the
+     * system animations off, it simply appears with its bubble.
+     */
+    private fun showVireoBoo() {
+        val animate = ValueAnimator.areAnimatorsEnabled()
+        val wave = binding.aboutMascot.drawable as? AnimatedVectorDrawable
+        if (wave?.isRunning == true) return
+        val row = binding.aboutMascotRow
+        if (!row.isVisible) {
+            row.isVisible = true
+            row.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            if (animate) {
+                val density = resources.displayMetrics.density
+                binding.aboutMascot.apply {
+                    alpha = 0f
+                    scaleX = MASCOT_START_SCALE
+                    scaleY = MASCOT_START_SCALE
+                    translationY = MASCOT_RISE_DP * density
+                    animate().alpha(1f).scaleX(1f).scaleY(1f).translationY(0f)
+                        .setDuration(MASCOT_ENTER_MS)
+                        .setInterpolator(PathInterpolator(0.16f, 1f, 0.3f, 1f))
+                        .start()
+                }
+                binding.aboutMascotBubble.apply {
+                    alpha = 0f
+                    translationX = -BUBBLE_SLIDE_DP * density
+                    // the words come once the arm is up
+                    animate().alpha(1f).translationX(0f)
+                        .setStartDelay(BUBBLE_DELAY_MS)
+                        .setDuration(BUBBLE_ENTER_MS)
+                        .setInterpolator(PathInterpolator(0.16f, 1f, 0.3f, 1f))
+                        .start()
+                }
+            }
+        }
+        if (animate) wave?.start()
+    }
+
+    /**
+     * The version card, discreet and alive: it rises into place as the screen opens, then a
+     * faint light in the accent colour keeps running round its edge. The card keeps its
+     * colours; nothing moves while the system animations are off.
+     */
+    private fun setupHeaderMotion(entering: Boolean) {
+        val header = binding.aboutHeader
+        headerGlow = CardGlowTrail(
+            density = resources.displayMetrics.density,
+            accent = ThemeHelper.getThemeColor(this, androidx.appcompat.R.attr.colorPrimary),
+            cornerRadius = resources.getDimension(R.dimen.watube_card_radius),
+        )
+        // on the card's background, under its content
+        header.background = LayerDrawable(arrayOf(header.background, headerGlow))
+        // the halo stays inside the card's rounded edge
+        header.clipToOutline = true
+        if (!entering || !ValueAnimator.areAnimatorsEnabled()) return
+        header.alpha = 0f
+        header.translationY = HEADER_RISE_DP * resources.displayMetrics.density
+        header.scaleX = HEADER_START_SCALE
+        header.scaleY = HEADER_START_SCALE
+        header.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(HEADER_ENTER_MS)
+            .setInterpolator(PathInterpolator(0.2f, 0f, 0f, 1f))
+            .start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        headerGlow.start(powerSave = getSystemService<PowerManager>()?.isPowerSaveMode == true)
+    }
+
+    override fun onPause() {
+        headerGlow.stop()
+        super.onPause()
     }
 
     private fun setupRows() {
@@ -192,8 +305,9 @@ class AboutActivity : BaseActivity() {
     }
 
     /**
-     * Manual update check. The checker already reports its own result (toast or
-     * dialog), the button only shows that a check is running.
+     * Manual update check. The checker reports its result in a snackbar of the screen (the
+     * system toast of some phones, drawn by Android, carries an odd shadow) or opens the update
+     * dialog; the button only shows that a check is running.
      */
     private fun checkForUpdates() {
         binding.checkUpdates.isEnabled = false
@@ -202,13 +316,19 @@ class AboutActivity : BaseActivity() {
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    UpdateChecker(this@AboutActivity).checkUpdate(true)
+                    UpdateChecker(this@AboutActivity, ::showCheckResult).checkUpdate(true)
                 }
             } finally {
                 binding.checkUpdates.setText(R.string.update_summary)
                 binding.checkUpdates.isEnabled = true
             }
         }
+    }
+
+    private suspend fun showCheckResult(@StringRes message: Int) = withContext(Dispatchers.Main) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+            .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+            .show()
     }
 
     private fun showLicense() {
@@ -324,6 +444,31 @@ class AboutActivity : BaseActivity() {
     }
 
     companion object {
+        /** Entrance of the version card: a short rise, from a hair smaller, settling softly. */
+        private const val HEADER_ENTER_MS = 520L
+        private const val HEADER_RISE_DP = 10f
+        private const val HEADER_START_SCALE = 0.985f
+
+        /** Easter egg: taps needed, at most this far apart, to bring VireoBoo out. */
+        private const val TAPS_TO_FIND = 7
+        private const val TAP_GAP_MS = 1_000L
+
+        /** VireoBoo's entrance, then its bubble once the arm is raised (320 ms). */
+        private const val MASCOT_ENTER_MS = 420L
+        private const val MASCOT_RISE_DP = 12f
+        private const val MASCOT_START_SCALE = 0.7f
+        private const val BUBBLE_DELAY_MS = 320L
+        private const val BUBBLE_ENTER_MS = 260L
+        private const val BUBBLE_SLIDE_DP = 8f
+
+        /**
+         * The version as shown to people: "26.12 · Vireo", the number then the name of the
+         * release's mascot. versionName stays the number alone, for the update check.
+         */
+        fun versionLabel(): String = listOf(BuildConfig.VERSION_NAME, BuildConfig.RELEASE_NAME)
+            .filter { it.isNotBlank() }
+            .joinToString(" · ")
+
         const val GITHUB_URL = "https://github.com/Lycaon-Project/Watube"
         private const val PIPED_GITHUB_URL = "https://github.com/TeamPiped/Piped"
         private const val WEBLATE_URL = "https://hosted.weblate.org/projects/libretube/libretube/"

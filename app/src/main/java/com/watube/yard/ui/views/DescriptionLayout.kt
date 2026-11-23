@@ -20,6 +20,7 @@ import com.watube.yard.extensions.formatShort
 import com.watube.yard.helpers.ClipboardHelper
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.ui.activities.VideoTagsAdapter
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.util.HtmlParser
 import com.watube.yard.util.LinkHandler
 import com.watube.yard.util.TextUtils
@@ -40,6 +41,9 @@ class DescriptionLayout(
         binding.playerTitleLayout.setOnClickListener {
             toggleDescription()
         }
+        // the arrow shows folded or unfolded: screen readers say it
+        binding.playerTitleLayout.stateDescription = context.getString(R.string.a11y_collapsed)
+        binding.playerTitleLayout.nameLongPress(R.string.copy_tooltip)
         binding.playerTitleLayout.setOnLongClickListener {
             streams?.title?.let { ClipboardHelper.save(context, text = it) }
             true
@@ -161,6 +165,8 @@ class DescriptionLayout(
             .setDuration(ANIMATION_DURATION)
             .start()
 
+        binding.playerTitleLayout.stateDescription =
+            context.getString(if (isNewStateExpanded) R.string.a11y_expanded else R.string.a11y_collapsed)
         binding.playerDescription.isVisible = isNewStateExpanded
         binding.descLinLayout.isVisible = isNewStateExpanded
     }

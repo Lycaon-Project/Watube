@@ -3,4 +3,24 @@
     <!-- View tag holding the id a row is currently bound to, so an async result can
          never be applied to a row that has been recycled for another item. -->
     <item name="bound_item_id" type="id" />
+    <!-- BottomBarOverlay: a list's own bottom padding, the screen's extra room, the bar's -->
+    <item name="bottom_bar_base_padding" type="id" />
+    <item name="bottom_bar_extra_padding" type="id" />
+    <item name="bottom_bar_overlay_height" type="id" />
+    <!-- View tag holding the beat of an upcoming pill (UpcomingBadgeMotion). -->
+    <item name="upcoming_badge_motion" type="id" />
+    <!-- View tag holding whether a header was last given Efecto's glass (Efecto). -->
+    <item name="watube_efecto_state" type="id" />
+    <!-- View tag holding a list's own top padding, under the room an Efecto header takes. -->
+    <item name="watube_efecto_base_padding" type="id" />
+    <!-- View tag holding the clip of a header's part that has scrolled under the top bar. -->
+    <item name="watube_top_bar_clip" type="id" />
+    <!-- running pulse of a download sheet placeholder (DownloadMotion) -->
+    <item name="watube_download_pulse" type="id" />
+    <!-- RecyclerView tag holding the listener that offers a list's swipe and drag as actions,
+         and row tag holding the ids of the actions it offers (RecyclerViewAdapter.kt). -->
+    <item name="gesture_actions_listener" type="id" />
+    <item name="gesture_action_ids" type="id" />
+    <!-- Accessibility action of a bottom bar option: open the app on this tab. -->
+    <item name="a11y_set_start_tab" type="id" />
 </resources>

@@ -27,10 +27,13 @@ import com.watube.yard.extensions.setOnDismissListener
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.parcelable.PlayerData
 import com.watube.yard.ui.adapters.WatchHistoryAdapter
+import com.watube.yard.ui.base.BottomBarOverlay
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
+import com.watube.yard.ui.base.RunsUnderTopBar
 import com.watube.yard.ui.extensions.addOnBottomReachedListener
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.WatchHistoryModel
+import com.watube.yard.ui.views.Efecto
 import com.watube.yard.util.PlayingQueue
 import com.watube.yard.ui.base.SecureAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +41,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 // region Watch History
-class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watch_history) {
+class WatchHistoryFragment :
+    DynamicLayoutManagerFragment(R.layout.fragment_watch_history), RunsUnderTopBar {
     private var _binding: FragmentWatchHistoryBinding? = null
     private val binding get() = _binding!!
 
@@ -47,6 +51,9 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
 
     private val viewModel: WatchHistoryModel by viewModels()
     private val watchHistoryAdapter = WatchHistoryAdapter()
+
+    /** Height of the app's top bar, which the filter (and the history) run on under. */
+    private var topBar = 0
 
     override fun setLayoutManagers(gridItems: Int) {
         _binding?.watchHistoryRecView?.layoutManager =
@@ -57,8 +64,17 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         _binding = FragmentWatchHistoryBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
+        // the history runs on under the filter, which shows it through Efecto's glass
+        val header = binding.watchHistoryAppBar
+        Efecto.runUnder(header, binding.watchHistoryBackdrop, binding.watchHistoryRecView) {
+            header.height
+        }
+        fitUnderTopBar()
+
         commonPlayerViewModel.isMiniPlayerVisible.observe(viewLifecycleOwner) { isMiniPlayerVisible ->
-            _binding?.watchHistoryRecView?.updatePadding(bottom = if (isMiniPlayerVisible) 64f.dpToPx() else 0)
+            _binding?.watchHistoryRecView?.let {
+                BottomBarOverlay.setExtraBottom(it, if (isMiniPlayerVisible) 64f.dpToPx() else 0)
+            }
             _binding?.playAll?.updateLayoutParams<MarginLayoutParams> {
                 bottomMargin = (if (isMiniPlayerVisible) 64f else 16f).dpToPx()
             }
@@ -182,6 +198,28 @@ class WatchHistoryFragment : DynamicLayoutManagerFragment(R.layout.fragment_watc
         super.onConfigurationChanged(newConfig)
         // manually restore the recyclerview state due to https://github.com/material-components/material-components-android/issues/3473
         binding.watchHistoryRecView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Efecto may have been switched in the settings meanwhile
+        _binding?.let { Efecto.applyToHeader(it.watchHistoryAppBar, it.watchHistoryBackdrop) }
+    }
+
+    /**
+     * The history runs on under the top bar (brand, theme, bell, menu) as the home does: the
+     * filter's glass, or its plain fill with Efecto off, covers the bar and runs on down to the
+     * chips. The empty state stays centred below the bar.
+     */
+    override fun fitTopBar(height: Int) {
+        topBar = height
+        if (_binding != null) fitUnderTopBar()
+    }
+
+    private fun fitUnderTopBar() {
+        val header = binding.watchHistoryAppBar
+        if (header.paddingTop != topBar) header.updatePadding(top = topBar)
+        if (binding.historyEmpty.paddingTop != topBar) binding.historyEmpty.updatePadding(top = topBar)
     }
 
     override fun onDestroyView() {

@@ -1,8 +1,16 @@
 package com.watube.yard.ui.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
+import android.widget.CheckBox
 import android.widget.Toast
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.watube.yard.R
@@ -68,7 +76,48 @@ class NavBarOptionsAdapter(
                 }
                 item.isVisible = checkbox.isChecked
             }
+            describeRow(isPinned, isStartTab = item.itemId == selectedHomeTabId)
         }
+    }
+
+    /**
+     * The row is read and used as one checkbox: its title, whether the tab shows in the bottom
+     * bar, and whether the app opens on it. Opening the app on it is an action of its own, as the
+     * small house icon is for touch.
+     */
+    private fun NavOptionsItemBinding.describeRow(isPinned: Boolean, isStartTab: Boolean) {
+        home.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        checkbox.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        val context = root.context
+        ViewCompat.setAccessibilityDelegate(root, object : AccessibilityDelegateCompat() {
+            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+                info.className = CheckBox::class.java.name
+                info.isCheckable = true
+                info.isChecked = checkbox.isChecked
+                info.isEnabled = checkbox.isEnabled
+                info.contentDescription = if (isStartTab) {
+                    "${title.text}, ${context.getString(R.string.a11y_start_tab)}"
+                } else {
+                    title.text
+                }
+                if (checkbox.isEnabled) info.addAction(AccessibilityActionCompat.ACTION_CLICK)
+                if (!isPinned && !isStartTab) {
+                    info.addAction(
+                        AccessibilityActionCompat(R.id.a11y_set_start_tab, context.getString(R.string.a11y_set_start_tab))
+                    )
+                }
+            }
+
+            override fun performAccessibilityAction(host: View, action: Int, args: Bundle?) = when (action) {
+                AccessibilityNodeInfoCompat.ACTION_CLICK -> checkbox.isEnabled && checkbox.performClick().also {
+                    // the box itself is hidden from screen readers: the row tells its new state
+                    host.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED)
+                }
+                R.id.a11y_set_start_tab -> home.performClick()
+                else -> super.performAccessibilityAction(host, action, args)
+            }
+        })
     }
 }
 // endregion

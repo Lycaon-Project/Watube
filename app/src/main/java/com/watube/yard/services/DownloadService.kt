@@ -9,7 +9,9 @@ import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Binder
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -27,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.watube.yard.WatubeApp.Companion.DOWNLOAD_CHANNEL_NAME
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
+import com.watube.yard.api.StreamsCache
 import com.watube.yard.api.obj.PipedStream
 import com.watube.yard.api.obj.Streams
 import com.watube.yard.constants.IntentData
@@ -45,6 +48,7 @@ import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.helpers.DownloadEncryption
 import com.watube.yard.helpers.DownloadHelper
 import com.watube.yard.helpers.DownloadHelper.getNotificationId
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.ScreenPrivacy
 import com.watube.yard.helpers.NetworkHelper
@@ -119,26 +123,34 @@ class DownloadService : LifecycleService() {
         IS_DOWNLOAD_RUNNING = true
         notifyForeground()
         sendBroadcast(Intent(ACTION_SERVICE_STARTED).setPackage(packageName))
+        registerNetworkChangedCallback()
     }
 
     /**
      * Listen for network changes and pause the download if the network connection becomes metered
      */
-    fun registerNetworkChangedCallback() {
-        val connectivityManager = getSystemService<ConnectivityManager>()
-        connectivityManager?.registerDefaultNetworkCallback(object :
-            ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                super.onAvailable(network)
+    private val networkChangedCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
 
-                // pause all downloads when switching to an unmetered connection
-                if (NetworkHelper.isNetworkMetered(this@DownloadService)) {
-                    for (download in downloadQueue.keyIterator()) {
-                        pause(download)
-                    }
+            // pause all downloads when switching to a metered connection
+            if (NetworkHelper.isNetworkMetered(this@DownloadService)) {
+                for (download in downloadQueue.keyIterator()) {
+                    pause(download)
                 }
             }
-        })
+        }
+    }
+
+    /**
+     * Registered once for the life of the service, then unregistered in [onDestroy]: registering
+     * it at each start command, as before, piled up callbacks that each outlived the service.
+     * Delivered on the main thread, where the other pause requests (notification actions) arrive
+     * too, rather than on Android's own connectivity thread.
+     */
+    private fun registerNetworkChangedCallback() {
+        getSystemService<ConnectivityManager>()
+            ?.registerDefaultNetworkCallback(networkChangedCallback, Handler(Looper.getMainLooper()))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -150,8 +162,6 @@ class DownloadService : LifecycleService() {
             ACTION_DOWNLOAD_STOP -> stop(downloadId!!)
             ACTION_RESUME_ALL -> resumeAll()
         }
-
-        registerNetworkChangedCallback()
 
         val downloadData = intent?.parcelableExtra<DownloadData>(IntentData.downloadData)
             ?: return START_NOT_STICKY
@@ -177,13 +187,14 @@ class DownloadService : LifecycleService() {
 
         val streams = try {
             withContext(Dispatchers.IO) {
-                MediaServiceRepository.instance.getStreams(videoId)
+                // the sheet (or the player) usually extracted them a moment ago
+                StreamsCache.forDownload(videoId)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
-            toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            toastFromMainDispatcher(ErrorMessages.of(e))
             return null
         }
 
@@ -311,7 +322,7 @@ class DownloadService : LifecycleService() {
         downloadProvider: DownloadProvider,
     ) {
         downloadQueue[item.id] = true
-        val notificationBuilder = getNotificationBuilder(item)
+        val notificationBuilder = getNotificationBuilder(item, titleOf(item))
         setResumeNotification(notificationBuilder, item)
 
         if (!prepareFile(item, notificationBuilder)) {
@@ -371,7 +382,7 @@ class DownloadService : LifecycleService() {
         }
 
         // a download complete but not encrypted yet (the app was stopped in between) too
-        if (completed || item.isFinished && !DownloadEncryption.isEncrypted(item.path)) {
+        if (completed || item.isFinished && !DownloadHelper.isStored(this@DownloadService, item.path)) {
             finishDownload(item, notificationBuilder)
         }
         downloadQueue[item.id] = false
@@ -415,8 +426,8 @@ class DownloadService : LifecycleService() {
 
         notificationBuilder
             .setContentText(
-                totalRead.formatAsFileSize() + " / " +
-                        item.downloadSize.formatAsFileSize()
+                totalRead.formatAsFileSize(this) + " / " +
+                        item.downloadSize.formatAsFileSize(this)
             )
 
         val downloadSize = item.downloadSize
@@ -601,14 +612,29 @@ class DownloadService : LifecycleService() {
         )
     }
 
-    private fun getNotificationBuilder(item: DownloadItem): Builder {
+    /** The video's title, stored before its files are downloaded; the file name without it. */
+    private suspend fun titleOf(item: DownloadItem): String =
+        Database.downloadDao().findById(item.videoId)?.download?.title
+            ?.takeIf { it.isNotBlank() } ?: item.fileName
+
+    /** What the file holds, in words: shown beside the app's name, above the title. */
+    private fun typeLabel(type: FileType): String = getString(
+        when (type) {
+            FileType.AUDIO -> R.string.download_audio_only
+            FileType.VIDEO -> R.string.video
+            FileType.SUBTITLE -> R.string.captions
+        }
+    )
+
+    private fun getNotificationBuilder(item: DownloadItem, title: String): Builder {
         val intent = Intent(this@DownloadService, MainActivity::class.java)
             .putExtra(IntentData.OPEN_DOWNLOADS, true)
         val activityIntent = PendingIntentCompat
             .getActivity(this@DownloadService, 0, intent, FLAG_CANCEL_CURRENT, false)
 
         return Builder(this, DOWNLOAD_CHANNEL_NAME)
-            .setContentTitle("[${item.type}] ${item.fileName}")
+            .setContentTitle(title)
+            .setSubText(typeLabel(item.type))
             .setProgress(0, 0, true)
             .setOngoing(true)
             .setContentIntent(activityIntent)
@@ -721,7 +747,7 @@ class DownloadService : LifecycleService() {
             return false
         }
         if (!goesOn) {
-            if (DownloadEncryption.isEncrypted(item.path)) {
+            if (DownloadHelper.isStored(this, item.path)) {
                 setPauseNotification(notificationBuilder, item, true)
                 _downloadFlow.emit(item.id to DownloadStatus.Completed)
             } else {
@@ -768,6 +794,10 @@ class DownloadService : LifecycleService() {
     }
 
     override fun onDestroy() {
+        runCatching {
+            getSystemService<ConnectivityManager>()
+                ?.unregisterNetworkCallback(networkChangedCallback)
+        }
         downloadQueue.clear()
         IS_DOWNLOAD_RUNNING = false
         sendBroadcast(Intent(ACTION_SERVICE_STOPPED).setPackage(packageName))

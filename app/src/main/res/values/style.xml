@@ -38,6 +38,14 @@
     </style>
 
     <!-- Bottom bar labels: .64rem / 700 of the mockup (.bnav button), single line -->
+    <!-- Labels of a pill tab row (Downloads): the bottom bar's ink, at reading size -->
+    <style name="WatubePillTabLabel" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">13sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="WatubeBottomNavLabel" parent="TextAppearance.Material3.LabelMedium">
         <item name="android:textSize">8.6sp</item>
         <item name="android:lineHeight">10sp</item>
@@ -58,6 +66,23 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
 
+    </style>
+
+    <!-- Thumbnails of the download sheets (DownloadDialog, DownloadPlaylistDialog) -->
+    <style name="WatubeDownloadThumbnail">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">9dp</item>
+    </style>
+
+    <!-- A button of the Video / Audio switch (SlidingToggle): no fill of its own, the accent
+         pill slides under the chosen one; the chips' text colours, full 48dp touch height -->
+    <style name="WatubeDownloadSegment" parent="Widget.Material3.Button.TextButton.Icon">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:textColor">@color/watube_segment_text</item>
+        <item name="iconTint">@color/watube_segment_text</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
     <!-- Solar sheet heading: compact bold title over a divider -->
@@ -291,12 +316,55 @@
         <item name="iconSpaceReserved">false</item>
     </style>
 
+    <!-- Snackbars take the colours of the app's own surfaces (not Material's inverse surface),
+         so they read as part of the screen in the light and the dark themes alike. -->
     <style name="snackBarStyle" parent="@style/Widget.Material3.Snackbar">
+        <item name="backgroundTint">?attr/colorSurfaceContainerHighest</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingEnd">20dp</item>
         <item name="maxLines">2</item>
         <item name="animationMode">slide</item>
+    </style>
+
+    <style name="snackBarTextStyle" parent="@style/Widget.Material3.Snackbar.TextView">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="snackBarButtonStyle" parent="@style/Widget.Material3.Button.TextButton.Snackbar">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Count badge of the navigation tabs (new videos on Abonnements). Material's 16dp badge
+         is as big as the 17.3dp tab icons; this one is three quarters of it, offsets scaled alike
+         (Material's nav offset is 14dp), so it reads as a mark on the icon rather than a second icon. -->
+    <style name="WatubeNavBadge" parent="@style/Widget.Material3.Badge">
+        <item name="badgeWithTextWidth">12dp</item>
+        <item name="badgeWithTextHeight">12dp</item>
+        <item name="horizontalOffsetWithText">9dp</item>
+        <item name="verticalOffsetWithText">10.5dp</item>
+        <item name="badgeVerticalPadding">1dp</item>
+        <item name="badgeWidePadding">3dp</item>
+        <item name="badgeTextAppearance">@style/WatubeNavBadgeText</item>
+    </style>
+
+    <!-- The Material navigation bars bring their own theme overlay, which sets the badge style
+         back to Material's; these bar styles keep everything else and swap only that overlay. -->
+    <style name="ThemeOverlay.Watube.NavBadge" parent="">
+        <item name="badgeStyle">@style/WatubeNavBadge</item>
+    </style>
+
+    <style name="WatubeBottomNav" parent="@style/Widget.Material3Expressive.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Watube.NavBadge</item>
+    </style>
+
+    <style name="WatubeNavRail" parent="@style/Widget.Material3Expressive.NavigationRailView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Watube.NavBadge</item>
+    </style>
+
+    <style name="WatubeNavBadgeText" parent="@style/TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">8.5sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Solar section heading: accent tick + compact bold title -->
@@ -309,6 +377,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:drawableStart">@drawable/watube_section_tick</item>
+        <!-- a section title: screen readers can jump from one to the next -->
+        <item name="android:accessibilityHeading">true</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:padding">8dp</item>
         <item name="android:paddingStart">@dimen/watube_gutter</item>

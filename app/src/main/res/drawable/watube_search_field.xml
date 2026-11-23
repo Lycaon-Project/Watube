@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Editable counterpart of the .spill pill of the mockup: same surface and hairline
-     stroke, except that the stroke follows the focus accent while typing -->
+     stroke, except that the stroke follows the focus accent while typing. Same fill as the
+     home search pill (watube_search_pill), like every search field of the app -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurfaceContainerHighest" />
+            <solid android:color="@color/watube_search_pill" />
             <stroke
                 android:width="1dp"
                 android:color="?attr/colorPrimary" />
@@ -13,7 +14,7 @@
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurfaceContainerHighest" />
+            <solid android:color="@color/watube_search_pill" />
             <stroke
                 android:width="1dp"
                 android:color="?attr/colorOutlineVariant" />

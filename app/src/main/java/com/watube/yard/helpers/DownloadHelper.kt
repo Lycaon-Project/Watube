@@ -1,9 +1,16 @@
 package com.watube.yard.helpers
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.storage.StorageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
 import com.watube.yard.R
@@ -47,7 +54,8 @@ object DownloadHelper {
     const val THUMBNAIL_DIR = "thumbnail"
     const val PLAYLIST_THUMBNAIL_DIR = "playlist_thumbnail"
     private const val PARTIAL_DIR = "downloading"
-    private const val SPACE_MARGIN = 16L * 1024 * 1024
+    /** Room kept free on top of a file being copied or encrypted. */
+    internal const val SPACE_MARGIN = 16L * 1024 * 1024
     private const val LEFTOVER_AGE_MS = 60L * 60 * 1000
 
     /** One file encrypted at a time: see [encryptInPlace]. */
@@ -56,6 +64,10 @@ object DownloadHelper {
     const val DEFAULT_TIMEOUT = 15 * 1000
     const val MAX_CONCURRENT_DOWNLOADS = 6
     private const val VIDEO_MIMETYPE = "video/*"
+    private const val NOTIFICATION_PERMISSION_REQUEST = 0x57A7
+
+    /** The apps' own part of the shared storage (Android/data, Android/media...). */
+    internal const val APP_STORAGE_DIR = "Android"
 
     fun getDownloadDir(context: Context, path: String): Path {
         val storageDir =
@@ -82,9 +94,28 @@ object DownloadHelper {
     }
 
     /**
+     * Whether the file at [path] is in its final place: encrypted among the downloads, or kept
+     * readable in the destination folder (Save readable, see DownloadDestination), which lies in
+     * the shared storage, out of the app's own (Android/...). Such a file is neither encrypted
+     * nor resumed again; a readable one the user deleted or moved away is no longer in place,
+     * and is downloaded again when resumed.
+     */
+    fun isStored(context: Context, path: Path): Boolean {
+        if (DownloadEncryption.isEncrypted(path)) return true
+        val storage = context.getSystemService<StorageManager>()
+            ?.primaryStorageVolume?.directory?.toPath()?.normalize() ?: return false
+        val file = path.normalize()
+        return file.startsWith(storage) && !file.startsWith(storage / APP_STORAGE_DIR) && file.exists()
+    }
+
+    /**
      * Encrypts the complete clear file of [item] into its place among the downloads, then
      * points the item at it and deletes the clear copy. The clear file is only deleted once
      * the database knows the encrypted one: an interruption never loses the download.
+     *
+     * With Save readable on, the file goes to the destination folder in the clear instead
+     * (see DownloadDestination). Where Watube can't write there directly, the download is
+     * encrypted as usual and a readable copy is exported to the folder.
      *
      * [onEncrypted] runs under the lock [discardDownloadItem] takes too: a download stopped
      * meanwhile is never announced complete, and is gone from the database (nothing to do).
@@ -99,11 +130,36 @@ object DownloadHelper {
         val dao = DatabaseHolder.Database.downloadDao()
         val current = dao.findDownloadItemById(item.id) ?: return@withLock
         item.path = current.path
-        if (DownloadEncryption.isEncrypted(current.path)) {
+        if (isStored(context, current.path)) {
             onEncrypted()
             return@withLock
         }
         val clear = current.path
+        val readableName = if (DownloadDestination.isReadable) {
+            DownloadDestination.fileNameOf(dao.findById(current.videoId)?.download?.title, current)
+        } else {
+            null
+        }
+        if (readableName != null) {
+            val placed = DownloadDestination.copyInto(context, clear, current.type, readableName)
+            if (placed != null) {
+                current.path = placed
+                // a subtitle has no known size: the one of its file, now that it is complete
+                if (current.downloadSize <= 0L) current.downloadSize = placed.fileSize()
+                try {
+                    dao.updateDownloadItem(current)
+                } catch (e: Exception) {
+                    // the clear file stays the download's: no second copy is left behind
+                    placed.deleteIfExists()
+                    throw e
+                }
+                item.path = placed
+                item.downloadSize = current.downloadSize
+                clear.deleteIfExists()
+                onEncrypted()
+                return@withLock
+            }
+        }
         val target = getDownloadDir(context, directoryOf(current.type))
         // the encrypted copy is written next to the clear one before the latter goes
         if (target.toFile().usableSpace < clear.fileSize() + SPACE_MARGIN) {
@@ -116,6 +172,10 @@ object DownloadHelper {
         item.path = encrypted
         clear.deleteIfExists()
         onEncrypted()
+        if (readableName != null) {
+            runCatching { DownloadDestination.export(context, encrypted, current.type, readableName) }
+                .onFailure { Log.e(TAG(), "Could not copy a download to the destination folder", it) }
+        }
     }
 
     /**
@@ -128,7 +188,7 @@ object DownloadHelper {
         val dao = DatabaseHolder.Database.downloadDao()
         val current = dao.findDownloadItemById(item.id) ?: return@withLock false
         item.path = current.path
-        if (DownloadEncryption.isEncrypted(current.path)) return@withLock false
+        if (isStored(context, current.path)) return@withLock false
         val partialDir = getPartialDownloadDir(context, directoryOf(current.type))
         if (current.path.startsWith(partialDir)) return@withLock true
 
@@ -172,7 +232,7 @@ object DownloadHelper {
     suspend fun encryptExistingDownloads(context: Context) = withContext(Dispatchers.IO) {
         val dao = DatabaseHolder.Database.downloadDao()
         dao.getAll().forEach { (download, items) ->
-            items.filter { isCompleteClearFile(it) }.forEach { item ->
+            items.filter { isCompleteClearFile(context, it) }.forEach { item ->
                 runCatching { encryptInPlace(context, item) }
                     .onFailure { Log.e(TAG(), "Could not encrypt a download", it) }
             }
@@ -192,8 +252,8 @@ object DownloadHelper {
     }
 
     /** Subtitles have no known size: one written by an older version was complete at once. */
-    private fun isCompleteClearFile(item: DownloadItem): Boolean {
-        if (DownloadEncryption.isEncrypted(item.path) || !item.path.exists()) return false
+    private fun isCompleteClearFile(context: Context, item: DownloadItem): Boolean {
+        if (isStored(context, item.path) || !item.path.exists()) return false
         return item.isFinished || item.type == FileType.SUBTITLE && item.path.fileSize() > 0
     }
 
@@ -254,6 +314,18 @@ object DownloadHelper {
             .putExtra(IntentData.downloadData, downloadData)
 
         ContextCompat.startForegroundService(context, intent)
+    }
+
+    /**
+     * Asks for the right to post notifications (Android 13 and later), so the progress and the
+     * end of a download show in the status bar. The download starts either way: refused, it runs
+     * without a visible notification, and Android stops asking after the second refusal.
+     */
+    fun requestNotificationPermission(activity: Activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+        if (ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED) return
+        ActivityCompat.requestPermissions(activity, arrayOf(permission), NOTIFICATION_PERMISSION_REQUEST)
     }
 
     fun DownloadItem.getNotificationId(): Int {

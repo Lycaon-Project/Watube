@@ -2,6 +2,7 @@ package com.watube.yard.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.watube.yard.R
 import com.watube.yard.extensions.bundleOf
 import androidx.recyclerview.widget.ListAdapter
 import com.watube.yard.api.obj.Subscription
@@ -13,6 +14,7 @@ import com.watube.yard.helpers.ImageHelper
 import com.watube.yard.helpers.NavigationHelper
 import com.watube.yard.ui.adapters.callbacks.DiffUtilItemCallback
 import com.watube.yard.ui.base.BaseActivity
+import com.watube.yard.ui.extensions.nameLongPress
 import com.watube.yard.ui.extensions.setupSubscriptionButton
 import com.watube.yard.ui.sheets.ChannelOptionsBottomSheet
 import com.watube.yard.ui.viewholders.SubscriptionChannelViewHolder
@@ -48,6 +50,7 @@ class SubscriptionChannelAdapter :
             root.setOnClickListener {
                 NavigationHelper.navigateChannel(root.context, subscription.url)
             }
+            root.nameLongPress(R.string.tooltip_more)
             root.setOnLongClickListener {
                 val channelOptionsSheet = ChannelOptionsBottomSheet()
                 channelOptionsSheet.arguments = bundleOf(

@@ -90,7 +90,10 @@ data class ExternalLink(
                 return null
             }
 
-            val cleaned = UrlPrivacy.removeTrackingParameters(link) ?: link
+            // the sheet shows the host of [link]: the cleaned link must open that very host, or
+            // the link is opened as it is
+            val cleaned = (UrlPrivacy.removeTrackingParameters(link) ?: link)
+                .takeIf { sameAuthority(it, uri) } ?: link
             val removed = parameterNames(link) - parameterNames(cleaned).toSet()
             return ExternalLink(
                 url = cleaned,
@@ -101,6 +104,11 @@ data class ExternalLink(
                 removedParameters = removed.distinct()
             )
         }
+
+        private fun sameAuthority(cleaned: String, original: URI): Boolean = runCatching {
+            val uri = URI(cleaned)
+            uri.scheme.equals(original.scheme, ignoreCase = true) && uri.rawAuthority == original.rawAuthority
+        }.getOrDefault(false)
 
         private fun parameterNames(link: String): List<String> {
             val query = link.substringAfter('?', "").substringBefore('#')

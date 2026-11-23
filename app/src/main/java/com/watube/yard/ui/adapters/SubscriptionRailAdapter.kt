@@ -9,7 +9,9 @@ import android.view.accessibility.AccessibilityEvent
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -35,10 +37,12 @@ data class RailChannel(
 
 /**
  * Channels above the subscriptions feed. A tap selects a channel ([onSelect] receives it, or
- * null when the selected one is tapped again), a long press opens the channel page.
+ * null when the selected one is tapped again), a long press opens the channel page. With
+ * [compact], for the pinned bar of the header, only the avatars show, smaller.
  */
 class SubscriptionRailAdapter(
     private val onSelect: (RailChannel?) -> Unit,
+    private val compact: Boolean = false,
 ) : ListAdapter<RailChannel, SubscriptionRailAdapter.RailViewHolder>(RailDiff) {
 
     var selectedId: String? = null
@@ -55,7 +59,21 @@ class SubscriptionRailAdapter(
         val binding = ItemSubscriptionRailBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
+        if (compact) binding.makeCompact()
         return RailViewHolder(binding)
+    }
+
+    /** Smaller avatars without their names; screen readers still get the name from the row. */
+    private fun ItemSubscriptionRailBinding.makeCompact() {
+        val res = root.resources
+        root.updateLayoutParams {
+            width = res.getDimensionPixelSize(R.dimen.watube_rail_item_width_compact)
+        }
+        (railAvatar.parent as View).updateLayoutParams {
+            width = res.getDimensionPixelSize(R.dimen.watube_rail_avatar_size_compact)
+            height = width
+        }
+        railName.isGone = true
     }
 
     override fun onBindViewHolder(holder: RailViewHolder, position: Int) {

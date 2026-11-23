@@ -11,6 +11,7 @@ object IntentData {
     const val channelId = "channelId"
     const val channelName = "channelName"
     const val channelAvatar = "channelAvatar"
+    const val isLive = "isLive"
     const val playlistId = "playlistId"
     const val timeStamp = "timeStamp"
     const val playlistType = "playlistType"

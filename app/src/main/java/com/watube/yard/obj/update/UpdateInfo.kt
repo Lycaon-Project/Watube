@@ -10,6 +10,8 @@ import kotlinx.serialization.Serializable
 @Parcelize
 data class UpdateInfo(
     val name: String,
+    /** The release's git tag, where the version often is when the title has none. */
+    @SerialName("tag_name") val tagName: String = "",
     val body: String,
     @SerialName("html_url") val htmlUrl: String
 ) : Parcelable

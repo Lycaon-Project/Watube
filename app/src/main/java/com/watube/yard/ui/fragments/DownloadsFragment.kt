@@ -3,6 +3,7 @@ package com.watube.yard.ui.fragments
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
+import android.content.res.Configuration
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
@@ -52,7 +53,9 @@ import com.watube.yard.receivers.DownloadReceiver
 import com.watube.yard.services.DownloadService
 import com.watube.yard.ui.adapters.DownloadPlaylistAdapter
 import com.watube.yard.ui.adapters.DownloadsAdapter
+import com.watube.yard.ui.adapters.showDownloadAction
 import com.watube.yard.ui.base.DynamicLayoutManagerFragment
+import com.watube.yard.ui.extensions.dragPillWith
 import com.watube.yard.ui.extensions.setOnBackPressed
 import com.watube.yard.ui.models.CommonPlayerViewModel
 import com.watube.yard.ui.models.DownloadsViewModel
@@ -100,6 +103,10 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
         downloadExport.bind()
 
         binding.downloadsPager.adapter = DownloadsFragmentAdapter(this)
+        // the tab pill wears the bottom bar's glass pill, its night one in the dark
+        val night = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
+        if (night) binding.tabPill.setBackgroundResource(R.drawable.watube_bottom_nav_background_night)
 
         TabLayoutMediator(binding.tabLayout, binding.downloadsPager) { tab, position ->
             tab.text = when (position) {
@@ -109,6 +116,8 @@ class DownloadsFragment : Fragment(R.layout.fragment_downloads) {
                 else -> throw IllegalArgumentException()
             }
         }.attach()
+        // the tabs' pill can also be dragged from tab to tab, the pages following
+        binding.tabLayout.dragPillWith(binding.downloadsPager)
 
         setupSearchInput()
     }
@@ -217,6 +226,9 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
                     updateProgress(it.first, it.second)
                 }
             }
+            // the progress events only add to the bars: catch up on what was written while
+            // the list was not followed, the rows read their size from the files
+            if (::adapter.isInitialized) adapter.notifyItemRangeChanged(0, adapter.itemCount)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -354,6 +366,7 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
             .map { item -> item.id }
 
         if (!serviceConnection.isBound) {
+            activity?.let(DownloadHelper::requestNotificationPermission)
             DownloadHelper.startDownloadService(requireContext())
             bindDownloadService(ids.toIntArray())
             return true
@@ -476,7 +489,7 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
         view?.binding?.apply {
             when (status) {
                 DownloadStatus.Paused -> {
-                    resumePauseBtn.setImageResource(R.drawable.ic_download)
+                    showDownloadAction(R.drawable.ic_download)
                 }
 
                 DownloadStatus.Completed -> {
@@ -487,16 +500,16 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
 
                 is DownloadStatus.Progress -> {
                     downloadOverlay.isVisible = true
-                    resumePauseBtn.setImageResource(R.drawable.ic_pause)
+                    showDownloadAction(R.drawable.ic_pause)
                     if (progressBar.isIndeterminate) return
                     progressBar.incrementProgressBy(status.progress.toInt())
-                    val progressInfo = progressBar.progress.formatAsFileSize() +
-                            " /\n" + progressBar.max.formatAsFileSize()
+                    val progressInfo = progressBar.progress.formatAsFileSize(fileSize.context) +
+                            " /\n" + progressBar.max.formatAsFileSize(fileSize.context)
                     fileSize.text = progressInfo
                 }
 
                 is DownloadStatus.Error -> {
-                    resumePauseBtn.setImageResource(R.drawable.ic_restart)
+                    showDownloadAction(R.drawable.ic_restart)
                 }
             }
         }
@@ -511,8 +524,15 @@ class DownloadsFragmentPage : DynamicLayoutManagerFragment(R.layout.fragment_dow
 
     override fun onStop() {
         super.onStop()
-        runCatching {
-            context?.unbindService(serviceConnection)
+        // battery: an unseen list draws no progress; it catches up when it shows again
+        serviceConnection.job?.cancel()
+        if (serviceConnection.isBound) {
+            runCatching {
+                context?.unbindService(serviceConnection)
+            }
+            // unbinding reports no disconnection: without this the next start never rebinds
+            serviceConnection.isBound = false
+            binder = null
         }
     }
 
@@ -560,6 +580,7 @@ class PlaylistDownloadsFragmentPage : Fragment(R.layout.fragment_download_conten
             PreferenceHelper.putInt(PreferenceKeys.SELECTED_DOWNLOAD_PLAYLIST_SORT_TYPE, value)
         }
     private val downloadsModel: DownloadsViewModel by activityViewModels()
+    private val downloadExport = DownloadExport(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentDownloadContentBinding.bind(view)
@@ -576,18 +597,32 @@ class PlaylistDownloadsFragmentPage : Fragment(R.layout.fragment_download_conten
         }
         backPressedCallback.isEnabled = false
 
-        val adapter = DownloadPlaylistAdapter { playlist ->
-            childFragmentManager.commit {
-                replace<DownloadsFragmentPage>(
-                    binding.fragment.id,
-                    args = bundleOf(
-                        IntentData.downloadTab to DownloadTab.PLAYLIST,
-                        IntentData.playlistId to playlist.downloadPlaylist.playlistId
+        lateinit var adapter: DownloadPlaylistAdapter
+        adapter = DownloadPlaylistAdapter(
+            navigateToPlaylist = { playlist ->
+                childFragmentManager.commit {
+                    replace<DownloadsFragmentPage>(
+                        binding.fragment.id,
+                        args = bundleOf(
+                            IntentData.downloadTab to DownloadTab.PLAYLIST,
+                            IntentData.playlistId to playlist.downloadPlaylist.playlistId
+                        )
                     )
-                )
+                }
+                backPressedCallback.isEnabled = true
+            },
+            showOptions = { playlist, position ->
+                val options = listOf(R.string.export_playlist, R.string.deletePlaylist)
+                BaseBottomSheet().setSimpleItems(options.map { getString(it) }) { which ->
+                    when (options[which]) {
+                        R.string.export_playlist ->
+                            downloadExport.exportPlaylist(playlist.downloadPlaylist.playlistId)
+
+                        R.string.deletePlaylist -> adapter.showDeleteDialog(requireContext(), position)
+                    }
+                }.show(childFragmentManager)
             }
-            backPressedCallback.isEnabled = true
-        }
+        )
         binding.downloadsRecView.setOnDismissListener { position ->
             adapter.showDeleteDialog(requireContext(), position)
             // put the item back to the center, as it's currently out of the screen

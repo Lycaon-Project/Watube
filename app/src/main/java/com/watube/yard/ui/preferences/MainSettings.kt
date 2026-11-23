@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.watube.yard.BuildConfig
 import com.watube.yard.R
 import com.watube.yard.databinding.FragmentMainSettingsBinding
 import com.watube.yard.databinding.SettingsCategoryRowBinding
@@ -77,7 +76,7 @@ class MainSettings : Fragment() {
         }
         // mockup: "Watube 26.9 · GPL-3.0 · crédits"
         binding.rowAbout.rowSummary.text =
-            getString(R.string.watube_settings_summary_about, BuildConfig.VERSION_NAME)
+            getString(R.string.watube_settings_summary_about, AboutActivity.versionLabel())
     }
 
     private fun setupRow(

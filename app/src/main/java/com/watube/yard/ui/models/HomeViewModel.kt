@@ -147,7 +147,7 @@ class HomeViewModel : ViewModel() {
         subscriptionsViewModel: SubscriptionsViewModel
     ): List<StreamItem> {
         // the feed already shown, else the load the subscriptions tab shares (never a second one)
-        val feed = subscriptionsViewModel.videoFeed.value
+        val feed = subscriptionsViewModel.currentFeed
             ?: subscriptionsViewModel.fetchFeed(context, forceRefresh = false).await()
 
         return DatabaseHelper.filterByStreamTypeAndWatchPosition(feed, hideWatched, showUpcoming)

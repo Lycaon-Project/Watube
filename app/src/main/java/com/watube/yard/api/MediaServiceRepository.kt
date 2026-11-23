@@ -22,6 +22,12 @@ interface MediaServiceRepository {
 
     // region Video Player
     suspend fun getStreams(videoId: String): Streams
+
+    /**
+     * The streams of [videoId] for a download: only what the files need, so a backend can skip
+     * what is shown in the player alone (the dislike count asked to a third-party service).
+     */
+    suspend fun getStreamsForDownload(videoId: String): Streams = getStreams(videoId)
     // endregion
 
     // region SABR Streaming

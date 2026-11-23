@@ -21,6 +21,12 @@ object ThemeHelper {
      * anymore. The optional OLED / pure-black variant is layered on top in dark mode.
      */
     fun updateTheme(activity: AppCompatActivity) {
+        applyAppColors(activity)
+        applyFontStyle(activity)
+    }
+
+    /** Material Forest, with the OLED / pure-black variant on top when it is enabled. */
+    private fun applyAppColors(activity: Activity) {
         activity.setTheme(R.style.Theme_Watube)
 
         val pureThemeEnabled = PreferenceHelper.getBoolean(
@@ -28,8 +34,6 @@ object ThemeHelper {
             false
         )
         if (pureThemeEnabled) activity.theme.applyStyle(R.style.Pure, true)
-
-        applyFontStyle(activity)
     }
 
     /**
@@ -42,7 +46,13 @@ object ThemeHelper {
         }
     }
 
+    /**
+     * A screen shown as a dialog (shared link to queue, playlist or download): the app colours
+     * first, then the floating window on top. The manifest theme of these activities is stock
+     * Material, so without the app colours their dialogs came out in the baseline purple.
+     */
     fun applyDialogActivityTheme(activity: Activity) {
+        applyAppColors(activity)
         activity.theme.applyStyle(R.style.DialogActivity, true)
         applyFontStyle(activity)
     }

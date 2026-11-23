@@ -47,10 +47,13 @@ class HelpActivity : BaseActivity() {
         view.findViewById<TextView>(R.id.faq_question).setText(question)
         answerView.setText(answer)
 
+        // the chevron shows folded or unfolded: screen readers say it
+        view.stateDescription = getString(R.string.a11y_collapsed)
         view.setOnClickListener {
             val expand = answerView.visibility != View.VISIBLE
             TransitionManager.beginDelayedTransition(container)
             answerView.visibility = if (expand) View.VISIBLE else View.GONE
+            view.stateDescription = getString(if (expand) R.string.a11y_expanded else R.string.a11y_collapsed)
             chevron.animate().rotation(if (expand) 180f else 0f).setDuration(200).start()
         }
         container.addView(view)

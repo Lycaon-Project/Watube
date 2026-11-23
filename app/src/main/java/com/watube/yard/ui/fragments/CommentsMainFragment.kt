@@ -33,6 +33,7 @@ class CommentsMainFragment : Fragment(R.layout.fragment_comments) {
         val binding = FragmentCommentsBinding.bind(view)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.commentsRV.layoutManager = layoutManager
+        CommentsSheet.padAboveNavigationBar(binding.commentsRV)
 
         val commentsSheet = parentFragment as? CommentsSheet
         commentsSheet?.binding?.btnScrollToTop?.setOnClickListener {

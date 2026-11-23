@@ -12,6 +12,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iconIV"
+        android:importantForAccessibility="no"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_gravity="center"

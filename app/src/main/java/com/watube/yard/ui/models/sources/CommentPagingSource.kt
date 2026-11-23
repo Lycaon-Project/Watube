@@ -28,7 +28,9 @@ class CommentPagingSource(
                 }
             }
 
-            LoadResult.Page(result.comments, null, result.nextpage)
+            // a live chat never ends while the stream lasts: it is read by the live chat
+            // screen, never paged on as comments
+            LoadResult.Page(result.comments, null, result.nextpage.takeUnless { result.liveChat })
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

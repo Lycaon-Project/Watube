@@ -25,6 +25,7 @@
         tools:visibility="visible">
 
         <ImageView
+            android:importantForAccessibility="no"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -53,20 +54,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!-- Over the feed, which runs on under the compact bar once the header is folded:
+                 Efecto's glass (or the page tone, a little see-through) is given by
+                 SubscriptionsFragment. The screen runs on under the app's top bar too: the
+                 collapsing part gets the bar's height as its top padding and on top of its
+                 folded height (UnderTopBar), so one surface goes from the top of the window down
+                 to the compact selection -->
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/subscriptions_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:outlineProvider="none"
+                android:translationZ="1dp"
                 app:liftOnScroll="false">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/subscriptions_collapsing_tb"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|enterAlways"
+                    android:minHeight="@dimen/watube_subs_compact_bar_height"
+                    app:contentScrim="@android:color/transparent"
+                    app:statusBarScrim="@android:color/transparent"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
                     app:titleCollapseMode="scale">
 
                     <LinearLayout
+                        android:id="@+id/subs_expanded"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -84,6 +98,7 @@
 
                             <TextView
                                 android:id="@+id/subs_title"
+                                android:accessibilityHeading="true"
                                 style="@style/WatubeSubsTitle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -285,6 +300,7 @@
 
                                 <TextView
                                     android:id="@+id/feed_progress_text"
+                                    android:accessibilityLiveRegion="polite"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     tools:text="5/20" />
@@ -295,15 +311,67 @@
 
                     </LinearLayout>
 
+                    <!-- the compact selection, pinned once the header above has scrolled away: the
+                         channels as small avatars and the group in view, which opens the whole
+                         header again. Faded in with the scroll by SubscriptionsFragment. -->
+                    <LinearLayout
+                        android:id="@+id/subs_compact_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/watube_subs_compact_bar_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="invisible"
+                        app:layout_collapseMode="pin">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/subs_rail_compact"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:orientation="horizontal"
+                            android:overScrollMode="never"
+                            android:paddingHorizontal="7dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                        <!-- the selected group chip of the full header, as it looks there (selected,
+                             not checkable: a tap opens the header instead of unchecking it) -->
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/subs_group_compact"
+                            style="@style/Watube.Chip.Subs"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="@dimen/watube_gutter"
+                            android:checkable="false"
+                            android:ellipsize="end"
+                            android:maxWidth="@dimen/watube_subs_compact_group_max_width"
+                            android:text="@string/all"
+                            app:closeIcon="@drawable/ic_arrow_down"
+                            app:closeIconEndPadding="8dp"
+                            app:closeIconSize="18dp"
+                            app:closeIconTint="?attr/colorOnPrimary"
+                            app:closeIconVisible="true"
+                            app:textEndPadding="2dp" />
+
+                    </LinearLayout>
+
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sub_feed"
+            <com.watube.yard.ui.views.BackdropFrameLayout
+                android:id="@+id/sub_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sub_feed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false" />
+
+            </com.watube.yard.ui.views.BackdropFrameLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </com.watube.yard.ui.views.CustomSwipeToRefresh>
 </RelativeLayout>

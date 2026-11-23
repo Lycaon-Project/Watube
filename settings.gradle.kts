@@ -52,7 +52,7 @@ dependencyResolutionManagement {
         exclusiveContent {
             forRepository { maven("https://jitpack.io") }
             filter {
-                includeGroup("com.github.TeamNewPipe")
+                // Watube Extrato only: it carries its own JSON code, so nothing else comes from here
                 includeGroup("com.github.Lycaon-Project")
             }
         }
@@ -70,3 +70,23 @@ rootProject.name = "Watube"
 
 include(":app")
 include(":baselineprofile")
+
+// Opt-in, local builds only: the extractor compiled from a reviewed local checkout instead of
+// the pinned JitPack commit, to work on both at once. Set in local.properties, which is never
+// committed: watube.extractor.dir=../../WatubeExtrato. Unset, nothing changes.
+val localProperties = java.util.Properties().apply {
+    val file = file("local.properties")
+    if (file.isFile) file.reader().use { load(it) }
+}
+localProperties.getProperty("watube.extractor.dir")?.takeIf { it.isNotBlank() }?.let { dir ->
+    val checkout = file(dir)
+    require(checkout.resolve("settings.gradle.kts").isFile) {
+        "watube.extractor.dir does not point to a WatubeExtrato checkout: $checkout"
+    }
+    logger.lifecycle("Watube: extractor built from the local checkout $checkout")
+    includeBuild(checkout) {
+        dependencySubstitution {
+            substitute(module("com.github.Lycaon-Project:WatubeExtrato")).using(project(":extractor"))
+        }
+    }
+}

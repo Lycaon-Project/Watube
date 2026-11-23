@@ -24,6 +24,7 @@
         <com.google.android.material.button.MaterialButton
             style="@style/Widget.Material3Expressive.Button.IconButton.Tonal"
             android:id="@+id/trending_region"
+            android:contentDescription="@string/region"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"

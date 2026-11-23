@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Comments -->
+<!-- One live chat message (LiveChatAdapter): the author, then the text, as plain text only.
+     No link is ever made from it and nothing in it can be tapped. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/live_chat_message"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="6dp"
+    android:textAlignment="viewStart"
+    android:textAppearance="?attr/textAppearanceBodyMedium"
+    android:textColor="?attr/colorOnSurface"
+    tools:text="Octacat  Hello from the live chat" />
+<!-- endregion -->

@@ -1,6 +1,7 @@
 package com.watube.yard.helpers
 
 import android.content.Context
+import android.content.res.Configuration
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
@@ -11,6 +12,7 @@ import com.watube.yard.api.TrendingCategory
 import com.watube.yard.constants.PreferenceKeys
 import com.watube.yard.enums.SbSkipOptions
 import com.watube.yard.helpers.LocaleHelper.getDetectedCountry
+import com.watube.yard.util.UpdateCheckInterval
 import kotlin.math.roundToInt
 
 // region Crash Reports
@@ -261,6 +263,41 @@ object PreferenceHelper {
             if (getBoolean(PreferenceKeys.FULL_LOCAL_MODE, true)) {
                 remove(PreferenceKeys.LOCAL_STREAM_EXTRACTION)
                 remove(PreferenceKeys.LOCAL_FEED_EXTRACTION)
+            }
+        },
+        PreferenceMigration(15, 16) {
+            // Watube: the video grids follow the window by default now (GridColumns.AUTO). The
+            // settings screen stored its default column counts as soon as it was opened, so a
+            // value equal to this device's former default was not a choice: it goes back to
+            // automatic. Any other number was picked by the user and stays
+            val screenSize = WatubeApp.instance.resources.configuration.screenLayout and
+                Configuration.SCREENLAYOUT_SIZE_MASK
+            val (portrait, landscape) = when (screenSize) {
+                Configuration.SCREENLAYOUT_SIZE_XLARGE -> "3" to "6"
+                Configuration.SCREENLAYOUT_SIZE_LARGE -> "2" to "4"
+                else -> "1" to "2"
+            }
+            if (getString(PreferenceKeys.GRID_COLUMNS_PORTRAIT, "") == portrait) {
+                remove(PreferenceKeys.GRID_COLUMNS_PORTRAIT)
+            }
+            if (getString(PreferenceKeys.GRID_COLUMNS_LANDSCAPE, "") == landscape) {
+                remove(PreferenceKeys.GRID_COLUMNS_LANDSCAPE)
+            }
+            // the home screen shows the subscriptions feed only until other sections are
+            // picked; every section at once was the former default, stored the same way
+            val allSections = WatubeApp.instance.resources
+                .getStringArray(R.array.homeTabItemsValues).toSet()
+            if (getStringSet(PreferenceKeys.HOME_TAB_CONTENT, emptySet()) == allSections) {
+                remove(PreferenceKeys.HOME_TAB_CONTENT)
+            }
+        },
+        PreferenceMigration(16, 17) {
+            // Watube: the update checks are offered every launch, weekly, monthly, every 3 or
+            // 6 months. The every 6 hours, 12 hours and daily choices are gone: they go back to
+            // the default, every launch, the closest to such frequent checks
+            val interval = getString(PreferenceKeys.UPDATE_CHECK_INTERVAL, "")
+            if (UpdateCheckInterval.isRetired(interval)) {
+                remove(PreferenceKeys.UPDATE_CHECK_INTERVAL)
             }
         }
     )

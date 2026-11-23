@@ -25,6 +25,7 @@
     <com.google.android.material.button.MaterialButton
         style="?materialIconButtonFilledStyle"
         android:id="@+id/deleteInstance"
+        android:contentDescription="@string/a11y_delete_instance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

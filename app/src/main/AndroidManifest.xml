@@ -111,7 +111,8 @@
             android:enabled="true"
             android:exported="true"
             android:label="@string/add_to_queue"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Material3.DayNight.Dialog">
 
             <intent-filter android:label="@string/add_to_queue">
                 <action android:name="android.intent.action.SEND" />

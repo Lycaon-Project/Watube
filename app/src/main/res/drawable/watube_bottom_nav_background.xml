@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Solar bottom navigation (day): floating bar, hairline stroke, 1.9rem corners on all
-  four sides, fill rgba(250,250,247,.94) so the page tint shows through the gap below.
+  Solar bottom navigation (day): floating glass pill, hairline stroke, 1.9rem corners on
+  all four sides. The screens run on under it (BottomBarOverlay), so only the pill is drawn:
+  its fill is the mockup nav tone at 92 % (watube_nav_plain, Efecto off; the glass uses
+  watube_nav_scrim at 82 %) and the videos show through it.
+  Same family as the mini player's glass, told apart by its light: where the mini player has
+  a soft sheen over its upper half, the bar catches a narrow sheen along its top (no line
+  drawn across its top edge).
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/watube_nav_scrim" />
-    <stroke
-        android:width="1dp"
-        android:color="?attr/colorOutlineVariant" />
-    <corners android:radius="25dp" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- the plain fill, swapped for the smart tint while the glass is on (GlassBackground) -->
+    <item android:id="@+id/watube_glass_fill">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/watube_nav_plain" />
+            <corners android:radius="25dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:centerY="0.3"
+                android:startColor="#33FFFFFF"
+                android:centerColor="#00FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners android:radius="25dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="1dp"
+                android:color="?attr/colorOutlineVariant" />
+            <corners android:radius="25dp" />
+        </shape>
+    </item>
+</layer-list>

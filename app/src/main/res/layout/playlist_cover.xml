@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Playlists -->
+<!-- Tile of the library playlists and bookmarks (two rows scrolling sideways): 16:9 cover (the thumbnails are
+     16:9, a squarer crop would show the letterbox bars of hqdefault images), the video
+     count chip in its corner, then the title on two lines and the owner on one. The
+     bookmark toggle (bookmarks only) sits on the cover's top corner. The horizontal
+     padding makes the gap between columns. -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playlist"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_ripple"
+    android:paddingHorizontal="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="10dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_playlist_thumbnail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+        app:cardCornerRadius="9.5dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="0dp">
+
+        <ImageView
+            android:id="@+id/playlist_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="4dp"
+            android:background="@drawable/watube_cover_badge"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp">
+
+            <ImageView
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_playlist"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/video_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:includeFontPadding="false"
+                android:textColor="#FFFFFF"
+                android:textFontWeight="800"
+                android:textSize="10.5sp"
+                android:textStyle="bold"
+                tools:text="20" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/bookmark_playlist"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="3dp"
+            android:background="@drawable/watube_cover_button"
+            android:contentDescription="@string/remove_bookmark"
+            android:padding="7dp"
+            android:src="@drawable/ic_bookmark"
+            android:visibility="gone"
+            app:tint="#FFFFFF"
+            tools:visibility="visible" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/playlist_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:lineHeight="16sp"
+        android:maxLines="2"
+        android:textColor="?attr/colorOnSurface"
+        android:textFontWeight="650"
+        android:textSize="12.5sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_playlist_thumbnail"
+        tools:text="Playlist title" />
+
+    <TextView
+        android:id="@+id/playlist_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?attr/colorOutline"
+        android:textSize="10.5sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlist_title"
+        tools:text="Channel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+<!-- endregion -->

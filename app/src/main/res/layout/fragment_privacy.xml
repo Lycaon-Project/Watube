@@ -11,7 +11,7 @@
     android:layout_height="match_parent"
     android:background="?android:colorBackground"
     android:clipToPadding="false"
-    android:paddingBottom="120dp"
+    android:paddingBottom="16dp"
     tools:context=".ui.fragments.PrivacyFragment">
 
     <LinearLayout

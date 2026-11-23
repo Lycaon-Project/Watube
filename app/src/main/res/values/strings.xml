@@ -34,6 +34,20 @@
     <string name="server_error">There seem to be a problem with the selected server. Try another instance.</string>
     <string name="unknown_error">Network error.</string>
     <string name="error">Something went wrong.</string>
+    <string name="error_age_restricted">This video is age-restricted.</string>
+    <string name="error_not_in_country">This video is not available in your country.</string>
+    <string name="error_private">This video is private.</string>
+    <string name="error_paid">This video is for paying members only.</string>
+    <string name="error_account_terminated">The account of this channel has been closed.</string>
+    <string name="error_unavailable">This video is not available.</string>
+    <string name="error_not_started">This video has not started yet: it can be watched once it airs.</string>
+    <string name="error_youtube_limited">YouTube is limiting anonymous access. Try again in a few minutes.</string>
+    <string name="error_youtube_unreadable">The answer of YouTube could not be read. Try again later.</string>
+    <string name="error_server_answer">The server could not answer. Try again later.</string>
+    <string name="error_playback_stream">The video stream could not be played.</string>
+    <string name="error_playback_decoder">This device cannot decode this video.</string>
+    <string name="error_playback_audio">The sound could not be played on this device.</string>
+    <string name="error_language_settings">The language settings of the system could not be opened.</string>
     <string name="empty">You have to enter a username and password.</string>
     <string name="notgmail">This is for a Piped account</string>
     <string name="defres">Video resolution</string>
@@ -68,6 +82,10 @@
     <string name="retry">Retry</string>
     <string name="comments">Comments</string>
     <string name="comments_count">Comments (%1$s)</string>
+    <string name="live_chat">Live chat</string>
+    <string name="live_chat_ended">The live chat has ended.</string>
+    <string name="live_chat_empty">No messages yet.</string>
+    <string name="live_chat_owner">Channel owner</string>
     <string name="replies">Replies</string>
     <string name="channels">Channels</string>
     <string name="albums">Albums</string>
@@ -148,14 +166,14 @@
     <string name="empty_instance">Fill in the name and the API URL.</string>
     <string name="invalid_url">Please enter a URL that works</string>
     <string name="show_updates">Check updates automatically</string>
-    <string name="show_updates_summary">Check for updates automatically every time the app is started.</string>
+    <string name="show_updates_summary">Look for a new version when the app starts, at the chosen frequency.</string>
     <string name="update_check_interval">Check frequency</string>
     <string name="update_check_interval_summary">How often the app looks for a new version.</string>
     <string name="update_interval_launch">Every launch</string>
-    <string name="update_interval_6h">Every 6 hours</string>
-    <string name="update_interval_12h">Every 12 hours</string>
-    <string name="update_interval_daily">Once a day</string>
-    <string name="update_interval_weekly">Once a week</string>
+    <string name="update_interval_weekly">Every week</string>
+    <string name="update_interval_monthly">Every month</string>
+    <string name="update_interval_3_months">Every 3 months</string>
+    <string name="update_interval_6_months">Every 6 months</string>
     <string name="related_streams">Related content</string>
     <string name="related_streams_summary">Show similar streams alongside what you watch</string>
     <string name="buffering_goal">Preloading</string>
@@ -206,6 +224,8 @@
     <string name="autoRotatePlayer_summary">Fullscreen playback when the device gets turned</string>
     <string name="pure_theme">Deep black (OLED)</string>
     <string name="pure_theme_summary">Saves battery on OLED screens</string>
+    <string name="efecto_off">Disable Efecto</string>
+    <string name="efecto_off_summary">Removes the blur under the navigation bar and the mini player</string>
     <string name="text_size">Text size</string>
     <string name="feed_density">Feed density</string>
     <string name="density_cozy">Cozy</string>
@@ -685,13 +705,8 @@
         <item quantity="one">local · %1$d video</item>
         <item quantity="other">local · %1$d videos</item>
     </plurals>
-    <plurals name="watube_shortcut_playlists">
-        <item quantity="one">%1$d playlist</item>
-        <item quantity="other">%1$d playlists</item>
-    </plurals>
     <string name="watube_shortcut_downloads">offline</string>
-    <string name="watube_shortcut_privacy_title">Private data</string>
-    <string name="watube_shortcut_privacy">never sent</string>
+    <string name="watube_shortcut_folder">Destination</string>
 
     <!-- Solar search pane (.slab labels, .noresult empty state) -->
     <string name="watube_search_recent">Recents</string>
@@ -715,6 +730,8 @@
     <string name="about_privacy">Privacy policy</string>
     <string name="about_report_issue">Report an issue</string>
     <string name="about_mission">Why Watube</string>
+    <string name="vireoboo_name" translatable="false">VireoBoo</string>
+    <string name="vireoboo_found">Congratulations, you found me!</string>
     <string name="about_header_subtitle">Checking for updates keeps the app reliable and brings you the latest fixes.</string>
 <string name="search_back">Back</string>
 <string name="search_clear">Clear</string>
@@ -888,7 +905,25 @@
     <string name="export_download">Export the file</string>
     <string name="download_export_choose">Which file to export?</string>
     <string name="download_export_unfinished">This download is not finished</string>
-    <string name="download_exported">File exported. It is no longer encrypted: keep it somewhere safe.</string>
+    <string name="download_exported">Exported to %1$s. It is no longer encrypted: keep it somewhere safe.</string>
+    <string name="download_already_readable">This file is already readable, in %1$s</string>
+    <plurals name="playlist_exported">
+        <item quantity="one">%1$d file exported to %2$s, folder “%3$s”</item>
+        <item quantity="other">%1$d files exported to %2$s, folder “%3$s”</item>
+    </plurals>
+    <string name="download_folder">Destination folder</string>
+    <string name="download_folder_summary">%1$s, with a Video and an Audio folder</string>
+    <string name="download_folder_message">Choose the folder your downloads go to. It holds a Video and an Audio folder, which your other apps and your file manager can open.</string>
+    <string name="download_folder_current">Current folder: %1$s</string>
+    <string name="download_folder_default">Watube folder</string>
+    <string name="download_folder_pick">Choose another folder…</string>
+    <string name="download_folder_pick_hint">Any folder of the phone or of a memory card</string>
+    <string name="download_folder_unavailable">This folder can no longer be reached, choose another one</string>
+    <string name="download_folder_video">Video</string>
+    <string name="download_folder_audio">Audio</string>
+    <string name="download_readable">Save readable</string>
+    <string name="download_readable_summary">New downloads stay in the destination folder, readable by your other apps and your file manager</string>
+    <string name="download_readable_warning">Downloads saved this way are not encrypted: any app allowed to read your files can open them. Downloads already made stay encrypted, use Export the file to get a readable copy.</string>
     <string name="download_export_failed">Could not export the file</string>
     <string name="download_encrypt_no_space">Not enough free space to finish the download: free some up, it will be finished on the next start</string>
     <string name="download_no_space">Not enough free space to go on with the download</string>
@@ -902,5 +937,53 @@
     <plurals name="external_link_trackers">
         <item quantity="one">%1$d tracker removed: %2$s</item>
         <item quantity="other">%1$d trackers removed: %2$s</item>
+    </plurals>
+    <!-- Download sheet (DownloadDialog, DownloadPlaylistDialog) -->
+    <string name="download_audio_only">Audio only</string>
+    <string name="download_more_options">More options</string>
+    <string name="download_video_codec">Video codec</string>
+    <string name="download_codec_auto">Auto</string>
+    <string name="download_with_size">Download · %1$s</string>
+    <string name="download_qualities_failed">The qualities of this video could not be loaded.</string>
+    <string name="download_fps">%1$d fps</string>
+    <string name="download_kbps">%1$s kbit/s</string>
+    <string name="download_choose_videos">Choose the videos to download</string>
+    <string name="download_select_all">Select all</string>
+    <string name="download_select_none">Select none</string>
+    <string name="download_next">Next</string>
+    <string name="download_back_to_videos">Back to the videos</string>
+    <string name="download_playlist_quality_note">Each video comes in this quality, or the closest one below it.</string>
+    <string name="download_playlist_empty">This playlist has no video to download.</string>
+    <plurals name="download_selected_count">
+        <item quantity="one">%1$d of %2$d selected</item>
+        <item quantity="other">%1$d of %2$d selected</item>
+    </plurals>
+    <plurals name="download_videos">
+        <item quantity="one">Download %1$d video</item>
+        <item quantity="other">Download %1$d videos</item>
+    </plurals>
+    <!-- Screen reader labels of controls shown as icons only -->
+    <string name="a11y_delete_instance">Delete instance</string>
+    <string name="a11y_decrease">Decrease</string>
+    <string name="a11y_increase">Increase</string>
+    <string name="a11y_swap_times">Swap start and end times</string>
+    <string name="a11y_remove_history">Remove from history</string>
+    <string name="a11y_fill_search">Copy to search field</string>
+    <string name="a11y_hearted">Liked by the creator</string>
+    <string name="a11y_creator_reply">Creator replied</string>
+    <string name="a11y_channel_picture">Channel picture</string>
+    <string name="a11y_channel_banner">Channel banner</string>
+    <string name="a11y_replay">Replay</string>
+    <string name="a11y_open_channel">Open channel %1$s</string>
+    <string name="a11y_expanded">Expanded</string>
+    <string name="a11y_collapsed">Collapsed</string>
+    <string name="a11y_remove">Remove</string>
+    <string name="a11y_move_up">Move up</string>
+    <string name="a11y_move_down">Move down</string>
+    <string name="a11y_start_tab">Start tab</string>
+    <string name="a11y_set_start_tab">Open the app on this tab</string>
+    <plurals name="a11y_video_count">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videos</item>
     </plurals>
 </resources>

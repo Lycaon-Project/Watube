@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Glass effect setting: the floating bar's pill catching a slanted gleam -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="?attr/colorControlNormal"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#000000"
+        android:fillType="evenOdd"
+        android:pathData="M8,6h8a6,6 0,0 1,0 12h-8a6,6 0,0 1,0 -12zM8,8a4,4 0,0 0,0 8h8a4,4 0,0 0,0 -8z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M8.4,14.6l3,-5.2h1.7l-3,5.2zM12.4,14.6l3,-5.2h1l-3,5.2z" />
+</vector>

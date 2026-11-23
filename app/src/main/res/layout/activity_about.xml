@@ -28,7 +28,9 @@
             app:title="@string/about"
             app:titleTextColor="?attr/colorOnSurface" />
 
-        <LinearLayout style="@style/WatubeAboutHeader">
+        <LinearLayout
+            android:id="@+id/about_header"
+            style="@style/WatubeAboutHeader">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,6 +40,7 @@
 
                 <ImageView
                     android:id="@+id/about_logo"
+                    android:contentDescription="@string/share"
                     android:layout_width="33dp"
                     android:layout_height="33dp"
                     android:background="@drawable/watube_mark_bg"
@@ -89,6 +92,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/update_summary" />
+
+            <!-- VireoBoo, hidden until the version card is tapped seven times -->
+            <LinearLayout
+                android:id="@+id/about_mascot_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/about_mascot"
+                    android:layout_width="72dp"
+                    android:layout_height="84dp"
+                    android:contentDescription="@string/vireoboo_name"
+                    android:src="@drawable/vireoboo_wave" />
+
+                <TextView
+                    android:id="@+id/about_mascot_bubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginBottom="26dp"
+                    android:accessibilityLiveRegion="polite"
+                    android:background="@drawable/watube_mascot_bubble"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:text="@string/vireoboo_found"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
         </LinearLayout>
 

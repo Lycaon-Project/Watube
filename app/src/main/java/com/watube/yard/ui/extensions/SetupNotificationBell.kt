@@ -14,13 +14,19 @@ fun MaterialButton.setupNotificationBell(channelId: String) {
     }
 
     var isIgnorable = PreferenceHelper.isChannelNotificationIgnorable(channelId)
-    setIconResource(iconResource(isIgnorable))
+    showBellState(isIgnorable)
 
     setOnClickListener {
         isIgnorable = !isIgnorable
         PreferenceHelper.toggleIgnorableNotificationChannel(channelId)
-        setIconResource(iconResource(isIgnorable))
+        showBellState(isIgnorable)
     }
+}
+
+/** Shows whether the channel's new videos are notified: by the icon, and in words for screen readers. */
+private fun MaterialButton.showBellState(isIgnorable: Boolean) {
+    setIconResource(iconResource(isIgnorable))
+    stateDescription = context.getString(if (isIgnorable) R.string.disabled else R.string.enabled)
 }
 
 private fun iconResource(isIgnorable: Boolean) =

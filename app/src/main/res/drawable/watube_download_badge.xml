@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- region Downloads -->
+<!-- Pill of a download quality card; its colour comes from backgroundTint
+     (watube_download_badge_fill), so it follows the card's chosen state -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="6dp" />
+    <solid android:color="@android:color/white" />
+</shape>
+<!-- endregion -->

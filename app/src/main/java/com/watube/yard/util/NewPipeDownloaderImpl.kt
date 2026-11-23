@@ -1,6 +1,7 @@
 package com.watube.yard.util
 
 import com.watube.yard.helpers.PrivacyHelper
+import okhttp3.Dns
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -9,6 +10,8 @@ import org.schabi.newpipe.extractor.downloader.Request
 import org.schabi.newpipe.extractor.downloader.Response
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException
 import java.io.IOException
+import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 // region Local Extraction
 class NewPipeDownloaderImpl : Downloader() {
@@ -23,8 +26,15 @@ class NewPipeDownloaderImpl : Downloader() {
             }
             chain.proceed(chain.request())
         })
+        // a host outside the policy is not even looked up (no DNS query, no TLS handshake)
+        .dns(Dns { host ->
+            if (!ExtractorNetworkPolicy.isAllowedHost(host)) throw UnknownHostException("Extractor host refused")
+            PrivateDns.lookup(host)
+        })
         // an https -> http redirect would expose the request on the network
         .followSslRedirects(false)
+        // a server dripping its answer must not hold an extraction thread for long
+        .callTimeout(CALL_TIMEOUT_S, TimeUnit.SECONDS)
         .build()
 
     @Throws(IOException::class, ReCaptchaException::class)
@@ -78,6 +88,7 @@ class NewPipeDownloaderImpl : Downloader() {
     private companion object {
         const val HTTP_TOO_MANY_REQUESTS = 429
         const val MAX_RESPONSE_BYTES = 32L * 1024 * 1024
+        const val CALL_TIMEOUT_S = 60L
     }
 }
 // endregion

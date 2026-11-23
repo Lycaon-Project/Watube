@@ -21,16 +21,16 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 // region Updates
-class UpdateChecker(private val context: Context) {
+/**
+ * @param report how the result of a manual check is told (a string resource): a toast by default,
+ * a snackbar where the screen has one (About), whose look the app controls.
+ */
+class UpdateChecker(
+    private val context: Context,
+    private val report: suspend (Int) -> Unit = { context.toastFromMainDispatcher(it) },
+) {
 
     companion object {
-        /**
-         * Default delay (hours) between two automatic update checks, used when the user hasn't picked one.
-         * "0" = check on every launch (no throttling). Must stay in sync with the `update_check_interval`
-         * ListPreference default in res/xml/general_settings.xml.
-         */
-        private const val DEFAULT_CHECK_INTERVAL_HOURS = "0"
-
         /**
          * "Every launch" means once per start of the app: MainActivity is also created again by a
          * shared link or after being destroyed in the background, which re-queried GitHub.
@@ -40,15 +40,15 @@ class UpdateChecker(private val context: Context) {
     }
 
     /**
-     * User-configurable minimum delay between two automatic checks, in milliseconds.
-     * A value of "0" means "check on every launch" (no throttling).
+     * User-configurable minimum delay between two automatic checks, in milliseconds; 0 means
+     * every launch. The default must match the ListPreference in res/xml/general_settings.xml.
      */
-    private fun autoCheckIntervalMs(): Long {
-        val hours = PreferenceHelper
-            .getString(PreferenceKeys.UPDATE_CHECK_INTERVAL, DEFAULT_CHECK_INTERVAL_HOURS)
-            .toLongOrNull() ?: DEFAULT_CHECK_INTERVAL_HOURS.toLong()
-        return hours * 60 * 60 * 1000L
-    }
+    private fun autoCheckIntervalMs(): Long = UpdateCheckInterval.millis(
+        PreferenceHelper.getString(
+            PreferenceKeys.UPDATE_CHECK_INTERVAL,
+            UpdateCheckInterval.EVERY_LAUNCH
+        )
+    )
 
     private fun isCheckThrottled(): Boolean {
         val interval = autoCheckIntervalMs()
@@ -76,51 +76,6 @@ class UpdateChecker(private val context: Context) {
         }
     }
 
-    /**
-     * Parse version string to comparable integer using weighted algorithm
-     * Examples:
-     *   "0.26.1" -> 26001
-     *   "1.2.3"  -> 1002003
-     *   "10.0.0" -> 10000000
-     *
-     * This ensures correct comparison even with multi-digit version numbers
-     */
-    private fun parseVersionToCode(versionName: String): Int {
-        return try {
-            val cleanVersion = versionName.trim()
-
-            // Try semantic versioning first (e.g., "0.26.1")
-            val parts = cleanVersion.split(".")
-            if (parts.size >= 2) {
-                var code = 0
-                var multiplier = 1000000  // Start with high multiplier
-
-                for (part in parts.take(3)) {  // Max 3 parts: major.minor.patch
-                    val number = part.filter { it.isDigit() }.toIntOrNull() ?: 0
-                    code += number * multiplier
-                    multiplier /= 1000  // Decrease multiplier for next part
-                }
-
-                return code
-            }
-
-            // Fallback: extract all digits
-            val digits = cleanVersion.filter { it.isDigit() }
-            if (digits.isNotEmpty()) {
-                digits.toIntOrNull() ?: 0
-            } else {
-                Log.w(TAG(), "Failed to parse version: $versionName")
-                0
-            }
-        } catch (e: NumberFormatException) {
-            Log.w(TAG(), "Failed to parse version: $versionName", e)
-            0
-        } catch (e: Exception) {
-            Log.e(TAG(), "Unexpected error parsing version: $versionName", e)
-            0
-        }
-    }
-
     suspend fun checkUpdate(isManualCheck: Boolean = false) {
         // automatic checks are throttled so that opening the app never spams the API,
         // manual checks from the settings always go through
@@ -130,12 +85,12 @@ class UpdateChecker(private val context: Context) {
         }
 
         val currentVersionName = getCurrentVersionName()
-        val currentAppVersion = parseVersionToCode(currentVersionName)
+        val currentAppVersion = ReleaseVersion.code(currentVersionName)
 
-        if (currentAppVersion == 0) {
+        if (currentAppVersion == null) {
             Log.e(TAG(), "Failed to determine current app version")
             if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.error_occurred)
+                report(R.string.error_occurred)
             }
             return
         }
@@ -146,24 +101,14 @@ class UpdateChecker(private val context: Context) {
                 RetrofitInstance.externalApi.getLatestRelease()
             }
 
-            val latestVersionName = response.name
+            // the version is in the tag ("Watube2611"), the title, or both: see ReleaseVersion
+            val latestVersionName = "${response.tagName} / ${response.name}"
+            val latestVersionCode = ReleaseVersion.code(response.tagName, response.name)
 
-            // ✅ CORRECTION : isEmpty() au lieu de isNullOrEmpty()
-            // car response.name est de type String non-nullable
-            if (latestVersionName.isEmpty()) {
-                Log.w(TAG(), "Latest release has no version name")
+            if (latestVersionCode == null) {
+                Log.w(TAG(), "No version in the latest release: $latestVersionName")
                 if (isManualCheck) {
-                    context.toastFromMainDispatcher(R.string.error_occurred)
-                }
-                return
-            }
-
-            val latestVersionCode = parseVersionToCode(latestVersionName)
-
-            if (latestVersionCode == 0) {
-                Log.w(TAG(), "Failed to parse latest version: $latestVersionName")
-                if (isManualCheck) {
-                    context.toastFromMainDispatcher(R.string.error_occurred)
+                    report(R.string.error_occurred)
                 }
                 return
             }
@@ -193,14 +138,14 @@ class UpdateChecker(private val context: Context) {
                                 "current=$currentAppVersion, latest=$latestVersionCode"
                     )
                     if (isManualCheck) {
-                        context.toastFromMainDispatcher(R.string.app_uptodate)
+                        report(R.string.app_uptodate)
                     }
                 }
 
                 else -> {
                     Log.i(TAG(), "App is up to date (version $currentAppVersion)")
                     if (isManualCheck) {
-                        context.toastFromMainDispatcher(R.string.app_uptodate)
+                        report(R.string.app_uptodate)
                     }
                 }
             }
@@ -210,33 +155,33 @@ class UpdateChecker(private val context: Context) {
                 404 -> {
                     Log.w(TAG(), "No published release found for this repository")
                     if (isManualCheck) {
-                        context.toastFromMainDispatcher(R.string.no_release_available)
+                        report(R.string.no_release_available)
                     }
                 }
 
                 else -> {
                     Log.e(TAG(), "HTTP error during update check: ${e.code()} - ${e.message()}", e)
                     if (isManualCheck) {
-                        context.toastFromMainDispatcher(R.string.error_occurred)
+                        report(R.string.error_occurred)
                     }
                 }
             }
         } catch (e: java.net.UnknownHostException) {
             Log.e(TAG(), "No internet connection during update check", e)
             if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.turnInternetOn)
+                report(R.string.turnInternetOn)
             }
         } catch (e: java.net.SocketTimeoutException) {
             Log.e(TAG(), "Timeout during update check", e)
             if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.error_occurred)
+                report(R.string.error_occurred)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), "Failed to check for updates", e)
             if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.error_occurred)
+                report(R.string.error_occurred)
             }
         }
     }

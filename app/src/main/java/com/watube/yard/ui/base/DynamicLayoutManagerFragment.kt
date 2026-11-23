@@ -5,34 +5,22 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.watube.yard.R
-import com.watube.yard.constants.PreferenceKeys
-import com.watube.yard.helpers.PreferenceHelper
+import com.watube.yard.helpers.GridColumns
 
 // region UI Components
 abstract class DynamicLayoutManagerFragment(@LayoutRes layoutResId: Int) : Fragment(layoutResId) {
     abstract fun setLayoutManagers(gridItems: Int)
 
-    private fun getGridItemsCount(orientation: Int): Int {
-        val (prefKey, defaultValueRes) = when (orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> PreferenceKeys.GRID_COLUMNS_PORTRAIT to R.integer.grid_items
-            else -> PreferenceKeys.GRID_COLUMNS_LANDSCAPE to R.integer.grid_items_landscape
-        }
-
-        val defaultValue = resources.getInteger(defaultValueRes).toString()
-        return PreferenceHelper.getString(prefKey, defaultValue).toInt()
-    }
-
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        setLayoutManagers(getGridItemsCount(newConfig.orientation))
+        setLayoutManagers(GridColumns.of(newConfig))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setLayoutManagers(getGridItemsCount(resources.configuration.orientation))
+        setLayoutManagers(GridColumns.of(resources.configuration))
     }
 }
 // endregion

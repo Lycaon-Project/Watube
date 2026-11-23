@@ -21,6 +21,7 @@ import androidx.media3.extractor.text.DefaultSubtitleParserFactory
 import androidx.media3.extractor.text.SubtitleExtractor
 import com.watube.yard.R
 import com.watube.yard.api.MediaServiceRepository
+import com.watube.yard.api.StreamsCache
 import com.watube.yard.api.SubscriptionHelper
 import com.watube.yard.api.obj.Segment
 import com.watube.yard.api.obj.Streams
@@ -41,6 +42,7 @@ import com.watube.yard.extensions.setMetadata
 import com.watube.yard.extensions.toastFromMainDispatcher
 import com.watube.yard.extensions.toastFromMainThread
 import com.watube.yard.extensions.updateParameters
+import com.watube.yard.helpers.ErrorMessages
 import com.watube.yard.helpers.PlayerHelper
 import com.watube.yard.helpers.PlayerHelper.getSubtitleRoleFlags
 import com.watube.yard.parcelable.PlayerData
@@ -57,6 +59,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -217,13 +220,15 @@ open class OnlinePlayerService : AbstractPlayerService() {
     private suspend fun fetchStreams(): Streams? = withContext(Dispatchers.IO) {
         try {
             MediaServiceRepository.instance.getStreams(videoId).let {
+                // a download of this video reuses them; a copy, as DeArrow retitles in place
+                StreamsCache.put(videoId, it.copy())
                 DeArrowUtil.deArrowStreams(it, videoId)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.e(TAG(), e.stackTraceToString())
-            toastFromMainDispatcher(e.localizedMessage.orEmpty())
+            toastFromMainDispatcher(ErrorMessages.of(e))
             null
         }
     }
@@ -459,7 +464,12 @@ open class OnlinePlayerService : AbstractPlayerService() {
         message?.let { toastFromMainThread(it) }
     }
 
-    override fun onRelease() = stopCast()
+    override fun onRelease() {
+        stopCast()
+        // nothing loaded for this service may outlive it: an extraction finishing later would
+        // drive a released player
+        scope.cancel()
+    }
     // endregion
 
     // region SABR Streaming
@@ -495,7 +505,7 @@ open class OnlinePlayerService : AbstractPlayerService() {
             }.onFailure { Log.e(TAG(), "streaming session renewal failed", it) }.getOrNull()
             if (renewed == null) {
                 // nothing left to try: the message the error would have shown
-                toastFromMainDispatcher(error.localizedMessage.orEmpty())
+                toastFromMainDispatcher(ErrorMessages.of(error))
                 return@launch
             }
             withContext(Dispatchers.Main) {

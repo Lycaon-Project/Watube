@@ -107,6 +107,8 @@ object PreferenceKeys {
     // region Appearance
     const val THEME_MODE = "theme_toggle"
     const val PURE_THEME = "pure_theme"
+    /** Turns Efecto off: the glass of the bottom bar and the mini player (on by default). */
+    const val EFECTO_OFF = "efecto_off"
     const val ACCENT_COLOR = "accent_color"
     const val APP_FONT = "app_font"
     const val FONT_SCALE = "font_scale"
@@ -302,6 +304,12 @@ object PreferenceKeys {
 
     // region Downloads
     const val EXTERNAL_DOWNLOAD_PROVIDER = "external_download_provider"
+
+    /** Tree uri of the destination folder the user picked; empty for Download/Watube. */
+    const val DOWNLOAD_FOLDER = "download_folder"
+
+    /** New downloads kept readable (not encrypted) in the destination folder; off by default. */
+    const val DOWNLOAD_READABLE = "download_readable"
 
     const val SELECTED_DOWNLOAD_SORT_TYPE = "selected_download_sort_type"
     const val SELECTED_DOWNLOAD_PLAYLIST_SORT_TYPE = "selected_download_playlist_sort_type"

@@ -44,11 +44,11 @@ jobs:
         build-mode: ${{ matrix.build-mode }}
 
     # explicit build instead of autobuild: same JDK and task as the CI, no guessed Gradle task
-    - name: Set up JDK 17
+    - name: Set up JDK 25
       if: matrix.build-mode == 'manual'
       uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
       with:
-        java-version: 17
+        java-version: 25
         distribution: "temurin"
 
     - name: Build

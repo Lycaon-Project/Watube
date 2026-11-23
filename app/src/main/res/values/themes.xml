@@ -19,6 +19,11 @@
         <item name="seekBarPreferenceStyle">@style/Preference.Watube.SeekBar</item>
 
         <item name="snackbarStyle">@style/snackBarStyle</item>
+        <item name="snackbarTextViewStyle">@style/snackBarTextStyle</item>
+        <item name="snackbarButtonStyle">@style/snackBarButtonStyle</item>
+
+        <item name="bottomNavigationStyle">@style/WatubeBottomNav</item>
+        <item name="navigationRailStyle">@style/WatubeNavRail</item>
 
         <item name="loadingIndicatorStyle">@style/Widget.Material3.LoadingIndicator.Contained</item>
 

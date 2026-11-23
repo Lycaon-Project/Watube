@@ -147,6 +147,10 @@ class SabrMediaPeriod(
             }
         }
         sampleStreams = sampleStreamList.toTypedArray()
+        // video track turned off: the next requests ask for the sound only (see deselectVideo)
+        if (sampleStreams.none { it.primaryTrackType == C.TRACK_TYPE_VIDEO }) {
+            sabrClient.deselectVideo()
+        }
 
         compositeSequenceableLoader =
             compositeSequenceableLoaderFactory.create(

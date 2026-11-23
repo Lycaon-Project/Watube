@@ -14,12 +14,12 @@
         android:layout_marginTop="8dp"
         app:icon="@drawable/ic_playlist_add" />
 
-    <LinearLayout
+    <!-- the two actions side by side, end-aligned; when they do not fit on one line (long
+         labels, large font) the main one moves to its own line below instead of folding -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:gravity="end|center_vertical"
-        android:orientation="horizontal"
         android:paddingVertical="8dp">
 
         <com.google.android.material.button.MaterialButton
@@ -27,6 +27,8 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/createPlaylist" />
 
         <com.google.android.material.button.MaterialButton
@@ -34,9 +36,25 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/addToPlaylist" />
-    </LinearLayout>
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="create_playlist,add_to_playlist"
+            app:flow_firstHorizontalBias="1"
+            app:flow_horizontalBias="1"
+            app:flow_horizontalGap="16dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_lastHorizontalBias="1"
+            app:flow_verticalGap="8dp"
+            app:flow_wrapMode="chain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
 <!-- endregion -->

@@ -21,14 +21,14 @@
 
   <!-- ░░░ TECH / STATUS BADGES ░░░ -->
   <p>
-    <img src="https://img.shields.io/badge/Platform-Android%2013%E2%80%9317-1FD47E?style=for-the-badge&labelColor=15181C&logo=android&logoColor=white" alt="Android 12 to 17">
+    <img src="https://img.shields.io/badge/Platform-Android%2012%E2%80%9317-1FD47E?style=for-the-badge&labelColor=15181C&logo=android&logoColor=white" alt="Android 12 to 17">
     <img src="https://img.shields.io/badge/Kotlin-100%25-1FD47E?style=for-the-badge&labelColor=15181C&logo=kotlin&logoColor=white" alt="100% Kotlin">
     <img src="https://img.shields.io/badge/Material_3-Expressive-1FD47E?style=for-the-badge&labelColor=15181C&logo=materialdesign&logoColor=white" alt="Material 3 Expressive">
   </p>
   <p>
     <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL_v3-1FD47E?style=for-the-badge&labelColor=15181C&logo=gnu&logoColor=white" alt="GPL-v3"></a>
     <a href="https://github.com/Lycaon-Project/Watube"><img src="https://img.shields.io/badge/Lycaon--Project-Watube-15181C?style=for-the-badge&labelColor=0E1013&logo=github&logoColor=white" alt="GitHub Lycaon-Project"></a>
-    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.11-1FD47E?style=for-the-badge&labelColor=15181C&logo=github&logoColor=white" alt="Latest release 26.11"></a>
+    <a href="https://github.com/Lycaon-Project/Watube/releases/latest"><img src="https://img.shields.io/badge/Release-26.12-1FD47E?style=for-the-badge&labelColor=15181C&logo=github&logoColor=white" alt="Latest release 26.11"></a>
   </p>
 
   <br>
@@ -109,16 +109,26 @@ YouTube ships with a deeply invasive [privacy policy](https://support.google.com
 
 ## ✨ Latest improvements
 
-The freshest work landing in Watube — focused on **playback correctness**, **sound** and **picture quality**:
+The freshest work landing in Watube. **Watube 26.12** is about **battery life**, **memory** and **accessibility**:
 
 | Area | What changed |
 | :--- | :--- |
+| 🔋 **Lighter on battery and memory** | The player keeps less of what you already watched in memory, a picture-in-picture window plays at 480p instead of full HD (your quality comes back as soon as you leave it), and fewer decoded thumbnails stay in memory. On a test phone: about 20 MB less memory while watching, up to 48 MB less after a long scroll, and a lighter load on the processor in picture-in-picture. |
+| 🎧 **Audio only in the background** | With picture-in-picture off, leaving the app keeps the sound playing but stops loading and decoding the video; the picture comes back when you return. |
+| ♿ **TalkBack** | Every screen, button and list can be used with TalkBack: clear labels, a sensible reading order and announced changes. |
+| 💬 **Live chat** | Live streams show their chat, as plain text: no links, no images. |
+| 📥 **New download sheet** | Pick the quality, audio only or a whole playlist in one sheet. Files go to a *Watube* folder in *Download* (with a *Video* and an *Audio* folder), with no storage permission, or to another folder you choose. |
+| 🧩 **Watube Extrato** | The extractor is now Watube's own, written in Kotlin, with its own JSON reader; one less third-party library in the build. |
+| 🔒 **HTTPS only** | Every connection is encrypted by default. |
+| 🗣️ **Clear error messages** | Playback and network errors are explained in your language instead of raw technical messages. |
+| 🔁 **Subscriptions feed** | The feed no longer stays empty after your very first subscription. |
+| 🐣 **A small guest** | VireoBoo, the 26.12 mascot, hides somewhere in the app. |
 | ⏭️ **Next video, every time** | With autoplay on, the next suggested video now follows every video, the *Next* button and the notification included; the countdown leads to it again, and a playlist started while another video plays keeps its order. A video no longer hangs on a network without IPv6. |
 | 📺 **Your choices on the TV** | When you cast with **Stolm**, the TV plays the audio track (original or dubbed), the subtitles and the quality you chose on the phone, and *Translation* and *Quality* stay at hand during the cast. The cast window is the same on every Android version, and stopping on the TV brings the video back to your phone. |
 | 🪶 **Lighter app** | One 64-bit APK under 9 MB (it was 15.5 MB): only the code for today's phones is shipped, nothing is removed from the app itself. |
 | 🔎 **Spelling suggestions** | Tapping *Did you mean* or *Showing results for* now runs the search with the corrected spelling (it used to do nothing), and going back skips the misspelled results. |
 | ⏭️ **Quieter SponsorBlock button** | The skip button is a small *Skip* pill on the side, clear of the play button: it shows for a few seconds when a segment starts, then only with the player controls. |
-| 📦 **Up-to-date libraries** | Media3 1.11, current AndroidX, OkHttp 5.5, Coil 3.6 and protobuf 4.36; NewPipeExtractor built from Watube's own fork with the latest caption-track names and the jsoup security fix (CVE-2026-75140). Code and resources left over from Android 12 and older are removed. |
+| 📦 **Up-to-date libraries** | Media3 1.11, current AndroidX, OkHttp 5.5, Coil 3.6 and protobuf 4.36; NewPipeExtractor built from Watube's own fork with the latest caption-track names and the jsoup security fix (CVE-2026-75140). Code and resources left over from Android 11 and older are removed. |
 | 🚫 **No proprietary Google code** | Google Play Services and its Cast SDK are **removed**: nothing in Watube talks to Play Services any more, and the build **refuses** them, even as an indirect dependency. Casting uses **Stolm**, Watube's own client written from the open Cast protocol: it only talks to devices that prove they are genuine, and the video reaches the TV through your phone, never from YouTube directly. |
 | 🔒 **Privacy by default** | Search suggestions come from your own history, on the device; online suggestions are an opt-in and never sent for a link, an e-mail address or a number. Nothing goes to a cloud backup. Connections use TLS 1.2/1.3 only. An option hides the app from screenshots and recordings. |
 | 🎬 **Player polish** | In fullscreen landscape the seek bar sits back at the bottom edge, and the top buttons show their press ripple above the video instead of behind it. |
@@ -207,10 +217,10 @@ Watube isn't a reskin. Its differentiator is **engineering**: deep rendering and
 
 | | |
 | :--- | :--- |
-| **Language** | Kotlin 2.3.20 — 100% Kotlin, 0 Java |
+| **Language** | Kotlin 2.4.21 — 100% Kotlin, 0 Java |
 | **UI** | Material 3 Expressive, View system |
 | **Playback** | AndroidX Media3 / ExoPlayer |
-| **Build** | Gradle 9.8.2 · AGP 9.5.0 · JDK 21 |
+| **Build** | Gradle 9.9.2 · AGP 9.5.2 · JDK 25 |
 | **SDK** | minSdk 31 (Android 12) · compile/target SDK 37 (Android 17) |
 
 </details>

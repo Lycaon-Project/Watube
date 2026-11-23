@@ -80,6 +80,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="?materialIconButtonFilledStyle"
                     android:id="@+id/copy_link"
+                    android:contentDescription="@string/external_link_copy"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
