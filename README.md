@@ -361,7 +361,7 @@ Watube is **[Free Software](https://en.wikipedia.org/wiki/Free_software)** — u
 <summary><b>📜 Credits & acknowledgments</b></summary>
 <br>
 
-**Foundations**
+
 Watube is built on the original **LibreTube** project by the libre-tube team. We're grateful for their foundational work on a privacy-focused YouTube client and their contributions to open source.
 
 > **Important:** Watube is an independent project by Lycaon-Project. It is **not** affiliated with, endorsed by, or connected to the original LibreTube developers.
